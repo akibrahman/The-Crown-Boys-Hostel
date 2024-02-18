@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import NavBar from "../Components/NavBar/NavBar";
 import "./globals.css";
 
@@ -14,6 +15,7 @@ const RootLayout = ({ children }) => {
     <html lang="en">
       <body className={inter.className}>
         <NavBar />
+        <Toaster />
         <div className="m-10">{children}</div>
       </body>
     </html>

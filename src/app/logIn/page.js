@@ -1,14 +1,16 @@
 "use client";
 
+import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
 
 const LogIn = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    username: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
   const handleChange = (e) => {
@@ -21,6 +23,24 @@ const LogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    setLoading(true);
+    try {
+      const res = await axios.post("/api/users/login", formData);
+      console.log(res);
+      if (res.data.success && res.data.code === 2121) {
+        toast.success(res.data.msg);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.code === 2002) {
+        toast.error(error.response.data.msg);
+      }
+      if (error.response.data.code === 2003) {
+        toast.error(error.response.data.msg);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,7 +61,7 @@ const LogIn = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="border border-gray-300 p-2 w-full rounded"
+              className="border border-gray-300 p-2 w-full rounded text-black"
               required
             />
           </div>
@@ -58,7 +78,7 @@ const LogIn = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="border border-gray-300 p-2 w-full rounded"
+              className="border border-gray-300 p-2 w-full rounded text-black"
               required
             />
           </div>
@@ -67,7 +87,11 @@ const LogIn = () => {
             type="submit"
             className="bg-yellow-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
           >
-            Login
+            {loading ? (
+              <CgSpinner className="animate-spin text-2xl text-center mx-auto" />
+            ) : (
+              "Login"
+            )}
           </button>
           <div className="mt-4">
             <Link href={"/signup"}>

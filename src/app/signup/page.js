@@ -2,9 +2,14 @@
 
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
 
 const Registration = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -21,13 +26,31 @@ const Registration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords are not same !");
+      // alert("a");
+      return;
+    }
+    setLoading(true);
     try {
       const res = await axios.post("/api/users/signup", formData);
       console.log(res.data);
+      if (res.data.success) {
+        toast.success("Registration Successful");
+        router.push("/login");
+      } else {
+        if (res.data.code === 1212) {
+          toast.error("User exists with this E-mail !");
+        }
+        if (res.data.code === 1010) {
+          toast.error("Username is already taken !");
+        }
+      }
     } catch (error) {
-      alert("Something Went Wrong");
+      toast.error("Error for Registration");
       console.log(error);
     } finally {
+      setLoading(false);
     }
   };
 
@@ -108,10 +131,14 @@ const Registration = () => {
             type="submit"
             className="bg-yellow-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
           >
-            Sign Up
+            {loading ? (
+              <CgSpinner className="animate-spin text-2xl text-center mx-auto" />
+            ) : (
+              "Sign Up"
+            )}
           </button>
           <div className="mt-4">
-            <Link href={"/logIn"}>
+            <Link href={"/login"}>
               Or,{" "}
               <span className="text-yellow-500 font-semibold underline">
                 Login
