@@ -1,4 +1,3 @@
-// import { getBlogs } from "@/src/lib/blogs";
 import { getBlogs } from "@/lib/blogs";
 import Image from "next/image";
 import Link from "next/link";

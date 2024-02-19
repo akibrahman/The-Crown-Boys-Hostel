@@ -1,3 +1,4 @@
+import TanstackProvider from "@/providers/TanstackProvider";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import NavBar from "../Components/NavBar/NavBar";
@@ -14,9 +15,11 @@ const RootLayout = ({ children }) => {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NavBar />
-        <Toaster />
-        <div className="m-10">{children}</div>
+        <TanstackProvider>
+          <NavBar />
+          <Toaster />
+          <div className="m-10">{children}</div>
+        </TanstackProvider>
       </body>
     </html>
   );
