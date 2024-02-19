@@ -1,13 +1,15 @@
 "use client";
 
+import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 
 const LogIn = () => {
+  const { userRefetch } = useContext(AuthContext);
   const route = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -30,6 +32,7 @@ const LogIn = () => {
       const res = await axios.post("/api/users/login", formData);
       console.log(res);
       if (res.data.success && res.data.code === 2121) {
+        await userRefetch();
         toast.success(res.data.msg);
         route.push("/profile");
       }

@@ -1,31 +1,22 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
 import toast from "react-hot-toast";
 
 const Logout = () => {
+  const { user, userRefetch } = useContext(AuthContext);
   const route = useRouter();
-
-  const { data: user } = useQuery({
-    queryKey: ["profile", "user"],
-    queryFn: async () => {
-      try {
-        const { data } = await axios.get("/api/users/me");
-        return data.user;
-      } catch (error) {
-        route.push("/login");
-        return null;
-      }
-    },
-  });
 
   const logout = async () => {
     try {
       const { data } = await axios.get("/api/users/logout");
       if (data.success) {
         toast.success(data.msg);
+        await userRefetch();
+        console.log("1111111111111111111");
         route.push("/login");
       }
     } catch (error) {

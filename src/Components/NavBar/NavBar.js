@@ -1,23 +1,11 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { AuthContext } from "@/providers/ContextProvider";
 import Link from "next/link";
+import { useContext } from "react";
 
 const NavBar = () => {
-  const { data: user } = useQuery({
-    queryKey: ["profile", "user", "NavBar"],
-    queryFn: async () => {
-      try {
-        const { data } = await axios.get("/api/users/me");
-        return data.user;
-      } catch (error) {
-        route.push("/login");
-        return null;
-      }
-    },
-  });
-  // if (!user) return;
+  const { user } = useContext(AuthContext);
   return (
     <nav className="flex items-center justify-center gap-10 py-4 bg-stone-900">
       <Link href="/">Home</Link>

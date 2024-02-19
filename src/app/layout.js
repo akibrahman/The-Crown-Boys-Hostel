@@ -1,3 +1,4 @@
+import ContextProvider from "@/providers/ContextProvider";
 import TanstackProvider from "@/providers/TanstackProvider";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
@@ -16,9 +17,11 @@ const RootLayout = ({ children }) => {
     <html lang="en">
       <body className={inter.className}>
         <TanstackProvider>
-          <NavBar />
-          <Toaster />
-          <div className="m-10">{children}</div>
+          <ContextProvider>
+            <NavBar />
+            <Toaster />
+            <div className="m-10">{children}</div>
+          </ContextProvider>
         </TanstackProvider>
       </body>
     </html>
