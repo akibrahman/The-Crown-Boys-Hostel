@@ -10,7 +10,6 @@ export const dbConfig = async () => {
     connection.on("error", (err) => {
       console.log("MongoDB Connection Error");
       console.log(err);
-      process.exit();
     });
   } catch (err) {
     console.log("Error to connect to the DB");

@@ -1,14 +1,17 @@
 "use client";
 
-import axios from "axios";
+import { base64 } from "@/utils/base64";
+import { imageUpload } from "@/utils/imageUpload";
+import { makeFile } from "@/utils/makeFile";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
-
 const Registration = () => {
   const router = useRouter();
+  const [preview, setPreview] = useState(null);
   const [role, setRole] = useState("client");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -31,37 +34,51 @@ const Registration = () => {
       toast.error("Passwords are not same !");
       return;
     }
-    setLoading(true);
-    try {
-      const res = await axios.post("/api/users/signup", formData);
-      console.log(res.data);
-      if (res.data.success) {
-        toast.success("Registration Successful");
-        router.push("/login");
-      } else {
-        if (res.data.code === 1212) {
-          toast.error("User exists with this E-mail !");
-        }
-        if (res.data.code === 1010) {
-          toast.error("Username is already taken !");
-        }
-      }
-    } catch (error) {
-      toast.error("Error for Registration");
-      console.log(error);
-    } finally {
-      setLoading(false);
+    if (!preview) {
+      toast.error("No profile picture!");
     }
+    const profilePicture = await imageUpload(
+      await makeFile(preview, `Profile Picture of ${formData.username}`, "png")
+    );
+    console.log({ ...formData, role, profilePicture });
+    // setLoading(true);
+    // try {
+    //   const res = await axios.post("/api/users/signup", formData);
+    //   console.log(res.data);
+    //   if (res.data.success) {
+    //     toast.success("Registration Successful");
+    //     router.push("/login");
+    //   } else {
+    //     if (res.data.code === 1212) {
+    //       toast.error("User exists with this E-mail !");
+    //     }
+    //     if (res.data.code === 1010) {
+    //       toast.error("Username is already taken !");
+    //     }
+    //   }
+    // } catch (error) {
+    //   toast.error("Error for Registration");
+    //   console.log(error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
     <div className="flex items-center justify-center">
-      <div className="bg-stone-900 p-10 rounded shadow-md w-full">
+      <div
+        className={`${
+          role === "manager" ? "bg-stone-950" : "bg-stone-900"
+        } p-10 rounded shadow-md w-full duration-300`}
+      >
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold mb-6">Sign Up</h2>
           <div className="flex justify-center items-center gap-4">
             <button
-              onClick={() => setRole("manager")}
+              onClick={() => {
+                setRole("manager");
+                setFormData({ ...formData, institution: "" });
+              }}
               className={`border px-4 py-2 border-yellow-500 rounded-lg font-bold duration-300 ${
                 role === "manager"
                   ? "bg-yellow-500 text-stone-900"
@@ -71,7 +88,10 @@ const Registration = () => {
               Manager
             </button>
             <button
-              onClick={() => setRole("client")}
+              onClick={() => {
+                setRole("client");
+                setFormData({ ...formData, bkashNumber: "" });
+              }}
               className={`border px-4 py-2 border-yellow-500 rounded-lg font-bold duration-300 ${
                 role === "client"
                   ? "bg-yellow-500 text-stone-900"
@@ -191,43 +211,79 @@ const Registration = () => {
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="bkashNumber"
-                  className="block text-white text-sm font-bold mb-2"
-                >
-                  Bkash Number
-                </label>
-                <input
-                  type="text"
-                  id="bkashNumber"
-                  name="bkashNumber"
-                  value={formData.bkashNumber}
-                  onChange={handleChange}
-                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                  required
-                />
-              </div>
-              <div className="mb-4 w-[80%]">
-                <label
-                  htmlFor="profilePicture"
-                  className="block text-white text-sm font-bold mb-2"
-                >
-                  Profile Picture
-                </label>
-                <label
-                  htmlFor="profilePicture"
-                  className="border border-yellow-500 flex items-center justify-center font-bold text-white p-2 w-1/2 rounded bg-yellow-500 cursor-pointer select-none duration-300 active:scale-90"
-                >
-                  + Add Photo
-                </label>
-                <input
-                  type="file"
-                  id="profilePicture"
-                  name="profilePicture"
-                  className="hidden"
-                  required
-                />
+              {role === "manager" ? (
+                <div className="mb-4">
+                  <label
+                    htmlFor="bkashNumber"
+                    className="block text-white text-sm font-bold mb-2"
+                  >
+                    Bkash Number
+                  </label>
+                  <input
+                    type="text"
+                    id="bkashNumber"
+                    name="bkashNumber"
+                    value={formData.bkashNumber}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  />
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <label
+                    htmlFor="institution"
+                    className="block text-white text-sm font-bold mb-2"
+                  >
+                    Institution
+                  </label>
+                  <input
+                    type="text"
+                    id="institution"
+                    name="institution"
+                    value={formData.institution}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  />
+                </div>
+              )}
+              <div className="flex items-center justify-between">
+                <div className="mb-4 w-[80%]">
+                  <label
+                    htmlFor="profilePicture"
+                    className="block text-white text-sm font-bold mb-2"
+                  >
+                    Profile Picture
+                  </label>
+                  <label
+                    htmlFor="profilePicture"
+                    className="border border-yellow-500 flex items-center justify-center font-bold text-white p-2 w-1/2 rounded bg-yellow-500 cursor-pointer select-none duration-300 active:scale-90"
+                  >
+                    + Add Photo
+                  </label>
+                  <input
+                    onChange={async (e) => {
+                      const base = await base64(e.target.files[0]);
+                      setPreview(base);
+                    }}
+                    type="file"
+                    accept="image/*"
+                    id="profilePicture"
+                    name="profilePicture"
+                    className="hidden"
+                  />
+                </div>
+
+                {preview && (
+                  <Image
+                    src={preview}
+                    className="aspect-square rounded-full mr-10"
+                    alt="Preview of profile picture"
+                    width={60}
+                    height={60}
+                  />
+                )}
               </div>
             </div>
           </div>
