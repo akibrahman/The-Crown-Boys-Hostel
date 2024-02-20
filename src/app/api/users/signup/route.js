@@ -29,6 +29,14 @@ export async function POST(req) {
       username: body.username,
       email: body.email,
       password: hashPassword,
+      messAddress: body.messAddress,
+      contactNumber: body.contactNumber,
+      bkashNumber: body.bkashNumber,
+      institution: body.institution,
+      profilePicture: body.profilePicture,
+      role: body.role,
+      isManager: body.role === "manager" ? true : false,
+      isClient: body.role === "client" ? true : false,
     });
     const savedUser = await newUser.save();
     console.log(savedUser);

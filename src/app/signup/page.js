@@ -3,6 +3,7 @@
 import { base64 } from "@/utils/base64";
 import { imageUpload } from "@/utils/imageUpload";
 import { makeFile } from "@/utils/makeFile";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -34,34 +35,40 @@ const Registration = () => {
       toast.error("Passwords are not same !");
       return;
     }
+    setLoading(true);
     if (!preview) {
       toast.error("No profile picture!");
+      setLoading(false);
+      return;
     }
     const profilePicture = await imageUpload(
       await makeFile(preview, `Profile Picture of ${formData.username}`, "png")
     );
     console.log({ ...formData, role, profilePicture });
-    // setLoading(true);
-    // try {
-    //   const res = await axios.post("/api/users/signup", formData);
-    //   console.log(res.data);
-    //   if (res.data.success) {
-    //     toast.success("Registration Successful");
-    //     router.push("/login");
-    //   } else {
-    //     if (res.data.code === 1212) {
-    //       toast.error("User exists with this E-mail !");
-    //     }
-    //     if (res.data.code === 1010) {
-    //       toast.error("Username is already taken !");
-    //     }
-    //   }
-    // } catch (error) {
-    //   toast.error("Error for Registration");
-    //   console.log(error);
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      const res = await axios.post("/api/users/signup", {
+        ...formData,
+        role,
+        profilePicture,
+      });
+      console.log(res.data);
+      if (res.data.success) {
+        toast.success("Registration Successful");
+        router.push("/login");
+      } else {
+        if (res.data.code === 1212) {
+          toast.error("User exists with this E-mail !");
+        }
+        if (res.data.code === 1010) {
+          toast.error("Username is already taken !");
+        }
+      }
+    } catch (error) {
+      toast.error("Error for Registration");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

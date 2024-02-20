@@ -16,6 +16,28 @@
   }
 }
 
+/* ScrollBar Styling Start */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #000000;
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #1c1917;
+  border-radius: 14px;
+  border: 1px solid #000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #1c1917;
+}
+
+/* ScrollBar Styling End */
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(

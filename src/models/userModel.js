@@ -4,7 +4,6 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, "Please Provide a UserName"],
-    unique: true,
   },
   email: {
     type: String,
@@ -12,7 +11,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
   contactNumber: {
-    type: Number,
+    type: String,
     required: [true, "Please Provide a Contact Number"],
   },
   profilePicture: {
@@ -31,16 +30,23 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  isManager: {
+  isManager: Boolean,
+  isManagerVerified: {
     type: Boolean,
     default: false,
   },
-  isClient: {
+  isClient: Boolean,
+  isClientVerified: {
     type: Boolean,
     default: false,
   },
+  balance: {
+    type: Number,
+    default: 0,
+  },
+  institution: String,
   messAddress: String,
-  bkashNumber: Number,
+  bkashNumber: String,
   manager: String,
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
@@ -48,6 +54,7 @@ const userSchema = new mongoose.Schema({
   verifyTokenExpiry: Date,
 });
 
-const User = mongoose.models.users || mongoose.model("users", userSchema);
+delete mongoose.models.users;
+const User = mongoose.model("users", userSchema);
 
 export default User;
