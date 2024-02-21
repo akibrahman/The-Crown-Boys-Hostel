@@ -1,6 +1,12 @@
+import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export const GET = async (req) => {
+  if (
+    req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return res.status(401).end("Unauthorized");
+  }
   const transport = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
@@ -20,4 +26,5 @@ export const GET = async (req) => {
   };
 
   await transport.sendMail(mailOptions);
+  return NextResponse.json({ success: true });
 };

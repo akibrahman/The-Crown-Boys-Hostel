@@ -109,7 +109,14 @@ const Registration = () => {
         } p-10 rounded shadow-md w-full duration-300`}
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold mb-6">Sign Up</h2>
+          <h2
+            onClick={async () => {
+              await axios.get("/api/cronjob/test1");
+            }}
+            className="text-2xl font-semibold mb-6"
+          >
+            Sign Up
+          </h2>
           <div className="flex justify-center items-center gap-4">
             <button
               onClick={() => {
