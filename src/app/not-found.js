@@ -6,7 +6,7 @@ export const metadata = {
 const notFound = () => {
   return (
     <div>
-      <p className="text-orange-600">Not Found</p>
+      <p className="text-orange-600">This Page is not here</p>
     </div>
   );
 };
