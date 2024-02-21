@@ -29,9 +29,9 @@ const Logout = () => {
     try {
       const { data } = await axios.get("/api/users/logout");
       if (data.success) {
-        toast.success(data.msg);
         await userRefetch();
         route.push("/login");
+        toast.success(data.msg);
       }
     } catch (error) {
       toast.error("Something went Wrong !");
@@ -67,14 +67,18 @@ const Logout = () => {
             src={user.profilePicture}
             width={200}
             height={200}
-            className="mb-10 rounded-full"
+            className="mb-10 rounded-full aspect-square"
           />
           <p>User Name: {user.username}</p>
           <p>E-mail: {user.email}</p>
           <p>Role: {user.role}</p>
 
           {user.isVerified ? (
-            <p className="flex items-center gap-1 bg-green-500 w-max px-4 py-1 rounded-full font-semibold mt-2">
+            <p
+              className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold mt-2 ${
+                user.role === "owner" ? "bg-blue-500" : "bg-green-500"
+              }`}
+            >
               <TiTick className="text-xl" />
               Verified
             </p>

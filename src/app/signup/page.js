@@ -3,6 +3,7 @@
 import { base64 } from "@/utils/base64";
 import { imageUpload } from "@/utils/imageUpload";
 import { makeFile } from "@/utils/makeFile";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,11 +23,32 @@ const Registration = () => {
     confirmPassword: "",
   });
 
+  //! Get Managers
+  const { data: verifiedManagers } = useQuery({
+    queryKey: ["managers", "signup"],
+    queryFn: async () => {
+      const { data } = await axios.get("api/managers/getmanagers");
+      if (data.success) {
+        const verifiedManagers = data.managers.filter(
+          (manager) =>
+            manager.isManagerVerified === true && manager.isVerified === true
+        );
+        return verifiedManagers;
+      }
+      return null;
+    },
+  });
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const testHandler = (e) => {
+    e.preventDefault();
+    console.log(formData);
   };
 
   const handleSubmit = async (e) => {
@@ -54,7 +76,7 @@ const Registration = () => {
       console.log(res.data);
       if (res.data.success) {
         toast.success("Registration Successful");
-        router.push("/login");
+        router.push("/signin");
       } else {
         if (res.data.code === 1212) {
           toast.error("User exists with this E-mail !");
@@ -70,6 +92,8 @@ const Registration = () => {
       setLoading(false);
     }
   };
+
+  if (!verifiedManagers) return <p>Loading.............</p>;
 
   return (
     <div className="flex items-center justify-center">
@@ -109,7 +133,7 @@ const Registration = () => {
             </button>
           </div>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={testHandler}>
           <div className="flex justify-between items-center gap-4">
             {/* Left Side  */}
             <div className="w-1/2">
@@ -181,6 +205,39 @@ const Registration = () => {
                   required
                 />
               </div>
+              {role === "client" && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="floor"
+                    className="block text-white text-sm font-bold mb-2"
+                  >
+                    Floor
+                  </label>
+                  <select
+                    id="floor"
+                    name="floor"
+                    // value={formData.floor}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  >
+                    <option value="">Select Floor</option>
+                    <option value="0">Ground Floor</option>
+                    <option value="1">First Floor</option>
+                    <option value="2">Second Floor</option>
+                    <option value="3">Third Floor</option>
+                    <option value="4">Fourth Floor</option>
+                    <option value="5">Fifth Floor</option>
+                    <option value="6">Sixth Floor</option>
+                    <option value="7">Seventh Floor</option>
+                    <option value="8">Eighth Floor</option>
+                    <option value="9">Nineth Floor</option>
+                    <option value="10">Tenth Floor</option>
+                    <option value="11">Eleventh Floor</option>
+                    <option value="12">Twelveth Floor</option>
+                  </select>
+                </div>
+              )}
             </div>
             {/* Right Side  */}
             <div className="w-1/2">
@@ -253,6 +310,39 @@ const Registration = () => {
                     className="border border-gray-300 p-2 w-full rounded text-stone-900"
                     required
                   />
+                </div>
+              )}
+              {role === "client" && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="manager"
+                    className="block text-white text-sm font-bold mb-2"
+                  >
+                    Manager
+                  </label>
+                  {/* <input
+                    type="text"
+                    id="manager"
+                    name="manager"
+                    value={formData.manager}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  /> */}
+                  <select
+                    id="manager"
+                    name="manager"
+                    onChange={handleChange}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  >
+                    <option value="">Select Manager</option>
+                    {verifiedManagers.map((manager) => (
+                      <option key={manager._id} value={manager.Id}>
+                        {manager.username}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
               <div className="flex items-center justify-between">

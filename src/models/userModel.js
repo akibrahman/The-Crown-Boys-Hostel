@@ -44,6 +44,7 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  floor: Number,
   institution: String,
   messAddress: String,
   bkashNumber: String,

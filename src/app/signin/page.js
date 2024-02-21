@@ -33,8 +33,8 @@ const Signin = () => {
       console.log(res);
       if (res.data.success && res.data.code === 2121) {
         await userRefetch();
-        toast.success(res.data.msg);
         route.push("/profile");
+        toast.success(res.data.msg);
       }
     } catch (error) {
       console.log(error);
