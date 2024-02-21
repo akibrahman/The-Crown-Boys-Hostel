@@ -5,19 +5,22 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
+import { FaTimes } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 
 const Logout = () => {
   const { user, userRefetch } = useContext(AuthContext);
   const route = useRouter();
+  const [givingAuthorization, setGivingAuthorization] = useState(false);
 
-  const { data: managers } = useQuery({
+  const { data: managers, refetch: managersRefetch } = useQuery({
     queryKey: ["managers", "owner"],
     queryFn: async () => {
-      const { data } = await axios.get("/api/managers");
+      const { data } = await axios.get("/api/managers/getmanagers");
       return data.managers;
     },
   });
@@ -28,7 +31,6 @@ const Logout = () => {
       if (data.success) {
         toast.success(data.msg);
         await userRefetch();
-        console.log("1111111111111111111");
         route.push("/login");
       }
     } catch (error) {
@@ -50,7 +52,8 @@ const Logout = () => {
         <p>My Profile</p>
       </div>
       {/* Parent Block  */}
-      <div className="flex items-start justify-start gap-10">
+      {/* <div className="flex items-start justify-start gap-10"> */}
+      <div className="grid grid-cols-4 gap-4">
         {/* Profile Details  */}
         <div
           className={`mt-10 border-l-4 pl-6 py-8 ${
@@ -69,12 +72,34 @@ const Logout = () => {
           <p>User Name: {user.username}</p>
           <p>E-mail: {user.email}</p>
           <p>Role: {user.role}</p>
+
+          {user.isVerified ? (
+            <p className="flex items-center gap-1 bg-green-500 w-max px-4 py-1 rounded-full font-semibold mt-2">
+              <TiTick className="text-xl" />
+              Verified
+            </p>
+          ) : (
+            <button
+              onClick={async () => {
+                axios.post("/api/sendverificationemail", {
+                  email: user.email,
+                  emailType: "verify",
+                  userId: user._id,
+                });
+                toast.success("Verification E-mail sent");
+              }}
+              className="flex items-center gap-1 duration-300 bg-yellow-500 w-max px-4 py-1 rounded-full font-semibold mt-2 active:scale-90"
+            >
+              Verify Please
+            </button>
+          )}
         </div>
         {/* Managers  */}
         {user.role === "owner" && (
-          <div className="h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
+          <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
             <div className="sticky top-0">
               <input
+                placeholder="Search by name"
                 type="text"
                 className="w-80 px-4 pl-12 py-3 rounded-full text-white bg-stone-900 focus:outline-none"
               />
@@ -84,7 +109,7 @@ const Logout = () => {
             {managers.map((manager) => (
               <div
                 key={manager._id}
-                className="border px-6 py-5 rounded-lg flex items-center justify-center gap-4"
+                className="border px-6 py-5 rounded-lg flex items-center w-[430px] justify-between gap-4"
               >
                 <Image
                   alt={`Profile picture of ${manager.username} who is a manager`}
@@ -93,25 +118,67 @@ const Logout = () => {
                   width={60}
                   className="rounded-full aspect-square"
                 />
-                <p>1</p>
+                {/* <p>1</p> */}
                 <div>
                   <p>{manager.username}</p>
-                  <p>{manager.email}</p>
+                  <p className="text-sm">{manager.email}</p>
                 </div>
-                {manager.isManagerVerified === true ? (
-                  <p className="text-blue-500 font-semibold flex items-center gap-1">
-                    <TiTick className="text-3xl font-normal" />
-                    Verified
-                  </p>
-                ) : (
+                {manager.isVerified === true ? (
                   <>
-                    <button className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 active:scale-90">
-                      Approve
-                    </button>
-                    <button className="bg-red-500 text-white font-semibold px-4 py-1 rounded-full duration-300 active:scale-90">
-                      Reject
-                    </button>
+                    {manager.isManagerVerified === true ? (
+                      <p className="text-blue-500 font-semibold flex items-center gap-1">
+                        <TiTick className="text-3xl font-normal" />
+                        Approved
+                      </p>
+                    ) : (
+                      <>
+                        <button
+                          onClick={async () => {
+                            const confirmation = await confirm(
+                              "Are you sure to Authorize?"
+                            );
+                            if (confirmation) {
+                              setGivingAuthorization(true);
+                              try {
+                                const { data } = await axios.post(
+                                  "api/managers/approvemanager",
+                                  { id: manager._id }
+                                );
+                                if (data.success) {
+                                  await managersRefetch();
+                                  toast.success("Authorization Provided");
+                                }
+                              } catch (error) {
+                                console.log(
+                                  "Frontend problem when authorizing as a manager"
+                                );
+                                console.log(error);
+                                toast.error("Authorization Error!");
+                              } finally {
+                                setGivingAuthorization(false);
+                              }
+                            } else {
+                              toast.success("Cancelled!");
+                            }
+                          }}
+                          className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
+                        >
+                          Approve
+                          {givingAuthorization && (
+                            <CgSpinner className="animate-spin text-2xl" />
+                          )}
+                        </button>
+                        {/* <button className="bg-red-500 text-white font-semibold px-4 py-1 rounded-full duration-300 active:scale-90">
+                        Reject
+                      </button> */}
+                      </>
+                    )}
                   </>
+                ) : (
+                  <p className="text-red-500 font-semibold flex items-center gap-1">
+                    <FaTimes className="text-xl font-normal" />
+                    Unverified
+                  </p>
                 )}
               </div>
             ))}
