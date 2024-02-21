@@ -327,6 +327,9 @@ const Registration = () => {
                     Manager
                   </label>
                   <Select
+                    // className=" text-red-700 "
+                    // classNames=" text-red-700 "
+                    classNamePrefix=" text-black "
                     name="manager"
                     id="manager"
                     placeholder="Select Manager"
