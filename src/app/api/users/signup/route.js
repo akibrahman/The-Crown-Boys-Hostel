@@ -34,6 +34,8 @@ export async function POST(req) {
       bkashNumber: body.bkashNumber,
       institution: body.institution,
       profilePicture: body.profilePicture,
+      floor: parseInt(body.floor),
+      manager: body.manager ? body.manager : "",
       role: body.role,
       isManager: body.role === "manager" ? true : false,
       isClient: body.role === "client" ? true : false,

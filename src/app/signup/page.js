@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import Select from "react-select";
 const Registration = () => {
   const router = useRouter();
   const [preview, setPreview] = useState(null);
@@ -29,10 +30,15 @@ const Registration = () => {
     queryFn: async () => {
       const { data } = await axios.get("api/managers/getmanagers");
       if (data.success) {
-        const verifiedManagers = data.managers.filter(
+        const tempVerifiedManagers = data.managers.filter(
           (manager) =>
             manager.isManagerVerified === true && manager.isVerified === true
         );
+        const verifiedManagers = tempVerifiedManagers.map((manager) => ({
+          value: manager._id,
+          label: manager.username,
+        }));
+
         return verifiedManagers;
       }
       return null;
@@ -133,7 +139,7 @@ const Registration = () => {
             </button>
           </div>
         </div>
-        <form onSubmit={testHandler}>
+        <form onSubmit={handleSubmit}>
           <div className="flex justify-between items-center gap-4">
             {/* Left Side  */}
             <div className="w-1/2">
@@ -320,29 +326,19 @@ const Registration = () => {
                   >
                     Manager
                   </label>
-                  {/* <input
-                    type="text"
-                    id="manager"
+                  <Select
                     name="manager"
-                    value={formData.manager}
-                    onChange={handleChange}
-                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                    required
-                  /> */}
-                  <select
                     id="manager"
-                    name="manager"
-                    onChange={handleChange}
-                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    placeholder="Select Manager"
                     required
-                  >
-                    <option value="">Select Manager</option>
-                    {verifiedManagers.map((manager) => (
-                      <option key={manager._id} value={manager.Id}>
-                        {manager.username}
-                      </option>
-                    ))}
-                  </select>
+                    isClearable={true}
+                    onChange={(e) => {
+                      handleChange({
+                        target: { name: "manager", value: e?.value },
+                      });
+                    }}
+                    options={verifiedManagers}
+                  />
                 </div>
               )}
               <div className="flex items-center justify-between">
