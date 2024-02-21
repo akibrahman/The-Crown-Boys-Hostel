@@ -24,7 +24,7 @@ const NavBar = () => {
       ) : (
         <Link
           className="bg-yellow-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
-          href="/login"
+          href="/signin"
         >
           Log In
         </Link>
