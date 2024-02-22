@@ -22,7 +22,16 @@ export const GET = async (req) => {
     from: "cron-job@hostelplates.com",
     to: "akibrahman5200@gmail.com",
     subject: "Cron Job",
-    html: `<p>This is the Prove</p>`,
+    html: `<p>
+    <p>This is the Prove</p>
+    <p>To Date String :${new Date().toDateString()}</p>
+    <p>To Time String :${new Date().toTimeString()}</p>
+    <p>To Local Date String :${new Date().toLocaleDateString()}</p>
+    <p>To Local Time String :${new Date().toLocaleTimeString()}</p>
+    <p>To String :${new Date().toString()}</p>
+    <p>To Local String :${new Date().toLocaleString()}</p>
+    <p>To ISOS String :${new Date().toISOString()}</p>
+    </>`,
   };
 
   await transport.sendMail(mailOptions);
