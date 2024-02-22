@@ -9,7 +9,7 @@ export const AuthContext = createContext(null);
 const ContextProvider = ({ children }) => {
   //! Get User
   const { data: user, refetch: userRefetch } = useQuery({
-    queryKey: ["profile", "user", "NavBar"],
+    queryKey: ["profile", "user", "all"],
     queryFn: async () => {
       try {
         const { data } = await axios.get("/api/users/me");
@@ -19,7 +19,23 @@ const ContextProvider = ({ children }) => {
       }
     },
   });
-  const info = { user, userRefetch };
+  //! Get Manager
+  const { data: manager, refetch: managerRefetch } = useQuery({
+    queryKey: ["manager", "user", "profile", user?.manager],
+    queryFn: async ({ queryKey }) => {
+      if (queryKey[3]) {
+        try {
+          const { data } = await axios.get(
+            `/api/users/manager?managerId=${queryKey[3]}`
+          );
+          return data.manager;
+        } catch (error) {
+          return null;
+        }
+      }
+    },
+  });
+  const info = { user, userRefetch, manager, managerRefetch };
   return <AuthContext.Provider value={info}>{children}</AuthContext.Provider>;
 };
 
