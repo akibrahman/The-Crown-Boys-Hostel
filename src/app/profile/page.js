@@ -318,16 +318,16 @@ const Logout = () => {
               </div>
             ))}
           </div>
-        ) : !user.isVerified ? (
+        ) : user.role === "manager" && !user.isVerified ? (
           <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
             <p>Verify Email</p>
           </div>
+        ) : user.role === "manager" && !user.isManagerVerified ? (
+          <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
+            <p>Verify as a manager</p>
+          </div>
         ) : (
-          !user.isManagerVerified && (
-            <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
-              <p>Verify as a manager</p>
-            </div>
-          )
+          <></>
         )}
       </div>
     </div>
