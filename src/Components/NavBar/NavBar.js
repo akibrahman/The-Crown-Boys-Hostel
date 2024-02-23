@@ -7,7 +7,7 @@ import { useContext } from "react";
 const NavBar = () => {
   const { user } = useContext(AuthContext);
   return (
-    <nav className="flex items-center justify-center gap-10 py-4 bg-stone-900">
+    <nav className="flex items-center justify-center gap-10 py-10 bg-stone-900">
       <Link href="/">Home</Link>
       <Link href="/order">Order</Link>
       <Link href="/blog">Blog</Link>

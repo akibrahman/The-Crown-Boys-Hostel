@@ -175,7 +175,9 @@ const Order = () => {
                     breakfast ? "shadow-2xl shadow-red-500" : ""
                   }`}
                 >
-                  <p className="text-2xl font-semibold">Breakfast:</p>
+                  <p className="text-2xl font-semibold w-[400px] text-left">
+                    Breakfast:
+                  </p>
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
@@ -211,7 +213,9 @@ const Order = () => {
                     lunch ? "shadow-2xl shadow-green-500" : ""
                   }`}
                 >
-                  <p className="text-2xl font-semibold">Lunch:</p>
+                  <p className="text-2xl font-semibold w-[400px] text-left">
+                    Lunch:
+                  </p>
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
@@ -243,7 +247,9 @@ const Order = () => {
                     dinner ? "shadow-2xl shadow-blue-500" : ""
                   }`}
                 >
-                  <p className="text-2xl font-semibold">Dinner:</p>
+                  <p className="text-2xl font-semibold w-[400px] text-left">
+                    Dinner:
+                  </p>
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
