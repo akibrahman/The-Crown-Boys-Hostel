@@ -171,13 +171,11 @@ const Order = () => {
               <>
                 {/* Breakfast   */}
                 <div
-                  className={`duration-700 transition-all ease-in-out flex items-center gap-14 border border-red-500 py-5 px-20 rounded-xl ${
+                  className={`duration-700 transition-all ease-in-out flex items-center justify-between gap-8 border border-red-500 py-5 px-12 md:px-20 rounded-xl ${
                     breakfast ? "shadow-2xl shadow-red-500" : ""
                   }`}
                 >
-                  <p className="text-2xl font-semibold w-[400px] text-left">
-                    Breakfast:
-                  </p>
+                  <p className="text-2xl font-semibold">Breakfast:</p>
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
@@ -209,13 +207,11 @@ const Order = () => {
                 </div>
                 {/* Lunch   */}
                 <div
-                  className={`duration-700 transition-all ease-in-out flex items-center gap-14 border border-green-500 py-5 px-20 rounded-xl ${
+                  className={`duration-700 transition-all ease-in-out flex items-center justify-between gap-8 border border-green-500 py-5 px-12 md:px-20 rounded-xl ${
                     lunch ? "shadow-2xl shadow-green-500" : ""
                   }`}
                 >
-                  <p className="text-2xl font-semibold w-[400px] text-left">
-                    Lunch:
-                  </p>
+                  <p className="text-2xl font-semibold">Lunch:</p>
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
@@ -243,13 +239,11 @@ const Order = () => {
                 </div>
                 {/* Dinner   */}
                 <div
-                  className={`duration-700 transition-all ease-in-out flex items-center gap-14 border border-blue-500 py-5 px-20 rounded-xl ${
+                  className={`duration-700 transition-all ease-in-out flex items-center justify-between gap-8 border border-blue-500 py-5 px-12 md:px-20 rounded-xl ${
                     dinner ? "shadow-2xl shadow-blue-500" : ""
                   }`}
                 >
-                  <p className="text-2xl font-semibold w-[400px] text-left">
-                    Dinner:
-                  </p>
+                  <p className="text-2xl font-semibold">Dinner:</p>
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
