@@ -82,6 +82,7 @@ const Order = () => {
       ) !== lastDateOfCurrentMonth
     ) {
       setDate(null);
+      setOrder(null);
       toast.error("Wait till last day of this month!");
       return;
     } else if (
@@ -155,9 +156,20 @@ const Order = () => {
               <p className="text-2xl font-semibold">Breakfast:</p>
               <label class="inline-flex items-center me-5 cursor-pointer">
                 <input
-                  onClick={() => {
-                    console.log(!breakfast);
-                    setBreakfast(!breakfast);
+                  onClick={async () => {
+                    setLoading(true);
+                    const { data } = await axios.patch(
+                      "/api/orders/updateorder",
+                      { meal: "breakfast", state: !breakfast, id: order._id }
+                    );
+                    if (data.success) {
+                      setLoading(false);
+                      console.log(!breakfast);
+                      setBreakfast(!breakfast);
+                      toast.success("Order placed");
+                    } else {
+                      toast.error("Something went wrong!");
+                    }
                   }}
                   type="checkbox"
                   value=""
@@ -176,9 +188,20 @@ const Order = () => {
               <p className="text-2xl font-semibold">Lunch:</p>
               <label class="inline-flex items-center me-5 cursor-pointer">
                 <input
-                  onClick={() => {
-                    console.log(!lunch);
-                    setLunch(!lunch);
+                  onClick={async () => {
+                    setLoading(true);
+                    const { data } = await axios.patch(
+                      "/api/orders/updateorder",
+                      { meal: "lunch", state: !lunch, id: order._id }
+                    );
+                    if (data.success) {
+                      setLoading(false);
+                      console.log(!lunch);
+                      setLunch(!lunch);
+                      toast.success("Order placed");
+                    } else {
+                      toast.error("Something went wrong!");
+                    }
                   }}
                   type="checkbox"
                   value=""
@@ -197,9 +220,20 @@ const Order = () => {
               <p className="text-2xl font-semibold">Dinner:</p>
               <label class="inline-flex items-center me-5 cursor-pointer">
                 <input
-                  onClick={() => {
-                    console.log(!dinner);
-                    setDinner(!dinner);
+                  onClick={async () => {
+                    setLoading(true);
+                    const { data } = await axios.patch(
+                      "/api/orders/updateorder",
+                      { meal: "dinner", state: !dinner, id: order._id }
+                    );
+                    if (data.success) {
+                      setLoading(false);
+                      console.log(!dinner);
+                      setDinner(!dinner);
+                      toast.success("Order placed");
+                    } else {
+                      toast.error("Something went wrong!");
+                    }
                   }}
                   type="checkbox"
                   value=""
