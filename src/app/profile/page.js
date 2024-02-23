@@ -52,7 +52,7 @@ const Logout = () => {
   };
   //! Get current month
   useEffect(() => {
-    if (user?.role === "client") {
+    if (user?.role === "client" || user?.role === "manager") {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -86,13 +86,40 @@ const Logout = () => {
 
   if (!user) return <p>Loading.......User</p>;
   if (user.role === "owner" && !managers) return <p>Loading.......</p>;
-  if (user.role === "manager" && !clients) return <p>Loading.......Clients</p>;
+  if (user.role === "manager" && (!clients || !currentDays))
+    return <p>Loading.......Clients</p>;
 
   if (user.role === "client" && (!manager || !currentDays))
     return <p>Loading.......Manager</p>;
   return (
     <div>
       <div className=" flex items-center flex-row-reverse justify-between">
+        {/* <button
+          onClick={async () => {
+            const data = await axios.post("/api/users/makeorders", {
+              userId: "65d8180be115bd272ca01911",
+              managerId: user._id,
+              days: parseInt(currentDays[currentDays.length - 1]),
+              currentMonthName: new Date().toLocaleDateString("en-BD", {
+                month: "long",
+                timeZone: "Asia/Dhaka",
+              }),
+              currentMonth: new Date(
+                new Date().toLocaleString("en-US", {
+                  timeZone: "Asia/Dhaka",
+                })
+              ).getMonth(),
+              currentYear: new Date(
+                new Date().toLocaleString("en-US", {
+                  timeZone: "Asia/Dhaka",
+                })
+              ).getFullYear(),
+            });
+            console.log(data.data.msg);
+          }}
+        >
+          TEST
+        </button> */}
         <button
           onClick={logout}
           className="bg-red-600 hover:bg-red-700 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
@@ -337,8 +364,32 @@ const Logout = () => {
                               "Are you sure to make your client?"
                             );
                             if (confirmation) {
+                              //! Here
                               setGivingAuthorization(true);
                               try {
+                                await axios.post("/api/orders/makeorders", {
+                                  userId: "65d8180be115bd272ca01911",
+                                  managerId: user._id,
+                                  days: parseInt(
+                                    currentDays[currentDays.length - 1]
+                                  ),
+                                  currentMonthName:
+                                    new Date().toLocaleDateString("en-BD", {
+                                      month: "long",
+                                      timeZone: "Asia/Dhaka",
+                                    }),
+                                  currentMonth: new Date(
+                                    new Date().toLocaleString("en-US", {
+                                      timeZone: "Asia/Dhaka",
+                                    })
+                                  ).getMonth(),
+                                  currentYear: new Date(
+                                    new Date().toLocaleString("en-US", {
+                                      timeZone: "Asia/Dhaka",
+                                    })
+                                  ).getFullYear(),
+                                });
+
                                 const { data } = await axios.post(
                                   "api/clients/approveclient",
                                   { id: client._id }
