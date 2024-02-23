@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaTimes } from "react-icons/fa";
@@ -16,6 +16,7 @@ const Logout = () => {
   const { user, userRefetch, manager } = useContext(AuthContext);
   const route = useRouter();
   const [givingAuthorization, setGivingAuthorization] = useState(false);
+  const [currentDays, setCurrentDays] = useState(null);
 
   const { data: managers, refetch: managersRefetch } = useQuery({
     queryKey: ["managers", "owner"],
@@ -49,11 +50,46 @@ const Logout = () => {
       console.log(error);
     }
   };
+  //! Get current month
+  useEffect(() => {
+    if (user?.role === "client") {
+      const currentDate = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentMonth = new Date(currentDate).getMonth() + 1;
+      const currentYear = new Date(currentDate).getFullYear();
+      const dayCountOfCurrentMonth = parseInt(
+        new Date(currentYear, currentMonth, 0).getDate()
+      );
+
+      let tempArray = [];
+      for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
+        tempArray.push(i);
+      }
+      setCurrentDays(tempArray);
+    }
+  }, [user?.role]);
+  // const currentDate = new Date().toLocaleString("en-US", {
+  //   timeZone: "Asia/Dhaka",
+  // });
+  // const currentMonth = new Date(currentDate).getMonth();
+  // const currentYear = new Date(currentDate).getFullYear();
+  // console.log(
+  //   "------------",
+  //   new Date(currentYear, currentMonth, 23).toISOString(), // 23 feb
+  //   moment().format("MMMM Do YYYY"), // 23 feb
+  //   moment(new Date(currentYear, currentMonth, 23).toISOString()).isSame(
+  //     moment.now(),
+  //     "day"
+  //   )
+  // );
+
   if (!user) return <p>Loading.......User</p>;
   if (user.role === "owner" && !managers) return <p>Loading.......</p>;
   if (user.role === "manager" && !clients) return <p>Loading.......Clients</p>;
 
-  if (user.role === "client" && !manager) return <p>Loading.......Manager</p>;
+  if (user.role === "client" && (!manager || !currentDays))
+    return <p>Loading.......Manager</p>;
   return (
     <div>
       <div className=" flex items-center flex-row-reverse justify-between">
@@ -111,6 +147,27 @@ const Logout = () => {
             </button>
           )}
         </div>
+        {/* Clalnder as a Client */}
+        {user.role == "client" && user.isVerified && user.isClientVerified && (
+          <div className="col-span-2 border-l-4 pl-6 pb-8 mt-10 border-purple-500">
+            <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2">
+              {new Date().toLocaleDateString("en-BD", {
+                month: "long",
+                timeZone: "Asia/Dhaka",
+              })}
+            </p>
+            <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
+              {currentDays.map((day, i) => (
+                <div
+                  key={i}
+                  className="w-16 h-16 rounded-xl bg-yellow-500 flex items-center justify-center"
+                >
+                  {day}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {/* Manager's Details  */}
         {user.role === "client" && !user.isVerified ? (
           <div className="flex items-center justify-center border-l-4 pl-6 py-8 border-purple-500 mt-10">
@@ -145,7 +202,7 @@ const Logout = () => {
         ) : (
           <></>
         )}
-        {/* Managers  */}
+        {/* Managers, me as a Owner  */}
         {user.role === "owner" && (
           <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
             <div className="sticky top-0">
