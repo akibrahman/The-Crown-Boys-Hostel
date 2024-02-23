@@ -20,7 +20,7 @@ const RootLayout = ({ children }) => {
           <ContextProvider>
             <NavBar />
             <Toaster />
-            <div className="m-10">{children}</div>
+            <div className="mt-10 mx-10">{children}</div>
           </ContextProvider>
         </TanstackProvider>
       </body>
