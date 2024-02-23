@@ -112,7 +112,19 @@ const Logout = () => {
           )}
         </div>
         {/* Manager's Details  */}
-        {user.role === "client" && user.isVerified && user.isClientVerified ? (
+        {user.role === "client" && !user.isVerified ? (
+          <div className="flex items-center justify-center border-l-4 pl-6 py-8 border-purple-500 mt-10">
+            <p>At first verify youself!</p>
+          </div>
+        ) : user.role === "client" &&
+          user.isVerified &&
+          !user.isClientVerified ? (
+          <div className="flex items-center justify-center border-l-4 pl-6 py-8 border-purple-500 mt-10">
+            <p>Wait till manager accepts you!</p>
+          </div>
+        ) : user.role === "client" &&
+          user.isVerified &&
+          user.isClientVerified ? (
           <div
             className={`mt-10 border-l-4 pl-6 py-8 ${
               manager.role === "owner" && "border-blue-500"
@@ -127,13 +139,8 @@ const Logout = () => {
               height={200}
               className="mb-10 rounded-full aspect-square"
             />
-            <p>User Name: {manager.username}</p>
+            <p>Manager&apos;s Name: {manager.username}</p>
             <p>E-mail: {manager.email}</p>
-            <p>Role: {manager.role}</p>
-          </div>
-        ) : user.role === "client" ? (
-          <div className="flex items-center justify-center border-l-4 pl-6 py-8 border-purple-500 mt-10">
-            <p>Wait till manager accepts you!</p>
           </div>
         ) : (
           <></>
@@ -260,7 +267,7 @@ const Logout = () => {
                 </div>
                 {client.isVerified === true ? (
                   <>
-                    {client.isManagerVerified === true ? (
+                    {client.isClientVerified === true ? (
                       <p className="text-blue-500 font-semibold flex items-center gap-1">
                         <TiTick className="text-3xl font-normal" />
                         Approved
@@ -269,23 +276,23 @@ const Logout = () => {
                       <>
                         <button
                           onClick={async () => {
-                            const confirmation = await confirm(
-                              "Are you sure to Authorize?"
+                            const confirmation = confirm(
+                              "Are you sure to make your client?"
                             );
                             if (confirmation) {
                               setGivingAuthorization(true);
                               try {
                                 const { data } = await axios.post(
-                                  "api/managers/approvemanager",
+                                  "api/clients/approveclient",
                                   { id: client._id }
                                 );
                                 if (data.success) {
-                                  await managersRefetch();
+                                  await clientRefetch();
                                   toast.success("Authorization Provided");
                                 }
                               } catch (error) {
                                 console.log(
-                                  "Frontend problem when authorizing as a manager"
+                                  "Frontend problem when authorizing as a client"
                                 );
                                 console.log(error);
                                 toast.error("Authorization Error!");
@@ -303,9 +310,6 @@ const Logout = () => {
                             <CgSpinner className="animate-spin text-2xl" />
                           )}
                         </button>
-                        {/* <button className="bg-red-500 text-white font-semibold px-4 py-1 rounded-full duration-300 active:scale-90">
-                        Reject
-                      </button> */}
                       </>
                     )}
                   </>
