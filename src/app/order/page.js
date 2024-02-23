@@ -3,10 +3,13 @@
 import moment from "moment";
 import { useState } from "react";
 import DatePicker from "react-date-picker";
+// import DatePicker from "react-datepicker";
 import "react-date-picker/dist/DatePicker.css";
+// import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { LuCalendarPlus } from "react-icons/lu";
+import "../globals.css";
 const Order = () => {
   const [breakfast, setBreakfast] = useState(false);
   const [lunch, setLunch] = useState(false);
@@ -52,7 +55,7 @@ const Order = () => {
     ).getDate()
   );
 
-  console.log(currentMonth, nextMonth, currentDate, lastDateOfCurrentMonth);
+  //   console.log(currentMonth, nextMonth, currentDate, lastDateOfCurrentMonth);
   return (
     <div className="relative">
       {loading && (
@@ -70,6 +73,7 @@ const Order = () => {
           className={""}
           format="dd - MM - y"
           value={date}
+          selected={date}
           calendarIcon={<LuCalendarPlus className="text-2xl" />}
           clearIcon={null}
           dayPlaceholder="00"
@@ -77,23 +81,53 @@ const Order = () => {
           yearPlaceholder="0000"
           onChange={(date) => {
             if (
-              moment(new Date(date).toISOString()).isAfter(
+              moment(new Date(date).toISOString()).isSameOrBefore(
                 moment(new Date(2024, 1, 23)),
                 "day"
               )
             ) {
+              setDate(null);
+              toast.error("Past!");
+              return;
+            } else if (
+              new Date(date).toLocaleDateString("en-BD", {
+                month: "long",
+                timeZone: "Asia/Dhaka",
+              }) === nextMonth &&
+              parseInt(
+                new Date(date).toLocaleDateString("en-BD", {
+                  day: "numeric",
+                  timeZone: "Asia/Dhaka",
+                })
+              ) !== lastDateOfCurrentMonth
+            ) {
+              setDate(null);
+              toast.error("Wait till last day of this month!");
+              return;
+            } else if (
+              new Date(date).toLocaleDateString("en-BD", {
+                month: "long",
+                timeZone: "Asia/Dhaka",
+              }) === currentMonth
+            ) {
               setDate(date);
               toast.success("Day selected");
             } else {
-              toast.error("Invalid Selection!");
+              setDate(null);
+              toast.error("Can't go so far!");
             }
 
-            console.log(
-              moment(new Date(date).toISOString()).isAfter(
-                moment(new Date(2024, 1, 23)),
-                "day"
-              )
-            );
+            // if (
+            //   moment(new Date(date).toISOString()).isAfter(
+            //     moment(new Date(2024, 1, 23)),
+            //     "day"
+            //   )
+            // ) {
+            //   setDate(date);
+            //   toast.success("Day selected");
+            // } else {
+            //   toast.error("Invalid Selection!");
+            // }
           }}
         />
       </div>

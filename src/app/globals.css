@@ -38,6 +38,45 @@
 
 /* ScrollBar Styling End */
 
+.react-date-picker__wrapper {
+  padding: 20px 60px;
+  border-radius: 12px;
+  border-color: #eab308;
+}
+.react-calendar {
+  background-color: #eab308;
+  padding: 10px;
+}
+/* NavBar  */
+.react-calendar__navigation {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  font-size: 30px;
+}
+/* February 2024  */
+.react-calendar__navigation__label {
+  flex-grow: 0 !important;
+  font-size: 18px !important;
+}
+/* Every Day  */
+.react-calendar__tile.react-calendar__month-view__days__day {
+  border: 1px solid white;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 100%;
+}
+.react-calendar__tile.react-calendar__tile--active.react-calendar__month-view__days__day {
+  background-color: white;
+  color: #eab308;
+}
+.react-calendar__tile.react-calendar__tile--now.react-calendar__month-view__days__day {
+  background-color: rgb(206, 45, 45);
+  border-color: rgb(206, 45, 45);
+  color: white;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
