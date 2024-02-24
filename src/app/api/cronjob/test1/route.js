@@ -50,6 +50,9 @@ export const GET = async (req) => {
     const currentDate = new Date().toLocaleString("en-US", {
       timeZone: "Asia/Dhaka",
     });
+    const currentMonth = new Date(currentDate).getMonth();
+    const nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
+    const currentYear = new Date(currentDate).getFullYear();
     const nextMonth = new Date(
       currentYear,
       currentMonth + 1,
@@ -58,14 +61,11 @@ export const GET = async (req) => {
       month: "long",
       timeZone: "Asia/Dhaka",
     });
-    const nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
-    const currentMonth = new Date(currentDate).getMonth();
-    const currentYear = new Date(currentDate).getFullYear();
-    const dayCountOfCurrentMonth = parseInt(
+    const dayCountOfNextMonth = parseInt(
       new Date(currentYear, nextNextMonthNumber, 0).getDate()
     );
 
-    // for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
+    // for (let i = 1; i <= dayCountOfNextMonth; i++) {
     //   const newOrder = new Order({
     //     userId: "Here the user ID",
     //     managerId: "Here the manager ID",
@@ -89,9 +89,9 @@ export const GET = async (req) => {
           <p>Date :${new Date(
             currentYear,
             currentMonth,
-            dayCountOfCurrentMonth
+            dayCountOfNextMonth
           ).toLocaleDateString()}</p>
-          <p>Day Count of Next Month :${dayCountOfCurrentMonth}</p>
+          <p>Day Count of Next Month :${dayCountOfNextMonth}</p>
           </div>`,
     };
     await transport.sendMail(mailOptions);
