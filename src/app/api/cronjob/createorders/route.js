@@ -35,7 +35,7 @@ export const GET = async (req) => {
         Date.UTC(currentYear, currentMonth + 1, 0)
       );
       const secondLastDayOfMonth = new Date(lastDayOfMonth);
-      secondLastDayOfMonth.setUTCDate(lastDayOfMonth.getUTCDate() - 5);
+      secondLastDayOfMonth.setUTCDate(lastDayOfMonth.getUTCDate() - 1);
       console.log(secondLastDayOfMonth);
       return {
         isSecondLastDay:
@@ -50,8 +50,6 @@ export const GET = async (req) => {
       };
     }
     const testData = isSecondLastDayOfCurrentMonthInBangladesh();
-
-   
 
     if (testData.isSecondLastDay) {
       const currentDate = new Date().toLocaleString("en-US", {
