@@ -70,42 +70,34 @@ export const GET = async (req) => {
         new Date(currentYear, nextNextMonthNumber, 0).getDate()
       );
 
-      // for (let i = 1; i <= dayCountOfNextMonth; i++) {
-      const newOrder = new Order({
-        userId: "Here the user ID",
-        managerId: "Here the manager ID",
-        month: "m", //nextMonth
-        year: 1, //currentYear
-        date: "1/1/1",
-        // new Date(currentYear, currentMonth, 10).toLocaleDateString(
-        //   "en-BD",
-        //   {
-        //     timeZone: "Asia/Dhaka",
-        //   }
-        // )
-        breakfast: false,
-        lunch: false,
-        dinner: false,
-      });
-      await newOrder.save();
-      // }
+      for (let i = 1; i <= dayCountOfNextMonth; i++) {
+        const newOrder = new Order({
+          userId: "Here the user ID",
+          managerId: "Here the manager ID",
+          month: nextMonth,
+          year: currentYear,
+          date: new Date(
+            currentYear,
+            currentMonth,
+            dayCountOfNextMonth
+          ).toLocaleDateString("en-BD", {
+            timeZone: "Asia/Dhaka",
+          }),
+
+          breakfast: false,
+          lunch: false,
+          dinner: false,
+        });
+        await newOrder.save();
+      }
       const mailOptions = {
         from: "cron-job@hostelplates.com",
         to: "akibrahman5200@gmail.com",
         subject: "Cron Job",
         html: `<div>
           <p>Is Last Day:${testData.isSecondLastDay}</p>
-          <p>Next Month :${typeof nextMonth}</p>
           <p>Next Month :${nextMonth}</p>
-          <p>Current Year :${typeof currentYear}</p>
           <p>Current Year :${currentYear}</p>
-          <p>Date :${typeof new Date(
-            currentYear,
-            nextMonthNumber,
-            dayCountOfNextMonth
-          ).toLocaleDateString("en-BD", {
-            timeZone: "Asia/Dhaka",
-          })}</p>
           <p>Date :${new Date(
             currentYear,
             nextMonthNumber,
