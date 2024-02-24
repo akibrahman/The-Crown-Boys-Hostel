@@ -1,3 +1,4 @@
+import Order from "@/models/orderModel";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -67,22 +68,23 @@ export const GET = async (req) => {
       );
 
       // for (let i = 1; i <= dayCountOfNextMonth; i++) {
-      // const newOrder = new Order({
-      //   userId: "Here the user ID",
-      //   managerId: "Here the manager ID",
-      //   month: nextMonth,
-      //   year: currentYear,
-      //   date: new Date(currentYear, currentMonth, 10).toLocaleDateString(
-      //     "en-BD",
-      //     {
-      //       timeZone: "Asia/Dhaka",
-      //     }
-      //   ),
-      //   breakfast: false,
-      //   lunch: false,
-      //   dinner: false,
-      // });
-      // await newOrder.save();
+      const newOrder = new Order({
+        userId: "Here the user ID",
+        managerId: "Here the manager ID",
+        month: "m", //nextMonth
+        year: 1, //currentYear
+        date: "1/1/1",
+        // new Date(currentYear, currentMonth, 10).toLocaleDateString(
+        //   "en-BD",
+        //   {
+        //     timeZone: "Asia/Dhaka",
+        //   }
+        // )
+        breakfast: false,
+        lunch: false,
+        dinner: false,
+      });
+      await newOrder.save();
       // }
       const mailOptions = {
         from: "cron-job@hostelplates.com",
