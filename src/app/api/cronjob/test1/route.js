@@ -1,3 +1,4 @@
+import Order from "@/models/orderModel";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
