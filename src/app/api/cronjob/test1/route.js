@@ -25,6 +25,7 @@ export const GET = async (req) => {
       const currentMonth = today.getUTCMonth();
       const currentYear = today.getUTCFullYear();
       const currentHour = today.getUTCHours();
+      const currentMinute = today.getUTCMinutes();
       const lastDayOfMonth = new Date(
         Date.UTC(currentYear, currentMonth + 1, 0)
       );
@@ -39,6 +40,7 @@ export const GET = async (req) => {
         sixthLastDayOfMonth,
         lastDayOfMonth,
         currentHour,
+        currentMinute,
       };
     }
     const testData = isSixthLastDayOfCurrentMonthInBangladesh();
@@ -52,6 +54,7 @@ export const GET = async (req) => {
         <p>Sixth Last Day Of Month :${testData.sixthLastDayOfMonth}</p>
         <p>Last Day Of Month :${testData.lastDayOfMonth}</p>
         <p>Current Hour :${testData.currentHour}</p>
+        <p>Current Minute :${testData.currentMinute}</p>
         </div>`,
     };
 
