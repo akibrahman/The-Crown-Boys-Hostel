@@ -51,11 +51,7 @@ export const GET = async (req) => {
     }
     const testData = isSecondLastDayOfCurrentMonthInBangladesh();
 
-    const allUsers = await User.find({
-      isClient: true,
-      isClientVerified: true,
-      isVerified: true,
-    });
+   
 
     if (testData.isSecondLastDay) {
       const currentDate = new Date().toLocaleString("en-US", {
@@ -76,11 +72,16 @@ export const GET = async (req) => {
       const dayCountOfNextMonth = parseInt(
         new Date(currentYear, nextNextMonthNumber, 0).getDate()
       );
-      for (let i = 0; i < allUsers.length; i++) {
+      const allUsers = await User.find({
+        isClient: true,
+        isClientVerified: true,
+        isVerified: true,
+      });
+      for (let j = 0; j < allUsers.length; j++) {
         for (let i = 1; i <= dayCountOfNextMonth; i++) {
           const newOrder = new Order({
-            userId: allUsers[i]._id,
-            managerId: allUsers[i].manager,
+            userId: allUsers[j]._id,
+            managerId: allUsers[j].manager,
             month: nextMonth,
             year: currentYear,
             date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
