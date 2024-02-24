@@ -1,5 +1,6 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Order from "@/models/orderModel";
+import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -50,6 +51,12 @@ export const GET = async (req) => {
     }
     const testData = isSecondLastDayOfCurrentMonthInBangladesh();
 
+    const allUsers = await User.find({
+      isClient: true,
+      isClientVerified: true,
+      isVerified: true,
+    });
+
     if (testData.isSecondLastDay) {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -69,26 +76,27 @@ export const GET = async (req) => {
       const dayCountOfNextMonth = parseInt(
         new Date(currentYear, nextNextMonthNumber, 0).getDate()
       );
-
-      for (let i = 1; i <= dayCountOfNextMonth; i++) {
-        const newOrder = new Order({
-          userId: "Here the user ID",
-          managerId: "Here the manager ID",
-          month: nextMonth,
-          year: currentYear,
-          date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
-            "en-BD",
-            {
-              timeZone: "Asia/Dhaka",
-            }
-          ),
-
-          breakfast: false,
-          lunch: false,
-          dinner: false,
-        });
-        await newOrder.save();
+      for (let i = 0; i < allUsers.length; i++) {
+        for (let i = 1; i <= dayCountOfNextMonth; i++) {
+          const newOrder = new Order({
+            userId: allUsers[i]._id,
+            managerId: allUsers[i].manager,
+            month: nextMonth,
+            year: currentYear,
+            date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
+              "en-BD",
+              {
+                timeZone: "Asia/Dhaka",
+              }
+            ),
+            breakfast: false,
+            lunch: false,
+            dinner: false,
+          });
+          await newOrder.save();
+        }
       }
+
       const mailOptions = {
         from: "cron-job@hostelplates.com",
         to: "akibrahman5200@gmail.com",
