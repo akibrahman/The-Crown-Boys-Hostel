@@ -76,13 +76,12 @@ export const GET = async (req) => {
           managerId: "Here the manager ID",
           month: nextMonth,
           year: currentYear,
-          date: new Date(
-            currentYear,
-            currentMonth,
-            dayCountOfNextMonth
-          ).toLocaleDateString("en-BD", {
-            timeZone: "Asia/Dhaka",
-          }),
+          date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
+            "en-BD",
+            {
+              timeZone: "Asia/Dhaka",
+            }
+          ),
 
           breakfast: false,
           lunch: false,
