@@ -51,6 +51,7 @@ export const GET = async (req) => {
         timeZone: "Asia/Dhaka",
       });
       const currentMonth = new Date(currentDate).getMonth();
+      const nextMonthNumber = new Date(currentDate).getMonth() + 1;
       const nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
       const currentYear = new Date(currentDate).getFullYear();
       const nextMonth = new Date(
@@ -88,7 +89,7 @@ export const GET = async (req) => {
           <p>Current Year :${currentYear}</p>
           <p>Date :${new Date(
             currentYear,
-            currentMonth,
+            nextMonthNumber,
             dayCountOfNextMonth
           ).toLocaleDateString("en-BD", {
             timeZone: "Asia/Dhaka",
