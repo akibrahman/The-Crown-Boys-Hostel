@@ -41,9 +41,13 @@ export const GET = async (req) => {
         lastDayOfMonth,
         currentHour,
         currentMinute,
+        currentMonth,
       };
     }
     const testData = isSecondLastDayOfCurrentMonthInBangladesh();
+
+    if (testData.isSecondLastDay) {
+    }
 
     const mailOptions = {
       from: "cron-job@hostelplates.com",
@@ -53,6 +57,7 @@ export const GET = async (req) => {
         <p>Is Second Last Day :${testData.isSecondLastDay}</p>
         <p>Second Last Day Of Month :${testData.secondLastDayOfMonth}</p>
         <p>Last Day Of Month :${testData.lastDayOfMonth}</p>
+        <p>Current Month :${testData.currentMonth}</p>
         <p>Current Hour :${testData.currentHour}</p>
         <p>Current Minute :${testData.currentMinute}</p>
         </div>`,
