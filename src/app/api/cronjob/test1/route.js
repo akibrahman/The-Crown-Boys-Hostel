@@ -50,12 +50,6 @@ export const GET = async (req) => {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
-      const prevMonth = new Date(currentDate).getMonth() + 1;
-      const currentMonth = new Date(currentDate).getMonth();
-      const currentYear = new Date(currentDate).getFullYear();
-      const dayCountOfCurrentMonth = parseInt(
-        new Date(currentYear, prevMonth, 0).getDate()
-      );
       const nextMonth = new Date(
         currentYear,
         currentMonth + 1,
@@ -64,6 +58,12 @@ export const GET = async (req) => {
         month: "long",
         timeZone: "Asia/Dhaka",
       });
+      const nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
+      const currentMonth = new Date(currentDate).getMonth();
+      const currentYear = new Date(currentDate).getFullYear();
+      const dayCountOfCurrentMonth = parseInt(
+        new Date(currentYear, nextNextMonthNumber, 0).getDate()
+      );
 
       // for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
       //   const newOrder = new Order({
@@ -88,7 +88,7 @@ export const GET = async (req) => {
           <p>Date :${new Date(
             currentYear,
             currentMonth,
-            i
+            dayCountOfCurrentMonth
           ).toLocaleDateString()}</p>
           <p>Day Count of Next Month :${dayCountOfCurrentMonth}</p>
           </div>`,
