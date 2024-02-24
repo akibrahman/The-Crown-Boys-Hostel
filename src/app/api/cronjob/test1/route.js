@@ -24,6 +24,7 @@ export const GET = async (req) => {
       today.setUTCHours(today.getUTCHours() + 6);
       const currentMonth = today.getUTCMonth();
       const currentYear = today.getUTCFullYear();
+      const currentHour = today.getUTCHours();
       const lastDayOfMonth = new Date(
         Date.UTC(currentYear, currentMonth + 1, 0)
       );
@@ -37,6 +38,7 @@ export const GET = async (req) => {
           today.getUTCFullYear() === sixthLastDayOfMonth.getUTCFullYear(),
         sixthLastDayOfMonth,
         lastDayOfMonth,
+        currentHour,
       };
     }
     const testData = isSixthLastDayOfCurrentMonthInBangladesh();
@@ -46,10 +48,10 @@ export const GET = async (req) => {
       to: "akibrahman5200@gmail.com",
       subject: "Cron Job",
       html: `<div>
-        <p>This is the Prove</p>
         <p>Is Last Sixth Day :${testData.isLastSixthDay}</p>
         <p>Sixth Last Day Of Month :${testData.sixthLastDayOfMonth}</p>
         <p>Last Day Of Month :${testData.lastDayOfMonth}</p>
+        <p>Current Hour :${testData.currentHour}</p>
         </div>`,
     };
 
