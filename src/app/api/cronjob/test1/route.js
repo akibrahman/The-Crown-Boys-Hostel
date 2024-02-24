@@ -46,43 +46,44 @@ export const GET = async (req) => {
     }
     const testData = isSecondLastDayOfCurrentMonthInBangladesh();
 
-    if (testData.isSecondLastDay) {
-      const currentDate = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Dhaka",
-      });
-      const nextMonth = new Date(
-        currentYear,
-        currentMonth + 1,
-        1
-      ).toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      });
-      const nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
-      const currentMonth = new Date(currentDate).getMonth();
-      const currentYear = new Date(currentDate).getFullYear();
-      const dayCountOfCurrentMonth = parseInt(
-        new Date(currentYear, nextNextMonthNumber, 0).getDate()
-      );
+    // if (testData.isSecondLastDay) {
+    const currentDate = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Dhaka",
+    });
+    const nextMonth = new Date(
+      currentYear,
+      currentMonth + 1,
+      1
+    ).toLocaleDateString("en-BD", {
+      month: "long",
+      timeZone: "Asia/Dhaka",
+    });
+    const nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
+    const currentMonth = new Date(currentDate).getMonth();
+    const currentYear = new Date(currentDate).getFullYear();
+    const dayCountOfCurrentMonth = parseInt(
+      new Date(currentYear, nextNextMonthNumber, 0).getDate()
+    );
 
-      // for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
-      //   const newOrder = new Order({
-      //     userId: "Here the user ID",
-      //     managerId: "Here the manager ID",
-      //     month: nextMonth,
-      //     year: currentYear,
-      //     date: new Date(currentYear, currentMonth, i).toLocaleDateString(),
-      //     breakfast: false,
-      //     lunch: false,
-      //     dinner: false,
-      //   });
-      //   await newOrder.save();
-      // }
-      const mailOptions = {
-        from: "cron-job@hostelplates.com",
-        to: "akibrahman5200@gmail.com",
-        subject: "Cron Job",
-        html: `<div>
+    // for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
+    //   const newOrder = new Order({
+    //     userId: "Here the user ID",
+    //     managerId: "Here the manager ID",
+    //     month: nextMonth,
+    //     year: currentYear,
+    //     date: new Date(currentYear, currentMonth, i).toLocaleDateString(),
+    //     breakfast: false,
+    //     lunch: false,
+    //     dinner: false,
+    //   });
+    //   await newOrder.save();
+    // }
+    const mailOptions = {
+      from: "cron-job@hostelplates.com",
+      to: "akibrahman5200@gmail.com",
+      subject: "Cron Job",
+      html: `<div>
+          <p>Is Last Day:${testData.isSecondLastDay}</p>
           <p>Next Month :${nextMonth}</p>
           <p>Current Year :${currentYear}</p>
           <p>Date :${new Date(
@@ -92,9 +93,9 @@ export const GET = async (req) => {
           ).toLocaleDateString()}</p>
           <p>Day Count of Next Month :${dayCountOfCurrentMonth}</p>
           </div>`,
-      };
-      await transport.sendMail(mailOptions);
-    }
+    };
+    await transport.sendMail(mailOptions);
+    // }
 
     return NextResponse.json({ success: true });
   } catch (error) {
