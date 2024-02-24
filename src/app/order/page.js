@@ -72,7 +72,6 @@ const Order = () => {
     ).getDate()
   );
 
-  //Sat Feb 24 2024 06:00:00 GMT+0600 (Bangladesh Standard Time)
   const dateSelected = async (date) => {
     if (
       moment(new Date(date).toISOString()).isSameOrBefore(
@@ -133,7 +132,6 @@ const Order = () => {
       toast.error("Can't go so far!");
     }
   };
-
   if (!user) return <p>Loading user ...</p>;
 
   return (

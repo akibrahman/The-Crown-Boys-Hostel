@@ -19,7 +19,7 @@ export const GET = async (req) => {
       },
     });
     //!!!!!!!!!!!!!!!!!!!!
-    function isSixthLastDayOfCurrentMonthInBangladesh() {
+    function isSecondLastDayOfCurrentMonthInBangladesh() {
       const today = new Date();
       today.setUTCHours(today.getUTCHours() + 6);
       const currentMonth = today.getUTCMonth();
@@ -29,29 +29,29 @@ export const GET = async (req) => {
       const lastDayOfMonth = new Date(
         Date.UTC(currentYear, currentMonth + 1, 0)
       );
-      const sixthLastDayOfMonth = new Date(lastDayOfMonth);
-      sixthLastDayOfMonth.setUTCDate(lastDayOfMonth.getUTCDate() - 5);
-      console.log(sixthLastDayOfMonth);
+      const secondLastDayOfMonth = new Date(lastDayOfMonth);
+      secondLastDayOfMonth.setUTCDate(lastDayOfMonth.getUTCDate() - 4);
+      console.log(secondLastDayOfMonth);
       return {
-        isLastSixthDay:
-          today.getUTCDate() === sixthLastDayOfMonth.getUTCDate() &&
-          today.getUTCMonth() === sixthLastDayOfMonth.getUTCMonth() &&
-          today.getUTCFullYear() === sixthLastDayOfMonth.getUTCFullYear(),
-        sixthLastDayOfMonth,
+        isSecondLastDay:
+          today.getUTCDate() === secondLastDayOfMonth.getUTCDate() &&
+          today.getUTCMonth() === secondLastDayOfMonth.getUTCMonth() &&
+          today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
+        secondLastDayOfMonth,
         lastDayOfMonth,
         currentHour,
         currentMinute,
       };
     }
-    const testData = isSixthLastDayOfCurrentMonthInBangladesh();
+    const testData = isSecondLastDayOfCurrentMonthInBangladesh();
 
     const mailOptions = {
       from: "cron-job@hostelplates.com",
       to: "akibrahman5200@gmail.com",
       subject: "Cron Job",
       html: `<div>
-        <p>Is Last Sixth Day :${testData.isLastSixthDay}</p>
-        <p>Sixth Last Day Of Month :${testData.sixthLastDayOfMonth}</p>
+        <p>Is Second Last Day :${testData.isSecondLastDay}</p>
+        <p>Second Last Day Of Month :${testData.secondLastDayOfMonth}</p>
         <p>Last Day Of Month :${testData.lastDayOfMonth}</p>
         <p>Current Hour :${testData.currentHour}</p>
         <p>Current Minute :${testData.currentMinute}</p>
