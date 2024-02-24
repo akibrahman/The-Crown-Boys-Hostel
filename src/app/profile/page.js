@@ -94,32 +94,13 @@ const Logout = () => {
   return (
     <div>
       <div className=" flex items-center flex-row-reverse justify-between">
-        {/* <button
+        <button
           onClick={async () => {
-            const data = await axios.post("/api/users/makeorders", {
-              userId: "65d8180be115bd272ca01911",
-              managerId: user._id,
-              days: parseInt(currentDays[currentDays.length - 1]),
-              currentMonthName: new Date().toLocaleDateString("en-BD", {
-                month: "long",
-                timeZone: "Asia/Dhaka",
-              }),
-              currentMonth: new Date(
-                new Date().toLocaleString("en-US", {
-                  timeZone: "Asia/Dhaka",
-                })
-              ).getMonth(),
-              currentYear: new Date(
-                new Date().toLocaleString("en-US", {
-                  timeZone: "Asia/Dhaka",
-                })
-              ).getFullYear(),
-            });
-            console.log(data.data.msg);
+            await axios.get("/api/cronjob/test2");
           }}
         >
           TEST
-        </button> */}
+        </button>
         <button
           onClick={logout}
           className="bg-red-600 hover:bg-red-700 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"

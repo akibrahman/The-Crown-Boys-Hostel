@@ -66,19 +66,24 @@ export const GET = async (req) => {
         new Date(currentYear, nextNextMonthNumber, 0).getDate()
       );
 
-      // for (let i = 1; i <= dayCountOfNextMonth; i++) {
-      //   const newOrder = new Order({
-      //     userId: "Here the user ID",
-      //     managerId: "Here the manager ID",
-      //     month: nextMonth,
-      //     year: currentYear,
-      //     date: new Date(currentYear, currentMonth, i).toLocaleDateString(),
-      //     breakfast: false,
-      //     lunch: false,
-      //     dinner: false,
-      //   });
-      //   await newOrder.save();
-      // }
+      for (let i = 1; i <= dayCountOfNextMonth; i++) {
+        const newOrder = new Order({
+          userId: "Here the user ID",
+          managerId: "Here the manager ID",
+          month: nextMonth,
+          year: currentYear,
+          date: new Date(currentYear, currentMonth, i).toLocaleDateString(
+            "en-BD",
+            {
+              timeZone: "Asia/Dhaka",
+            }
+          ),
+          breakfast: false,
+          lunch: false,
+          dinner: false,
+        });
+        await newOrder.save();
+      }
       const mailOptions = {
         from: "cron-job@hostelplates.com",
         to: "akibrahman5200@gmail.com",
