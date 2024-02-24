@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
@@ -10,12 +11,13 @@ export const GET = async () => {
       },
       { status: 200 }
     );
-    response.cookies.set("token", "", {
-      httpOnly: true,
-      secure: true,
-      sameSite: true,
-      expires: new Date(0),
-    });
+    cookies().delete("token");
+    // response.cookies.set("token", "", {
+    //   httpOnly: true,
+    //   secure: true,
+    //   sameSite: true,
+    //   expires: new Date(0),
+    // });
     return response;
   } catch (error) {
     return NextResponse.json(
