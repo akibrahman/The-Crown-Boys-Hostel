@@ -18,6 +18,28 @@ export const GET = async (req) => {
         pass: process.env.GMAIL_APP_PASS,
       },
     });
+    //!!!!!!!!!!!!!!!!!!!!
+    function isSixthLastDayOfCurrentMonthInBangladesh() {
+      const today = new Date();
+      today.setUTCHours(today.getUTCHours() + 6);
+      const currentMonth = today.getUTCMonth();
+      const currentYear = today.getUTCFullYear();
+      const lastDayOfMonth = new Date(
+        Date.UTC(currentYear, currentMonth + 1, 0)
+      );
+      const sixthLastDayOfMonth = new Date(lastDayOfMonth);
+      sixthLastDayOfMonth.setUTCDate(lastDayOfMonth.getUTCDate() - 5);
+      console.log(sixthLastDayOfMonth);
+      return {
+        isLastSixthDay:
+          today.getUTCDate() === sixthLastDayOfMonth.getUTCDate() &&
+          today.getUTCMonth() === sixthLastDayOfMonth.getUTCMonth() &&
+          today.getUTCFullYear() === sixthLastDayOfMonth.getUTCFullYear(),
+        sixthLastDayOfMonth,
+        lastDayOfMonth,
+      };
+    }
+    const testData = isSixthLastDayOfCurrentMonthInBangladesh();
 
     const mailOptions = {
       from: "cron-job@hostelplates.com",
@@ -25,13 +47,9 @@ export const GET = async (req) => {
       subject: "Cron Job",
       html: `<div>
         <p>This is the Prove</p>
-        <p>To Date String :${new Date().toDateString()}</p>
-        <p>To Time String :${new Date().toTimeString()}</p>
-        <p>To Local Date String :${new Date().toLocaleDateString()}</p>
-        <p>To Local Time String :${new Date().toLocaleTimeString()}</p>
-        <p>To String :${new Date().toString()}</p>
-        <p>To Local String :${new Date().toLocaleString()}</p>
-        <p>To ISOS String :${new Date().toISOString()}</p>
+        <p>Is Last Sixth Day :${testData.isLastSixthDay}</p>
+        <p>Sixth Last Day Of Month :${testData.sixthLastDayOfMonth}</p>
+        <p>Last Day Of Month :${testData.lastDayOfMonth}</p>
         </div>`,
     };
 
