@@ -47,7 +47,7 @@ const Profile = () => {
       const { data } = await axios.get("/api/users/logout");
       if (data.success) {
         await userRefetch();
-        route.push("/login");
+        route.push("/signin");
         toast.success(data.msg);
       }
     } catch (error) {
