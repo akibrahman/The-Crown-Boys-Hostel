@@ -1,6 +1,5 @@
 "use client";
 
-import moment from "moment";
 import { useContext, useState } from "react";
 import DatePicker from "react-date-picker";
 // import DatePicker from "react-datepicker";
@@ -73,17 +72,18 @@ const Order = () => {
   );
 
   const dateSelected = async (date) => {
+    // if (
+    //   moment(new Date(date).toISOString()).isSameOrBefore(
+    //     moment(new Date(currentYear, currentMonthNumber, currentDate)),
+    //     "day"
+    //   )
+    // ) {
+    //   setDate(null);
+    //   setOrder(null);
+    //   toast.error("Past!");
+    //   return;
+    // } else
     if (
-      moment(new Date(date).toISOString()).isSameOrBefore(
-        moment(new Date(currentYear, currentMonthNumber, currentDate)),
-        "day"
-      )
-    ) {
-      setDate(null);
-      setOrder(null);
-      toast.error("Past!");
-      return;
-    } else if (
       new Date(date).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",

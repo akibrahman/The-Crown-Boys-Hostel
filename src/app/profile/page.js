@@ -18,6 +18,11 @@ const Logout = () => {
   const [givingAuthorization, setGivingAuthorization] = useState(false);
   const [currentDays, setCurrentDays] = useState(null);
 
+  //! For Client
+  const [breakfastCount, setBreakfastCount] = useState(0);
+  const [lunchCount, setLunchCount] = useState(0);
+  const [dinnerCount, setDinnerCount] = useState(0);
+
   const { data: managers, refetch: managersRefetch } = useQuery({
     queryKey: ["managers", "owner"],
     queryFn: async () => {
@@ -50,6 +55,7 @@ const Logout = () => {
       console.log(error);
     }
   };
+
   //! Get current month
   useEffect(() => {
     if (user?.role === "client" || user?.role === "manager") {
@@ -69,45 +75,97 @@ const Logout = () => {
       setCurrentDays(tempArray);
     }
   }, [user?.role]);
-  // const currentDate = new Date().toLocaleString("en-US", {
-  //   timeZone: "Asia/Dhaka",
-  // });
-  // const currentMonth = new Date(currentDate).getMonth();
-  // const currentYear = new Date(currentDate).getFullYear();
-  // console.log(
-  //   "------------",
-  //   new Date(currentYear, currentMonth, 23).toISOString(), // 23 feb
-  //   moment().format("MMMM Do YYYY"), // 23 feb
-  //   moment(new Date(currentYear, currentMonth, 23).toISOString()).isSame(
-  //     moment.now(),
-  //     "day"
-  //   )
-  // );
+
+  const currentMonth = new Date().toLocaleDateString("en-BD", {
+    month: "long",
+    timeZone: "Asia/Dhaka",
+  });
+  const currentYear = new Date().toLocaleDateString("en-BD", {
+    year: "numeric",
+    timeZone: "Asia/Dhaka",
+  });
+
+  const { data: calanderData } = useQuery({
+    queryKey: ["calanderData", "user", user?._id],
+    queryFn: async ({ queryKey }) => {
+      try {
+        const { data } = await axios.post("/api/orders/getorders", {
+          userId: queryKey[2],
+          month: currentMonth,
+          year: currentYear,
+        });
+        return data.orders;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    },
+    enabled: user?._id ? true : false,
+  });
+
+  //! Get Breakfast, Lunch and Dinner count
+  useEffect(() => {
+    if (calanderData) {
+      const breakfast = calanderData.reduce(
+        (accumulator, currentValue) =>
+          accumulator + (currentValue.breakfast ? 1 : 0),
+        0
+      );
+      setBreakfastCount(breakfast);
+      const lunch = calanderData.reduce(
+        (accumulator, currentValue) =>
+          accumulator + (currentValue.lunch ? 1 : 0),
+        0
+      );
+      setLunchCount(lunch);
+      const dinner = calanderData.reduce(
+        (accumulator, currentValue) =>
+          accumulator + (currentValue.dinner ? 1 : 0),
+        0
+      );
+      setDinnerCount(dinner);
+    }
+  }, [calanderData]);
 
   if (!user) return <p>Loading.......User</p>;
   if (user.role === "owner" && !managers) return <p>Loading.......</p>;
   if (user.role === "manager" && (!clients || !currentDays))
     return <p>Loading.......Clients</p>;
 
-  if (user.role === "client" && (!manager || !currentDays))
+  if (user.role === "client" && (!manager || !currentDays || !calanderData))
     return <p>Loading.......Manager</p>;
   return (
     <div>
       <div className=" flex items-center flex-row-reverse justify-between">
-        <button
+        {/* <button
           onClick={async () => {
             await axios.get("/api/cronjob/test2");
           }}
         >
           TEST
-        </button>
+        </button> */}
         <button
           onClick={logout}
           className="bg-red-600 hover:bg-red-700 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
         >
           Logout
         </button>
-        <p>My Profile</p>
+        {user.role === "client" && user.isVerified && user.isClientVerified && (
+          <>
+            <p className="text-lg border rounded-xl border-yellow-500 px-8 py-1.5">
+              Dinner: {dinnerCount}
+            </p>
+            <p className="text-lg border rounded-xl border-yellow-500 px-8 py-1.5">
+              Lunch: {lunchCount}
+            </p>
+            <p className="text-lg border rounded-xl border-yellow-500 px-8 py-1.5">
+              Breakfast: {breakfastCount}
+            </p>
+          </>
+        )}
+        <p className="text-lg bg-yellow-500 rounded-xl font-semibold px-6 py-1.5">
+          My Profile
+        </p>
       </div>
       {/* Parent Block  */}
       <div className="grid grid-cols-4 gap-4">
@@ -158,19 +216,35 @@ const Logout = () => {
         {/* Clalnder as a Client */}
         {user.role == "client" && user.isVerified && user.isClientVerified && (
           <div className="col-span-2 border-l-4 pl-6 pb-8 mt-10 border-purple-500">
-            <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2">
-              {new Date().toLocaleDateString("en-BD", {
-                month: "long",
-                timeZone: "Asia/Dhaka",
-              })}
+            <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative">
+              {currentMonth}
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-yellow-500">
+                {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}
+                BDT
+              </span>
             </p>
             <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
-              {currentDays.map((day, i) => (
+              {calanderData.map((order) => (
                 <div
-                  key={i}
-                  className="w-16 h-16 rounded-xl bg-yellow-500 flex items-center justify-center"
+                  key={order._id}
+                  className="relative w-16 h-16 rounded-xl bg-yellow-500 flex items-center justify-center"
                 >
-                  {day}
+                  {order.date.split("/")[1]}
+                  <span
+                    className={`absolute w-2 h-2 rounded-full left-2 bottom-1.5 ${
+                      order.breakfast ? "bg-green-600" : "bg-red-600"
+                    }`}
+                  ></span>
+                  <span
+                    className={`absolute w-2 h-2 rounded-full left-1/2 -translate-x-1/2 bottom-1.5 ${
+                      order.lunch ? "bg-green-600" : "bg-red-600"
+                    }`}
+                  ></span>
+                  <span
+                    className={`absolute w-2 h-2 rounded-full right-2 bottom-1.5 ${
+                      order.dinner ? "bg-green-600" : "bg-red-600"
+                    }`}
+                  ></span>
                 </div>
               ))}
             </div>
