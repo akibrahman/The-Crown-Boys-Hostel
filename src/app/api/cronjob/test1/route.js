@@ -47,23 +47,55 @@ export const GET = async (req) => {
     const testData = isSecondLastDayOfCurrentMonthInBangladesh();
 
     if (testData.isSecondLastDay) {
+      const currentDate = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const prevMonth = new Date(currentDate).getMonth() + 1;
+      const currentMonth = new Date(currentDate).getMonth();
+      const currentYear = new Date(currentDate).getFullYear();
+      const dayCountOfCurrentMonth = parseInt(
+        new Date(currentYear, prevMonth, 0).getDate()
+      );
+      const nextMonth = new Date(
+        currentYear,
+        currentMonth + 1,
+        1
+      ).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+
+      // for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
+      //   const newOrder = new Order({
+      //     userId: "Here the user ID",
+      //     managerId: "Here the manager ID",
+      //     month: nextMonth,
+      //     year: currentYear,
+      //     date: new Date(currentYear, currentMonth, i).toLocaleDateString(),
+      //     breakfast: false,
+      //     lunch: false,
+      //     dinner: false,
+      //   });
+      //   await newOrder.save();
+      // }
+      const mailOptions = {
+        from: "cron-job@hostelplates.com",
+        to: "akibrahman5200@gmail.com",
+        subject: "Cron Job",
+        html: `<div>
+          <p>Next Month :${nextMonth}</p>
+          <p>Current Year :${currentYear}</p>
+          <p>Date :${new Date(
+            currentYear,
+            currentMonth,
+            i
+          ).toLocaleDateString()}</p>
+          <p>Day Count of Next Month :${dayCountOfCurrentMonth}</p>
+          </div>`,
+      };
+      await transport.sendMail(mailOptions);
     }
 
-    const mailOptions = {
-      from: "cron-job@hostelplates.com",
-      to: "akibrahman5200@gmail.com",
-      subject: "Cron Job",
-      html: `<div>
-        <p>Is Second Last Day :${testData.isSecondLastDay}</p>
-        <p>Second Last Day Of Month :${testData.secondLastDayOfMonth}</p>
-        <p>Last Day Of Month :${testData.lastDayOfMonth}</p>
-        <p>Current Month :${testData.currentMonth}</p>
-        <p>Current Hour :${testData.currentHour}</p>
-        <p>Current Minute :${testData.currentMinute}</p>
-        </div>`,
-    };
-
-    await transport.sendMail(mailOptions);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
