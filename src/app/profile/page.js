@@ -12,7 +12,7 @@ import { FaTimes } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 
-const Logout = () => {
+const Profile = () => {
   const { user, userRefetch, manager } = useContext(AuthContext);
   const route = useRouter();
   const [givingAuthorization, setGivingAuthorization] = useState(false);
@@ -501,4 +501,4 @@ const Logout = () => {
   );
 };
 
-export default Logout;
+export default Profile;
