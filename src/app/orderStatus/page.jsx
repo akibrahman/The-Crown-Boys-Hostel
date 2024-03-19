@@ -39,9 +39,11 @@ const OrderStatus = () => {
     queryKey: ["orderStatus", user?._id],
     queryFn: async () => {
       try {
-        const { data } = await axios.get(
-          `/api/managersOrder/getOrderStatus?yesterday=${yesterdayDateString}&today=${todayDateString}&tomorrow=${tomorrowDateString}`
-        );
+        const { data } = await axios.post("/api/managersOrder/getOrderStatus", {
+          yesterday: yesterdayDateString,
+          today: todayDateString,
+          tomorrow: tomorrowDateString,
+        });
         if (data.success) {
           return data.orders;
         } else {

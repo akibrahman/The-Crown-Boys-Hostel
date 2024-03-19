@@ -4,12 +4,13 @@ const { dbConfig } = require("@/dbConfig/dbConfig");
 
 dbConfig();
 
-export const GET = async (req) => {
+export const POST = async (req) => {
   try {
-    const { searchParams } = new URL(req.url);
-    const yesterday = searchParams.get("yesterday");
-    const today = searchParams.get("today");
-    const tomorrow = searchParams.get("tomorrow");
+    // const { searchParams } = new URL(req.url);
+    const data = await req.json();
+    const yesterday = data.yesterday;
+    const today = data.today;
+    const tomorrow = data.tomorrow;
     const orders = await Order.aggregate([
       {
         $match: {
