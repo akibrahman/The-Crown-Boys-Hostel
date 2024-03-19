@@ -26,6 +26,14 @@ const OrderStatus = () => {
   const tomorrowDateString = tomorrow.toLocaleDateString("en-US", {
     timeZone: "Asia/Dhaka",
   });
+  console.log(
+    "Date Data: ",
+    todayDateString,
+    " - ",
+    tomorrowDateString,
+    " - ",
+    yesterdayDateString
+  );
 
   const { data: orders } = useQuery({
     queryKey: ["orderStatus", user?._id],
