@@ -1,12 +1,10 @@
 "use client";
 
-import { useContext, useState } from "react";
-import DatePicker from "react-date-picker";
-// import DatePicker from "react-datepicker";
-import "react-date-picker/dist/DatePicker.css";
-// import "react-datepicker/dist/react-datepicker.css";
 import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
+import { useContext, useState } from "react";
+import DatePicker from "react-date-picker";
+import "react-date-picker/dist/DatePicker.css";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { LuCalendarPlus } from "react-icons/lu";

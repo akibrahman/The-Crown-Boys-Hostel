@@ -4,6 +4,7 @@ import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -484,6 +485,36 @@ const Profile = () => {
                 )}
               </div>
             ))}
+          </div>
+        ) : user.role === "manager" && !user.isVerified ? (
+          <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
+            <p>Verify Email</p>
+          </div>
+        ) : user.role === "manager" && !user.isManagerVerified ? (
+          <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
+            <p>Verify as a manager</p>
+          </div>
+        ) : (
+          <></>
+        )}
+        {/* Settings Part & me as a manager  */}
+        {user.role === "manager" &&
+        user.isVerified &&
+        user.isManagerVerified ? (
+          <div className="h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 mt-10 relative">
+            <div className="flex items-start justify-center flex-wrap gap-5">
+              <Link href="/orderStatus" className="w-full">
+                <button class="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 w-full active:scale-90">
+                  Order Status
+                </button>
+              </Link>
+              <button className="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+                User Query
+              </button>
+              <button className="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+                Meal Updator
+              </button>
+            </div>
           </div>
         ) : user.role === "manager" && !user.isVerified ? (
           <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">

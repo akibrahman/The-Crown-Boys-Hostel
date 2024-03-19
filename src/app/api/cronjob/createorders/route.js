@@ -24,13 +24,32 @@ export const GET = async (req) => {
       },
     });
     //!!!!!!!!!!!!!!!!!!!!
-    function isSecondLastDayOfCurrentMonthInBangladesh() {
+    const isLastDayOfCurrentMonthInBangladesh = () => {
       const today = new Date();
       today.setUTCHours(today.getUTCHours() + 6);
       const currentMonth = today.getUTCMonth();
       const currentYear = today.getUTCFullYear();
-      const currentHour = today.getUTCHours();
-      const currentMinute = today.getUTCMinutes();
+      // const currentHour = today.getUTCHours();
+      // const currentMinute = today.getUTCMinutes();
+      const lastDayOfMonth = new Date(
+        Date.UTC(currentYear, currentMonth + 1, 0)
+      );
+      console.log(lastDayOfMonth);
+      return {
+        isSecondLastDay:
+          today.getUTCDate() === lastDayOfMonth.getUTCDate() &&
+          today.getUTCMonth() === lastDayOfMonth.getUTCMonth() &&
+          today.getUTCFullYear() === lastDayOfMonth.getUTCFullYear(),
+      };
+    };
+    //!!!!!!!!!!!!!!!!!!!!
+    const isSecondLastDayOfCurrentMonthInBangladesh = () => {
+      const today = new Date();
+      today.setUTCHours(today.getUTCHours() + 6);
+      const currentMonth = today.getUTCMonth();
+      const currentYear = today.getUTCFullYear();
+      // const currentHour = today.getUTCHours();
+      // const currentMinute = today.getUTCMinutes();
       const lastDayOfMonth = new Date(
         Date.UTC(currentYear, currentMonth + 1, 0)
       );
@@ -42,16 +61,17 @@ export const GET = async (req) => {
           today.getUTCDate() === secondLastDayOfMonth.getUTCDate() &&
           today.getUTCMonth() === secondLastDayOfMonth.getUTCMonth() &&
           today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
-        secondLastDayOfMonth,
-        lastDayOfMonth,
-        currentHour,
-        currentMinute,
-        currentMonth,
       };
-    }
-    const testData = isSecondLastDayOfCurrentMonthInBangladesh();
+    };
+    const aboutSecondLastDayOfCurrentMonth =
+      isSecondLastDayOfCurrentMonthInBangladesh();
+    const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
 
-    if (testData.isSecondLastDay) {
+    if (aboutLastDayOfCurrentMonth.isSecondLastDay) {
+      console.log("Today is the last day of this month");
+    }
+
+    if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -101,7 +121,7 @@ export const GET = async (req) => {
         to: "akibrahman5200@gmail.com",
         subject: "Cron Job",
         html: `<div>
-          <p>Is Last Day:${testData.isSecondLastDay}</p>
+          <p>Is Last Day:${aboutSecondLastDayOfCurrentMonth.isSecondLastDay}</p>
           <p>Next Month :${nextMonth}</p>
           <p>Current Year :${currentYear}</p>
           <p>Date :${new Date(
