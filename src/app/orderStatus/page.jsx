@@ -90,7 +90,7 @@ const OrderStatus = () => {
   ).length;
 
   //! For Modal
-  const [modalIsOpen, setIsOpen] = useState(true);
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   const customStyles = {
     content: {
@@ -101,7 +101,7 @@ const OrderStatus = () => {
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
       backgroundColor: "#000",
-      border: "none",
+      border: "1px solid #EAB308",
     },
     overlay: {
       backgroundColor: "rgba(0,0,0,0.5)",
@@ -116,6 +116,7 @@ const OrderStatus = () => {
     setIsOpen(false);
   };
 
+  //! Floor Analyzing Part
   const findHighestFloor = (array) => {
     let highestFloor = -Infinity;
 
@@ -142,7 +143,13 @@ const OrderStatus = () => {
           order.lunch ? (lunch += 1) : null;
           order.dinner ? (dinner += 1) : null;
         });
-      analyzedData.push({ floor: i, breakfast, lunch, dinner });
+      analyzedData.push({
+        floor: i,
+        breakfast,
+        lunch,
+        dinner,
+        total: breakfast + lunch + dinner,
+      });
     }
     setFloorAnalysingData(analyzedData);
   };
@@ -153,14 +160,33 @@ const OrderStatus = () => {
         onRequestClose={closeModal}
         style={customStyles}
       >
-        {floorAnalysingData.map((d, i) => (
-          <p key={i}>
-            {d.floor} <sup>th</sup> Floor - Breakfast: {d.breakfast} - Lunch:{" "}
-            {d.lunch} - Dinner: {d.dinner}
+        <div className="">
+          <p className="text-center text-xl text-yellow-500 pb-4 font-semibold">
+            Floor Meal Analyzation
           </p>
-        ))}
+          <div className="space-y-1">
+            {floorAnalysingData.map((d, i) => (
+              <div
+                className="bg-stone-700 px-6 py-2 rounded-md flex items-center justify-center gap-5"
+                key={i}
+              >
+                <p className="w-[110px]">
+                  <span className="text-yellow-500 bg-stone-800 h-6 w-6 rounded-full inline-flex items-center justify-center mr-2">
+                    {d.floor + 1}
+                  </span>
+                  {d.floor == 0 ? "G" : d.floor}
+                  <sup>th</sup> Floor
+                </p>
+                <p className="w-[100px]">Breakfast: {d.breakfast}</p>
+                <p className="w-[100px]">Lunch: {d.lunch}</p>
+                <p className="w-[100px]">Dinner: {d.dinner}</p>
+                <p className="w-[100px]">Total: {d.total}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </Modal>
-      <div className="mb-20">
+      <div className="mb-20 max-h-screen">
         <p className="text-center font-semibold text-2xl">Order Status</p>
         {/* Order - Today  */}
         <div className="mt-10 bg-yellow-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">

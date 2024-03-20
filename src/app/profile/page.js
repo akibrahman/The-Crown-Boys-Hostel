@@ -501,9 +501,11 @@ const Profile = () => {
                   Order Status
                 </button>
               </Link>
-              <button className="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
-                User Query
-              </button>
+              <Link href="/userQuery">
+                <button className="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+                  User Query
+                </button>
+              </Link>
               <button className="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
                 Meal Updator
               </button>
