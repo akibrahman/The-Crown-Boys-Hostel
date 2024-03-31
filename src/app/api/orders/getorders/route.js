@@ -7,6 +7,7 @@ dbConfig();
 export const POST = async (req) => {
   try {
     const { userId, month, year } = await req.json();
+    console.log(userId, month, year);
     const orders = await Order.find({ userId, month, year });
     return NextResponse.json({ success: true, orders });
   } catch (error) {

@@ -36,7 +36,7 @@ export const GET = async (req) => {
       );
       console.log(lastDayOfMonth);
       return {
-        isSecondLastDay:
+        isLastDay:
           today.getUTCDate() === lastDayOfMonth.getUTCDate() &&
           today.getUTCMonth() === lastDayOfMonth.getUTCMonth() &&
           today.getUTCFullYear() === lastDayOfMonth.getUTCFullYear(),
@@ -67,8 +67,16 @@ export const GET = async (req) => {
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
 
-    if (aboutLastDayOfCurrentMonth.isSecondLastDay) {
-      console.log("Today is the last day of this month");
+    if (aboutLastDayOfCurrentMonth.isLastDay) {
+      const mailOptions = {
+        from: "cron-job@hostelplates.com",
+        to: "akibrahman5200@gmail.com",
+        subject: "Cron Job - Last Day",
+        html: `<div>
+          <p>This is the last day of current month</p>
+          </div>`,
+      };
+      await transport.sendMail(mailOptions);
     }
 
     if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {

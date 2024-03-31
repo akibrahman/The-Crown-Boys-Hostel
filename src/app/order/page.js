@@ -2,6 +2,7 @@
 
 import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
+import moment from "moment";
 import { useContext, useState } from "react";
 import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
@@ -18,17 +19,6 @@ const Order = () => {
   const [date, setDate] = useState("");
   const [order, setOrder] = useState(null);
 
-  const getNextMonthBangladesh = () => {
-    const currentDate = new Date();
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    if (currentDate.getMonth() === 0) {
-      currentDate.setFullYear(currentDate.getFullYear() + 1);
-    }
-    const nextMonth = currentDate.toLocaleString("en-US", {
-      month: "long",
-    });
-    return nextMonth;
-  };
   const currentMonthNumber =
     parseInt(
       new Date().toLocaleDateString("en-BD", {
@@ -40,7 +30,24 @@ const Order = () => {
     month: "long",
     timeZone: "Asia/Dhaka",
   });
-  const nextMonth = getNextMonthBangladesh();
+
+  const nextMonth = new Date(
+    new Date(
+      new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      })
+    ).getFullYear(),
+    new Date(
+      new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      })
+    ).getMonth() + 1,
+    1
+  ).toLocaleDateString("en-BD", {
+    month: "long",
+    timeZone: "Asia/Dhaka",
+  });
+
   const currentDate = parseInt(
     new Date().toLocaleDateString("en-BD", {
       day: "numeric",
@@ -69,45 +76,48 @@ const Order = () => {
     ).getDate()
   );
 
-  const dateSelected = async (date) => {
-    // if (
-    //   moment(new Date(date).toISOString()).isSameOrBefore(
-    //     moment(new Date(currentYear, currentMonthNumber, currentDate)),
-    //     "day"
-    //   )
-    // ) {
-    //   setDate(null);
-    //   setOrder(null);
-    //   toast.error("Past!");
-    //   return;
-    // } else
+  const dateSelected = async (selectedDate) => {
+    console.log(selectedDate);
+    console.log(lastDateOfCurrentMonth);
+    console.log(currentDate);
     if (
-      new Date(date).toLocaleDateString("en-BD", {
+      moment(new Date(selectedDate).toISOString()).isSameOrBefore(
+        moment(new Date(currentYear, currentMonthNumber, currentDate)),
+        "day"
+      )
+    ) {
+      setDate(null);
+      setOrder(null);
+      toast.error("Today or before cann't be selected");
+      return;
+    } else if (
+      new Date(selectedDate).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
       }) === nextMonth &&
-      parseInt(
-        new Date(date).toLocaleDateString("en-BD", {
-          day: "numeric",
-          timeZone: "Asia/Dhaka",
-        })
-      ) !== lastDateOfCurrentMonth
+      currentDate !== lastDateOfCurrentMonth
     ) {
       setDate(null);
       setOrder(null);
       toast.error("Wait till last day of this month!");
       return;
     } else if (
-      new Date(date).toLocaleDateString("en-BD", {
+      //!-------------------------------------------------
+      new Date(selectedDate).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
-      }) === currentMonth
+      }) === currentMonth ||
+      (new Date(selectedDate).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      }) === nextMonth &&
+        currentDate == lastDateOfCurrentMonth)
     ) {
       setLoading(true);
       try {
-        setDate(date);
+        setDate(selectedDate);
         const { data } = await axios.post("/api/orders/getorder", {
-          date: new Date(date).toLocaleDateString(),
+          date: new Date(selectedDate).toLocaleDateString(),
           userId: user._id,
         });
         if (data.success) {
