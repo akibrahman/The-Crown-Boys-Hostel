@@ -1,4 +1,5 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
+import Bill from "@/models/billModel";
 import Order from "@/models/orderModel";
 import { NextResponse } from "next/server";
 
@@ -27,6 +28,12 @@ export const POST = async (req) => {
       });
       await newOrder.save();
     }
+    const newBill = new Bill({
+      userId,
+      month: currentMonthName,
+      year: currentYear,
+    });
+    await newBill.save();
     return NextResponse.json({ msg: "OK" });
   } catch (error) {
     console.log(error);

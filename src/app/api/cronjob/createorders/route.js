@@ -1,4 +1,5 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
+import Bill from "@/models/billModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
@@ -122,6 +123,12 @@ export const GET = async (req) => {
           });
           await newOrder.save();
         }
+        const newBill = new Bill({
+          userId: allUsers[j]._id,
+          month: nextMonth,
+          year: currentYear,
+        });
+        await newBill.save();
       }
 
       const mailOptions = {

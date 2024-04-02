@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthContext } from "@/providers/ContextProvider";
+import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
@@ -180,7 +181,7 @@ const Profile = () => {
           />
           <p>User Name: {user.username}</p>
           <p>E-mail: {user.email}</p>
-          <p>Role: {user.role}</p>
+          <p>Role: {convertCamelCaseToCapitalized(user.role)}</p>
 
           {user.isVerified ? (
             <p
@@ -368,7 +369,7 @@ const Profile = () => {
             ))}
           </div>
         )}
-        {/* Clients of me as a manager  */}
+        {/* Clients, me as a manager  */}
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
@@ -385,7 +386,7 @@ const Profile = () => {
             {clients.map((client) => (
               <div
                 key={client._id}
-                className="border px-6 py-5 rounded-lg flex items-center w-[430px] justify-between gap-4"
+                className="border px-6 py-5 rounded-lg flex items-center w-[450px] justify-between gap-4"
               >
                 <Image
                   alt={`Profile picture of ${client.username} who is a manager`}
