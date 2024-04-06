@@ -14,6 +14,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please Provide a Contact Number"],
   },
+  fathersNumber: {
+    type: String,
+    required: [true, "Please Provide a Father's Number"],
+  },
+  mothersNumber: {
+    type: String,
+    required: [true, "Please Provide a Mother's Number"],
+  },
   profilePicture: {
     type: String,
     required: [true, "Please Provide a Profile Picture"],
@@ -55,6 +63,7 @@ const userSchema = new mongoose.Schema({
   },
   nidAuth: Boolean,
   floor: Number,
+  roomNumber: String,
   institution: String,
   messAddress: String,
   bkashNumber: String,

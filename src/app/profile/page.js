@@ -193,30 +193,15 @@ const Profile = () => {
         style={customStylesForclientDetailsModal}
       >
         {clientDetails && (
-          // <div>
-          //   <p>Name: {clientDetails.username}</p>
-          //   <p>E-mail: {clientDetails.email}</p>
-          //   <p>Contact Number: {clientDetails.contactNumber}</p>
-          //   <p>
-          //     Floor: {clientDetails.floor}
-          //     <sup>th</sup> Floor - {clientDetails.floor + 1} Tala
-          //   </p>
-          //   <p>
-          //     Room Number:{" "}
-          //     {clientDetails.roomNumber.split("")[0].toUpperCase() +
-          //       "-" +
-          //       clientDetails.roomNumber.split("")[1]}
-          //   </p>
-          // </div>
           <div className="p-4 h-[90vh] overflow-scroll">
             <div className="flex items-center gap-10">
               <div className="mb-4">
                 <Image
-                  width={130}
-                  height={130}
+                  width={150}
+                  height={150}
                   src={clientDetails.profilePicture}
                   alt="Profile Picture"
-                  className="object-cover rounded-full"
+                  className="object-cover aspect-square rounded-full"
                 />
               </div>
               <div>
@@ -236,31 +221,37 @@ const Profile = () => {
                     "-" +
                     clientDetails.roomNumber.split("")[1]}
                 </p>
-                <p className="text-gray-700 mb-2">
+                <p className="text-gray-700 mb-1">
                   Contact Number: {clientDetails.contactNumber}
+                </p>
+                <p className="text-gray-700 mb-1">
+                  Father&apos;s Number: {clientDetails.fathersNumber}
+                </p>
+                <p className="text-gray-700 mb-1">
+                  Mother&apos;s Number: {clientDetails.mothersNumber}
                 </p>
               </div>
             </div>
-            <div className="flex items-center mb-4">
-              {clientDetails.nidFront && (
-                <div className="mr-4">
+            <div className="flex flex-col items-center gap-6 my-6">
+              {clientDetails.nidFrontPicture && (
+                <div className="">
                   <Image
-                    width={100}
-                    height={100}
-                    src={clientDetails.nidFront}
-                    alt="NID Photo 1"
+                    width={400}
+                    height={170}
+                    src={clientDetails.nidFrontPicture}
+                    alt="NID Photo Front"
                     className="object-cover rounded-lg"
                   />
                 </div>
               )}
-              {clientDetails.nidBack && (
+              {clientDetails.nidBackPicture && (
                 <div>
                   <Image
-                    width={100}
-                    height={100}
-                    src={clientDetails.nidBack}
-                    alt="NID Photo 2"
-                    className="w-32 h-32 object-cover rounded-lg"
+                    width={400}
+                    height={170}
+                    src={clientDetails.nidBackPicture}
+                    alt="NID Photo Back"
+                    className="object-cover rounded-lg"
                   />
                 </div>
               )}
@@ -276,6 +267,69 @@ const Profile = () => {
                 />
               </div>
             )}
+            <div>
+              <button
+                onClick={async () => {
+                  const confirmation = confirm(
+                    "Are you sure to make your client?"
+                  );
+                  if (confirmation) {
+                    //! Here
+                    setGivingAuthorization(true);
+                    try {
+                      // await axios.post("/api/orders/makeorders", {
+                      //   userId: clientDetails._id,
+                      //   managerId: user._id,
+                      //   days: parseInt(currentDays[currentDays.length - 1]),
+                      //   currentMonthName: new Date().toLocaleDateString(
+                      //     "en-BD",
+                      //     {
+                      //       month: "long",
+                      //       timeZone: "Asia/Dhaka",
+                      //     }
+                      //   ),
+                      //   currentMonth: new Date(
+                      //     new Date().toLocaleString("en-US", {
+                      //       timeZone: "Asia/Dhaka",
+                      //     })
+                      //   ).getMonth(),
+                      //   currentYear: new Date(
+                      //     new Date().toLocaleString("en-US", {
+                      //       timeZone: "Asia/Dhaka",
+                      //     })
+                      //   ).getFullYear(),
+                      // });
+
+                      const { data } = await axios.post(
+                        "api/clients/approveclient",
+                        { id: clientDetails._id }
+                      );
+                      if (data.success) {
+                        await clientRefetch();
+                        toast.success("Authorization Provided");
+                      }
+                    } catch (error) {
+                      console.log(
+                        "Frontend problem when authorizing as a client"
+                      );
+                      console.log(error);
+                      toast.error("Authorization Error!");
+                    } finally {
+                      setGivingAuthorization(false);
+                      closeModalForClientDetails();
+                    }
+                  } else {
+                    toast.success("Cancelled!");
+                  }
+                }}
+                className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
+              >
+                Approve
+                {givingAuthorization && (
+                  <CgSpinner className="animate-spin text-2xl" />
+                )}
+              </button>
+            </div>
           </div>
         )}
       </Modal>
@@ -549,7 +603,10 @@ const Profile = () => {
                           }
                           className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
                         >
-                          Details
+                          Details{" "}
+                          {clientDetailsIsLoading && (
+                            <CgSpinner className="animate-spin text-2xl" />
+                          )}
                         </button>
                       </>
                     )}

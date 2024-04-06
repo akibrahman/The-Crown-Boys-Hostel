@@ -117,7 +117,7 @@ const Registration = () => {
         birthCertificatePicture,
       };
     }
-    // console.log(finalData);
+    console.log(finalData);
     // return;
     try {
       const res = await axios.post("/api/users/signup", finalData);
@@ -449,6 +449,40 @@ const Registration = () => {
                   required
                 />
               </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="fathersNumber"
+                  className="block text-white text-sm font-bold mb-2"
+                >
+                  Father&apos;s Number
+                </label>
+                <input
+                  type="text"
+                  id="fathersNumber"
+                  name="fathersNumber"
+                  value={formData.fathersNumber}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="mothersNumber"
+                  className="block text-white text-sm font-bold mb-2"
+                >
+                  Mother&apos;s Number
+                </label>
+                <input
+                  type="text"
+                  id="mothersNumber"
+                  name="mothersNumber"
+                  value={formData.mothersNumber}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                  required
+                />
+              </div>
               {role === "manager" ? (
                 <div className="mb-4">
                   <label
@@ -548,14 +582,14 @@ const Registration = () => {
               {role === "client" && (
                 <div className="mb-4">
                   <label
-                    htmlFor="room"
+                    htmlFor="roomNumber"
                     className="block text-white text-sm font-bold mb-2"
                   >
                     Room Number
                   </label>
                   <select
-                    id="room"
-                    name="room"
+                    id="roomNumber"
+                    name="roomNumber"
                     // value={formData.floor}
                     onChange={handleChange}
                     className="border border-gray-300 p-2 w-full rounded text-stone-900"
