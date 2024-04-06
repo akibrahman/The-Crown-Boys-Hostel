@@ -91,6 +91,7 @@ export const GET = async (req) => {
         timeZone: "Asia/Dhaka",
       });
       const currentYear = new Date(currentDate).getFullYear();
+      const currentMonth = new Date(currentDate).getMonth();
       const nextMonthNumber = new Date(currentDate).getMonth() + 1;
       const nextMonth = new Date(
         currentYear,
