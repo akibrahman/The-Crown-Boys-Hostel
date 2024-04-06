@@ -77,10 +77,41 @@ const Order = () => {
   );
 
   const dateSelected = async (selectedDate) => {
-    console.log(selectedDate);
-    console.log(lastDateOfCurrentMonth);
-    console.log(currentDate);
     if (
+      moment(new Date(selectedDate).toISOString()).isSame(
+        moment(new Date(currentYear, currentMonthNumber, currentDate)),
+        "day"
+      ) &&
+      new Date(
+        new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" })
+      ).getHours() < 15
+      // new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Dhaka"})).getMinutes()
+    ) {
+      setLoading(true);
+
+      try {
+        setDate(selectedDate);
+        const { data } = await axios.post("/api/orders/getorder", {
+          date: new Date(selectedDate).toLocaleDateString(),
+          userId: user._id,
+        });
+        if (data.success) {
+          setOrder(data.order);
+          setBreakfast(data.order.breakfast);
+          setLunch(data.order.lunch);
+          setDinner(data.order.dinner);
+        }
+        toast.success("Day selected");
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong!");
+        setDate(null);
+        setOrder(null);
+      } finally {
+        setLoading(false);
+      }
+      return;
+    } else if (
       moment(new Date(selectedDate).toISOString()).isSameOrBefore(
         moment(new Date(currentYear, currentMonthNumber, currentDate)),
         "day"
@@ -88,7 +119,7 @@ const Order = () => {
     ) {
       setDate(null);
       setOrder(null);
-      toast.error("Today or before cann't be selected");
+      toast.error("Today or Past Date cann't be selected");
       return;
     } else if (
       new Date(selectedDate).toLocaleDateString("en-BD", {
@@ -186,6 +217,10 @@ const Order = () => {
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
+                        if (moment(date).isSame(moment(new Date()), "day")) {
+                          toast.error("Today's Brakefast cann't be edited");
+                          return;
+                        }
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",
@@ -222,6 +257,10 @@ const Order = () => {
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
+                        if (moment(date).isSame(moment(new Date()), "day")) {
+                          toast.error("Today's Lunch cann't be edited");
+                          return;
+                        }
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",
@@ -254,6 +293,16 @@ const Order = () => {
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
+                        if (
+                          new Date(
+                            new Date().toLocaleString("en-US", {
+                              timeZone: "Asia/Dhaka",
+                            })
+                          ).getHours() > 15
+                        ) {
+                          toast.error("Today's Dinner cann't be edited");
+                          return;
+                        }
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",

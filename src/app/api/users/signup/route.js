@@ -40,6 +40,14 @@ export async function POST(req) {
       isManager: body.role === "manager" ? true : false,
       isClient: body.role === "client" ? true : false,
     });
+    if (body.birthCertificatePicture) {
+      newUser.nidAuth = false;
+      newUser.birthCertificatePicture = body.birthCertificatePicture;
+    } else {
+      newUser.nidAuth = true;
+      newUser.nidFrontPicture = body.nidFrontPicture;
+      newUser.nidBackPicture = body.nidBackPicture;
+    }
     const savedUser = await newUser.save();
     console.log(savedUser);
     return NextResponse.json(
@@ -57,7 +65,7 @@ export async function POST(req) {
     console.log("--------------->", error.code);
     return NextResponse.json(
       {
-        msg: "Error in Backend when creating an user",
+        msg: error.message,
         code: 1010,
         success: false,
       },

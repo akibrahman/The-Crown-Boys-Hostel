@@ -18,6 +18,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please Provide a Profile Picture"],
   },
+  birthCertificatePicture: {
+    type: String,
+  },
+  nidFrontPicture: {
+    type: String,
+  },
+  nidBackPicture: {
+    type: String,
+  },
   password: {
     type: String,
     required: [true, "Please Provide a Password"],
@@ -44,6 +53,7 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  nidAuth: Boolean,
   floor: Number,
   institution: String,
   messAddress: String,

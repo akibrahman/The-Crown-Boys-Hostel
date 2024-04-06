@@ -11,12 +11,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { FaPlusCircle, FaTimes } from "react-icons/fa";
 import Select from "react-select";
 const Registration = () => {
   const router = useRouter();
   const [preview, setPreview] = useState(null);
+  const [nidFront, setNidFront] = useState(null);
+  const [nidBack, setNidBack] = useState(null);
+  const [birthCertificate, setBrithCertificate] = useState(null);
   const [role, setRole] = useState("client");
   const [loading, setLoading] = useState(false);
+  const [isNid, setIsNid] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -59,7 +64,8 @@ const Registration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
+    let finalData = { ...formData, role };
+    if (finalData.password !== finalData.confirmPassword) {
       toast.error("Passwords are not same !");
       return;
     }
@@ -69,16 +75,52 @@ const Registration = () => {
       setLoading(false);
       return;
     }
+    if (isNid ? !nidFront || !nidBack : !birthCertificate) {
+      toast.error("Set identity properly");
+      setLoading(false);
+      return;
+    }
+
     const profilePicture = await imageUpload(
       await makeFile(preview, `Profile Picture of ${formData.username}`, "png")
     );
-    console.log({ ...formData, role, profilePicture });
-    try {
-      const res = await axios.post("/api/users/signup", {
-        ...formData,
-        role,
+    if (isNid) {
+      const nidFrontPicture = await imageUpload(
+        await makeFile(nidFront, `NID Front of ${formData.username}`, "png")
+      );
+      const nidBackPicture = await imageUpload(
+        await makeFile(nidBack, `NID Back of ${formData.username}`, "png")
+      );
+      const birthCertificatePicture = null;
+      finalData = {
+        ...finalData,
         profilePicture,
-      });
+        nidFrontPicture,
+        nidBackPicture,
+        birthCertificatePicture,
+      };
+    } else {
+      const nidFrontPicture = null;
+      const nidBackPicture = null;
+      const birthCertificatePicture = await imageUpload(
+        await makeFile(
+          birthCertificate,
+          `Birth Certificate of ${formData.username}`,
+          "png"
+        )
+      );
+      finalData = {
+        ...finalData,
+        profilePicture,
+        nidFrontPicture,
+        nidBackPicture,
+        birthCertificatePicture,
+      };
+    }
+    // console.log(finalData);
+    // return;
+    try {
+      const res = await axios.post("/api/users/signup", finalData);
       console.log(res.data);
       if (res.data.success) {
         toast.success("Registration Successful");
@@ -88,7 +130,7 @@ const Registration = () => {
           toast.error("User exists with this E-mail !");
         }
         if (res.data.code === 1010) {
-          toast.error("Username is already taken !");
+          toast.error(res.data.msg);
         }
       }
     } catch (error) {
@@ -140,7 +182,7 @@ const Registration = () => {
           </div>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="flex justify-between items-center gap-4">
+          <div className="flex justify-between items-cente gap-4">
             {/* Left Side  */}
             <div className="w-1/2">
               <div className="mb-4">
@@ -211,37 +253,163 @@ const Registration = () => {
                   required
                 />
               </div>
-              {role === "client" && (
-                <div className="mb-4">
+              <div className="mb-4 mt-8 flex items-center gap-4">
+                <span
+                  className={`${
+                    !isNid ? "bg-yellow-500" : "bg-stone-500"
+                  } px-3 py-1 font-medium rounded-md duration-300 transition-all`}
+                >
+                  Birth Certificate
+                </span>
+                {/* Toggle Switch  */}
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    onClick={() => {
+                      setIsNid(!isNid);
+                      setNidFront(null);
+                      setNidBack(null);
+                      setBrithCertificate(null);
+                    }}
+                    type="checkbox"
+                    value=""
+                    className={`sr-only ${isNid ? "peer" : ""}`}
+                    checked
+                  />
+                  <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+                <span
+                  className={`${
+                    !isNid ? "bg-stone-500" : "bg-yellow-500"
+                  } px-3 py-1 font-medium rounded-md duration-300 transition-all`}
+                >
+                  NID Birth
+                </span>
+              </div>
+              {/* Area for NID Input  */}
+              {isNid && (
+                <div className="mb-8 mt-4 flex items-center justify-center gap-8">
+                  <div className="">
+                    <label
+                      htmlFor="nidFront"
+                      className="block text-white text-sm font-bold mb-2 cursor-pointer"
+                    >
+                      NID Front
+                    </label>
+                    {nidFront ? (
+                      <div className="relative">
+                        <Image
+                          src={nidFront}
+                          width={"200"}
+                          height={"100"}
+                          alt="NID Front"
+                          className="rounded-md"
+                        />
+                        <FaTimes
+                          onClick={() => setNidFront(null)}
+                          className="absolute top-0 right-0 bg-yellow-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
+                        />
+                      </div>
+                    ) : (
+                      <label
+                        htmlFor="nidFront"
+                        className={`w-[200px] h-[100px] bg-no-repeat bg-center bg-contain block bg-[url('/svg/nid-front-blank.svg')] cursor-pointer`}
+                      ></label>
+                    )}
+                    <input
+                      onChange={async (e) => {
+                        const base = await base64(e.target.files[0]);
+                        setNidFront(base);
+                      }}
+                      className="hidden"
+                      type="file"
+                      id="nidFront"
+                    />
+                  </div>
+                  <div className="">
+                    <label
+                      htmlFor="nidBack"
+                      className="block text-white text-sm font-bold mb-2 cursor-pointer"
+                    >
+                      NID Back
+                    </label>
+                    {nidBack ? (
+                      <div className="relative">
+                        <Image
+                          src={nidBack}
+                          width={"200"}
+                          height={"100"}
+                          className="rounded-md"
+                          alt="NID Back"
+                        />
+                        <FaTimes
+                          onClick={() => setNidBack(null)}
+                          className="absolute top-0 right-0 bg-yellow-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
+                        />
+                      </div>
+                    ) : (
+                      <label
+                        htmlFor="nidBack"
+                        className="w-[200px] h-[100px] bg-no-repeat bg-center bg-contain block bg-[url('/svg/nid-back-blank.svg')] cursor-pointer"
+                      ></label>
+                    )}
+
+                    <input
+                      onChange={async (e) => {
+                        const base = await base64(e.target.files[0]);
+                        setNidBack(base);
+                      }}
+                      className="hidden"
+                      type="file"
+                      id="nidBack"
+                    />
+                  </div>
+                </div>
+              )}
+              {/* Area for Birth Certificate  */}
+              {isNid || (
+                <div className="mb-8 mt-4">
                   <label
-                    htmlFor="floor"
-                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="birthCertificate"
+                    className="block text-white text-sm font-bold mb-2 cursor-pointer"
                   >
-                    Floor
+                    Birth Certificate
                   </label>
-                  <select
-                    id="floor"
-                    name="floor"
-                    // value={formData.floor}
-                    onChange={handleChange}
-                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                    required
-                  >
-                    <option value="">Select Floor</option>
-                    <option value="0">Ground Floor</option>
-                    <option value="1">First Floor</option>
-                    <option value="2">Second Floor</option>
-                    <option value="3">Third Floor</option>
-                    <option value="4">Fourth Floor</option>
-                    <option value="5">Fifth Floor</option>
-                    <option value="6">Sixth Floor</option>
-                    <option value="7">Seventh Floor</option>
-                    <option value="8">Eighth Floor</option>
-                    <option value="9">Nineth Floor</option>
-                    <option value="10">Tenth Floor</option>
-                    <option value="11">Eleventh Floor</option>
-                    <option value="12">Twelveth Floor</option>
-                  </select>
+                  {birthCertificate ? (
+                    <div className="relative">
+                      <Image
+                        src={birthCertificate}
+                        width={"300"}
+                        height={"400"}
+                        className="rounded-md mx-auto"
+                        alt="Birth Certificate"
+                      />
+                      <FaTimes
+                        onClick={() => setBrithCertificate(null)}
+                        className="absolute top-0 right-0 bg-yellow-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
+                      />
+                    </div>
+                  ) : (
+                    <label
+                      htmlFor="birthCertificate"
+                      className="w-[300px] mx-auto h-[400px] bg-no-repeat bg-center bg-cover flex items-center justify-center bg-[url('/images/birth-certificate-placeholder.png')] cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3 bg-[#206BC4] px-3 py-1 rounded-md">
+                        <FaPlusCircle className="text-[#fff] text-4xl" />{" "}
+                        <span className="text-[#fff] font-semibold">
+                          Click Here
+                        </span>
+                      </div>
+                    </label>
+                  )}
+                  <input
+                    onChange={async (e) => {
+                      const base = await base64(e.target.files[0]);
+                      setBrithCertificate(base);
+                    }}
+                    className="hidden"
+                    type="file"
+                    id="birthCertificate"
+                  />
                 </div>
               )}
             </div>
@@ -342,6 +510,69 @@ const Registration = () => {
                     }}
                     options={verifiedManagers}
                   />
+                </div>
+              )}
+              {role === "client" && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="floor"
+                    className="block text-white text-sm font-bold mb-2"
+                  >
+                    Floor
+                  </label>
+                  <select
+                    id="floor"
+                    name="floor"
+                    // value={formData.floor}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  >
+                    <option value="">Select Floor</option>
+                    <option value="0">Ground Floor</option>
+                    <option value="1">First Floor</option>
+                    <option value="2">Second Floor</option>
+                    <option value="3">Third Floor</option>
+                    <option value="4">Fourth Floor</option>
+                    <option value="5">Fifth Floor</option>
+                    <option value="6">Sixth Floor</option>
+                    <option value="7">Seventh Floor</option>
+                    <option value="8">Eighth Floor</option>
+                    <option value="9">Nineth Floor</option>
+                    <option value="10">Tenth Floor</option>
+                    <option value="11">Eleventh Floor</option>
+                    <option value="12">Twelveth Floor</option>
+                  </select>
+                </div>
+              )}
+              {role === "client" && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="room"
+                    className="block text-white text-sm font-bold mb-2"
+                  >
+                    Room Number
+                  </label>
+                  <select
+                    id="room"
+                    name="room"
+                    // value={formData.floor}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  >
+                    <option value="">Select Room</option>
+                    <option value="a1">A 1</option>
+                    <option value="a2">A 2</option>
+                    <option value="a3">A 3</option>
+                    <option value="a4">A 4</option>
+                    <option value="a5">A 5</option>
+                    <option value="a6">A 6</option>
+                    <option value="b1">B 1</option>
+                    <option value="b2">B 2</option>
+                    <option value="b3">B 3</option>
+                    <option value="b4">B 4</option>
+                  </select>
                 </div>
               )}
               <div className="flex items-center justify-between">

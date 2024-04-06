@@ -38,7 +38,7 @@ const Profile = () => {
     queryKey: ["clients", "manager", user?._id],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
-        `/api/clients/getclients?id=${queryKey[2]}`
+        `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=0`
       );
       return data.clients;
     },
@@ -165,13 +165,7 @@ const Profile = () => {
       {/* Parent Block  */}
       <div className="grid grid-cols-4 gap-4">
         {/* Profile Details  */}
-        <div
-          className={`mt-10 border-l-4 pl-6 py-8 ${
-            user.role === "owner" && "border-blue-500"
-          } ${user.role === "manager" && "border-purple-500"} ${
-            user.role === "client" && "border-yellow-500"
-          }`}
-        >
+        <div className={`mt-10 pl-6 py-8`}>
           <Image
             alt={`Profile picture of ${user.username}`}
             src={user.profilePicture}
@@ -210,7 +204,7 @@ const Profile = () => {
         </div>
         {/* Clalnder as a Client */}
         {user.role == "client" && user.isVerified && user.isClientVerified && (
-          <div className="col-span-2 border-l-4 pl-6 pb-8 mt-10 border-purple-500">
+          <div className="col-span-2 pl-6 pb-8 mt-10">
             <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative">
               {currentMonth}
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-yellow-500">
@@ -247,7 +241,7 @@ const Profile = () => {
         )}
         {/* Manager's Details  */}
         {user.role === "client" && !user.isVerified ? (
-          <div className="flex items-center justify-center border-l-4 pl-6 py-8 border-purple-500 mt-10">
+          <div className="flex items-center justify-center pl-6 py-8 mt-10">
             <p>At first verify youself!</p>
           </div>
         ) : user.role === "client" &&
@@ -281,7 +275,7 @@ const Profile = () => {
         )}
         {/* Managers, me as a Owner  */}
         {user.role === "owner" && (
-          <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
+          <div className="col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
             <div className="sticky top-0">
               <input
                 placeholder="Search by name"
@@ -373,7 +367,7 @@ const Profile = () => {
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
-          <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
+          <div className="col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
             <div className="sticky top-0">
               <input
                 placeholder="Search by name"
@@ -386,7 +380,7 @@ const Profile = () => {
             {clients.map((client) => (
               <div
                 key={client._id}
-                className="border px-6 py-5 rounded-lg flex items-center w-[450px] justify-between gap-4"
+                className="border px-6 py-5 rounded-lg flex items-center w-[470px] justify-between gap-4"
               >
                 <Image
                   alt={`Profile picture of ${client.username} who is a manager`}
@@ -408,65 +402,8 @@ const Profile = () => {
                       </p>
                     ) : (
                       <>
-                        <button
-                          onClick={async () => {
-                            const confirmation = confirm(
-                              "Are you sure to make your client?"
-                            );
-                            if (confirmation) {
-                              //! Here
-                              setGivingAuthorization(true);
-                              try {
-                                await axios.post("/api/orders/makeorders", {
-                                  userId: client._id,
-                                  managerId: user._id,
-                                  days: parseInt(
-                                    currentDays[currentDays.length - 1]
-                                  ),
-                                  currentMonthName:
-                                    new Date().toLocaleDateString("en-BD", {
-                                      month: "long",
-                                      timeZone: "Asia/Dhaka",
-                                    }),
-                                  currentMonth: new Date(
-                                    new Date().toLocaleString("en-US", {
-                                      timeZone: "Asia/Dhaka",
-                                    })
-                                  ).getMonth(),
-                                  currentYear: new Date(
-                                    new Date().toLocaleString("en-US", {
-                                      timeZone: "Asia/Dhaka",
-                                    })
-                                  ).getFullYear(),
-                                });
-
-                                const { data } = await axios.post(
-                                  "api/clients/approveclient",
-                                  { id: client._id }
-                                );
-                                if (data.success) {
-                                  await clientRefetch();
-                                  toast.success("Authorization Provided");
-                                }
-                              } catch (error) {
-                                console.log(
-                                  "Frontend problem when authorizing as a client"
-                                );
-                                console.log(error);
-                                toast.error("Authorization Error!");
-                              } finally {
-                                setGivingAuthorization(false);
-                              }
-                            } else {
-                              toast.success("Cancelled!");
-                            }
-                          }}
-                          className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
-                        >
-                          Approve
-                          {givingAuthorization && (
-                            <CgSpinner className="animate-spin text-2xl" />
-                          )}
+                        <button className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90">
+                          Details
                         </button>
                       </>
                     )}
@@ -495,7 +432,7 @@ const Profile = () => {
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
-          <div className="h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 mt-10 relative">
+          <div className="h-[380px] overflow-y-scroll px-3 mt-10 relative">
             <div className="flex items-start justify-center flex-wrap gap-5">
               <Link href="/orderStatus" className="w-full">
                 <button class="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 w-full active:scale-90">
