@@ -13,6 +13,7 @@ import { CgSpinner } from "react-icons/cg";
 import { FaTimes } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
+import Modal from "react-modal";
 
 const Profile = () => {
   const { user, userRefetch, manager } = useContext(AuthContext);
@@ -20,10 +21,57 @@ const Profile = () => {
   const [givingAuthorization, setGivingAuthorization] = useState(false);
   const [currentDays, setCurrentDays] = useState(null);
 
-  //! For Client
   const [breakfastCount, setBreakfastCount] = useState(0);
   const [lunchCount, setLunchCount] = useState(0);
   const [dinnerCount, setDinnerCount] = useState(0);
+  const [clientDetailsModalIsOpen, setClientDetailsModalIsOpen] =
+    useState(false);
+  const [clientDetailsIsLoading, setClientDetailsIsLoading] = useState(false);
+  const [clientDetails, setClientDetails] = useState(null);
+
+  const customStylesForclientDetailsModal = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "#000",
+      border: "1px solid #EAB308",
+    },
+    overlay: {
+      backgroundColor: "rgba(0,0,0,0.5)",
+    },
+  };
+
+  const openModalForClientDetails = () => {
+    setClientDetailsModalIsOpen(true);
+  };
+
+  const closeModalForClientDetails = () => {
+    setClientDetailsModalIsOpen(false);
+  };
+
+  const getDetailsOfClientForApproval = async (id) => {
+    setClientDetailsIsLoading(true);
+    setClientDetails(null);
+    try {
+      const { data } = await axios.get(`/api/clients/getclient?id=${id}`);
+      if (data.success) {
+        console.log(data.client);
+        setClientDetails(data.client);
+        openModalForClientDetails();
+      }
+    } catch (error) {
+      closeModalForClientDetails();
+      setClientDetails(null);
+      console.log(error);
+      toast.error("Something went wrong, Try again");
+    } finally {
+      setClientDetailsIsLoading(false);
+    }
+  };
 
   const { data: managers, refetch: managersRefetch } = useQuery({
     queryKey: ["managers", "owner"],
@@ -138,6 +186,99 @@ const Profile = () => {
     return <p>Loading.......Manager</p>;
   return (
     <div>
+      <Modal
+        // appElement={el}
+        isOpen={clientDetailsModalIsOpen}
+        onRequestClose={closeModalForClientDetails}
+        style={customStylesForclientDetailsModal}
+      >
+        {clientDetails && (
+          // <div>
+          //   <p>Name: {clientDetails.username}</p>
+          //   <p>E-mail: {clientDetails.email}</p>
+          //   <p>Contact Number: {clientDetails.contactNumber}</p>
+          //   <p>
+          //     Floor: {clientDetails.floor}
+          //     <sup>th</sup> Floor - {clientDetails.floor + 1} Tala
+          //   </p>
+          //   <p>
+          //     Room Number:{" "}
+          //     {clientDetails.roomNumber.split("")[0].toUpperCase() +
+          //       "-" +
+          //       clientDetails.roomNumber.split("")[1]}
+          //   </p>
+          // </div>
+          <div className="p-4 h-[90vh] overflow-scroll">
+            <div className="flex items-center gap-10">
+              <div className="mb-4">
+                <Image
+                  width={130}
+                  height={130}
+                  src={clientDetails.profilePicture}
+                  alt="Profile Picture"
+                  className="object-cover rounded-full"
+                />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold mb-2">
+                  {clientDetails.username}
+                </h1>
+                <p className="text-gray-700 mb-2">
+                  Email: {clientDetails.email}
+                </p>
+                <p>
+                  Floor: {clientDetails.floor}
+                  <sup>th</sup> Floor - {clientDetails.floor + 1} Tala
+                </p>
+                <p>
+                  Room Number:{" "}
+                  {clientDetails.roomNumber.split("")[0].toUpperCase() +
+                    "-" +
+                    clientDetails.roomNumber.split("")[1]}
+                </p>
+                <p className="text-gray-700 mb-2">
+                  Contact Number: {clientDetails.contactNumber}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center mb-4">
+              {clientDetails.nidFront && (
+                <div className="mr-4">
+                  <Image
+                    width={100}
+                    height={100}
+                    src={clientDetails.nidFront}
+                    alt="NID Photo 1"
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+              )}
+              {clientDetails.nidBack && (
+                <div>
+                  <Image
+                    width={100}
+                    height={100}
+                    src={clientDetails.nidBack}
+                    alt="NID Photo 2"
+                    className="w-32 h-32 object-cover rounded-lg"
+                  />
+                </div>
+              )}
+            </div>
+            {clientDetails.birthCertificatePicture && (
+              <div className="mb-4 flex justify-center">
+                <Image
+                  width={300}
+                  height={700}
+                  src={clientDetails.birthCertificatePicture}
+                  alt="Birth Certificate"
+                  className="object-cover rounded-lg"
+                />
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
       <div className=" flex items-center flex-row-reverse justify-between">
         <button
           onClick={logout}
@@ -402,7 +543,12 @@ const Profile = () => {
                       </p>
                     ) : (
                       <>
-                        <button className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90">
+                        <button
+                          onClick={() =>
+                            getDetailsOfClientForApproval(client._id)
+                          }
+                          className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
+                        >
                           Details
                         </button>
                       </>
