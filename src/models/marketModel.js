@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 
+const subSchemaForData = new mongoose.Schema({
+  date: String,
+  amount: Number,
+});
 const marketSchema = new mongoose.Schema({
   managerId: {
     type: String,
@@ -14,7 +18,7 @@ const marketSchema = new mongoose.Schema({
     required: true,
   },
   data: {
-    type: [{ date: String, amount: Number }],
+    type: [subSchemaForData],
   },
 });
 
