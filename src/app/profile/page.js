@@ -19,6 +19,7 @@ const Profile = () => {
   const { user, userRefetch, manager } = useContext(AuthContext);
   const route = useRouter();
   const [givingAuthorization, setGivingAuthorization] = useState(false);
+  const [declining, setDeclining] = useState(false);
   const [currentDays, setCurrentDays] = useState(null);
 
   const [breakfastCount, setBreakfastCount] = useState(0);
@@ -267,7 +268,41 @@ const Profile = () => {
                 />
               </div>
             )}
-            <div>
+            <div className="flex items-center justify-center gap-4 my-10">
+              <button
+                onClick={async () => {
+                  const confirmation = confirm(
+                    "Are you sure to decline your client?"
+                  );
+                  if (confirmation) {
+                    //! Here
+                    setDeclining(true);
+                    try {
+                      const { data } = await axios.post(
+                        "api/clients/declineclient",
+                        { id: clientDetails._id }
+                      );
+                      if (data.success) {
+                        await clientRefetch();
+                        toast.success("Client Declined");
+                      }
+                    } catch (error) {
+                      console.log("Frontend problem when declining a client");
+                      console.log(error);
+                      toast.error("Authorization Error!");
+                    } finally {
+                      setDeclining(false);
+                      closeModalForClientDetails();
+                    }
+                  } else {
+                    toast.success("Cancelled!");
+                  }
+                }}
+                className="bg-red-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
+              >
+                Decline
+                {declining && <CgSpinner className="animate-spin text-2xl" />}
+              </button>
               <button
                 onClick={async () => {
                   const confirmation = confirm(
