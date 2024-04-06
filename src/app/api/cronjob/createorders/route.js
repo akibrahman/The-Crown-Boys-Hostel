@@ -1,5 +1,6 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
+import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
@@ -64,10 +65,11 @@ export const GET = async (req) => {
           today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
       };
     };
+    const test = true;
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
-
+    //! Last day of any month
     if (aboutLastDayOfCurrentMonth.isLastDay) {
       const mailOptions = {
         from: "cron-job@hostelplates.com",
@@ -79,7 +81,53 @@ export const GET = async (req) => {
       };
       await transport.sendMail(mailOptions);
     }
-
+    if (test) {
+      const allManagers = await User.find({
+        isManager: true,
+        isManagerVerified: true,
+        isVerified: true,
+      });
+      const currentDate = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentYear = new Date(currentDate).getFullYear();
+      const nextMonthNumber = new Date(currentDate).getMonth() + 1;
+      const nextMonth = new Date(
+        currentYear,
+        currentMonth + 1,
+        1
+      ).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+      const nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
+      const dayCountOfNextMonth = parseInt(
+        new Date(currentYear, nextNextMonthNumber, 0).getDate()
+      );
+      let dataOfMarket = [];
+      for (let k = 0; k < allManagers.length; k++) {
+        for (let l = 1; l <= dayCountOfNextMonth; l++) {
+          dataOfMarket.push({
+            date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
+              "en-BD",
+              {
+                timeZone: "Asia/Dhaka",
+              }
+            ),
+            amount: 0,
+          });
+        }
+        const newMarket = new Market({
+          managerId: allManagers[k]._id,
+          month: nextMonth,
+          year: currentYear,
+          data: dataOfMarket,
+        });
+        await newMarket.save();
+        dataOfMarket = [];
+      }
+    }
+    //! Second Last day of any month
     if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",

@@ -253,38 +253,40 @@ const Registration = () => {
                   required
                 />
               </div>
-              <div className="mb-4 mt-8 flex items-center gap-4">
-                <span
-                  className={`${
-                    !isNid ? "bg-yellow-500" : "bg-stone-500"
-                  } px-3 py-1 font-medium rounded-md duration-300 transition-all`}
-                >
-                  Birth Certificate
-                </span>
-                {/* Toggle Switch  */}
-                <label className="inline-flex items-center cursor-pointer">
-                  <input
-                    onClick={() => {
-                      setIsNid(!isNid);
-                      setNidFront(null);
-                      setNidBack(null);
-                      setBrithCertificate(null);
-                    }}
-                    type="checkbox"
-                    value=""
-                    className={`sr-only ${isNid ? "peer" : ""}`}
-                    checked
-                  />
-                  <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                </label>
-                <span
-                  className={`${
-                    !isNid ? "bg-stone-500" : "bg-yellow-500"
-                  } px-3 py-1 font-medium rounded-md duration-300 transition-all`}
-                >
-                  NID Birth
-                </span>
-              </div>
+              {role === "client" && (
+                <div className="mb-4 mt-8 flex items-center gap-4">
+                  <span
+                    className={`${
+                      !isNid ? "bg-yellow-500" : "bg-stone-500"
+                    } px-3 py-1 font-medium rounded-md duration-300 transition-all`}
+                  >
+                    Birth Certificate
+                  </span>
+                  {/* Toggle Switch  */}
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      onClick={() => {
+                        setIsNid(!isNid);
+                        setNidFront(null);
+                        setNidBack(null);
+                        setBrithCertificate(null);
+                      }}
+                      type="checkbox"
+                      value=""
+                      className={`sr-only ${isNid ? "peer" : ""}`}
+                      checked
+                    />
+                    <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  </label>
+                  <span
+                    className={`${
+                      !isNid ? "bg-stone-500" : "bg-yellow-500"
+                    } px-3 py-1 font-medium rounded-md duration-300 transition-all`}
+                  >
+                    NID Birth
+                  </span>
+                </div>
+              )}
               {/* Area for NID Input  */}
               {isNid && (
                 <div className="mb-8 mt-4 flex items-center justify-center gap-8">
@@ -319,6 +321,9 @@ const Registration = () => {
                       onChange={async (e) => {
                         const base = await base64(e.target.files[0]);
                         setNidFront(base);
+                        // await axios.post(`/api/orders/nidverify`, {
+                        //   imageData: base,
+                        // });
                       }}
                       className="hidden"
                       type="file"
@@ -449,40 +454,44 @@ const Registration = () => {
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="fathersNumber"
-                  className="block text-white text-sm font-bold mb-2"
-                >
-                  Father&apos;s Number
-                </label>
-                <input
-                  type="text"
-                  id="fathersNumber"
-                  name="fathersNumber"
-                  value={formData.fathersNumber}
-                  onChange={handleChange}
-                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="mothersNumber"
-                  className="block text-white text-sm font-bold mb-2"
-                >
-                  Mother&apos;s Number
-                </label>
-                <input
-                  type="text"
-                  id="mothersNumber"
-                  name="mothersNumber"
-                  value={formData.mothersNumber}
-                  onChange={handleChange}
-                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                  required
-                />
-              </div>
+              {role === "client" && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="fathersNumber"
+                    className="block text-white text-sm font-bold mb-2"
+                  >
+                    Father&apos;s Number
+                  </label>
+                  <input
+                    type="text"
+                    id="fathersNumber"
+                    name="fathersNumber"
+                    value={formData.fathersNumber}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  />
+                </div>
+              )}
+              {role === "client" && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="mothersNumber"
+                    className="block text-white text-sm font-bold mb-2"
+                  >
+                    Mother&apos;s Number
+                  </label>
+                  <input
+                    type="text"
+                    id="mothersNumber"
+                    name="mothersNumber"
+                    value={formData.mothersNumber}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  />
+                </div>
+              )}
               {role === "manager" ? (
                 <div className="mb-4">
                   <label

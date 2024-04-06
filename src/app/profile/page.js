@@ -30,6 +30,8 @@ const Profile = () => {
   const [clientDetailsIsLoading, setClientDetailsIsLoading] = useState(false);
   const [clientDetails, setClientDetails] = useState(null);
 
+  const [loggingOut, setLoggingOut] = useState(false);
+
   const customStylesForclientDetailsModal = {
     content: {
       top: "50%",
@@ -94,6 +96,7 @@ const Profile = () => {
   });
 
   const logout = async () => {
+    setLoggingOut(true);
     try {
       const { data } = await axios.get("/api/users/logout");
       if (data.success) {
@@ -104,6 +107,8 @@ const Profile = () => {
     } catch (error) {
       toast.error("Something went Wrong !");
       console.log(error);
+    } finally {
+      setLoggingOut(false);
     }
   };
 
@@ -312,28 +317,28 @@ const Profile = () => {
                     //! Here
                     setGivingAuthorization(true);
                     try {
-                      // await axios.post("/api/orders/makeorders", {
-                      //   userId: clientDetails._id,
-                      //   managerId: user._id,
-                      //   days: parseInt(currentDays[currentDays.length - 1]),
-                      //   currentMonthName: new Date().toLocaleDateString(
-                      //     "en-BD",
-                      //     {
-                      //       month: "long",
-                      //       timeZone: "Asia/Dhaka",
-                      //     }
-                      //   ),
-                      //   currentMonth: new Date(
-                      //     new Date().toLocaleString("en-US", {
-                      //       timeZone: "Asia/Dhaka",
-                      //     })
-                      //   ).getMonth(),
-                      //   currentYear: new Date(
-                      //     new Date().toLocaleString("en-US", {
-                      //       timeZone: "Asia/Dhaka",
-                      //     })
-                      //   ).getFullYear(),
-                      // });
+                      await axios.post("/api/orders/makeorders", {
+                        userId: clientDetails._id,
+                        managerId: user._id,
+                        days: parseInt(currentDays[currentDays.length - 1]),
+                        currentMonthName: new Date().toLocaleDateString(
+                          "en-BD",
+                          {
+                            month: "long",
+                            timeZone: "Asia/Dhaka",
+                          }
+                        ),
+                        currentMonth: new Date(
+                          new Date().toLocaleString("en-US", {
+                            timeZone: "Asia/Dhaka",
+                          })
+                        ).getMonth(),
+                        currentYear: new Date(
+                          new Date().toLocaleString("en-US", {
+                            timeZone: "Asia/Dhaka",
+                          })
+                        ).getFullYear(),
+                      });
 
                       const { data } = await axios.post(
                         "api/clients/approveclient",
@@ -371,9 +376,10 @@ const Profile = () => {
       <div className=" flex items-center flex-row-reverse justify-between">
         <button
           onClick={logout}
-          className="bg-red-600 hover:bg-red-700 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
+          className="bg-red-600 hover:bg-red-700 text-stone-900 font-bold px-4 py-1 flex items-center gap-3 rounded-lg duration-300 active:scale-90"
         >
           Logout
+          {loggingOut && <CgSpinner className="animate-spin text-2xl" />}
         </button>
         {user.role === "client" && user.isVerified && user.isClientVerified && (
           <>
