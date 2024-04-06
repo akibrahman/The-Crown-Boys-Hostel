@@ -114,7 +114,11 @@ const Profile = () => {
 
   //! Get current month
   useEffect(() => {
-    if (user?.role === "client" || user?.role === "manager") {
+    if (
+      user?.role === "client" ||
+      user?.role === "manager" ||
+      user?.role === "owner"
+    ) {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -159,6 +163,25 @@ const Profile = () => {
     enabled: user?._id ? true : false,
   });
 
+  const { data: managerCalanderData } = useQuery({
+    queryKey: ["managerCalanderData", "manager", user?._id],
+    queryFn: async ({ queryKey }) => {
+      try {
+        const { data } = await axios.post("/api/markets/getmarkets", {
+          managerId: queryKey[2],
+          month: currentMonth,
+          year: currentYear,
+        });
+        return data.market;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    },
+    enabled: user?._id ? true : false,
+  });
+  console.log("++++++++++", managerCalanderData);
+
   //! Get Breakfast, Lunch and Dinner count
   useEffect(() => {
     if (calanderData) {
@@ -192,6 +215,7 @@ const Profile = () => {
     return <p>Loading.......Manager</p>;
   return (
     <div>
+      {/*//! Modal for Client Details  */}
       <Modal
         // appElement={el}
         isOpen={clientDetailsModalIsOpen}
@@ -373,6 +397,7 @@ const Profile = () => {
           </div>
         )}
       </Modal>
+      {/*//! NavBar Panel  */}
       <div className=" flex items-center flex-row-reverse justify-between">
         <button
           onClick={logout}
@@ -398,9 +423,9 @@ const Profile = () => {
           My Profile
         </p>
       </div>
-      {/* Parent Block  */}
+      {/*//! Parent Block ------------------------------------------------------------- */}
       <div className="grid grid-cols-4 gap-4">
-        {/* Profile Details  */}
+        {/*//! Profile Details  */}
         <div className={`mt-10 pl-6 py-8`}>
           <Image
             alt={`Profile picture of ${user.username}`}
@@ -438,7 +463,7 @@ const Profile = () => {
             </button>
           )}
         </div>
-        {/* Clalnder as a Client */}
+        {/*//! Clalnder as a Client */}
         {user.role == "client" && user.isVerified && user.isClientVerified && (
           <div className="col-span-2 pl-6 pb-8 mt-10">
             <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative">
@@ -475,7 +500,7 @@ const Profile = () => {
             </div>
           </div>
         )}
-        {/* Manager's Details  */}
+        {/*//! Manager's Details  */}
         {user.role === "client" && !user.isVerified ? (
           <div className="flex items-center justify-center pl-6 py-8 mt-10">
             <p>At first verify youself!</p>
@@ -509,7 +534,7 @@ const Profile = () => {
         ) : (
           <></>
         )}
-        {/* Managers, me as a Owner  */}
+        {/*//! Managers as a Owner  */}
         {user.role === "owner" && (
           <div className="col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
             <div className="sticky top-0">
@@ -549,7 +574,7 @@ const Profile = () => {
                       <>
                         <button
                           onClick={async () => {
-                            const confirmation = await confirm(
+                            const confirmation = confirm(
                               "Are you sure to Authorize?"
                             );
                             if (confirmation) {
@@ -557,7 +582,28 @@ const Profile = () => {
                               try {
                                 const { data } = await axios.post(
                                   "api/managers/approvemanager",
-                                  { id: manager._id }
+                                  {
+                                    id: manager._id,
+
+                                    days: parseInt(
+                                      currentDays[currentDays.length - 1]
+                                    ),
+                                    currentMonthName:
+                                      new Date().toLocaleDateString("en-BD", {
+                                        month: "long",
+                                        timeZone: "Asia/Dhaka",
+                                      }),
+                                    currentMonth: new Date(
+                                      new Date().toLocaleString("en-US", {
+                                        timeZone: "Asia/Dhaka",
+                                      })
+                                    ).getMonth(),
+                                    currentYear: new Date(
+                                      new Date().toLocaleString("en-US", {
+                                        timeZone: "Asia/Dhaka",
+                                      })
+                                    ).getFullYear(),
+                                  }
                                 );
                                 if (data.success) {
                                   await managersRefetch();
@@ -599,7 +645,7 @@ const Profile = () => {
             ))}
           </div>
         )}
-        {/* Clients, me as a manager  */}
+        {/*//! Clients as a manager  */}
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
@@ -672,7 +718,7 @@ const Profile = () => {
         ) : (
           <></>
         )}
-        {/* Settings Part & me as a manager  */}
+        {/*//! Settings Part & me as a manager  */}
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
@@ -704,6 +750,47 @@ const Profile = () => {
         ) : (
           <></>
         )}
+        {/*//! Clalnder as a Manager ------------ Working Stage*/}
+        {user.role == "manager" &&
+          user.isVerified &&
+          user.isManagerVerified && (
+            <div className="col-span-2 pl-6 pb-8 mt-10">
+              <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative">
+                {currentMonth}
+                {/* <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-yellow-500">
+                {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}
+                BDT
+              </span> */}
+              </p>
+              <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
+                {managerCalanderData?.data?.map((mrkt) => (
+                  <div
+                    key={mrkt._id}
+                    className="relative w-16 h-16 rounded-xl bg-yellow-500 flex items-center justify-center flex-col"
+                  >
+                    {mrkt.date.split("/")[1]}
+
+                    <span>{mrkt.amount} BDT</span>
+                    {/* <span
+                      className={`absolute w-2 h-2 rounded-full left-2 bottom-1.5 ${
+                        order.breakfast ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    ></span>
+                    <span
+                      className={`absolute w-2 h-2 rounded-full left-1/2 -translate-x-1/2 bottom-1.5 ${
+                        order.lunch ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    ></span>
+                    <span
+                      className={`absolute w-2 h-2 rounded-full right-2 bottom-1.5 ${
+                        order.dinner ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    ></span> */}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
       </div>
     </div>
   );

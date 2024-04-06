@@ -82,55 +82,8 @@ export const GET = async (req) => {
       await transport.sendMail(mailOptions);
     }
     if (test) {
-      console.log("Operation Started");
-      const allManagers = await User.find({
-        isManager: true,
-        isManagerVerified: true,
-        isVerified: true,
-      });
-      console.log("Managers Founded");
-      const currentDate = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Dhaka",
-      });
-      const currentYear = new Date(currentDate).getFullYear();
-      const currentMonth = new Date(currentDate).getMonth();
-      const nextMonthNumber = new Date(currentDate).getMonth() + 1;
-      const nextMonth = new Date(
-        currentYear,
-        currentMonth + 1,
-        1
-      ).toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      });
-      const nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
-      const dayCountOfNextMonth = parseInt(
-        new Date(currentYear, nextNextMonthNumber, 0).getDate()
-      );
-      let dataOfMarket = [];
-      for (let k = 0; k < allManagers.length; k++) {
-        for (let l = 1; l <= dayCountOfNextMonth; l++) {
-          dataOfMarket.push({
-            date: new Date(currentYear, nextMonthNumber, l).toLocaleDateString(
-              "en-BD",
-              {
-                timeZone: "Asia/Dhaka",
-              }
-            ),
-            amount: 0,
-          });
-        }
-        const newMarket = new Market({
-          managerId: allManagers[k]._id,
-          month: nextMonth,
-          year: currentYear,
-          data: dataOfMarket,
-        });
-        await newMarket.save();
-        dataOfMarket = [];
-      }
     }
-    //! Second Last day of any month
+    //! Second Last day of any month----------------------------------------------------------------------------------------------
     if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -155,6 +108,7 @@ export const GET = async (req) => {
         isClientVerified: true,
         isVerified: true,
       });
+      //! Order creation for all verified users
       for (let j = 0; j < allUsers.length; j++) {
         for (let i = 1; i <= dayCountOfNextMonth; i++) {
           const newOrder = new Order({
@@ -180,6 +134,34 @@ export const GET = async (req) => {
           year: currentYear,
         });
         await newBill.save();
+      }
+      const allManagers = await User.find({
+        isManager: true,
+        isManagerVerified: true,
+        isVerified: true,
+      });
+      //! Market Data creation for all verified managers
+      let dataOfMarket = [];
+      for (let k = 0; k < allManagers.length; k++) {
+        for (let l = 1; l <= dayCountOfNextMonth; l++) {
+          dataOfMarket.push({
+            date: new Date(currentYear, nextMonthNumber, l).toLocaleDateString(
+              "en-BD",
+              {
+                timeZone: "Asia/Dhaka",
+              }
+            ),
+            amount: 0,
+          });
+        }
+        const newMarket = new Market({
+          managerId: allManagers[k]._id,
+          month: nextMonth,
+          year: currentYear,
+          data: dataOfMarket,
+        });
+        await newMarket.save();
+        dataOfMarket = [];
       }
 
       const mailOptions = {
