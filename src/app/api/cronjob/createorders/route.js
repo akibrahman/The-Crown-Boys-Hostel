@@ -82,11 +82,13 @@ export const GET = async (req) => {
       await transport.sendMail(mailOptions);
     }
     if (test) {
+      console.log("Operation Started");
       const allManagers = await User.find({
         isManager: true,
         isManagerVerified: true,
         isVerified: true,
       });
+      console.log("Managers Founded");
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -109,7 +111,7 @@ export const GET = async (req) => {
       for (let k = 0; k < allManagers.length; k++) {
         for (let l = 1; l <= dayCountOfNextMonth; l++) {
           dataOfMarket.push({
-            date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
+            date: new Date(currentYear, nextMonthNumber, l).toLocaleDateString(
               "en-BD",
               {
                 timeZone: "Asia/Dhaka",
