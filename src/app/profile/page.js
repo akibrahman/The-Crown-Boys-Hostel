@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaTimes } from "react-icons/fa";
+import { GiPayMoney } from "react-icons/gi";
 import { IoSearchOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import Modal from "react-modal";
@@ -31,6 +32,8 @@ const Profile = () => {
   const [clientDetails, setClientDetails] = useState(null);
 
   const [loggingOut, setLoggingOut] = useState(false);
+  const [managerAmount, setManagerAmount] = useState(null);
+  const [isMoneyAdding, setIsMoneyAdding] = useState(false);
 
   const customStylesForclientDetailsModal = {
     content: {
@@ -79,12 +82,13 @@ const Profile = () => {
   const { data: managers, refetch: managersRefetch } = useQuery({
     queryKey: ["managers", "owner"],
     queryFn: async () => {
-      if (user?.role === "owner") {
-        const { data } = await axios.get("/api/managers/getmanagers");
-        return data.managers;
-      }
+      console.log("Managers are fetching for Owner");
+      const { data } = await axios.get("/api/managers/getmanagers");
+      return data.managers;
     },
+    enabled: user?._id && user?.role == "owner" ? true : false,
   });
+
   const { data: clients, refetch: clientRefetch } = useQuery({
     queryKey: ["clients", "manager", user?._id],
     queryFn: async ({ queryKey }) => {
@@ -93,6 +97,7 @@ const Profile = () => {
       );
       return data.clients;
     },
+    enabled: user?._id && user?.role == "manager" ? true : false,
   });
 
   const logout = async () => {
@@ -160,27 +165,48 @@ const Profile = () => {
         return null;
       }
     },
-    enabled: user?._id ? true : false,
+    enabled: user?._id && user?.role == "client" ? true : false,
   });
 
-  const { data: managerCalanderData } = useQuery({
-    queryKey: ["managerCalanderData", "manager", user?._id],
-    queryFn: async ({ queryKey }) => {
-      try {
-        const { data } = await axios.post("/api/markets/getmarkets", {
-          managerId: queryKey[2],
-          month: currentMonth,
-          year: currentYear,
-        });
-        return data.market;
-      } catch (error) {
-        console.log(error);
-        return null;
-      }
-    },
-    enabled: user?._id ? true : false,
-  });
-  console.log("++++++++++", managerCalanderData);
+  const { data: managerCalanderData, refetch: managerCalanderDataRefetch } =
+    useQuery({
+      queryKey: ["managerCalanderData", "manager", user?._id],
+      queryFn: async ({ queryKey }) => {
+        try {
+          const { data } = await axios.post("/api/markets/getmarkets", {
+            managerId: queryKey[2],
+            month: currentMonth,
+            year: currentYear,
+          });
+          console.log("Manager Calander Loading");
+          return data.market;
+        } catch (error) {
+          console.log(error);
+          return null;
+        }
+      },
+      enabled: user?._id && user?.role == "manager" ? true : false,
+    });
+
+  const { data: ordersForTheMonth, refetch: ordersForTheMonthRefetch } =
+    useQuery({
+      queryKey: ["allOrdersForCurrentMonth", "manager", user?._id],
+      queryFn: async ({ queryKey }) => {
+        try {
+          const { data } = await axios.post("/api/orders/getordersformanager", {
+            managerId: queryKey[2],
+            month: currentMonth,
+            year: currentYear,
+          });
+          console.log("Manager All Orders Loading");
+          return data.orders;
+        } catch (error) {
+          console.log(error);
+          return null;
+        }
+      },
+      enabled: user?._id && user?.role == "manager" ? true : false,
+    });
 
   //! Get Breakfast, Lunch and Dinner count
   useEffect(() => {
@@ -205,10 +231,13 @@ const Profile = () => {
       setDinnerCount(dinner);
     }
   }, [calanderData]);
-
+  // console.log(user);
   if (!user) return <p>Loading.......User</p>;
-  if (user.role === "owner" && !managers) return <p>Loading.......</p>;
-  if (user.role === "manager" && (!clients || !currentDays))
+  if (user.role === "owner" && !managers) return <p>Loading.......Managers</p>;
+  if (
+    user.role === "manager" &&
+    (!clients || !currentDays || !ordersForTheMonth || !managerCalanderData)
+  )
     return <p>Loading.......Clients</p>;
 
   if (user.role === "client" && (!manager || !currentDays || !calanderData))
@@ -725,7 +754,7 @@ const Profile = () => {
           <div className="h-[380px] overflow-y-scroll px-3 mt-10 relative">
             <div className="flex items-start justify-center flex-wrap gap-5">
               <Link href="/orderStatus" className="w-full">
-                <button class="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 w-full active:scale-90">
+                <button className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 w-full active:scale-90">
                   Order Status
                 </button>
               </Link>
@@ -754,9 +783,18 @@ const Profile = () => {
         {user.role == "manager" &&
           user.isVerified &&
           user.isManagerVerified && (
-            <div className="col-span-2 pl-6 pb-8 mt-10">
-              <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative">
-                {currentMonth}
+            <div className="col-span-3 pl-6 pb-8 mt-10">
+              <p className="font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative flex items-center justify-around">
+                <input
+                  placeholder="Enter Amount"
+                  onChange={(e) => setManagerAmount(parseInt(e.target.value))}
+                  value={
+                    managerAmount || managerAmount == 0 ? managerAmount : ""
+                  }
+                  className="w-[200px] px-3 py-1 rounded-full bg-[#1C1917]"
+                  type="number"
+                />
+                <span className="w-[300px]">{currentMonth}</span>
                 {/* <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-yellow-500">
                 {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}
                 BDT
@@ -766,11 +804,44 @@ const Profile = () => {
                 {managerCalanderData?.data?.map((mrkt) => (
                   <div
                     key={mrkt._id}
-                    className="relative w-16 h-16 rounded-xl bg-yellow-500 flex items-center justify-center flex-col"
+                    className="relative w-[110px] h-20 rounded-md bg-yellow-500 flex items-center justify-center flex-col cursor-pointer after:h-0 after:w-full after:absolute after:bg-[rgba(0,0,0,0.5)] hover:after:h-full after:duration-300 transition-all group"
                   >
-                    {mrkt.date.split("/")[1]}
+                    {!isMoneyAdding ? (
+                      <GiPayMoney
+                        onClick={async () => {
+                          if (managerAmount != null && managerAmount >= 0) {
+                            setIsMoneyAdding(true);
+                            await axios.put("/api/markets/updatemarket", {
+                              id1: managerCalanderData._id,
+                              id2: mrkt._id,
+                              amount: managerAmount,
+                            });
+                            await managerCalanderDataRefetch();
+                            setManagerAmount(null);
+                            setIsMoneyAdding(false);
+                            toast.success("Amount updated");
+                          } else {
+                            toast.error("Please enter amount");
+                          }
+                        }}
+                        className="scale-0 group-hover:scale-100 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-yellow-500 bg-white z-10 text-[40px] p-1 rounded-md duration-300 transition-all active:scale-90"
+                      />
+                    ) : (
+                      <div className="bg-white z-10 hidden group-hover:block absolute rounded-md">
+                        {" "}
+                        <CgSpinner className="text-yellow-500 text-[40px] p-1  duration-300 transition-all active:scale-90 group-hover:animate-spin" />
+                      </div>
+                    )}
+                    <span className="font-semibold bg-white text-yellow-500 px-2 py-1 rounded-md mb-2 select-none">
+                      {" "}
+                      {mrkt.date.split("/")[1] +
+                        "-" +
+                        mrkt.date.split("/")[0] +
+                        "-" +
+                        mrkt.date.split("/")[2]}
+                    </span>
 
-                    <span>{mrkt.amount} BDT</span>
+                    <span className="select-none">{mrkt.amount} /-</span>
                     {/* <span
                       className={`absolute w-2 h-2 rounded-full left-2 bottom-1.5 ${
                         order.breakfast ? "bg-green-600" : "bg-red-600"
@@ -789,6 +860,63 @@ const Profile = () => {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+        {user.role == "manager" &&
+          user.isVerified &&
+          user.isManagerVerified && (
+            <div className="border-2">
+              <p>
+                Total Market:{" "}
+                {managerCalanderData?.data.reduce(
+                  (accumulator, currentValue) =>
+                    accumulator + currentValue.amount,
+                  0
+                )}
+              </p>
+              <p>
+                Total meal count:
+                {ordersForTheMonth.reduce(
+                  (accumulator, currentValue) =>
+                    accumulator + (currentValue.breakfast ? 0.5 : 0),
+                  0
+                ) +
+                  ordersForTheMonth.reduce(
+                    (accumulator, currentValue) =>
+                      accumulator + (currentValue.lunch ? 1 : 0),
+                    0
+                  ) +
+                  ordersForTheMonth.reduce(
+                    (accumulator, currentValue) =>
+                      accumulator + (currentValue.dinner ? 1 : 0),
+                    0
+                  )}
+              </p>
+              <p>
+                Current Meal Rate:
+                {(
+                  managerCalanderData?.data.reduce(
+                    (accumulator, currentValue) =>
+                      accumulator + currentValue.amount,
+                    0
+                  ) /
+                  (ordersForTheMonth.reduce(
+                    (accumulator, currentValue) =>
+                      accumulator + (currentValue.breakfast ? 0.5 : 0),
+                    0
+                  ) +
+                    ordersForTheMonth.reduce(
+                      (accumulator, currentValue) =>
+                        accumulator + (currentValue.lunch ? 1 : 0),
+                      0
+                    ) +
+                    ordersForTheMonth.reduce(
+                      (accumulator, currentValue) =>
+                        accumulator + (currentValue.dinner ? 1 : 0),
+                      0
+                    ))
+                ).toFixed(2)}
+              </p>
             </div>
           )}
       </div>

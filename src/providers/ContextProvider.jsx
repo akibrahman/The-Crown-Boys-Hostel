@@ -23,17 +23,16 @@ const ContextProvider = ({ children }) => {
   const { data: manager, refetch: managerRefetch } = useQuery({
     queryKey: ["manager", "user", "profile", user?.manager],
     queryFn: async ({ queryKey }) => {
-      if (queryKey[3]) {
-        try {
-          const { data } = await axios.get(
-            `/api/users/manager?managerId=${queryKey[3]}`
-          );
-          return data.manager;
-        } catch (error) {
-          return null;
-        }
+      try {
+        const { data } = await axios.get(
+          `/api/users/manager?managerId=${queryKey[3]}`
+        );
+        return data.manager;
+      } catch (error) {
+        return null;
       }
     },
+    enabled: user?.manager ? true : false,
   });
   const info = { user, userRefetch, manager, managerRefetch };
   return <AuthContext.Provider value={info}>{children}</AuthContext.Provider>;
