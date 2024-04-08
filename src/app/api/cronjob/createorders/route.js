@@ -1,5 +1,6 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
+import ManagerBill from "@/models/managerBillModel";
 import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
@@ -71,18 +72,7 @@ export const GET = async (req) => {
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     //! Last day of any month------------------------------
     if (aboutLastDayOfCurrentMonth.isLastDay) {
-      const mailOptions = {
-        from: "cron-job@hostelplates.com",
-        to: "akibrahman5200@gmail.com",
-        subject: "Cron Job - Last Day",
-        html: `<div>
-          <p>This is the last day of current month</p>
-          </div>`,
-      };
-      await transport.sendMail(mailOptions);
-    }
-    if (test) {
-      console.log("Process Started");
+      //! <---------->User Bill Creation Start <---------->
       const bills = await Bill.find({});
       for (let m = 0; m < bills.length; m++) {
         const bill = await Bill.findById(bills[m]._id);
@@ -113,6 +103,99 @@ export const GET = async (req) => {
         bill.status = "calculated";
         await bill.save();
       }
+      //! <---------->User Bill Creation End <---------->
+
+      //! <---------->Manager Bill Creation Start <---------->
+      const allManagers = await User.find({
+        isManager: true,
+        isManagerVerified: true,
+        isVerified: true,
+      });
+      const currentDate = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentMonthNumber = new Date(currentDate).getMonth();
+      const currentYear = new Date(currentDate).getFullYear();
+      const currentMonth = new Date(
+        currentYear,
+        currentMonthNumber,
+        1
+      ).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+      for (let n = 0; n < allManagers.length; n++) {
+        const market = await Market.findOne({
+          managerId: allManagers[n]._id,
+          month: currentMonth,
+          year: currentYear,
+        });
+        const orders = await Order.find({
+          managerId: allManagers[n]._id,
+          month: currentMonth,
+          year: currentYear,
+        });
+        const managerBill = new ManagerBill({
+          managerId: allManagers[n]._id,
+          marketId: market._id,
+          month: currentMonth,
+          year: currentYear,
+          totalMarketAmountInBDT: market.data.reduce(
+            (accumulator, currentValue) => accumulator + currentValue.amount,
+            0
+          ),
+          totalMeal:
+            orders.reduce(
+              (accumulator, currentValue) =>
+                accumulator + (currentValue.breakfast ? 0.5 : 0),
+              0
+            ) +
+            orders.reduce(
+              (accumulator, currentValue) =>
+                accumulator + (currentValue.lunch ? 1 : 0),
+              0
+            ) +
+            orders.reduce(
+              (accumulator, currentValue) =>
+                accumulator + (currentValue.dinner ? 1 : 0),
+              0
+            ),
+          mealRate: (
+            market.data.reduce(
+              (accumulator, currentValue) => accumulator + currentValue.amount,
+              0
+            ) /
+            (orders.reduce(
+              (accumulator, currentValue) =>
+                accumulator + (currentValue.breakfast ? 0.5 : 0),
+              0
+            ) +
+              orders.reduce(
+                (accumulator, currentValue) =>
+                  accumulator + (currentValue.lunch ? 1 : 0),
+                0
+              ) +
+              orders.reduce(
+                (accumulator, currentValue) =>
+                  accumulator + (currentValue.dinner ? 1 : 0),
+                0
+              ))
+          ).toFixed(2),
+        });
+        await managerBill.save();
+      }
+      //! <---------->Manager Bill Creation End <---------->
+    }
+    if (test) {
+      const mailOptions = {
+        from: "cron-job@hostelplates.com",
+        to: "akibrahman5200@gmail.com",
+        subject: "Cron Job - Last Day",
+        html: `<div>
+          <p>This is the last day of current month</p>
+          </div>`,
+      };
+      await transport.sendMail(mailOptions);
     }
     //! Second Last day of any month------------------------------
     if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
@@ -134,12 +217,12 @@ export const GET = async (req) => {
       const dayCountOfNextMonth = parseInt(
         new Date(currentYear, nextNextMonthNumber, 0).getDate()
       );
+      //! <---------->Order creation for all verified users Start <---------->
       const allUsers = await User.find({
         isClient: true,
         isClientVerified: true,
         isVerified: true,
       });
-      //! Order creation for all verified users
       for (let j = 0; j < allUsers.length; j++) {
         for (let i = 1; i <= dayCountOfNextMonth; i++) {
           const newOrder = new Order({
@@ -171,7 +254,9 @@ export const GET = async (req) => {
         isManagerVerified: true,
         isVerified: true,
       });
-      //! Market Data creation for all verified managers
+      //! <---------->Order creation for all verified users End <---------->
+
+      //! <---------->Market Data creation for all verified managers Start <---------->
       let dataOfMarket = [];
       for (let k = 0; k < allManagers.length; k++) {
         for (let l = 1; l <= dayCountOfNextMonth; l++) {
@@ -194,6 +279,7 @@ export const GET = async (req) => {
         await newMarket.save();
         dataOfMarket = [];
       }
+      //! <---------->Market Data creation for all verified managers End <---------->
 
       const mailOptions = {
         from: "cron-job@hostelplates.com",

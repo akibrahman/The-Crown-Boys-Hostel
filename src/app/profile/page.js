@@ -808,7 +808,7 @@ const Profile = () => {
                       toast.error("Backend error");
                     }
                   }}
-                  className="bg-yellow-500 px-3 py-1 duration-300 active:scale-90 hidden"
+                  className="bg-yellow-500 px-3 py-1 duration-300 active:scale-90"
                 >
                   Test Bills
                 </button>

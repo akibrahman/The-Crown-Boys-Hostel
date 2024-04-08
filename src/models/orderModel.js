@@ -33,6 +33,22 @@ const orderSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  isGuestMeal: {
+    type: Boolean,
+    default: false,
+  },
+  guestBreakfastCount: {
+    type: Number,
+    default: 0,
+  },
+  guestLunchCount: {
+    type: Number,
+    default: 0,
+  },
+  guestDinnerCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 delete mongoose.models.orders;

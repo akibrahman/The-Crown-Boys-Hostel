@@ -15,6 +15,10 @@ const Order = () => {
   const [breakfast, setBreakfast] = useState(false);
   const [lunch, setLunch] = useState(false);
   const [dinner, setDinner] = useState(false);
+  const [isGuestMeal, setIsGuestMeal] = useState(false);
+  const [guestMealBreakfastCount, setGuestMealBreakfastCount] = useState(0);
+  const [guestMealLunchCount, setGuestMealLunchCount] = useState(0);
+  const [guestMealDinnerCount, setGuestMealDinnerCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState("");
   const [order, setOrder] = useState(null);
@@ -95,13 +99,19 @@ const Order = () => {
           date: new Date(selectedDate).toLocaleDateString(),
           userId: user._id,
         });
+
         if (data.success) {
+          setOrder(null);
           setOrder(data.order);
           setBreakfast(data.order.breakfast);
           setLunch(data.order.lunch);
           setDinner(data.order.dinner);
+          setIsGuestMeal(data.order.isGuestMeal);
+          setGuestMealBreakfastCount(data.order.guestBreakfastCount);
+          setGuestMealLunchCount(data.order.guestLunchCount);
+          setGuestMealDinnerCount(data.order.guestDinnerCount);
+          toast.success("Day selected");
         }
-        toast.success("Day selected");
       } catch (error) {
         console.log(error);
         toast.error("Something went wrong!");
@@ -152,12 +162,17 @@ const Order = () => {
           userId: user._id,
         });
         if (data.success) {
+          setOrder(null);
           setOrder(data.order);
           setBreakfast(data.order.breakfast);
           setLunch(data.order.lunch);
           setDinner(data.order.dinner);
+          setIsGuestMeal(data.order.isGuestMeal);
+          setGuestMealBreakfastCount(data.order.guestBreakfastCount);
+          setGuestMealLunchCount(data.order.guestLunchCount);
+          setGuestMealDinnerCount(data.order.guestDinnerCount);
+          toast.success("Day selected");
         }
-        toast.success("Day selected");
       } catch (error) {
         console.log(error);
         toast.error("Something went wrong!");
@@ -293,16 +308,6 @@ const Order = () => {
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
-                        if (
-                          new Date(
-                            new Date().toLocaleString("en-US", {
-                              timeZone: "Asia/Dhaka",
-                            })
-                          ).getHours() > 15
-                        ) {
-                          toast.error("Today's Dinner cann't be edited");
-                          return;
-                        }
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",
@@ -324,6 +329,153 @@ const Order = () => {
                     />
                     <div class="duration-700 transition-all ease-in-out relative w-20 h-8 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-[170%] rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500"></div>
                   </label>
+                </div>
+                <div className="my-20">
+                  <div className="flex items-center gap-3">
+                    <p>Guest Meal</p>
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        onClick={async () => {
+                          if (moment(date).isSame(moment(new Date()), "day")) {
+                            toast.error("Today's Guest meal cann't be edited");
+                            return;
+                          }
+                          if (isGuestMeal) {
+                            setLoading(true);
+                            const { data } = await axios.patch(
+                              "/api/orders/updateorder",
+                              {
+                                meal: "guest",
+                                state: false,
+                                id: order._id,
+                              }
+                            );
+                            if (data.success) {
+                              setGuestMealBreakfastCount(0);
+                              setGuestMealLunchCount(0);
+                              setGuestMealDinnerCount(0);
+                              setIsGuestMeal(false);
+                              setLoading(false);
+                              toast.success("Guest Meal turned off");
+                            } else {
+                              toast.error("Something went wrong!");
+                              setLoading(false);
+                            }
+                          }
+                          setIsGuestMeal(!isGuestMeal);
+                        }}
+                        type="checkbox"
+                        value=""
+                        className={`sr-only ${isGuestMeal ? "peer" : ""}`}
+                        checked
+                      />
+                      <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                  {isGuestMeal && (
+                    <form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        const guestMealBreakfastCount =
+                          e.target.guestMealBreakfastCount.value;
+                        const guestMealLunchCount =
+                          e.target.guestMealLunchCount.value;
+                        const guestMealDinnerCount =
+                          e.target.guestMealDinnerCount.value;
+
+                        if (
+                          guestMealBreakfastCount == 0 &&
+                          guestMealLunchCount == 0 &&
+                          guestMealDinnerCount == 0
+                        ) {
+                          return;
+                        }
+                        setLoading(true);
+                        const { data } = await axios.patch(
+                          "/api/orders/updateorder",
+                          {
+                            meal: "guest",
+                            state: isGuestMeal,
+                            id: order._id,
+                            guestBreakfastCount: guestMealBreakfastCount,
+                            guestLunchCount: guestMealLunchCount,
+                            guestDinnerCount: guestMealDinnerCount,
+                          }
+                        );
+                        if (data.success) {
+                          setLoading(false);
+                          toast.success("Guest Meal Updated");
+                        } else {
+                          toast.error("Something went wrong!");
+                          setLoading(false);
+                        }
+                      }}
+                      className="my-10 flex items-center justify-around gap-6"
+                    >
+                      <div className="flex items-center gap-3">
+                        <p className="min-w-[100px]">Breakfast:</p>
+                        <input
+                          min={0}
+                          className="bg-stone-800 w-[100px] px-3 py-2 rounded-md"
+                          type="number"
+                          onChange={(e) => {
+                            if (
+                              moment(date).isSame(moment(new Date()), "day")
+                            ) {
+                              toast.error(
+                                "Today's Guest-Breakfast cann't be edited"
+                              );
+                              return;
+                            }
+
+                            setGuestMealBreakfastCount(e.target.value);
+                          }}
+                          value={guestMealBreakfastCount}
+                          name="guestMealBreakfastCount"
+                        />
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <p className="min-w-[100px]">Lunch:</p>
+                        <input
+                          min={0}
+                          className="bg-stone-800 w-[100px] px-3 py-2 rounded-md"
+                          type="number"
+                          onChange={(e) => {
+                            if (
+                              moment(date).isSame(moment(new Date()), "day")
+                            ) {
+                              toast.error(
+                                "Today's Guest-Lunch cann't be edited"
+                              );
+                              return;
+                            }
+                            setGuestMealLunchCount(e.target.value);
+                          }}
+                          value={guestMealLunchCount}
+                          name="guestMealLunchCount"
+                        />
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <p className="min-w-[100px]">Dinner:</p>
+                        <input
+                          min={0}
+                          className="bg-stone-800 w-[100px] px-3 py-2 rounded-md"
+                          type="number"
+                          onChange={(e) =>
+                            setGuestMealDinnerCount(e.target.value)
+                          }
+                          value={guestMealDinnerCount}
+                          name="guestMealDinnerCount"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="bg-yellow-500 px-3 py-1 rounded-md duration-300 active:scale-90"
+                      >
+                        {order.isGuestMeal ? "Update" : "Save"}
+                      </button>
+                    </form>
+                  )}
                 </div>
               </>
             )}
