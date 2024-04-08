@@ -791,10 +791,27 @@ const Profile = () => {
                   value={
                     managerAmount || managerAmount == 0 ? managerAmount : ""
                   }
-                  className="w-[200px] px-3 py-1 rounded-full bg-[#1C1917]"
+                  className="w-[200px] px-3 py-1 outline-none rounded-full bg-[#1C1917]"
                   type="number"
                 />
                 <span className="w-[300px]">{currentMonth}</span>
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await axios.get("/api/orders/testapi");
+                      if (res.data.success) {
+                        toast.success("Test success");
+                      } else {
+                        toast.error("Test Failed");
+                      }
+                    } catch (error) {
+                      toast.error("Backend error");
+                    }
+                  }}
+                  className="bg-yellow-500 px-3 py-1 duration-300 active:scale-90 hidden"
+                >
+                  Test Bills
+                </button>
                 {/* <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-yellow-500">
                 {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}
                 BDT

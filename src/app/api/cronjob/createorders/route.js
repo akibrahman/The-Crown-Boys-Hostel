@@ -69,7 +69,7 @@ export const GET = async (req) => {
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
-    //! Last day of any month
+    //! Last day of any month------------------------------
     if (aboutLastDayOfCurrentMonth.isLastDay) {
       const mailOptions = {
         from: "cron-job@hostelplates.com",
@@ -82,8 +82,39 @@ export const GET = async (req) => {
       await transport.sendMail(mailOptions);
     }
     if (test) {
+      console.log("Process Started");
+      const bills = await Bill.find({});
+      for (let m = 0; m < bills.length; m++) {
+        const bill = await Bill.findById(bills[m]._id);
+        const userId = bill.userId;
+        const month = bill.month;
+        const year = bill.year;
+        const orders = await Order.find({ userId, month, year });
+        const totalBreakfast = orders.reduce(
+          (accumulator, currentValue) =>
+            accumulator + (currentValue.breakfast ? 1 : 0),
+          0
+        );
+        const totalLunch = orders.reduce(
+          (accumulator, currentValue) =>
+            accumulator + (currentValue.lunch ? 1 : 0),
+          0
+        );
+        const totalDinner = orders.reduce(
+          (accumulator, currentValue) =>
+            accumulator + (currentValue.dinner ? 1 : 0),
+          0
+        );
+        bill.totalBreakfast = totalBreakfast;
+        bill.totalLunch = totalLunch;
+        bill.totalDinner = totalDinner;
+        bill.totalBillInBDT =
+          totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
+        bill.status = "calculated";
+        await bill.save();
+      }
     }
-    //! Second Last day of any month----------------------------------------------------------------------------------------------
+    //! Second Last day of any month------------------------------
     if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
