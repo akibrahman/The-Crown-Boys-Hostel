@@ -1,17 +1,18 @@
 "use client";
 
 import { AuthContext } from "@/providers/ContextProvider";
+import Link from "next/link";
 import { useContext } from "react";
 
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
   if (loading) return;
   return (
-    <div className="flex items-center justify-center gap-10 dark:bg-stone-900 bg-white text-black dark:text-white py-10">
-      {/* <p className="py-6">
+    <div className="flex items-center justify-center gap-10 dark:bg-stone-900 bg-white text-black dark:text-white py-6">
+      <p className="">
         <Link href="/">Home</Link>
       </p>
-      <p>
+      {/* <p>
         <Link href="/order">Order</Link>
       </p>
       <p>
