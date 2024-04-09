@@ -51,13 +51,13 @@ const Signin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center dark:bg-stone-900">
-      <div className="dark:bg-stone-900 p-8 rounded shadow-2xl shadow-yellow-500 w-full max-w-md">
+      <div className="dark:bg-stone-900 p-8 rounded shadow-2xl shadow-sky-500 w-full max-w-md">
         <h2 className="text-2xl font-semibold mb-6 dark:text-white">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-white text-sm font-bold mb-2"
+              className="block dark:text-white text-sm font-bold mb-2"
             >
               Email
             </label>
@@ -74,7 +74,7 @@ const Signin = () => {
           <div className="mb-4">
             <label
               htmlFor="password"
-              className="block text-white text-sm font-bold mb-2"
+              className="block dark:text-white text-sm font-bold mb-2"
             >
               Password
             </label>
@@ -91,7 +91,7 @@ const Signin = () => {
 
           <button
             type="submit"
-            className="bg-yellow-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
+            className="bg-sky-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
           >
             {loading ? (
               <CgSpinner className="animate-spin text-2xl text-center mx-auto" />
@@ -102,7 +102,7 @@ const Signin = () => {
           <div className="mt-4">
             <Link href={"/signup"}>
               <span className="dark:text-white">Or,</span>{" "}
-              <span className="text-yellow-500 font-semibold underline">
+              <span className="text-sky-500 font-semibold underline">
                 SignUp
               </span>
             </Link>

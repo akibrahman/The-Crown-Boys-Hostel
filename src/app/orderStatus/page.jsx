@@ -348,11 +348,11 @@ const OrderStatus = () => {
         style={customStyles}
       >
         <div className="relative">
-          <p className="text-center text-xl text-yellow-500 pb-4 font-semibold overflow-y-scroll">
+          <p className="text-center text-xl text-sky-500 pb-4 font-semibold overflow-y-scroll">
             Floor Meal Analyzation
           </p>
           <FaTimes
-            className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer"
+            className="absolute top-2 right-2 text-sky-500 text-xl cursor-pointer"
             onClick={closeModal}
           />
           <div className="space-y-1">
@@ -363,7 +363,7 @@ const OrderStatus = () => {
                   key={i}
                 >
                   <p className="w-[110px]">
-                    <span className="text-yellow-500 bg-stone-800 h-6 w-6 rounded-full inline-flex items-center justify-center mr-2">
+                    <span className="text-sky-500 bg-stone-800 h-6 w-6 rounded-full inline-flex items-center justify-center mr-2">
                       {d.floor + 1}
                     </span>
                     {d.floor == 0 ? "G" : d.floor}
@@ -430,7 +430,7 @@ const OrderStatus = () => {
       <div className="mb-20 max-h-screen">
         <p className="text-center font-semibold text-2xl">Order Status</p>
         {/* Order - Today  */}
-        <div className="mt-10 bg-yellow-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
+        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
           <p className="w-[220px]">Today - {todayDateString}</p>
           <p className="">Breakfast - {breakfastOfToday}</p>
           <p className="">Lunch - {lunchOfToday}</p>
@@ -481,7 +481,7 @@ const OrderStatus = () => {
         </div>
 
         {/* Order - Tomorrow  */}
-        <div className="mt-10 bg-yellow-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
+        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
           <p className="w-[220px]">Tomorrow - {tomorrowDateString}</p>
           <p className="">Breakfast - {breakfastOfTomorrow}</p>
           <p className="">Lunch - {lunchOfTomorrow}</p>
@@ -532,7 +532,7 @@ const OrderStatus = () => {
         </div>
 
         {/* Order - Yesterday  */}
-        <div className="mt-10 bg-yellow-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
+        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
           <p className="w-[220px]">Yesterday - {yesterdayDateString}</p>
           <p className="">Breakfast - {breakfastOfYesterday}</p>
           <p className="">Lunch - {lunchOfYesterday}</p>

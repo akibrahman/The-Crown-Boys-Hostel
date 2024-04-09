@@ -22,7 +22,7 @@ const NavBar = () => {
       {loading ? null : user ? (
         <p>
           <Link
-            className="bg-yellow-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
+            className="bg-sky-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
             href="/profile"
           >
             Profile
@@ -31,7 +31,7 @@ const NavBar = () => {
       ) : (
         <p>
           <Link
-            className="bg-yellow-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
+            className="bg-sky-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
             href="/signin"
           >
             Log In

@@ -55,7 +55,7 @@ const UserQuery = () => {
         onSubmit={searchUserQuery}
         className="flex items-center justify-center gap-4 my-14"
       >
-        <p className="text-yellow-500 font-semibold">Select User : </p>
+        <p className="text-sky-500 font-semibold">Select User : </p>
         <select
           name="clients"
           className="px-5 py-2 rounded-md bg-stone-700 cursor-pointer"
@@ -67,7 +67,7 @@ const UserQuery = () => {
             </option>
           ))}
         </select>
-        <p className="text-yellow-500 font-semibold">Select Month : </p>
+        <p className="text-sky-500 font-semibold">Select Month : </p>
         <select
           name="month"
           className="px-5 py-2 rounded-md bg-stone-700 cursor-pointer"
@@ -86,7 +86,7 @@ const UserQuery = () => {
           <option value="November">November</option>
           <option value="December">December</option>
         </select>
-        <p className="text-yellow-500 font-semibold">Select Year : </p>
+        <p className="text-sky-500 font-semibold">Select Year : </p>
         <select
           name="year"
           className="px-5 py-2 rounded-md bg-stone-700 cursor-pointer"
@@ -102,7 +102,7 @@ const UserQuery = () => {
         </select>
         <button
           type="submit"
-          className="bg-yellow-500 px-4 py-2 rounded-md duration-300 font-semibold text-stone-800 active:scale-90"
+          className="bg-sky-500 px-4 py-2 rounded-md duration-300 font-semibold text-stone-800 active:scale-90"
         >
           Search
         </button>
@@ -110,16 +110,16 @@ const UserQuery = () => {
       <div className="border-2 flex justify-center py-10">
         {/* Search Result  */}
         <div className="w-1/2">
-          <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative">
+          <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">
             {result == null && (
               <p className="py-3">
-                <span className="text-yellow-500 font-bold text-2xl">S</span>
+                <span className="text-sky-500 font-bold text-2xl">S</span>
                 earch to get result
               </p>
             )}
             {result && result.orders.length == 0 && (
               <p className="py-3">
-                No <span className="text-yellow-500 font-bold text-2xl">R</span>
+                No <span className="text-sky-500 font-bold text-2xl">R</span>
                 esult found
               </p>
             )}
@@ -129,7 +129,7 @@ const UserQuery = () => {
             {result?.orders?.map((order) => (
               <div
                 key={order._id}
-                className="relative w-16 h-16 rounded-xl bg-yellow-500 flex items-center justify-center"
+                className="relative w-16 h-16 rounded-xl bg-sky-500 flex items-center justify-center"
               >
                 {order.date.split("/")[1]}
                 <span
@@ -155,7 +155,7 @@ const UserQuery = () => {
       {result && result?.bill && (
         <div className="border-2 flex justify-center py-10 my-10">
           <div className="w-1/2">
-            <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative">
+            <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">
               Bill Details
             </p>
             <div className="py-3 space-y-3 select-none">
@@ -164,13 +164,13 @@ const UserQuery = () => {
               <p>Total Dinner: {result.bill.totalDinner}</p>
               <p>
                 Total Amount:{" "}
-                <span className="bg-yellow-500 font-semibold px-3 py-1 rounded-md ml-3">
+                <span className="bg-sky-500 font-semibold px-3 py-1 rounded-md ml-3">
                   {result.bill.totalBillInBDT} BDT
                 </span>
               </p>
               <p>
                 Paid Amount:{" "}
-                <span className="bg-yellow-500 font-semibold px-3 py-1 rounded-md ml-3">
+                <span className="bg-sky-500 font-semibold px-3 py-1 rounded-md ml-3">
                   {result.bill.paidBillInBDT} BDT
                 </span>
               </p>

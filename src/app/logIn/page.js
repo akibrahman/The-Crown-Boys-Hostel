@@ -91,7 +91,7 @@ const LogIn = () => {
 
           <button
             type="submit"
-            className="bg-yellow-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
+            className="bg-sky-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
           >
             {loading ? (
               <CgSpinner className="animate-spin text-2xl text-center mx-auto" />
@@ -102,7 +102,7 @@ const LogIn = () => {
           <div className="mt-4">
             <Link href={"/signup"}>
               Or,{" "}
-              <span className="text-yellow-500 font-semibold underline">
+              <span className="text-sky-500 font-semibold underline">
                 SignUp
               </span>
             </Link>

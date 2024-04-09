@@ -461,18 +461,18 @@ const Profile = () => {
         </button>
         {user.role === "client" && user.isVerified && user.isClientVerified && (
           <>
-            <p className="text-lg border rounded-xl border-yellow-500 px-8 py-1.5">
+            <p className="text-lg border rounded-xl border-sky-500 px-8 py-1.5">
               Dinner: {dinnerCount}
             </p>
-            <p className="text-lg border rounded-xl border-yellow-500 px-8 py-1.5">
+            <p className="text-lg border rounded-xl border-sky-500 px-8 py-1.5">
               Lunch: {lunchCount}
             </p>
-            <p className="text-lg border rounded-xl border-yellow-500 px-8 py-1.5">
+            <p className="text-lg border rounded-xl border-sky-500 px-8 py-1.5">
               Breakfast: {breakfastCount}
             </p>
           </>
         )}
-        <p className="text-lg bg-yellow-500 rounded-xl font-semibold px-6 py-1.5">
+        <p className="text-lg bg-sky-500 rounded-xl font-semibold px-6 py-1.5">
           My Profile
         </p>
       </div>
@@ -510,7 +510,7 @@ const Profile = () => {
                 });
                 toast.success("Verification E-mail sent");
               }}
-              className="flex items-center gap-1 duration-300 bg-yellow-500 w-max px-4 py-1 rounded-full font-semibold mt-2 active:scale-90"
+              className="flex items-center gap-1 duration-300 bg-sky-500 w-max px-4 py-1 rounded-full font-semibold mt-2 active:scale-90"
             >
               Verify Please
             </button>
@@ -519,9 +519,9 @@ const Profile = () => {
         {/*//! Clalnder as a Client */}
         {user.role == "client" && user.isVerified && user.isClientVerified && (
           <div className="col-span-2 pl-6 pb-8 mt-10">
-            <p className="text-center text-xl font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative">
+            <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">
               {currentMonth}
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-yellow-500">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-sky-500">
                 {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}
                 BDT
               </span>
@@ -530,7 +530,7 @@ const Profile = () => {
               {calanderData.map((order) => (
                 <div
                   key={order._id}
-                  className="relative w-16 h-16 rounded-xl bg-yellow-500 flex items-center justify-center"
+                  className="relative w-16 h-16 rounded-xl bg-sky-500 flex items-center justify-center"
                 >
                   {order.date.split("/")[1]}
                   <span
@@ -782,11 +782,11 @@ const Profile = () => {
                 </button>
               </Link>
               <Link href="/userQuery">
-                <button className="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+                <button className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
                   User Query
                 </button>
               </Link>
-              <button className="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+              <button className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
                 Meal Updator
               </button>
             </div>
@@ -807,7 +807,7 @@ const Profile = () => {
           user.isVerified &&
           user.isManagerVerified && (
             <div className="col-span-3 pl-6 pb-8 mt-10">
-              <p className="font-semibold border border-yellow-500 rounded-xl px-4 py-2 relative flex items-center justify-around">
+              <p className="font-semibold border border-sky-500 rounded-xl px-4 py-2 relative flex items-center justify-around">
                 <input
                   placeholder="Enter Amount"
                   onChange={(e) => setManagerAmount(parseInt(e.target.value))}
@@ -832,11 +832,11 @@ const Profile = () => {
                       toast.error("Backend error");
                     }
                   }}
-                  className="bg-yellow-500 px-3 py-1 duration-300 active:scale-90"
+                  className="bg-sky-500 px-3 py-1 duration-300 active:scale-90 hidden"
                 >
                   Test
                 </button>
-                {/* <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-yellow-500">
+                {/* <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-sky-500">
                 {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}
                 BDT
               </span> */}
@@ -845,7 +845,7 @@ const Profile = () => {
                 {managerCalanderData?.data?.map((mrkt) => (
                   <div
                     key={mrkt._id}
-                    className="relative w-[110px] h-20 rounded-md bg-yellow-500 flex items-center justify-center flex-col cursor-pointer after:h-0 after:w-full after:absolute after:bg-[rgba(0,0,0,0.5)] hover:after:h-full after:duration-300 transition-all group"
+                    className="relative w-[110px] h-20 rounded-md bg-sky-500 flex items-center justify-center flex-col cursor-pointer after:h-0 after:w-full after:absolute after:bg-[rgba(0,0,0,0.5)] hover:after:h-full after:duration-300 transition-all group"
                   >
                     {!isMoneyAdding ? (
                       <GiPayMoney
@@ -865,15 +865,15 @@ const Profile = () => {
                             toast.error("Please enter amount");
                           }
                         }}
-                        className="scale-0 group-hover:scale-100 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-yellow-500 bg-white z-10 text-[40px] p-1 rounded-md duration-300 transition-all active:scale-90"
+                        className="scale-0 group-hover:scale-100 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sky-500 bg-white z-10 text-[40px] p-1 rounded-md duration-300 transition-all active:scale-90"
                       />
                     ) : (
                       <div className="bg-white z-10 hidden group-hover:block absolute rounded-md">
                         {" "}
-                        <CgSpinner className="text-yellow-500 text-[40px] p-1  duration-300 transition-all active:scale-90 group-hover:animate-spin" />
+                        <CgSpinner className="text-sky-500 text-[40px] p-1  duration-300 transition-all active:scale-90 group-hover:animate-spin" />
                       </div>
                     )}
-                    <span className="font-semibold bg-white text-yellow-500 px-2 py-1 rounded-md mb-2 select-none">
+                    <span className="font-semibold bg-white text-sky-500 px-2 py-1 rounded-md mb-2 select-none">
                       {" "}
                       {mrkt.date.split("/")[1] +
                         "-" +
@@ -903,6 +903,7 @@ const Profile = () => {
               </div>
             </div>
           )}
+        {/*//! Meal Rate as a Manager ------------ Working Stage*/}
         {user.role == "manager" &&
           user.isVerified &&
           user.isManagerVerified && (
@@ -924,12 +925,39 @@ const Profile = () => {
                 ) +
                   ordersForTheMonth.reduce(
                     (accumulator, currentValue) =>
+                      accumulator +
+                      (currentValue.isGuestMeal &&
+                      currentValue.guestBreakfastCount > 0
+                        ? currentValue.guestBreakfastCount / 2
+                        : 0),
+                    0
+                  ) +
+                  ordersForTheMonth.reduce(
+                    (accumulator, currentValue) =>
                       accumulator + (currentValue.lunch ? 1 : 0),
                     0
                   ) +
                   ordersForTheMonth.reduce(
                     (accumulator, currentValue) =>
+                      accumulator +
+                      (currentValue.isGuestMeal &&
+                      currentValue.guestLunchCount > 0
+                        ? currentValue.guestLunchCount
+                        : 0),
+                    0
+                  ) +
+                  ordersForTheMonth.reduce(
+                    (accumulator, currentValue) =>
                       accumulator + (currentValue.dinner ? 1 : 0),
+                    0
+                  ) +
+                  ordersForTheMonth.reduce(
+                    (accumulator, currentValue) =>
+                      accumulator +
+                      (currentValue.isGuestMeal &&
+                      currentValue.guestDinnerCount > 0
+                        ? currentValue.guestDinnerCount
+                        : 0),
                     0
                   )}
               </p>
@@ -948,12 +976,39 @@ const Profile = () => {
                   ) +
                     ordersForTheMonth.reduce(
                       (accumulator, currentValue) =>
+                        accumulator +
+                        (currentValue.isGuestMeal &&
+                        currentValue.guestBreakfastCount > 0
+                          ? currentValue.guestBreakfastCount / 2
+                          : 0),
+                      0
+                    ) +
+                    ordersForTheMonth.reduce(
+                      (accumulator, currentValue) =>
                         accumulator + (currentValue.lunch ? 1 : 0),
                       0
                     ) +
                     ordersForTheMonth.reduce(
                       (accumulator, currentValue) =>
+                        accumulator +
+                        (currentValue.isGuestMeal &&
+                        currentValue.guestLunchCount > 0
+                          ? currentValue.guestLunchCount
+                          : 0),
+                      0
+                    ) +
+                    ordersForTheMonth.reduce(
+                      (accumulator, currentValue) =>
                         accumulator + (currentValue.dinner ? 1 : 0),
+                      0
+                    ) +
+                    ordersForTheMonth.reduce(
+                      (accumulator, currentValue) =>
+                        accumulator +
+                        (currentValue.isGuestMeal &&
+                        currentValue.guestDinnerCount > 0
+                          ? currentValue.guestDinnerCount
+                          : 0),
                       0
                     ))
                 ).toFixed(2)}

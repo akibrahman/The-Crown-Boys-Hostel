@@ -11,13 +11,13 @@ const page = async () => {
   const blogs = await getBlogs();
   return (
     <div>
-      <p className="text-2xl text-center text-yellow-500 border py-2 rounded-md border-yellow-500">
+      <p className="text-2xl text-center text-sky-500 border py-2 rounded-md border-sky-500">
         Blogs
       </p>
       <div className="mt-5 grid grid-cols-3 gap-4">
         {blogs.map((blog) => (
           <Link key={blog.id} href={`/blog/${blog.id}`}>
-            <div className="border rounded-md border-yellow-500 p-3 flex flex-col items-center gap-4">
+            <div className="border rounded-md border-sky-500 p-3 flex flex-col items-center gap-4">
               <Image
                 className="rounded-md"
                 src={blog.url}

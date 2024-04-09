@@ -154,9 +154,9 @@ const Registration = () => {
                 setRole("manager");
                 setFormData({ ...formData, institution: "" });
               }}
-              className={`border px-4 py-2 border-yellow-500 rounded-lg font-bold duration-300 ${
+              className={`border px-4 py-2 border-sky-500 rounded-lg font-bold duration-300 ${
                 role === "manager"
-                  ? "bg-yellow-500 text-stone-900"
+                  ? "bg-sky-500 text-stone-900"
                   : "bg-transparent text-white"
               }`}
             >
@@ -167,9 +167,9 @@ const Registration = () => {
                 setRole("client");
                 setFormData({ ...formData, bkashNumber: "" });
               }}
-              className={`border px-4 py-2 border-yellow-500 rounded-lg font-bold duration-300 ${
+              className={`border px-4 py-2 border-sky-500 rounded-lg font-bold duration-300 ${
                 role === "client"
-                  ? "bg-yellow-500 text-stone-900"
+                  ? "bg-sky-500 text-stone-900"
                   : "bg-transparent text-white"
               }`}
             >
@@ -250,7 +250,7 @@ const Registration = () => {
                 <div className="mb-4 mt-8 flex items-center gap-4">
                   <span
                     className={`${
-                      !isNid ? "bg-yellow-500" : "bg-stone-500"
+                      !isNid ? "bg-sky-500" : "bg-stone-500"
                     } px-3 py-1 font-medium rounded-md duration-300 transition-all`}
                   >
                     Birth Certificate
@@ -273,7 +273,7 @@ const Registration = () => {
                   </label>
                   <span
                     className={`${
-                      !isNid ? "bg-stone-500" : "bg-yellow-500"
+                      !isNid ? "bg-stone-500" : "bg-sky-500"
                     } px-3 py-1 font-medium rounded-md duration-300 transition-all`}
                   >
                     NID Birth
@@ -301,7 +301,7 @@ const Registration = () => {
                         />
                         <FaTimes
                           onClick={() => setNidFront(null)}
-                          className="absolute top-0 right-0 bg-yellow-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
+                          className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
                         />
                       </div>
                     ) : (
@@ -341,7 +341,7 @@ const Registration = () => {
                         />
                         <FaTimes
                           onClick={() => setNidBack(null)}
-                          className="absolute top-0 right-0 bg-yellow-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
+                          className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
                         />
                       </div>
                     ) : (
@@ -383,7 +383,7 @@ const Registration = () => {
                       />
                       <FaTimes
                         onClick={() => setBrithCertificate(null)}
-                        className="absolute top-0 right-0 bg-yellow-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
+                        className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
                       />
                     </div>
                   ) : (
@@ -621,7 +621,7 @@ const Registration = () => {
                   </label>
                   <label
                     htmlFor="profilePicture"
-                    className="border border-yellow-500 flex items-center justify-center font-bold text-white p-2 w-1/2 rounded bg-yellow-500 cursor-pointer select-none duration-300 active:scale-90"
+                    className="border border-sky-500 flex items-center justify-center font-bold text-white p-2 w-1/2 rounded bg-sky-500 cursor-pointer select-none duration-300 active:scale-90"
                   >
                     + Add Photo
                   </label>
@@ -652,7 +652,7 @@ const Registration = () => {
           </div>
           <button
             type="submit"
-            className="bg-yellow-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
+            className="bg-sky-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
           >
             {loading ? (
               <CgSpinner className="animate-spin text-2xl text-center mx-auto" />
@@ -663,7 +663,7 @@ const Registration = () => {
           <div className="mt-4">
             <Link href={"/login"}>
               Or,{" "}
-              <span className="text-yellow-500 font-semibold underline">
+              <span className="text-sky-500 font-semibold underline">
                 Login
               </span>
             </Link>

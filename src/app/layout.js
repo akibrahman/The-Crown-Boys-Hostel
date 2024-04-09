@@ -29,7 +29,7 @@ const RootLayout = ({ children }) => {
         <TanstackProvider>
           <ContextProvider>
             <NavBar />
-            <hr className="border-yellow-500" />
+            <hr className="border-sky-500" />
             <Toaster />
             <div className="">{children}</div>
           </ContextProvider>

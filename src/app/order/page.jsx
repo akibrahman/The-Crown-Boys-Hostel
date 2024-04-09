@@ -193,7 +193,7 @@ const Order = () => {
       {loading && (
         <div className="absolute h-full w-full top-0 bg-[rgba(0,0,0,0.6)] z-50"></div>
       )}
-      <p className="text-2xl text-white bg-yellow-500 px-8 py-3 rounded-xl font-bold text-center mb-5 relative">
+      <p className="text-2xl text-white bg-sky-500 px-8 py-3 rounded-xl font-bold text-center mb-5 relative">
         Order your meal here
         {loading && (
           <CgSpinner className="animate-spin absolute top-[10px] right-2 text-4xl" />
@@ -470,7 +470,7 @@ const Order = () => {
                       </div>
                       <button
                         type="submit"
-                        className="bg-yellow-500 px-3 py-1 rounded-md duration-300 active:scale-90"
+                        className="bg-sky-500 px-3 py-1 rounded-md duration-300 active:scale-90"
                       >
                         {order.isGuestMeal ? "Update" : "Save"}
                       </button>

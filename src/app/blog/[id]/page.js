@@ -7,11 +7,11 @@ const page = async ({ params }) => {
 
   return (
     <div>
-      <p className="text-2xl text-center text-yellow-500 border py-2 rounded-md border-yellow-500">
+      <p className="text-2xl text-center text-sky-500 border py-2 rounded-md border-sky-500">
         Blog Details
       </p>
       <div
-        className="border rounded-md border-yellow-500 p-3 flex flex-col items-center gap-4"
+        className="border rounded-md border-sky-500 p-3 flex flex-col items-center gap-4"
         key={blog.albumId}
       >
         <Image
