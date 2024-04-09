@@ -9,8 +9,8 @@ const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
   if (loading) return;
   return (
-    <nav className="flex items-center justify-center gap-10 py-6 dark:bg-stone-900 bg-white text-black dark:text-white">
-      <p>
+    <nav className="flex items-center justify-center gap-10 dark:bg-stone-900 bg-white text-black dark:text-white">
+      <p className="py-6">
         <Link href="/">Home</Link>
       </p>
       <p>

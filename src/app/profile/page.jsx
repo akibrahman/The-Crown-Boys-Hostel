@@ -827,38 +827,8 @@ const Profile = () => {
                       // } else {
                       //   toast.error("Test Failed");
                       // }
-                      await axios.post("/api/orders/makeorders", {
-                        userId: "user Id",
-                        managerId: "Manager Id",
-                        days: parseInt(currentDays[currentDays.length - 1]),
-                        currentMonthName: new Date().toLocaleDateString(
-                          "en-BD",
-                          {
-                            month: "long",
-                            timeZone: "Asia/Dhaka",
-                          }
-                        ),
-                        currentMonth: new Date(
-                          new Date().toLocaleString("en-US", {
-                            timeZone: "Asia/Dhaka",
-                          })
-                        ).getMonth(),
-                        currentYear: new Date(
-                          new Date().toLocaleString("en-US", {
-                            timeZone: "Asia/Dhaka",
-                          })
-                        ).getFullYear(),
-                      });
-
-                      const { data } = await axios.post(
-                        "api/clients/approveclient",
-                        { id: clientDetails._id }
-                      );
-                      if (data.success) {
-                        await clientRefetch();
-                        toast.success("Authorization Provided");
-                      }
                     } catch (error) {
+                      console.log(error);
                       toast.error("Backend error");
                     }
                   }}

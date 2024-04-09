@@ -11,10 +11,20 @@ export const POST = async (req) => {
       userId,
       managerId,
       days,
+      currentDateNumber,
       currentMonthName,
       currentMonth,
       currentYear,
     } = await req.json();
+    // console.log("--------------------------------");
+    // console.log(userId);
+    // console.log(managerId);
+    // console.log(days);
+    // console.log(currentDateNumber);
+    // console.log(currentMonthName);
+    // console.log(currentMonth);
+    // console.log(currentYear);
+    // return NextResponse.json({ success: true, msg: "OK" });
     for (let i = 1; i <= days; i++) {
       const newOrder = new Order({
         userId,
@@ -22,9 +32,9 @@ export const POST = async (req) => {
         month: currentMonthName,
         year: currentYear,
         date: new Date(currentYear, currentMonth, i).toLocaleDateString(),
-        breakfast: false,
-        lunch: false,
-        dinner: false,
+        breakfast: i <= currentDateNumber ? false : true,
+        lunch: i <= currentDateNumber ? false : true,
+        dinner: i <= currentDateNumber ? false : true,
       });
       await newOrder.save();
     }
@@ -34,9 +44,9 @@ export const POST = async (req) => {
       year: currentYear,
     });
     await newBill.save();
-    return NextResponse.json({ msg: "OK" });
+    return NextResponse.json({ success: true, msg: "OK" });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ msg: "Error", error });
+    return NextResponse.json({ success: false, msg: "Error", error });
   }
 };
