@@ -189,9 +189,9 @@ const Order = () => {
   if (!user) return <p>Loading user ...</p>;
 
   return (
-    <div className="relative">
+    <div className="relative dark:bg-stone-900 dark:text-white min-h-screen">
       {loading && (
-        <div className="fixed h-screen w-screen bg-[rgba(0,0,0,0.6)] z-50"></div>
+        <div className="absolute h-full w-full top-0 bg-[rgba(0,0,0,0.6)] z-50"></div>
       )}
       <p className="text-2xl text-white bg-yellow-500 px-8 py-3 rounded-xl font-bold text-center mb-5 relative">
         Order your meal here
@@ -219,7 +219,7 @@ const Order = () => {
             />
           </div>
           {/* Meal Switch  */}
-          <div className="grid grid-cols-1 md:grid-cols-3 align-middle gap-10 md:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 align-middle gap-10 md:gap-4 px-20">
             {order && (
               <>
                 {/* Breakfast   */}
@@ -416,7 +416,7 @@ const Order = () => {
                         <p className="min-w-[100px]">Breakfast:</p>
                         <input
                           min={0}
-                          className="bg-stone-800 w-[100px] px-3 py-2 rounded-md"
+                          className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md"
                           type="number"
                           onChange={(e) => {
                             if (
@@ -438,7 +438,7 @@ const Order = () => {
                         <p className="min-w-[100px]">Lunch:</p>
                         <input
                           min={0}
-                          className="bg-stone-800 w-[100px] px-3 py-2 rounded-md"
+                          className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md"
                           type="number"
                           onChange={(e) => {
                             if (
@@ -459,7 +459,7 @@ const Order = () => {
                         <p className="min-w-[100px]">Dinner:</p>
                         <input
                           min={0}
-                          className="bg-stone-800 w-[100px] px-3 py-2 rounded-md"
+                          className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md"
                           type="number"
                           onChange={(e) =>
                             setGuestMealDinnerCount(e.target.value)

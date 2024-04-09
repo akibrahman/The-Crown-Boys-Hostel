@@ -4,6 +4,7 @@ import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 import Modal from "react-modal";
 
 const OrderStatus = () => {
@@ -346,10 +347,14 @@ const OrderStatus = () => {
         onRequestClose={closeModal}
         style={customStyles}
       >
-        <div className="">
+        <div className="relative">
           <p className="text-center text-xl text-yellow-500 pb-4 font-semibold overflow-y-scroll">
             Floor Meal Analyzation
           </p>
+          <FaTimes
+            className="absolute top-2 right-2 text-yellow-500 text-xl cursor-pointer"
+            onClick={closeModal}
+          />
           <div className="space-y-1">
             {floorAnalysingData.map((d, i) => (
               <>
@@ -376,13 +381,6 @@ const OrderStatus = () => {
                         {(r.totalBreakfast == 0 &&
                           r.totalLunch == 0 &&
                           r.totalDinner == 0) || (
-                          // <p key={j}>
-                          //   {r.roomNumber.split("")[0].toUpperCase() +
-                          //     "_" +
-                          //     r.roomNumber.split("")[1]}{" "}
-                          //   - Breakfast {r.totalBreakfast} - Lunch{" "}
-                          //   {r.totalLunch} - Dinner {r.totalDinner}
-                          // </p>
                           <table className="border" key={j}>
                             <thead>
                               <tr>

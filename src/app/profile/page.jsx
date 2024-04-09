@@ -1,5 +1,6 @@
 "use client";
 
+import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
@@ -253,16 +254,18 @@ const Profile = () => {
     }
   }, [calanderData]);
   // console.log(user);
-  if (!user) return <p>Loading.......User</p>;
-  if (user.role === "owner" && !managers) return <p>Loading.......Managers</p>;
   if (
-    user.role === "manager" &&
-    (!clients || !currentDays || !ordersForTheMonth || !managerCalanderData)
+    !user ||
+    (user.role === "owner" && !managers) ||
+    (user.role === "manager" &&
+      (!clients ||
+        !currentDays ||
+        !ordersForTheMonth ||
+        !managerCalanderData)) ||
+    (user.role === "client" && (!manager || !currentDays || !calanderData))
   )
-    return <p>Loading.......Clients</p>;
+    return <PreLoader />;
 
-  if (user.role === "client" && (!manager || !currentDays || !calanderData))
-    return <p>Loading.......Manager</p>;
   return (
     <div>
       {/*//! Modal for Client Details  */}
@@ -448,7 +451,7 @@ const Profile = () => {
         )}
       </Modal>
       {/*//! NavBar Panel  */}
-      <div className=" flex items-center flex-row-reverse justify-between">
+      <div className="p-6 flex items-center flex-row-reverse justify-between dark:bg-stone-900 dark:text-white">
         <button
           onClick={logout}
           className="bg-red-600 hover:bg-red-700 text-stone-900 font-bold px-4 py-1 flex items-center gap-3 rounded-lg duration-300 active:scale-90"
@@ -474,7 +477,7 @@ const Profile = () => {
         </p>
       </div>
       {/*//! Parent Block ------------------------------------------------------------- */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 dark:bg-stone-900 dark:text-white">
         {/*//! Profile Details  */}
         <div className={`mt-10 pl-6 py-8`}>
           <Image
@@ -563,19 +566,13 @@ const Profile = () => {
         ) : user.role === "client" &&
           user.isVerified &&
           !user.isClientVerified ? (
-          <div className="flex items-center justify-center border-l-4 pl-6 py-8 border-purple-500 mt-10">
+          <div className="flex items-center justify-center pl-6 py-8 mt-10">
             <p>Wait till manager accepts you!</p>
           </div>
         ) : user.role === "client" &&
           user.isVerified &&
           user.isClientVerified ? (
-          <div
-            className={`mt-10 border-l-4 pl-6 py-8 ${
-              manager.role === "owner" && "border-blue-500"
-            } ${manager.role === "manager" && "border-purple-500"} ${
-              manager.role === "client" && "border-yellow-500"
-            }`}
-          >
+          <div className={`mt-10 pl-6 py-8`}>
             <Image
               alt={`Profile picture of ${manager.username}`}
               src={manager.profilePicture}
@@ -709,7 +706,7 @@ const Profile = () => {
               <input
                 placeholder="Search by name"
                 type="text"
-                className="w-80 px-4 pl-12 py-3 rounded-full text-white bg-stone-900 focus:outline-none"
+                className="w-80 px-4 pl-12 py-3 rounded-full text-white dark:bg-stone-800 bg-stone-300 focus:outline-none"
               />
               <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
             </div>
@@ -777,7 +774,7 @@ const Profile = () => {
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
-          <div className="h-[380px] overflow-y-scroll px-3 mt-10 relative">
+          <div className="px-3 mt-10 relative">
             <div className="flex items-start justify-center flex-wrap gap-5">
               <Link href="/orderStatus" className="w-full">
                 <button className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 w-full active:scale-90">
@@ -817,18 +814,49 @@ const Profile = () => {
                   value={
                     managerAmount || managerAmount == 0 ? managerAmount : ""
                   }
-                  className="w-[200px] px-3 py-1 outline-none rounded-full bg-[#1C1917]"
+                  className="w-[200px] px-5 py-1 outline-none rounded-full dark:bg-stone-800 bg-stone-300"
                   type="number"
                 />
                 <span className="w-[300px]">{currentMonth}</span>
                 <button
                   onClick={async () => {
                     try {
-                      const res = await axios.get("/api/orders/testapi");
-                      if (res.data.success) {
-                        toast.success("Test success");
-                      } else {
-                        toast.error("Test Failed");
+                      // const res = await axios.get("/api/orders/testapi");
+                      // if (res.data.success) {
+                      //   toast.success("Test success");
+                      // } else {
+                      //   toast.error("Test Failed");
+                      // }
+                      await axios.post("/api/orders/makeorders", {
+                        userId: "user Id",
+                        managerId: "Manager Id",
+                        days: parseInt(currentDays[currentDays.length - 1]),
+                        currentMonthName: new Date().toLocaleDateString(
+                          "en-BD",
+                          {
+                            month: "long",
+                            timeZone: "Asia/Dhaka",
+                          }
+                        ),
+                        currentMonth: new Date(
+                          new Date().toLocaleString("en-US", {
+                            timeZone: "Asia/Dhaka",
+                          })
+                        ).getMonth(),
+                        currentYear: new Date(
+                          new Date().toLocaleString("en-US", {
+                            timeZone: "Asia/Dhaka",
+                          })
+                        ).getFullYear(),
+                      });
+
+                      const { data } = await axios.post(
+                        "api/clients/approveclient",
+                        { id: clientDetails._id }
+                      );
+                      if (data.success) {
+                        await clientRefetch();
+                        toast.success("Authorization Provided");
                       }
                     } catch (error) {
                       toast.error("Backend error");
@@ -836,7 +864,7 @@ const Profile = () => {
                   }}
                   className="bg-yellow-500 px-3 py-1 duration-300 active:scale-90"
                 >
-                  Test Bills
+                  Test
                 </button>
                 {/* <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-yellow-500">
                 {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}

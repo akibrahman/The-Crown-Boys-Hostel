@@ -1,14 +1,8 @@
 const Home = () => {
   return (
-    <main className="">
+    <main className="min-h-screen">
       <p>Hello World</p>
-      {/* <Image
-        src={img}
-        alt="Picture of Zibra"
-        width={500}
-        placeholder="blur"
-        className="rounded-md my-10"
-      ></Image> */}
+      <p>Hello World</p>
     </main>
   );
 };

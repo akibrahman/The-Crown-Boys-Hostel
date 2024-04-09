@@ -50,9 +50,9 @@ const Signin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-stone-900 p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-semibold mb-6">Login</h2>
+    <div className="min-h-screen flex items-center justify-center dark:bg-black">
+      <div className="dark:bg-stone-900 p-8 rounded shadow-2xl shadow-yellow-500 w-full max-w-md">
+        <h2 className="text-2xl font-semibold mb-6 dark:text-white">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -101,7 +101,7 @@ const Signin = () => {
           </button>
           <div className="mt-4">
             <Link href={"/signup"}>
-              Or,{" "}
+              <span className="dark:text-white">Or,</span>{" "}
               <span className="text-yellow-500 font-semibold underline">
                 SignUp
               </span>

@@ -144,12 +144,8 @@ const Registration = () => {
   if (!verifiedManagers) return <p>Loading.............</p>;
 
   return (
-    <div className="flex items-center justify-center">
-      <div
-        className={`${
-          role === "manager" ? "bg-stone-950" : "bg-stone-900"
-        } p-10 rounded shadow-md w-full duration-300`}
-      >
+    <div className="flex items-center justify-center dark:bg-stone-900 dark:text-white">
+      <div className={`p-10 rounded shadow-md w-full duration-300`}>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold mb-6">Sign Up</h2>
           <div className="flex justify-center items-center gap-4">
@@ -188,7 +184,7 @@ const Registration = () => {
               <div className="mb-4">
                 <label
                   htmlFor="username"
-                  className="block text-white text-sm font-bold mb-2"
+                  className="block text-sm font-bold mb-2"
                 >
                   Username
                 </label>
@@ -203,10 +199,7 @@ const Registration = () => {
                 />
               </div>
               <div className="mb-4">
-                <label
-                  htmlFor="email"
-                  className="block text-white text-sm font-bold mb-2"
-                >
+                <label htmlFor="email" className="block text-sm font-bold mb-2">
                   Email
                 </label>
                 <input
@@ -222,7 +215,7 @@ const Registration = () => {
               <div className="mb-4">
                 <label
                   htmlFor="password"
-                  className="block text-white text-sm font-bold mb-2"
+                  className="block text-sm font-bold mb-2"
                 >
                   Password
                 </label>
@@ -239,7 +232,7 @@ const Registration = () => {
               <div className="mb-4">
                 <label
                   htmlFor="confirmPassword"
-                  className="block text-white text-sm font-bold mb-2"
+                  className="block text-sm font-bold mb-2"
                 >
                   Confirm Password
                 </label>
@@ -293,7 +286,7 @@ const Registration = () => {
                   <div className="">
                     <label
                       htmlFor="nidFront"
-                      className="block text-white text-sm font-bold mb-2 cursor-pointer"
+                      className="block text-sm font-bold mb-2 cursor-pointer"
                     >
                       NID Front
                     </label>
@@ -333,7 +326,7 @@ const Registration = () => {
                   <div className="">
                     <label
                       htmlFor="nidBack"
-                      className="block text-white text-sm font-bold mb-2 cursor-pointer"
+                      className="block text-sm font-bold mb-2 cursor-pointer"
                     >
                       NID Back
                     </label>
@@ -375,7 +368,7 @@ const Registration = () => {
                 <div className="mb-8 mt-4">
                   <label
                     htmlFor="birthCertificate"
-                    className="block text-white text-sm font-bold mb-2 cursor-pointer"
+                    className="block text-sm font-bold mb-2 cursor-pointer"
                   >
                     Birth Certificate
                   </label>
@@ -423,7 +416,7 @@ const Registration = () => {
               <div className="mb-4">
                 <label
                   htmlFor="messAddress"
-                  className="block text-white text-sm font-bold mb-2"
+                  className="block text-sm font-bold mb-2"
                 >
                   Mess Address
                 </label>
@@ -440,7 +433,7 @@ const Registration = () => {
               <div className="mb-4">
                 <label
                   htmlFor="contactNumber"
-                  className="block text-white text-sm font-bold mb-2"
+                  className="block text-sm font-bold mb-2"
                 >
                   Contact Number
                 </label>
@@ -458,7 +451,7 @@ const Registration = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="fathersNumber"
-                    className="block text-white text-sm font-bold mb-2"
+                    className="block text-sm font-bold mb-2"
                   >
                     Father&apos;s Number
                   </label>
@@ -477,7 +470,7 @@ const Registration = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="mothersNumber"
-                    className="block text-white text-sm font-bold mb-2"
+                    className="block text-sm font-bold mb-2"
                   >
                     Mother&apos;s Number
                   </label>
@@ -496,7 +489,7 @@ const Registration = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="bkashNumber"
-                    className="block text-white text-sm font-bold mb-2"
+                    className="block text-sm font-bold mb-2"
                   >
                     Bkash Number
                   </label>
@@ -514,7 +507,7 @@ const Registration = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="institution"
-                    className="block text-white text-sm font-bold mb-2"
+                    className="block text-sm font-bold mb-2"
                   >
                     Institution
                   </label>
@@ -533,7 +526,7 @@ const Registration = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="manager"
-                    className="block text-white text-sm font-bold mb-2"
+                    className="block text-sm font-bold mb-2"
                   >
                     Manager
                   </label>
@@ -559,7 +552,7 @@ const Registration = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="floor"
-                    className="block text-white text-sm font-bold mb-2"
+                    className="block text-sm font-bold mb-2"
                   >
                     Floor
                   </label>
@@ -592,7 +585,7 @@ const Registration = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="roomNumber"
-                    className="block text-white text-sm font-bold mb-2"
+                    className="block text-sm font-bold mb-2"
                   >
                     Room Number
                   </label>
@@ -622,7 +615,7 @@ const Registration = () => {
                 <div className="mb-4 w-[80%]">
                   <label
                     htmlFor="profilePicture"
-                    className="block text-white text-sm font-bold mb-2"
+                    className="block text-sm font-bold mb-2"
                   >
                     Profile Picture
                   </label>

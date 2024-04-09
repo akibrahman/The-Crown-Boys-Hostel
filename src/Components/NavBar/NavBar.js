@@ -3,30 +3,43 @@
 import { AuthContext } from "@/providers/ContextProvider";
 import Link from "next/link";
 import { useContext } from "react";
+import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 const NavBar = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+  if (loading) return;
   return (
-    <nav className="flex items-center justify-center gap-10 h-[70px] bg-stone-900">
-      <Link href="/">Home</Link>
-      <Link href="/order">Order</Link>
-      <Link href="/blog">Blog</Link>
-
-      {user ? (
-        <Link
-          className="bg-yellow-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
-          href="/profile"
-        >
-          Profile
-        </Link>
+    <nav className="flex items-center justify-center gap-10 py-6 dark:bg-stone-900 bg-white text-black dark:text-white">
+      <p>
+        <Link href="/">Home</Link>
+      </p>
+      <p>
+        <Link href="/order">Order</Link>
+      </p>
+      <p>
+        <Link href="/blog">Blog</Link>
+      </p>
+      {loading ? null : user ? (
+        <p>
+          <Link
+            className="bg-yellow-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
+            href="/profile"
+          >
+            Profile
+          </Link>
+        </p>
       ) : (
-        <Link
-          className="bg-yellow-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
-          href="/signin"
-        >
-          Log In
-        </Link>
+        <p>
+          <Link
+            className="bg-yellow-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
+            href="/signin"
+          >
+            Log In
+          </Link>
+        </p>
       )}
+
+      <ThemeSwitch />
     </nav>
   );
 };
