@@ -39,7 +39,6 @@ const NavBar = () => {
       )} */}
 
       {/* <ThemeSwitch /> */}
-      <p>Akib Rahman</p>
     </div>
   );
 };
