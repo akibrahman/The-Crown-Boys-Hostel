@@ -3,7 +3,6 @@
 import { AuthContext } from "@/providers/ContextProvider";
 // import Link from "next/link";
 import { useContext } from "react";
-import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
@@ -39,7 +38,8 @@ const NavBar = () => {
         </p>
       )} */}
 
-      <ThemeSwitch />
+      {/* <ThemeSwitch /> */}
+      <p>Akib Rahman</p>
     </div>
   );
 };
