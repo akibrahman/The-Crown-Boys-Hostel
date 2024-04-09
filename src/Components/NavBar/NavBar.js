@@ -1,18 +1,19 @@
 "use client";
 
 import { AuthContext } from "@/providers/ContextProvider";
-import Link from "next/link";
+// import Link from "next/link";
 import { useContext } from "react";
+import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
   if (loading) return;
   return (
     <div className="flex items-center justify-center gap-10 dark:bg-stone-900 bg-white text-black dark:text-white py-6">
-      <p className="">
+      {/* <p className="">
         <Link href="/">Home</Link>
       </p>
-      {/* <p>
+       <p>
         <Link href="/order">Order</Link>
       </p>
       <p>
@@ -38,7 +39,7 @@ const NavBar = () => {
         </p>
       )} */}
 
-      {/* <ThemeSwitch /> */}
+      <ThemeSwitch />
     </div>
   );
 };
