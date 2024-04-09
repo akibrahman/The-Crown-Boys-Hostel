@@ -50,7 +50,7 @@ const Signin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center dark:bg-black">
+    <div className="min-h-screen flex items-center justify-center dark:bg-stone-900">
       <div className="dark:bg-stone-900 p-8 rounded shadow-2xl shadow-yellow-500 w-full max-w-md">
         <h2 className="text-2xl font-semibold mb-6 dark:text-white">Login</h2>
         <form onSubmit={handleSubmit}>
