@@ -49,7 +49,6 @@ const OrderStatus = () => {
     },
     enabled: user?._id ? true : false,
   });
-
   //todo: Order Calculation
   const orderOfToday = orders?.filter((order) => order.date == todayDateString);
   const orderOfTomorrow = orders?.filter(
@@ -59,35 +58,129 @@ const OrderStatus = () => {
     (order) => order.date == yesterdayDateString
   );
   //todo: Order of Today Calculation
-  const breakfastOfToday = orderOfToday?.filter(
-    (order) => order.breakfast == true
-  ).length;
-  const lunchOfToday = orderOfToday?.filter(
-    (order) => order.lunch == true
-  ).length;
-  const dinnerOfToday = orderOfToday?.filter(
-    (order) => order.dinner == true
-  ).length;
+  const breakfastOfToday =
+    parseInt(orderOfToday?.filter((order) => order.breakfast == true).length) +
+    parseInt(
+      orderOfToday
+        ?.filter(
+          (order) => order.isGuestMeal == true && order.guestBreakfastCount > 0
+        )
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestBreakfastCount),
+          0
+        )
+    );
+  const lunchOfToday =
+    parseInt(orderOfToday?.filter((order) => order.lunch == true).length) +
+    parseInt(
+      orderOfToday
+        ?.filter(
+          (order) => order.isGuestMeal == true && order.guestLunchCount > 0
+        )
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestLunchCount),
+          0
+        )
+    );
+  const dinnerOfToday =
+    parseInt(orderOfToday?.filter((order) => order.dinner == true).length) +
+    parseInt(
+      orderOfToday
+        ?.filter(
+          (order) => order.isGuestMeal == true && order.guestDinnerCount > 0
+        )
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestDinnerCount),
+          0
+        )
+    );
   //todo: Order of Tomorow Calculation
-  const breakfastOfTomorrow = orderOfTomorrow?.filter(
-    (order) => order.breakfast == true
-  ).length;
-  const lunchOfTomorrow = orderOfTomorrow?.filter(
-    (order) => order.lunch == true
-  ).length;
-  const dinnerOfTomorrow = orderOfTomorrow?.filter(
-    (order) => order.dinner == true
-  ).length;
+  const breakfastOfTomorrow =
+    parseInt(
+      orderOfTomorrow?.filter((order) => order.breakfast == true).length
+    ) +
+    parseInt(
+      orderOfTomorrow
+        ?.filter(
+          (order) => order.isGuestMeal == true && order.guestBreakfastCount > 0
+        )
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestBreakfastCount),
+          0
+        )
+    );
+  const lunchOfTomorrow =
+    parseInt(orderOfTomorrow?.filter((order) => order.lunch == true).length) +
+    parseInt(
+      orderOfTomorrow
+        ?.filter(
+          (order) => order.isGuestMeal == true && order.guestLunchCount > 0
+        )
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestLunchCount),
+          0
+        )
+    );
+  const dinnerOfTomorrow =
+    parseInt(orderOfTomorrow?.filter((order) => order.dinner == true).length) +
+    parseInt(
+      orderOfTomorrow
+        ?.filter(
+          (order) => order.isGuestMeal == true && order.guestDinnerCount > 0
+        )
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestDinnerCount),
+          0
+        )
+    );
   //todo: Order of Yesterday Calculation
-  const breakfastOfYesterday = orderOfYesterday?.filter(
-    (order) => order.breakfast == true
-  ).length;
-  const lunchOfYesterday = orderOfYesterday?.filter(
-    (order) => order.lunch == true
-  ).length;
-  const dinnerOfYesterday = orderOfYesterday?.filter(
-    (order) => order.dinner == true
-  ).length;
+  const breakfastOfYesterday =
+    parseInt(
+      orderOfYesterday?.filter((order) => order.breakfast == true).length
+    ) +
+    parseInt(
+      orderOfYesterday
+        ?.filter(
+          (order) => order.isGuestMeal == true && order.guestBreakfastCount > 0
+        )
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestBreakfastCount),
+          0
+        )
+    );
+  const lunchOfYesterday =
+    parseInt(orderOfYesterday?.filter((order) => order.lunch == true).length) +
+    parseInt(
+      orderOfYesterday
+        ?.filter(
+          (order) => order.isGuestMeal == true && order.guestLunchCount > 0
+        )
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestLunchCount),
+          0
+        )
+    );
+  const dinnerOfYesterday =
+    parseInt(orderOfYesterday?.filter((order) => order.dinner == true).length) +
+    parseInt(
+      orderOfYesterday
+        ?.filter(
+          (order) => order.isGuestMeal == true && order.guestDinnerCount > 0
+        )
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestDinnerCount),
+          0
+        )
+    );
 
   //! For Modal
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -102,6 +195,8 @@ const OrderStatus = () => {
       transform: "translate(-50%, -50%)",
       backgroundColor: "#000",
       border: "1px solid #EAB308",
+      width: "90%",
+      height: "90%",
     },
     overlay: {
       backgroundColor: "rgba(0,0,0,0.5)",
@@ -128,14 +223,38 @@ const OrderStatus = () => {
     return highestFloor;
   };
   const [floorAnalysingData, setFloorAnalysingData] = useState([]);
+  const compareRoomNumbers = (a, b) => {
+    const roomOrder = {
+      a: ["a1", "a2", "a3", "a4", "a5", "a6"],
+      b: ["b1", "b2", "b3", "b4"],
+    };
+    const [aPrefix, aNumber] = [
+      a.roomNumber[0],
+      parseInt(a.roomNumber.slice(1)),
+    ];
+    const [bPrefix, bNumber] = [
+      b.roomNumber[0],
+      parseInt(b.roomNumber.slice(1)),
+    ];
+
+    if (aPrefix !== bPrefix) {
+      return aPrefix.localeCompare(bPrefix);
+    } else {
+      return (
+        roomOrder[aPrefix].indexOf(a.roomNumber) -
+        roomOrder[bPrefix].indexOf(b.roomNumber)
+      );
+    }
+  };
   const floorAnalyzer = (orders) => {
+    const rooms = ["a1", "a2", "a3", "a4", "a5", "a6", "b1", "b2", "b3", "b4"];
     const analyzedData = [];
     const maxFloor = findHighestFloor(orders);
-    // console.log(orders, maxFloor);
     for (let i = 0; i <= maxFloor; i++) {
       let breakfast = 0;
       let lunch = 0;
       let dinner = 0;
+      let ordersArray = [];
       orders
         .filter((order) => order.user.floor == i)
         .forEach((order) => {
@@ -143,14 +262,81 @@ const OrderStatus = () => {
           order.lunch ? (lunch += 1) : null;
           order.dinner ? (dinner += 1) : null;
         });
+      orders
+        .filter((order) => order.user.floor == i)
+        .forEach((order) => {
+          order.isGuestMeal &&
+            order.guestBreakfastCount > 0 &&
+            (breakfast += order.guestBreakfastCount);
+          order.isGuestMeal &&
+            order.guestLunchCount > 0 &&
+            (lunch += order.guestLunchCount);
+          order.isGuestMeal &&
+            order.guestDinnerCount > 0 &&
+            (dinner += order.guestDinnerCount);
+        });
+      // orders
+      //   .filter((order) => order.user.floor == i)
+      //   .forEach((order) => {
+      //     ordersArray.push({
+      //       username: order.user.username,
+      //       roomNumber: order.user.roomNumber,
+      //       breakfast: order.breakfast,
+      //       lunch: order.lunch,
+      //       diner: order.diner,
+      //       isGuestMeal: order.isGuestMeal,
+      //       guestBreakfastCount: order.guestBreakfastCount,
+      //       guestLunchCount: order.guestLunchCount,
+      //       guestDinnerCount: order.guestDinnerCount,
+      //       totalBreakfast: order.breakfast
+      //         ? order.guestBreakfastCount + 1
+      //         : order.guestBreakfastCount,
+      //       totalLunch: order.lunch
+      //         ? order.guestLunchCount + 1
+      //         : order.guestLunchCount,
+      //       totalDinner: order.dinner
+      //         ? order.guestDinnerCount + 1
+      //         : order.guestDinnerCount,
+      //     });
+      //   });
+      rooms.forEach((room) => {
+        let b = 0,
+          l = 0,
+          d = 0;
+        orders
+          .filter(
+            (order) => order.user.floor == i && order.user.roomNumber == room
+          )
+          .forEach((order) => {
+            order.breakfast ? (b += 1) : null;
+            order.isGuestMeal ? (b += order.guestBreakfastCount) : null;
+            order.lunch ? (l += 1) : null;
+            order.isGuestMeal ? (l += order.guestLunchCount) : null;
+            order.dinner ? (d += 1) : null;
+            order.isGuestMeal ? (d += order.guestDinnerCount) : null;
+          });
+        if (b > 0 || l > 0 || d > 0) {
+          ordersArray.push({
+            roomNumber: room,
+            totalBreakfast: b,
+            totalLunch: l,
+            totalDinner: d,
+          });
+        }
+      });
+
+      ordersArray.sort(compareRoomNumbers);
       analyzedData.push({
         floor: i,
-        breakfast,
-        lunch,
-        dinner,
-        total: breakfast + lunch + dinner,
+        orders: ordersArray,
+        totalBreakfast: breakfast,
+        totalLunch: lunch,
+        totalDinner: dinner,
+        totalMeal: breakfast + lunch + dinner,
       });
+      ordersArray = [];
     }
+    console.log(analyzedData);
     setFloorAnalysingData(analyzedData);
   };
   return (
@@ -161,27 +347,84 @@ const OrderStatus = () => {
         style={customStyles}
       >
         <div className="">
-          <p className="text-center text-xl text-yellow-500 pb-4 font-semibold">
+          <p className="text-center text-xl text-yellow-500 pb-4 font-semibold overflow-y-scroll">
             Floor Meal Analyzation
           </p>
           <div className="space-y-1">
             {floorAnalysingData.map((d, i) => (
-              <div
-                className="bg-stone-700 px-6 py-2 rounded-md flex items-center justify-center gap-5"
-                key={i}
-              >
-                <p className="w-[110px]">
-                  <span className="text-yellow-500 bg-stone-800 h-6 w-6 rounded-full inline-flex items-center justify-center mr-2">
-                    {d.floor + 1}
-                  </span>
-                  {d.floor == 0 ? "G" : d.floor}
-                  <sup>th</sup> Floor
-                </p>
-                <p className="w-[100px]">Breakfast: {d.breakfast}</p>
-                <p className="w-[100px]">Lunch: {d.lunch}</p>
-                <p className="w-[100px]">Dinner: {d.dinner}</p>
-                <p className="w-[100px]">Total: {d.total}</p>
-              </div>
+              <>
+                <div
+                  className="bg-stone-700 px-6 py-2 rounded-md flex items-center justify-center gap-5"
+                  key={i}
+                >
+                  <p className="w-[110px]">
+                    <span className="text-yellow-500 bg-stone-800 h-6 w-6 rounded-full inline-flex items-center justify-center mr-2">
+                      {d.floor + 1}
+                    </span>
+                    {d.floor == 0 ? "G" : d.floor}
+                    <sup>th</sup> Floor
+                  </p>
+                  <p className="w-[100px]">Breakfast: {d.totalBreakfast}</p>
+                  <p className="w-[100px]">Lunch: {d.totalLunch}</p>
+                  <p className="w-[100px]">Dinner: {d.totalDinner}</p>
+                  <p className="w-[100px]">Total: {d.totalMeal}</p>
+                </div>
+                {d.orders.length > 0 && (
+                  <div className="grid grid-cols-5 gap-3 border rounded-md p-2">
+                    {d.orders.map((r, j) => (
+                      <>
+                        {(r.totalBreakfast == 0 &&
+                          r.totalLunch == 0 &&
+                          r.totalDinner == 0) || (
+                          // <p key={j}>
+                          //   {r.roomNumber.split("")[0].toUpperCase() +
+                          //     "_" +
+                          //     r.roomNumber.split("")[1]}{" "}
+                          //   - Breakfast {r.totalBreakfast} - Lunch{" "}
+                          //   {r.totalLunch} - Dinner {r.totalDinner}
+                          // </p>
+                          <table className="border" key={j}>
+                            <thead>
+                              <tr>
+                                <th className="border text-sm font-extralight">
+                                  Room
+                                </th>
+                                <th className="border text-sm font-extralight">
+                                  Breakfast
+                                </th>
+                                <th className="border text-sm font-extralight">
+                                  Lunch
+                                </th>
+                                <th className="border text-sm font-extralight">
+                                  Dinner
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td className="border text-center">
+                                  {r.roomNumber.split("")[0].toUpperCase() +
+                                    "_" +
+                                    r.roomNumber.split("")[1]}
+                                </td>
+                                <td className="border text-center">
+                                  {r.totalBreakfast}
+                                </td>
+                                <td className="border text-center">
+                                  {r.totalLunch}
+                                </td>
+                                <td className="border text-center">
+                                  {r.totalDinner}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        )}
+                      </>
+                    ))}
+                  </div>
+                )}
+              </>
             ))}
           </div>
         </div>
@@ -194,6 +437,9 @@ const OrderStatus = () => {
           <p className="">Breakfast - {breakfastOfToday}</p>
           <p className="">Lunch - {lunchOfToday}</p>
           <p className="">Dinner - {dinnerOfToday}</p>
+          <p className="">
+            Total - {breakfastOfToday + lunchOfToday + dinnerOfToday}
+          </p>
           <button
             onClick={() => {
               openModal();
@@ -208,7 +454,9 @@ const OrderStatus = () => {
         <div className="text-sm bg-stone-700 px-5 py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
           {orderOfToday?.map((order) => (
             <div className="flex items-center gap-8" key={order._id}>
-              <p>{order.user.username}</p>
+              <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
+                {order.user.username}
+              </p>
               <p>
                 {order.user.floor + 1} - ( {order.user.floor}
                 <sup>th</sup> Floor )
@@ -240,6 +488,9 @@ const OrderStatus = () => {
           <p className="">Breakfast - {breakfastOfTomorrow}</p>
           <p className="">Lunch - {lunchOfTomorrow}</p>
           <p className="">Dinner - {dinnerOfTomorrow}</p>
+          <p className="">
+            Total - {breakfastOfTomorrow + lunchOfTomorrow + dinnerOfTomorrow}
+          </p>
           <button
             onClick={() => {
               openModal();
@@ -254,7 +505,9 @@ const OrderStatus = () => {
         <div className="text-sm bg-stone-700 px-5 py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
           {orderOfTomorrow?.map((order) => (
             <div className="flex items-center gap-8" key={order._id}>
-              <p>{order.user.username}</p>
+              <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
+                {order.user.username}
+              </p>
               <p>
                 {order.user.floor + 1} - ( {order.user.floor}
                 <sup>th</sup> Floor )
@@ -286,6 +539,10 @@ const OrderStatus = () => {
           <p className="">Breakfast - {breakfastOfYesterday}</p>
           <p className="">Lunch - {lunchOfYesterday}</p>
           <p className="">Dinner - {dinnerOfYesterday}</p>
+          <p className="">
+            Total -{" "}
+            {breakfastOfYesterday + lunchOfYesterday + dinnerOfYesterday}
+          </p>
           <button
             onClick={() => {
               openModal();
@@ -300,7 +557,9 @@ const OrderStatus = () => {
         <div className="text-sm bg-stone-700 px-5 py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
           {orderOfYesterday?.map((order) => (
             <div className="flex items-center gap-8" key={order._id}>
-              <p>{order.user.username}</p>
+              <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
+                {order.user.username}
+              </p>
               <p>
                 {order.user.floor + 1} - ( {order.user.floor}
                 <sup>th</sup> Floor )

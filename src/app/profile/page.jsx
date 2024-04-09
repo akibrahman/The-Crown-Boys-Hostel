@@ -216,19 +216,40 @@ const Profile = () => {
           accumulator + (currentValue.breakfast ? 1 : 0),
         0
       );
-      setBreakfastCount(breakfast);
+      const extraBreakfast = calanderData
+        .filter((d) => d.isGuestMeal && d.guestBreakfastCount > 0)
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestBreakfastCount),
+          0
+        );
+      setBreakfastCount(breakfast + extraBreakfast);
       const lunch = calanderData.reduce(
         (accumulator, currentValue) =>
           accumulator + (currentValue.lunch ? 1 : 0),
         0
       );
-      setLunchCount(lunch);
+      const extraLunch = calanderData
+        .filter((d) => d.isGuestMeal && d.guestLunchCount > 0)
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestLunchCount),
+          0
+        );
+      setLunchCount(lunch + extraLunch);
       const dinner = calanderData.reduce(
         (accumulator, currentValue) =>
           accumulator + (currentValue.dinner ? 1 : 0),
         0
       );
-      setDinnerCount(dinner);
+      const extraDinner = calanderData
+        .filter((d) => d.isGuestMeal && d.guestDinnerCount > 0)
+        .reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.guestDinnerCount),
+          0
+        );
+      setDinnerCount(dinner + extraDinner);
     }
   }, [calanderData]);
   // console.log(user);
@@ -509,6 +530,11 @@ const Profile = () => {
                   className="relative w-16 h-16 rounded-xl bg-yellow-500 flex items-center justify-center"
                 >
                   {order.date.split("/")[1]}
+                  <span
+                    className={`absolute w-2 h-2 rounded-full top-2 right-2 ${
+                      order.isGuestMeal ? "bg-blue-600" : "bg-transparent"
+                    }`}
+                  ></span>
                   <span
                     className={`absolute w-2 h-2 rounded-full left-2 bottom-1.5 ${
                       order.breakfast ? "bg-green-600" : "bg-red-600"
