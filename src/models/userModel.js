@@ -64,6 +64,7 @@ const userSchema = new mongoose.Schema({
   nidAuth: Boolean,
   floor: Number,
   roomNumber: String,
+  studentId: String,
   institution: String,
   messAddress: String,
   bkashNumber: String,

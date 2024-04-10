@@ -30,6 +30,7 @@ export async function POST(req) {
       email: body.email,
       password: hashPassword,
       messAddress: body.messAddress,
+      studentId: body.studentId,
       contactNumber: body.contactNumber,
       fathersNumber: body.fathersNumber,
       mothersNumber: body.mothersNumber,

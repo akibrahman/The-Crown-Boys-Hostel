@@ -246,6 +246,23 @@ const Registration = () => {
                   required
                 />
               </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="studentId"
+                  className="block text-sm font-bold mb-2"
+                >
+                  Student ID or Job ID
+                </label>
+                <input
+                  type="text"
+                  id="studentId"
+                  name="studentId"
+                  value={formData.studentId}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                  required
+                />
+              </div>
               {role === "client" && (
                 <div className="mb-4 mt-8 flex items-center gap-4">
                   <span

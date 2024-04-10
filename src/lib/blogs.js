@@ -8,11 +8,15 @@ export const getBlogs = async () => {
 };
 
 export const getBlog = async (id) => {
-  console.log("===================================");
   const data = await axios.get(
     `https://jsonplaceholder.typicode.com/photos/${id}`
   );
-  console.log("===================================");
-  // console.log("=>>>", data);
   return data.data;
+};
+
+export const getClient = async (id) => {
+  const { data } = await axios.get(
+    `${process.env.CLIENT_SIDE}/api/clients/getclient?id=${id}`
+  );
+  return data.client;
 };

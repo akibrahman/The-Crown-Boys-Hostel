@@ -49,8 +49,10 @@ const UserQuery = () => {
   };
   if (!myClients) return <p>Loading</p>;
   return (
-    <div className="min-h-screen">
-      <p className="text-center font-semibold text-2xl">User Query</p>
+    <div className="min-h-screen p-10 dark:bg-stone-900">
+      <p className="text-center font-semibold text-2xl dark:text-white">
+        User Query
+      </p>
       <form
         onSubmit={searchUserQuery}
         className="flex items-center justify-center gap-4 my-14"
@@ -58,7 +60,7 @@ const UserQuery = () => {
         <p className="text-sky-500 font-semibold">Select User : </p>
         <select
           name="clients"
-          className="px-5 py-2 rounded-md bg-stone-700 cursor-pointer"
+          className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300"
         >
           <option value="">Select Client</option>
           {myClients.map((client) => (
@@ -70,7 +72,7 @@ const UserQuery = () => {
         <p className="text-sky-500 font-semibold">Select Month : </p>
         <select
           name="month"
-          className="px-5 py-2 rounded-md bg-stone-700 cursor-pointer"
+          className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300"
         >
           <option value="">Select Month</option>
           <option value="January">January</option>
@@ -89,7 +91,7 @@ const UserQuery = () => {
         <p className="text-sky-500 font-semibold">Select Year : </p>
         <select
           name="year"
-          className="px-5 py-2 rounded-md bg-stone-700 cursor-pointer"
+          className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300"
         >
           <option value="">Select Year</option>
           <option value={currentYearBangladesh - 1}>
@@ -110,15 +112,15 @@ const UserQuery = () => {
       <div className="border-2 flex justify-center py-10">
         {/* Search Result  */}
         <div className="w-1/2">
-          <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">
+          <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative dark:text-white">
             {result == null && (
-              <p className="py-3">
+              <p className="py-3 dark:text-white">
                 <span className="text-sky-500 font-bold text-2xl">S</span>
                 earch to get result
               </p>
             )}
             {result && result.orders.length == 0 && (
-              <p className="py-3">
+              <p className="py-3 dark:text-white">
                 No <span className="text-sky-500 font-bold text-2xl">R</span>
                 esult found
               </p>
@@ -129,7 +131,7 @@ const UserQuery = () => {
             {result?.orders?.map((order) => (
               <div
                 key={order._id}
-                className="relative w-16 h-16 rounded-xl bg-sky-500 flex items-center justify-center"
+                className="relative w-16 h-16 rounded-xl border-sky-500 border dark:text-white font-semibold flex items-center justify-center"
               >
                 {order.date.split("/")[1]}
                 <span
@@ -153,7 +155,7 @@ const UserQuery = () => {
         </div>
       </div>
       {result && result?.bill && (
-        <div className="border-2 flex justify-center py-10 my-10">
+        <div className="border-2 flex justify-center py-10 my-10 dark:text-white">
           <div className="w-1/2">
             <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">
               Bill Details

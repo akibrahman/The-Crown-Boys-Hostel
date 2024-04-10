@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
-import { FaTimes } from "react-icons/fa";
+import { FaArrowRight, FaTimes } from "react-icons/fa";
 import { GiPayMoney } from "react-icons/gi";
 import { IoSearchOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
@@ -90,11 +90,12 @@ const Profile = () => {
     enabled: user?._id && user?.role == "owner" ? true : false,
   });
 
+  const [clientName, setClientName] = useState("");
   const { data: clients, refetch: clientRefetch } = useQuery({
-    queryKey: ["clients", "manager", user?._id],
+    queryKey: ["clients", "manager", user?._id, clientName],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
-        `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=0`
+        `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=0&clientName=${clientName}`
       );
       return data.clients;
     },
@@ -258,10 +259,7 @@ const Profile = () => {
     !user ||
     (user.role === "owner" && !managers) ||
     (user.role === "manager" &&
-      (!clients ||
-        !currentDays ||
-        !ordersForTheMonth ||
-        !managerCalanderData)) ||
+      (!currentDays || !ordersForTheMonth || !managerCalanderData)) ||
     (user.role === "client" && (!manager || !currentDays || !calanderData))
   )
     return <PreLoader />;
@@ -705,61 +703,74 @@ const Profile = () => {
             <div className="dark:bg-stone-900 bg-white w-[80%] flex justify-center sticky top-0">
               <div className="relative">
                 <input
+                  onChange={(e) => setClientName(e.target.value)}
                   placeholder="Search by name"
                   type="text"
-                  className="w-80 px-4 pl-12 py-3 rounded-full text-white dark:bg-stone-800 bg-stone-300 focus:outline-none"
+                  className="w-80 px-4 pl-12 py-3 rounded-full dark:text-white font-semibold dark:bg-stone-800 bg-stone-300 focus:outline-none"
                 />
                 <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
               </div>
             </div>
 
-            {clients.map((client) => (
-              <div
-                key={client._id}
-                className="border px-6 py-5 rounded-lg flex items-center w-[470px] justify-between gap-4"
-              >
-                <Image
-                  alt={`Profile picture of ${client.username} who is a manager`}
-                  src={client.profilePicture}
-                  height={60}
-                  width={60}
-                  className="rounded-full aspect-square"
-                />
-                <div>
-                  <p>{client.username}</p>
-                  <p className="text-sm">{client.email}</p>
+            {clientName && !clients ? (
+              <p className="mt-4 flex items-center gap-1 font-semibold">
+                <CgSpinner className="animate-spin text-lg" />
+                Loading...
+              </p>
+            ) : (
+              clients?.map((client) => (
+                <div
+                  key={client._id}
+                  className="border px-6 py-5 rounded-lg flex items-center w-[90%] justify-between gap-4"
+                >
+                  <Image
+                    alt={`Profile picture of ${client.username} who is a manager`}
+                    src={client.profilePicture}
+                    height={60}
+                    width={60}
+                    className="rounded-full aspect-square"
+                  />
+                  <div className="w-[900px] overflow-x-hidden">
+                    <p>{client.username}</p>
+                    <p className="text-sm">{client.email}</p>
+                  </div>
+                  {client.isVerified === true ? (
+                    <>
+                      {client.isClientVerified === true ? (
+                        <p className="text-blue-500 font-semibold flex items-center gap-1">
+                          <TiTick className="text-3xl font-normal" />
+                          Approved
+                        </p>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() =>
+                              getDetailsOfClientForApproval(client._id)
+                            }
+                            className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
+                          >
+                            Details{" "}
+                            {clientDetailsIsLoading && (
+                              <CgSpinner className="animate-spin text-2xl" />
+                            )}
+                          </button>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-red-500 font-semibold flex items-center gap-1">
+                      <FaTimes className="text-xl font-normal" />
+                      Unverified
+                    </p>
+                  )}
+                  <Link href={`/userDetails/${client._id}`}>
+                    <button className="font-semibold flex items-center gap-2 bg-blue-500 px-3 py-1 duration-300 active:scale-90">
+                      Details <FaArrowRight />
+                    </button>
+                  </Link>
                 </div>
-                {client.isVerified === true ? (
-                  <>
-                    {client.isClientVerified === true ? (
-                      <p className="text-blue-500 font-semibold flex items-center gap-1">
-                        <TiTick className="text-3xl font-normal" />
-                        Approved
-                      </p>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() =>
-                            getDetailsOfClientForApproval(client._id)
-                          }
-                          className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
-                        >
-                          Details{" "}
-                          {clientDetailsIsLoading && (
-                            <CgSpinner className="animate-spin text-2xl" />
-                          )}
-                        </button>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-red-500 font-semibold flex items-center gap-1">
-                    <FaTimes className="text-xl font-normal" />
-                    Unverified
-                  </p>
-                )}
-              </div>
-            ))}
+              ))
+            )}
           </div>
         ) : user.role === "manager" && !user.isVerified ? (
           <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
