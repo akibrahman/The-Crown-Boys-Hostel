@@ -65,6 +65,7 @@ const userSchema = new mongoose.Schema({
   floor: Number,
   roomNumber: String,
   studentId: String,
+  bloodGroup: String,
   institution: String,
   messAddress: String,
   bkashNumber: String,

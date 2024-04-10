@@ -31,6 +31,7 @@ export async function POST(req) {
       password: hashPassword,
       messAddress: body.messAddress,
       studentId: body.studentId,
+      bloodGroup: body.bloodGroup,
       contactNumber: body.contactNumber,
       fathersNumber: body.fathersNumber,
       mothersNumber: body.mothersNumber,

@@ -263,6 +263,23 @@ const Registration = () => {
                   required
                 />
               </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="bloodGroup"
+                  className="block text-sm font-bold mb-2"
+                >
+                  Blood Group
+                </label>
+                <input
+                  type="text"
+                  id="bloodGroup"
+                  name="bloodGroup"
+                  value={formData.bloodGroup}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                  required
+                />
+              </div>
               {role === "client" && (
                 <div className="mb-4 mt-8 flex items-center gap-4">
                   <span

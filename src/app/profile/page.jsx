@@ -21,6 +21,7 @@ const Profile = () => {
   const { user, userRefetch, manager } = useContext(AuthContext);
   const route = useRouter();
   const [givingAuthorization, setGivingAuthorization] = useState(false);
+  const [canVerify, setCanVerify] = useState(true);
   const [declining, setDeclining] = useState(false);
   const [currentDays, setCurrentDays] = useState(null);
 
@@ -44,8 +45,9 @@ const Profile = () => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      backgroundColor: "#000",
-      border: "1px solid #EAB308",
+      padding: "0",
+      // backgroundColor: "#000",
+      // border: "1px solid #EAB308",
     },
     overlay: {
       backgroundColor: "rgba(0,0,0,0.5)",
@@ -274,7 +276,7 @@ const Profile = () => {
         style={customStylesForclientDetailsModal}
       >
         {clientDetails && (
-          <div className="p-4 h-[90vh] overflow-scroll">
+          <div className="dark:bg-stone-900 bg-white dark:text-white font-semibold p-10 h-[90vh] overflow-y-scroll">
             <div className="flex items-center gap-10">
               <div className="mb-4">
                 <Image
@@ -289,9 +291,7 @@ const Profile = () => {
                 <h1 className="text-3xl font-bold mb-2">
                   {clientDetails.username}
                 </h1>
-                <p className="text-gray-700 mb-2">
-                  Email: {clientDetails.email}
-                </p>
+                <p className="mb-2">Email: {clientDetails.email}</p>
                 <p>
                   Floor: {clientDetails.floor}
                   <sup>th</sup> Floor - {clientDetails.floor + 1} Tala
@@ -302,13 +302,13 @@ const Profile = () => {
                     "-" +
                     clientDetails.roomNumber.split("")[1]}
                 </p>
-                <p className="text-gray-700 mb-1">
+                <p className="mb-1">
                   Contact Number: {clientDetails.contactNumber}
                 </p>
-                <p className="text-gray-700 mb-1">
+                <p className="mb-1">
                   Father&apos;s Number: {clientDetails.fathersNumber}
                 </p>
-                <p className="text-gray-700 mb-1">
+                <p className="mb-1">
                   Mother&apos;s Number: {clientDetails.mothersNumber}
                 </p>
               </div>
@@ -498,9 +498,10 @@ const Profile = () => {
               <TiTick className="text-xl" />
               Verified
             </p>
-          ) : (
+          ) : canVerify ? (
             <button
               onClick={async () => {
+                setCanVerify(false);
                 axios.post("/api/sendverificationemail", {
                   email: user.email,
                   emailType: "verify",
@@ -512,6 +513,13 @@ const Profile = () => {
             >
               Verify Please
             </button>
+          ) : (
+            <p
+              className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold mt-2 bg-lime-500 select-none`}
+            >
+              <TiTick className="text-xl" />
+              Verification E-mail sent
+            </p>
           )}
         </div>
         {/*//! Clalnder as a Client */}
@@ -559,7 +567,9 @@ const Profile = () => {
         {/*//! Manager's Details  */}
         {user.role === "client" && !user.isVerified ? (
           <div className="flex items-center justify-center pl-6 py-8 mt-10">
-            <p>At first verify youself!</p>
+            <p className="font-semibold shadow-xl shadow-blue-500 px-8 select-none py-2 rounded-full">
+              At first verify youself!
+            </p>
           </div>
         ) : user.role === "client" &&
           user.isVerified &&
