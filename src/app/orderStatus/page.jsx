@@ -194,8 +194,9 @@ const OrderStatus = () => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      backgroundColor: "#000",
-      border: "1px solid #EAB308",
+      // backgroundColor: "#000",
+      // border: "1px solid #EAB308",
+      padding: "0",
       width: "90%",
       height: "90%",
     },
@@ -347,8 +348,8 @@ const OrderStatus = () => {
         onRequestClose={closeModal}
         style={customStyles}
       >
-        <div className="relative">
-          <p className="text-center text-xl text-sky-500 pb-4 font-semibold overflow-y-scroll">
+        <div className="relative dark:bg-stone-900 bg-white p-4">
+          <p className="text-center text-xl text-sky-500 pb-4 font-semibold">
             Floor Meal Analyzation
           </p>
           <FaTimes
@@ -359,7 +360,7 @@ const OrderStatus = () => {
             {floorAnalysingData.map((d, i) => (
               <>
                 <div
-                  className="bg-stone-700 px-6 py-2 rounded-md flex items-center justify-center gap-5"
+                  className="dark:bg-stone-700 bg-stone-300 px-6 py-2 rounded-md flex items-center justify-center gap-5 dark:text-white text-stone-900 font-semibold"
                   key={i}
                 >
                   <p className="w-[110px]">
@@ -381,7 +382,7 @@ const OrderStatus = () => {
                         {(r.totalBreakfast == 0 &&
                           r.totalLunch == 0 &&
                           r.totalDinner == 0) || (
-                          <table className="border" key={j}>
+                          <table className="border dark:text-white" key={j}>
                             <thead>
                               <tr>
                                 <th className="border text-sm font-extralight">
@@ -427,8 +428,10 @@ const OrderStatus = () => {
           </div>
         </div>
       </Modal>
-      <div className="mb-20 max-h-screen">
-        <p className="text-center font-semibold text-2xl">Order Status</p>
+      <div className="min-h-screen dark:bg-stone-900">
+        <p className="text-center font-semibold text-2xl pt-6 dark:text-white">
+          Order Status
+        </p>
         {/* Order - Today  */}
         <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
           <p className="w-[220px]">Today - {todayDateString}</p>
@@ -449,7 +452,7 @@ const OrderStatus = () => {
           </button>
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
           {orderOfToday?.map((order) => (
             <div className="flex items-center gap-8" key={order._id}>
               <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
@@ -500,7 +503,7 @@ const OrderStatus = () => {
           </button>
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
           {orderOfTomorrow?.map((order) => (
             <div className="flex items-center gap-8" key={order._id}>
               <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
@@ -552,7 +555,7 @@ const OrderStatus = () => {
           </button>
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
           {orderOfYesterday?.map((order) => (
             <div className="flex items-center gap-8" key={order._id}>
               <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>

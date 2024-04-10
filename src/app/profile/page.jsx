@@ -702,13 +702,15 @@ const Profile = () => {
         user.isVerified &&
         user.isManagerVerified ? (
           <div className="col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
-            <div className="sticky top-0">
-              <input
-                placeholder="Search by name"
-                type="text"
-                className="w-80 px-4 pl-12 py-3 rounded-full text-white dark:bg-stone-800 bg-stone-300 focus:outline-none"
-              />
-              <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
+            <div className="dark:bg-stone-900 bg-white w-[80%] flex justify-center sticky top-0">
+              <div className="relative">
+                <input
+                  placeholder="Search by name"
+                  type="text"
+                  className="w-80 px-4 pl-12 py-3 rounded-full text-white dark:bg-stone-800 bg-stone-300 focus:outline-none"
+                />
+                <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
+              </div>
             </div>
 
             {clients.map((client) => (

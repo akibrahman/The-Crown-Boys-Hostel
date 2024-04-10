@@ -152,12 +152,37 @@ export const GET = async (req) => {
             ) +
             orders.reduce(
               (accumulator, currentValue) =>
+                accumulator +
+                (currentValue.isGuestMeal &&
+                currentValue.guestBreakfastCount > 0
+                  ? currentValue.guestBreakfastCount / 2
+                  : 0),
+              0
+            ) +
+            orders.reduce(
+              (accumulator, currentValue) =>
                 accumulator + (currentValue.lunch ? 1 : 0),
               0
             ) +
             orders.reduce(
               (accumulator, currentValue) =>
+                accumulator +
+                (currentValue.isGuestMeal && currentValue.guestLunchCount > 0
+                  ? currentValue.guestLunchCount
+                  : 0),
+              0
+            ) +
+            orders.reduce(
+              (accumulator, currentValue) =>
                 accumulator + (currentValue.dinner ? 1 : 0),
+              0
+            ) +
+            orders.reduce(
+              (accumulator, currentValue) =>
+                accumulator +
+                (currentValue.isGuestMeal && currentValue.guestDinnerCount > 0
+                  ? currentValue.guestDinnerCount
+                  : 0),
               0
             ),
           mealRate: (
@@ -172,12 +197,37 @@ export const GET = async (req) => {
             ) +
               orders.reduce(
                 (accumulator, currentValue) =>
+                  accumulator +
+                  (currentValue.isGuestMeal &&
+                  currentValue.guestBreakfastCount > 0
+                    ? currentValue.guestBreakfastCount / 2
+                    : 0),
+                0
+              ) +
+              orders.reduce(
+                (accumulator, currentValue) =>
                   accumulator + (currentValue.lunch ? 1 : 0),
                 0
               ) +
               orders.reduce(
                 (accumulator, currentValue) =>
+                  accumulator +
+                  (currentValue.isGuestMeal && currentValue.guestLunchCount > 0
+                    ? currentValue.guestLunchCount
+                    : 0),
+                0
+              ) +
+              orders.reduce(
+                (accumulator, currentValue) =>
                   accumulator + (currentValue.dinner ? 1 : 0),
+                0
+              ) +
+              orders.reduce(
+                (accumulator, currentValue) =>
+                  accumulator +
+                  (currentValue.isGuestMeal && currentValue.guestDinnerCount > 0
+                    ? currentValue.guestDinnerCount
+                    : 0),
                 0
               ))
           ).toFixed(2),
