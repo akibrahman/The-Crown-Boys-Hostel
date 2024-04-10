@@ -1,6 +1,7 @@
 import ContextProvider from "@/providers/ContextProvider";
 import TanstackProvider from "@/providers/TanstackProvider";
 
+import IntPreLoader from "@/Components/IntPreLoader/IntPreLoader";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import NavBar from "../Components/NavBar/NavBar";
@@ -31,6 +32,7 @@ const RootLayout = ({ children }) => {
             <NavBar />
             <hr className="border-sky-500" />
             <Toaster />
+            <IntPreLoader duration={2000} />
             <div className="">{children}</div>
           </ContextProvider>
         </TanstackProvider>
