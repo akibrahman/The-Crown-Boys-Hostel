@@ -8,11 +8,14 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { FaPlus } from "react-icons/fa";
 
 const BillQuery = () => {
   const { user } = useContext(AuthContext);
   const [result, setResult] = useState(null);
   const [searching, setSearching] = useState(false);
+  const [managerAmount, setManagerAmount] = useState(null);
+  const [isMoneyAdding, setIsMoneyAdding] = useState({ id: "", state: false });
 
   //! Current Year in Bangladesh
   const currentDateBangladesh = new Date();
@@ -128,9 +131,18 @@ const BillQuery = () => {
         </p>
       )}
       <div className="">
-        <p className="text-center text-xl font-semibold border border-sky-500 px-4 py-2 relative dark:text-white mt-4">
+        <div className="text-center text-xl font-semibold border border-sky-500 px-4 py-2 relative dark:text-white mt-4">
+          {result && result.length > 0 && (
+            <input
+              placeholder="Enter Amount"
+              onChange={(e) => setManagerAmount(parseInt(e.target.value))}
+              value={managerAmount || managerAmount == 0 ? managerAmount : ""}
+              className="text-sm w-[200px] px-5 py-2 outline-none rounded-full dark:bg-stone-800 bg-stone-300 absolute top-1/2 -translate-y-1/2 left-3"
+              type="number"
+            />
+          )}
           Bill Details
-        </p>
+        </div>
         <div className="grid grid-cols-3 gap-4">
           {result &&
             result.length > 0 &&
@@ -153,12 +165,37 @@ const BillQuery = () => {
                       {bill.totalBillInBDT} BDT
                     </span>
                   </p>
-                  <p>
-                    Paid Amount:{" "}
-                    <span className="bg-sky-500 font-semibold px-3 py-1 rounded-md ml-3">
-                      {bill.paidBillInBDT} BDT
-                    </span>
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p>Paid Amount:</p>{" "}
+                    <div className="flex items-center gap-5">
+                      <span className="bg-sky-500 font-semibold px-3 py-1 rounded-md ml-3">
+                        {bill.paidBillInBDT} BDT
+                      </span>
+                      {isMoneyAdding.state && isMoneyAdding.id == bill._id ? (
+                        <CgSpinner className="text-xl text-blue-500 cursor-pointer animate-spin" />
+                      ) : (
+                        <FaPlus
+                          onClick={async () => {
+                            if (managerAmount != null && managerAmount >= 0) {
+                              setIsMoneyAdding({ id: bill._id, state: true });
+                              await axios.patch("/api/bills/getbills", {
+                                billId: bill._id,
+                                amount: managerAmount,
+                              });
+                              // await managerCalanderDataRefetch();
+
+                              setManagerAmount(null);
+                              setIsMoneyAdding({ id: "", state: false });
+                              toast.success("Amount updated");
+                            } else {
+                              toast.error("Please enter amount");
+                            }
+                          }}
+                          className="text-xl text-blue-500 cursor-pointer duration-300 active:scale-90"
+                        />
+                      )}
+                    </div>
+                  </div>
                   <p>
                     Status:{" "}
                     <span

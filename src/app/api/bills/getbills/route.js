@@ -20,3 +20,15 @@ export const GET = async (req) => {
     return NextResponse.json({ success: false, error }, { status: 500 });
   }
 };
+export const PATCH = async (req) => {
+  try {
+    const { billId, amount } = await req.json();
+    const bill = await Bill.findById(billId);
+    bill.paidBillInBDT = amount;
+    await bill.save();
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ success: false, error }, { status: 500 });
+  }
+};
