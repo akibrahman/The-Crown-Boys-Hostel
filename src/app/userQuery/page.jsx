@@ -1,5 +1,6 @@
 "use client";
 
+import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
@@ -47,7 +48,7 @@ const UserQuery = () => {
     console.log(data);
     setResult({ orders: data.orders, bill: data.bill });
   };
-  if (!myClients) return <p>Loading</p>;
+  if (!myClients) return <PreLoader />;
   return (
     <div className="min-h-screen p-10 dark:bg-stone-900">
       <p className="text-center font-semibold text-2xl dark:text-white">

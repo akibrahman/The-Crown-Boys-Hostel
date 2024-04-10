@@ -804,14 +804,16 @@ const Profile = () => {
                   Order Status
                 </button>
               </Link>
+              <Link href={"/billQuery"}>
+                <button className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+                  Bill Query
+                </button>
+              </Link>
               <Link href="/userQuery">
                 <button className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
                   User Query
                 </button>
               </Link>
-              <button className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
-                Meal Updator
-              </button>
             </div>
           </div>
         ) : user.role === "manager" && !user.isVerified ? (

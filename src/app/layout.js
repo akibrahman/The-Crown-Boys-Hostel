@@ -10,7 +10,7 @@ import "./globals.css";
 const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-poppins",
+  // variable: "--font-poppins",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
@@ -24,7 +24,7 @@ const RootLayout = ({ children }) => {
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} duration-300 transition-all ease-in-out`}
+        className={`${poppins.className} duration-300 transition-all ease-in-out`}
       >
         <TanstackProvider>
           <ContextProvider>
