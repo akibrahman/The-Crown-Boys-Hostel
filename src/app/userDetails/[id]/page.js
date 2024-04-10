@@ -52,7 +52,6 @@ const page = async ({ params }) => {
                     id="grid-city"
                     type="text"
                     value={client.messAddress}
-                    placeholder="1234 Main St"
                   />
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
@@ -68,10 +67,9 @@ const page = async ({ params }) => {
                     id="grid-state"
                     type="text"
                     value={client.institution}
-                    placeholder="XYZ University"
                   />
                 </div>
-                <div class="lg:w-1/2 md:w-full px-3 mb-6 md:mb-0">
+                <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-gray-700 font-bold mb-2"
                     for="grid-zip"
@@ -84,10 +82,9 @@ const page = async ({ params }) => {
                     id="grid-zip"
                     type="text"
                     value={`${client.floor} th Floor`}
-                    placeholder="5"
                   />
                 </div>
-                <div class="lg:w-1/2 md:w-full px-3 mb-6 md:mb-0">
+                <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-gray-700 font-bold mb-2"
                     for="grid-state"
@@ -99,7 +96,6 @@ const page = async ({ params }) => {
                     class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="grid-state"
                     type="text"
-                    placeholder="O+"
                     value={
                       client.roomNumber.split("")[0].toUpperCase() +
                       " " +
@@ -107,7 +103,72 @@ const page = async ({ params }) => {
                     }
                   />
                 </div>
+                <div class="lg:w-1/2 md:w-full px-3 mb-6">
+                  <label
+                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    for="grid-state"
+                  >
+                    Blood Group
+                  </label>
+                  <input
+                    readOnly
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="grid-state"
+                    type="text"
+                    value={client.bloodGroup}
+                  />
+                </div>
+                <div class="lg:w-1/2 md:w-full px-3 mb-6">
+                  <label
+                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    for="grid-state"
+                  >
+                    Student or Job ID
+                  </label>
+                  <input
+                    readOnly
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="grid-state"
+                    type="text"
+                    value={client.studentId}
+                  />
+                </div>
               </div>
+              {client.nidAuth ? (
+                <div className="flex items-center justify-around">
+                  <div>
+                    <p className="mb-2">NID Front</p>
+                    <Image
+                      src={client.nidFrontPicture}
+                      width={350}
+                      height={60}
+                      className="rounded-md"
+                      alt={`NID front of ${client.username}`}
+                    />
+                  </div>
+                  <div>
+                    <p className="mb-2">NID Back</p>
+                    <Image
+                      src={client.nidBackPicture}
+                      width={350}
+                      height={60}
+                      className="rounded-md"
+                      alt={`NID back of ${client.username}`}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col justify-center items-center">
+                  <p className="mb-2">Birth Certificate</p>
+                  <Image
+                    src={client.birthCertificatePicture}
+                    width={400}
+                    height={40}
+                    className="rounded-md"
+                    alt={`Birth Certificate of ${client.username}`}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
