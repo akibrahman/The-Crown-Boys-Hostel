@@ -39,8 +39,8 @@ export const POST = async (req) => {
       username: user.username,
       email: user.email,
     };
-    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET, {
-      expiresIn: "1h",
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
+      expiresIn: "15s",
     });
 
     const response = NextResponse.json(

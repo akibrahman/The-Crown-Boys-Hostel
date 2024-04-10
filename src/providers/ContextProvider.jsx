@@ -15,7 +15,8 @@ const ContextProvider = ({ children }) => {
       setLoading(true);
       try {
         const { data } = await axios.get("/api/users/me");
-        return data.user;
+        if (data.success) return { ...data.user, success: true };
+        else return { success: false, msg: "unauthirized" };
       } catch (error) {
         return null;
       } finally {

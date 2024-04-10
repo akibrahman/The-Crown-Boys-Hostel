@@ -265,7 +265,8 @@ const Profile = () => {
     (user.role === "client" && (!manager || !currentDays || !calanderData))
   )
     return <PreLoader />;
-
+  console.log("====>", user);
+  if (user?.success == false) route.push("/");
   return (
     <div>
       {/*//! Modal for Client Details  */}

@@ -19,7 +19,7 @@ const NavBar = () => {
       <p>
         <Link href="/blog">Blog</Link>
       </p>
-      {loading ? null : user ? (
+      {loading ? null : user && user.success ? (
         <p>
           <Link
             className="bg-sky-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
