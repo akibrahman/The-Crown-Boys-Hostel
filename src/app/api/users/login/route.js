@@ -40,7 +40,7 @@ export const POST = async (req) => {
       email: user.email,
     };
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
-      expiresIn: "15s",
+      expiresIn: "2h",
     });
 
     const response = NextResponse.json(

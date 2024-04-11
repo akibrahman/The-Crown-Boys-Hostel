@@ -3,7 +3,7 @@ import Image from "next/image";
 const Home = () => {
   return (
     <div className="px-10 dark:bg-stone-900">
-      <div className="flex flex-col md:flex-row gap-10 items-center justify-between py-10 md:h-[calc(100vh-65px)]">
+      <div className="flex flex-col md:flex-row gap-10 items-center justify-between py-10 md:h-[calc(100vh-65px)] min-h-screen">
         <div className="w-[90%] md:w-1/2">
           <p className="dark:text-white text-[30px] md:text-[40px] font-semibold mb-4">
             Campus Bites: Elevate Your Dining!
@@ -13,6 +13,9 @@ const Home = () => {
             straight to your university hostel room. Our online meal service
             ensures that you do not have to compromise on quality or flavor,
             providing a convenient solution for your busy student life.
+          </p>
+          <p className="w-[80%] dark:text-white mt-2">
+            Akib Meal Management System
           </p>
           <div className="mt-4 flex items-center">
             <input

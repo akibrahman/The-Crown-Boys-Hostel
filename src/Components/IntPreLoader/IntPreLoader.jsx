@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import PreLoader from "../PreLoader/PreLoader";
 
-const IntPreLoader = ({ duration }) => {
+const IntPreLoader = ({ duration, child }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -15,10 +15,12 @@ const IntPreLoader = ({ duration }) => {
   }, [duration]);
 
   return isVisible ? (
-    <div className="preloader">
+    <div className="">
       <PreLoader />
     </div>
-  ) : null;
+  ) : (
+    <div className="">{child}</div>
+  );
 };
 
 export default IntPreLoader;
