@@ -16,6 +16,7 @@ import { GiPayMoney } from "react-icons/gi";
 import { IoSearchOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import Modal from "react-modal";
+import { Tooltip } from "react-tooltip";
 
 const Profile = () => {
   const { user, userRefetch, manager } = useContext(AuthContext);
@@ -265,10 +266,9 @@ const Profile = () => {
     (user.role === "client" && (!manager || !currentDays || !calanderData))
   )
     return <PreLoader />;
-  console.log("====>", user);
   if (user?.success == false) route.push("/");
   return (
-    <div>
+    <div className="select-none">
       {/*//! Modal for Client Details  */}
       <Modal
         // appElement={el}
@@ -534,10 +534,24 @@ const Profile = () => {
               </span>
             </p>
             <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
+              <Tooltip className="z-50" id="my-tooltip" />
               {calanderData.map((order) => (
                 <div
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content={
+                    order.isGuestMeal
+                      ? "Breakfast : " +
+                        order.guestBreakfastCount +
+                        " Lunch : " +
+                        order.guestLunchCount +
+                        " Dinner : " +
+                        order.guestDinnerCount
+                      : null
+                  }
                   key={order._id}
-                  className="relative w-16 h-16 rounded-xl bg-sky-500 flex items-center justify-center"
+                  className={`${
+                    order.isGuestMeal && "shadow-lg shadow-white"
+                  } relative w-16 h-16 rounded-xl bg-sky-500 flex items-center justify-center z-0`}
                 >
                   {order.date.split("/")[1]}
                   <span

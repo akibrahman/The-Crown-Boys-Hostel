@@ -4,8 +4,9 @@ import { NextResponse } from "next/server";
 export const POST = async (req) => {
   try {
     const { userId, date } = await req.json();
-    const order = await Order.find({ userId, date });
-    return NextResponse.json({ msg: "OK", success: true, order: order[0] });
+    const order = await Order.findOne({ userId, date });
+    if (order) return NextResponse.json({ msg: "OK", success: true, order });
+    else throw new Error("Order not found");
   } catch (error) {
     console.log(error);
     return NextResponse.json({ msg: "Backend Error", error }, { status: 500 });

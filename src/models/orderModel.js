@@ -37,6 +37,9 @@ const orderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isRequested: {
+    type: Boolean,
+  },
   guestBreakfastCount: {
     type: Number,
     default: 0,

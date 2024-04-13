@@ -1,8 +1,10 @@
 import ContextProvider from "@/providers/ContextProvider";
 import TanstackProvider from "@/providers/TanstackProvider";
 
+import Footer from "@/Components/Footer/Footer";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import "react-tooltip/dist/react-tooltip.css";
 import NavBar from "../Components/NavBar/NavBar";
 import "./globals.css";
 
@@ -28,10 +30,12 @@ const RootLayout = ({ children }) => {
       >
         <TanstackProvider>
           <ContextProvider>
+            <Toaster />
             <NavBar />
             <hr className="border-sky-500" />
-            <Toaster />
             <div className="">{children}</div>
+            <hr className="border-sky-500" />
+            <Footer />
           </ContextProvider>
         </TanstackProvider>
       </body>

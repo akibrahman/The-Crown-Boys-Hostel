@@ -13,9 +13,11 @@ const NavBar = () => {
       <p className="">
         <Link href="/">Home</Link>
       </p>
-      <p>
-        <Link href="/order">Order</Link>
-      </p>
+      {user && user?.isClient && user.isClientVerified && (
+        <p>
+          <Link href="/order">Order</Link>
+        </p>
+      )}
       <p>
         <Link href="/blog">Blog</Link>
       </p>

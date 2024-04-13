@@ -21,9 +21,9 @@ const Home = () => {
             <input
               type="text"
               placeholder="Subscribe to our newsletter"
-              className="bg-[#282828] dark:text-white px-4 py-2 rounded-l-md focus:outline-none w-[200px] md:w-[250px] lg:w-[320px]"
+              className="dark:bg-[#282828] bg-stone-300 dark:text-white px-4 py-2 rounded-l-md focus:outline-none w-[200px] md:w-[250px] lg:w-[320px]"
             />
-            <button className="bg-red-600 dark:text-white px-6 py-2 rounded-r-md hover:bg-red-700 focus:outline-none">
+            <button className="bg-blue-500 text-white px-6 py-2 rounded-r-md hover:bg-red-700 focus:outline-none">
               Subscribe
             </button>
           </div>

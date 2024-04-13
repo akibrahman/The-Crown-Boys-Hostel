@@ -1,5 +1,7 @@
 "use client";
 
+import MealRequest from "@/Components/MealRequest/MealRequest";
+import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
 import moment from "moment";
@@ -8,6 +10,7 @@ import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { FaArrowRight } from "react-icons/fa";
 import { LuCalendarPlus } from "react-icons/lu";
 import "../globals.css";
 const Order = () => {
@@ -22,6 +25,8 @@ const Order = () => {
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState("");
   const [order, setOrder] = useState(null);
+
+  const [requestPopUp, setRequestPopUp] = useState(false);
 
   const currentMonthNumber =
     parseInt(
@@ -186,14 +191,23 @@ const Order = () => {
       toast.error("Can't go so far!");
     }
   };
-  if (!user) return <p>Loading user ...</p>;
+  if (!user) return <PreLoader />;
 
   return (
     <div className="relative dark:bg-stone-900 dark:text-white min-h-screen">
+      {/*//! Request Pop Up Starts */}
+      <MealRequest
+        requestPopUp={requestPopUp}
+        setRequestPopUp={setRequestPopUp}
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        user={user}
+      />
+      {/*//! Request Pop Up Ends */}
       {loading && (
         <div className="absolute h-full w-full top-0 bg-[rgba(0,0,0,0.6)] z-50"></div>
       )}
-      <p className="text-2xl text-white bg-sky-500 px-8 py-3 rounded-xl font-bold text-center mb-5 relative">
+      <p className="text-2xl text-white bg-sky-500 px-8 py-3 font-bold text-center mb-5 relative">
         Order your meal here
         {loading && (
           <CgSpinner className="animate-spin absolute top-[10px] right-2 text-4xl" />
@@ -217,6 +231,13 @@ const Order = () => {
               yearPlaceholder="----"
               onChange={(e) => dateSelected(e)}
             />
+            <p
+              onClick={() => setRequestPopUp(true)}
+              className="font-semibold text-blue-500 underline flex items-center gap-1 group cursor-pointer"
+            >
+              Request Meal Change
+              <FaArrowRight className="text-xl duration-300 group-hover:translate-x-2" />
+            </p>
           </div>
           {/* Meal Switch  */}
           <div className="grid grid-cols-1 md:grid-cols-3 align-middle gap-10 md:gap-4 px-20">
