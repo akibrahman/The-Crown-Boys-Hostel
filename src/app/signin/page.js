@@ -91,7 +91,7 @@ const Signin = () => {
 
           <button
             type="submit"
-            className="bg-sky-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
+            className="bg-sky-500 text-white p-2 w-full rounded hover:bg-sky-600 transition duration-300"
           >
             {loading ? (
               <CgSpinner className="animate-spin text-2xl text-center mx-auto" />

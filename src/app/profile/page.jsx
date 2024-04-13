@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { BsChatSquareQuote } from "react-icons/bs";
 import { CgSpinner } from "react-icons/cg";
 import { FaArrowRight, FaTimes } from "react-icons/fa";
 import { GiPayMoney } from "react-icons/gi";
@@ -101,6 +102,15 @@ const Profile = () => {
         `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=0&clientName=${clientName}`
       );
       return data.clients;
+    },
+    enabled: user?._id && user?.role == "manager" ? true : false,
+  });
+  const { data: mealRequestCount = 0 } = useQuery({
+    queryKey: ["mealRequests", "manager", user?._id],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/mealrequests/mealrequestscount`);
+      if (data.success) return data.count;
+      else return 0;
     },
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
@@ -404,6 +414,12 @@ const Profile = () => {
                             timeZone: "Asia/Dhaka",
                           }
                         ),
+                        currentDateNumber: parseInt(
+                          new Date().toLocaleDateString("en-BD", {
+                            day: "numeric",
+                            timeZone: "Asia/Dhaka",
+                          })
+                        ),
                         currentMonth: new Date(
                           new Date().toLocaleString("en-US", {
                             timeZone: "Asia/Dhaka",
@@ -478,7 +494,15 @@ const Profile = () => {
       {/*//! Parent Block ------------------------------------------------------------- */}
       <div className="grid grid-cols-4 gap-4 dark:bg-stone-900 dark:text-white">
         {/*//! Profile Details  */}
-        <div className={`mt-10 pl-6 py-8`}>
+        <div className={`mt-10 pl-6 py-8 relative`}>
+          {user && user.role == "manager" && (
+            <div className="absolute top-0 right-0 dark:bg-stone-700 bg-stone-300 flex items-center justify-center h-12 w-12 rounded-full cursor-pointer duration-300 active:scale-90 select-none">
+              <BsChatSquareQuote className="text-xl" />
+              <span className="absolute top-0 right-0 text-sm bg-red-500 rounded-full h-[18px] w-[18px] flex items-center justify-center">
+                {parseInt(mealRequestCount)}
+              </span>
+            </div>
+          )}
           <Image
             alt={`Profile picture of ${user.username}`}
             src={user.profilePicture}
@@ -724,8 +748,8 @@ const Profile = () => {
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
-          <div className="col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
-            <div className="dark:bg-stone-900 bg-white w-[80%] flex justify-center sticky top-0">
+          <div className="col-span-2 h-[380px] overflow-x-hidden overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
+            <div className="dark:bg-stone-900 pb-2 bg-white w-[110%] flex justify-center sticky top-0">
               <div className="relative">
                 <input
                   onChange={(e) => setClientName(e.target.value)}
@@ -746,7 +770,7 @@ const Profile = () => {
               clients?.map((client) => (
                 <div
                   key={client._id}
-                  className="border px-6 py-5 rounded-lg flex items-center w-[90%] justify-between gap-4"
+                  className="border px-6 py-5 rounded-lg flex items-center w-[95%] justify-between gap-4"
                 >
                   <Image
                     alt={`Profile picture of ${client.username} who is a manager`}
@@ -842,7 +866,7 @@ const Profile = () => {
         ) : (
           <></>
         )}
-        {/*//! Clalnder as a Manager ------------ Working Stage*/}
+        {/*//! Clalnder as a Manager*/}
         {user.role == "manager" &&
           user.isVerified &&
           user.isManagerVerified && (
@@ -947,69 +971,78 @@ const Profile = () => {
         {user.role == "manager" &&
           user.isVerified &&
           user.isManagerVerified && (
-            <div className="border-2">
+            <div className="p-10 mt-20">
+              <p className="flex items-center gap-2 mb-5">
+                Current Meal Rate:{" "}
+                <span className="text-blue-500 font-extralight text-4xl">
+                  {" "}
+                  {(
+                    managerCalanderData?.data.reduce(
+                      (accumulator, currentValue) =>
+                        accumulator + currentValue.amount,
+                      0
+                    ) /
+                    (ordersForTheMonth.reduce(
+                      (accumulator, currentValue) =>
+                        accumulator + (currentValue.breakfast ? 0.5 : 0),
+                      0
+                    ) +
+                      ordersForTheMonth.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator +
+                          (currentValue.isGuestMeal &&
+                          currentValue.guestBreakfastCount > 0
+                            ? currentValue.guestBreakfastCount / 2
+                            : 0),
+                        0
+                      ) +
+                      ordersForTheMonth.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator + (currentValue.lunch ? 1 : 0),
+                        0
+                      ) +
+                      ordersForTheMonth.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator +
+                          (currentValue.isGuestMeal &&
+                          currentValue.guestLunchCount > 0
+                            ? currentValue.guestLunchCount
+                            : 0),
+                        0
+                      ) +
+                      ordersForTheMonth.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator + (currentValue.dinner ? 1 : 0),
+                        0
+                      ) +
+                      ordersForTheMonth.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator +
+                          (currentValue.isGuestMeal &&
+                          currentValue.guestDinnerCount > 0
+                            ? currentValue.guestDinnerCount
+                            : 0),
+                        0
+                      ))
+                  ).toFixed(2)}
+                </span>
+              </p>
               <p>
                 Total Market:{" "}
-                {managerCalanderData?.data.reduce(
-                  (accumulator, currentValue) =>
-                    accumulator + currentValue.amount,
-                  0
-                )}
-              </p>
-              <p>
-                Total meal count:
-                {ordersForTheMonth.reduce(
-                  (accumulator, currentValue) =>
-                    accumulator + (currentValue.breakfast ? 0.5 : 0),
-                  0
-                ) +
-                  ordersForTheMonth.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator +
-                      (currentValue.isGuestMeal &&
-                      currentValue.guestBreakfastCount > 0
-                        ? currentValue.guestBreakfastCount / 2
-                        : 0),
-                    0
-                  ) +
-                  ordersForTheMonth.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + (currentValue.lunch ? 1 : 0),
-                    0
-                  ) +
-                  ordersForTheMonth.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator +
-                      (currentValue.isGuestMeal &&
-                      currentValue.guestLunchCount > 0
-                        ? currentValue.guestLunchCount
-                        : 0),
-                    0
-                  ) +
-                  ordersForTheMonth.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + (currentValue.dinner ? 1 : 0),
-                    0
-                  ) +
-                  ordersForTheMonth.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator +
-                      (currentValue.isGuestMeal &&
-                      currentValue.guestDinnerCount > 0
-                        ? currentValue.guestDinnerCount
-                        : 0),
-                    0
-                  )}
-              </p>
-              <p>
-                Current Meal Rate:
-                {(
-                  managerCalanderData?.data.reduce(
+                <span className="text-blue-500 font-bold text-2xl">
+                  {managerCalanderData?.data.reduce(
                     (accumulator, currentValue) =>
                       accumulator + currentValue.amount,
                     0
-                  ) /
-                  (ordersForTheMonth.reduce(
+                  )}
+                </span>{" "}
+                BDT
+              </p>
+              <p>
+                Total meal count:
+                <span className="text-blue-500 font-bold text-2xl">
+                  {" "}
+                  {ordersForTheMonth.reduce(
                     (accumulator, currentValue) =>
                       accumulator + (currentValue.breakfast ? 0.5 : 0),
                     0
@@ -1050,8 +1083,8 @@ const Profile = () => {
                           ? currentValue.guestDinnerCount
                           : 0),
                       0
-                    ))
-                ).toFixed(2)}
+                    )}
+                </span>
               </p>
             </div>
           )}

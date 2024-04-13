@@ -1,5 +1,6 @@
 "use client";
 
+import PreLoader from "@/Components/PreLoader/PreLoader";
 import { base64 } from "@/utils/base64";
 import { imageUpload } from "@/utils/imageUpload";
 import { makeFile } from "@/utils/makeFile";
@@ -141,7 +142,7 @@ const Registration = () => {
     }
   };
 
-  if (!verifiedManagers) return <p>Loading.............</p>;
+  if (!verifiedManagers) return <PreLoader />;
 
   return (
     <div className="flex items-center justify-center dark:bg-stone-900 dark:text-white">
@@ -686,7 +687,7 @@ const Registration = () => {
           </div>
           <button
             type="submit"
-            className="bg-sky-500 text-white p-2 w-full rounded hover:bg-yellow-600 transition duration-300"
+            className="bg-sky-500 text-white p-2 w-full rounded hover:bg-sky-600 transition duration-300"
           >
             {loading ? (
               <CgSpinner className="animate-spin text-2xl text-center mx-auto" />

@@ -76,7 +76,7 @@ const MealRequest = ({
   const makeRequest = async () => {
     setIsRequesting(true);
     try {
-      const { data } = await axios.post("/api/mealrequests", {
+      const { data } = await axios.post("/api/mealrequests/mealrequests", {
         reqData,
         orderId: order._id,
         reason,

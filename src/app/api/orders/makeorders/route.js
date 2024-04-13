@@ -17,13 +17,7 @@ export const POST = async (req) => {
       currentYear,
     } = await req.json();
     // console.log("--------------------------------");
-    // console.log(userId);
-    // console.log(managerId);
-    // console.log(days);
     // console.log(currentDateNumber);
-    // console.log(currentMonthName);
-    // console.log(currentMonth);
-    // console.log(currentYear);
     // return NextResponse.json({ success: true, msg: "OK" });
     for (let i = 1; i <= days; i++) {
       const newOrder = new Order({
