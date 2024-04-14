@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 const Home = () => {
@@ -23,7 +25,14 @@ const Home = () => {
               placeholder="Subscribe to our newsletter"
               className="dark:bg-[#282828] bg-stone-300 dark:text-white px-4 py-2 rounded-l-md focus:outline-none w-[200px] md:w-[250px] lg:w-[320px]"
             />
-            <button className="bg-blue-500 text-white px-6 py-2 rounded-r-md hover:bg-red-700 focus:outline-none">
+            <button
+              // onClick={async () => {
+              //   const { data } = await axios.post("/api/orders/testapi");
+              //   if (data.success) alert("E-mail sent");
+              //   else alert("Error");
+              // }}
+              className="bg-blue-500 text-white px-6 py-2 rounded-r-md hover:bg-red-700 focus:outline-none"
+            >
               Subscribe
             </button>
           </div>

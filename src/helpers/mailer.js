@@ -1,8 +1,10 @@
+import TestEmail from "@/Components/VerificationEmail/page";
 import User from "@/models/userModel";
+import { render } from "@react-email/render";
 import bcryptjs from "bcryptjs";
 import nodemailer from "nodemailer";
 
-export const sendEmail = async ({ email, emailType, userId }) => {
+export const sendEmail = async ({ email, emailType, userId, userName }) => {
   try {
     const hashedToken = await bcryptjs.hash(userId.toString(), 10);
     if (emailType === "verify") {
@@ -30,11 +32,25 @@ export const sendEmail = async ({ email, emailType, userId }) => {
       },
     });
 
+    // const mailOptions = {
+    //   from: "checker@hostelplates.com",
+    //   to: email,
+    //   subject: "Verify Email",
+    //   html: `<p>Click <a href="${process.env.CLIENT_SIDE}/verifyemail?token=${hashedToken}"> Here </a> to Verify</p>`,
+    // };
+
+    const emailHtml = render(
+      TestEmail({
+        userFirstname: userName,
+        url: `${process.env.CLIENT_SIDE}/verifyemail?token=${hashedToken}`,
+      })
+    );
+
     const mailOptions = {
       from: "checker@hostelplates.com",
       to: email,
-      subject: "Verify Email",
-      html: `<p>Click <a href="${process.env.CLIENT_SIDE}/verifyemail?token=${hashedToken}"> Here </a> to Verify</p>`,
+      subject: "Manager Expo - Verification E-mail",
+      html: emailHtml,
     };
 
     const mailRes = await transport.sendMail(mailOptions);

@@ -528,6 +528,7 @@ const Profile = () => {
               onClick={async () => {
                 setCanVerify(false);
                 axios.post("/api/sendverificationemail", {
+                  userName: user.username,
                   email: user.email,
                   emailType: "verify",
                   userId: user._id,

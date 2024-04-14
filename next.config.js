@@ -11,6 +11,11 @@ module.exports = {
         hostname: "i.ibb.co",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.templates.unlayer.com",
+        port: "",
+      },
     ],
   },
 };
