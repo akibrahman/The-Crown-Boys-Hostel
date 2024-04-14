@@ -35,6 +35,14 @@
 ::-webkit-scrollbar-thumb:hover {
   background-color: #1c1917;
 }
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Webkit/Blink browsers */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Webkit/Blink */
+}
 
 /* ScrollBar Styling End */
 

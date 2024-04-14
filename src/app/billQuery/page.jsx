@@ -60,53 +60,61 @@ const BillQuery = () => {
       </p>
       <form
         onSubmit={searchBillQuery}
-        className="flex items-center justify-center gap-4 my-6"
+        className="flex flex-col md:flex-row items-center justify-center gap-4 my-6"
       >
-        <p className="text-sky-500 font-semibold">Select User : </p>
-        <select
-          name="clients"
-          className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300"
-        >
-          <option value="">Select Client</option>
-          {myClients.map((client) => (
-            <option value={client._id} key={client._id}>
-              {client.username}
+        <div className="flex items-center gap-4">
+          <p className="text-sky-500 font-semibold">Select User : </p>
+          <select
+            name="clients"
+            className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300 outline-none"
+          >
+            <option value="">Select Client</option>
+            {myClients.map((client) => (
+              <option value={client._id} key={client._id}>
+                {client.username}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center gap-4">
+          <p className="text-sky-500 font-semibold">Select Month : </p>
+          <select
+            name="month"
+            className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300 outline-none"
+          >
+            <option value="">None</option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-4">
+          <p className="text-sky-500 font-semibold">Select Year : </p>
+          <select
+            name="year"
+            className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300 outline-none"
+          >
+            <option value="">None</option>
+            <option value={currentYearBangladesh - 1}>
+              {currentYearBangladesh - 1}
             </option>
-          ))}
-        </select>
-        <p className="text-sky-500 font-semibold">Select Month : </p>
-        <select
-          name="month"
-          className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300"
-        >
-          <option value="">None</option>
-          <option value="January">January</option>
-          <option value="February">February</option>
-          <option value="March">March</option>
-          <option value="April">April</option>
-          <option value="May">May</option>
-          <option value="June">June</option>
-          <option value="July">July</option>
-          <option value="August">August</option>
-          <option value="September">September</option>
-          <option value="October">October</option>
-          <option value="November">November</option>
-          <option value="December">December</option>
-        </select>
-        <p className="text-sky-500 font-semibold">Select Year : </p>
-        <select
-          name="year"
-          className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300"
-        >
-          <option value="">None</option>
-          <option value={currentYearBangladesh - 1}>
-            {currentYearBangladesh - 1}
-          </option>
-          <option value={currentYearBangladesh}>{currentYearBangladesh}</option>
-          <option value={currentYearBangladesh + 1}>
-            {currentYearBangladesh + 1}
-          </option>
-        </select>
+            <option value={currentYearBangladesh}>
+              {currentYearBangladesh}
+            </option>
+            <option value={currentYearBangladesh + 1}>
+              {currentYearBangladesh + 1}
+            </option>
+          </select>
+        </div>
         <button
           type="submit"
           className="bg-sky-500 px-4 py-2 rounded-md duration-300 font-semibold text-white active:scale-90 flex items-center gap-3"
@@ -115,7 +123,7 @@ const BillQuery = () => {
         </button>
       </form>
       {result == null && (
-        <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 w-1/2 mx-auto relative dark:text-white">
+        <p className="text-center text-xl font-semibold border border-sky-500 rounded-sm px-4 py-2 md:w-1/2 mx-auto relative dark:text-white">
           <p className="py-3 dark:text-white">
             <span className="text-sky-500 font-bold text-2xl">S</span>
             earch to get result
@@ -137,13 +145,13 @@ const BillQuery = () => {
               placeholder="Enter Amount"
               onChange={(e) => setManagerAmount(parseInt(e.target.value))}
               value={managerAmount || managerAmount == 0 ? managerAmount : ""}
-              className="text-sm w-[200px] px-5 py-2 outline-none rounded-full dark:bg-stone-800 bg-stone-300 absolute top-1/2 -translate-y-1/2 left-3"
+              className="text-sm w-[200px] px-5 py-2 outline-none rounded-full dark:bg-stone-800 bg-stone-300 md:absolute md:top-1/2 md:-translate-y-1/2 md:left-3 mr-3 md:mr-0"
               type="number"
             />
           )}
           Bill Details
         </div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {result &&
             result.length > 0 &&
             result.map((bill) => (

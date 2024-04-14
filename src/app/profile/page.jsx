@@ -466,7 +466,7 @@ const Profile = () => {
         )}
       </Modal>
       {/*//! NavBar Panel  */}
-      <div className="p-6 flex items-center flex-row-reverse justify-between dark:bg-stone-900 dark:text-white">
+      <div className="p-6 flex flex-col-reverse gap-3 items-center md:flex-row-reverse md:gap-0 justify-between dark:bg-stone-900 dark:text-white">
         <button
           onClick={logout}
           className="bg-red-600 hover:bg-red-700 text-stone-900 font-bold px-4 py-1 flex items-center gap-3 rounded-lg duration-300 active:scale-90"
@@ -492,15 +492,17 @@ const Profile = () => {
         </p>
       </div>
       {/*//! Parent Block ------------------------------------------------------------- */}
-      <div className="grid grid-cols-4 gap-4 dark:bg-stone-900 dark:text-white">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 dark:bg-stone-900 dark:text-white">
         {/*//! Profile Details  */}
-        <div className={`mt-10 pl-6 py-8 relative`}>
+        <div className={`mt-10 px-6 py-8 relative`}>
           {user && user.role == "manager" && (
-            <div className="absolute top-0 right-0 dark:bg-stone-700 bg-stone-300 flex items-center justify-center h-12 w-12 rounded-full cursor-pointer duration-300 active:scale-90 select-none">
+            <div className="absolute top-0 right-4 dark:bg-stone-700 bg-stone-300 flex items-center justify-center h-12 w-12 rounded-full cursor-pointer duration-300 active:scale-90 select-none">
               <BsChatSquareQuote className="text-xl" />
-              <span className="absolute top-0 right-0 text-sm bg-red-500 rounded-full h-[18px] w-[18px] flex items-center justify-center">
-                {parseInt(mealRequestCount)}
-              </span>
+              {parseInt(mealRequestCount) > 0 && (
+                <span className="absolute top-0 right-0 text-sm bg-red-500 rounded-full h-[18px] w-[18px] flex items-center justify-center">
+                  {parseInt(mealRequestCount)}
+                </span>
+              )}
             </div>
           )}
           <Image
@@ -550,7 +552,7 @@ const Profile = () => {
         </div>
         {/*//! Clalnder as a Client */}
         {user.role == "client" && user.isVerified && user.isClientVerified && (
-          <div className="col-span-2 pl-6 pb-8 mt-10">
+          <div className="col-span-1 md:col-span-2 px-6 pb-8 mt-10">
             <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">
               {currentMonth}
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-sky-500">
@@ -615,7 +617,9 @@ const Profile = () => {
           user.isVerified &&
           !user.isClientVerified ? (
           <div className="flex items-center justify-center pl-6 py-8 mt-10">
-            <p>Wait till manager accepts you!</p>
+            <p className="font-semibold shadow-xl shadow-blue-500 px-8 select-none py-2 rounded-full">
+              Wait till manager accepts you!
+            </p>
           </div>
         ) : user.role === "client" &&
           user.isVerified &&
@@ -636,7 +640,7 @@ const Profile = () => {
         )}
         {/*//! Managers as a Owner  */}
         {user.role === "owner" && (
-          <div className="col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
+          <div className="col-span-1 md:col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
             <div className="sticky top-0">
               <input
                 placeholder="Search by name"
@@ -749,7 +753,7 @@ const Profile = () => {
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
-          <div className="col-span-2 h-[380px] overflow-x-hidden overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
+          <div className="col-span-1 md:col-span-2 h-[380px] overflow-x-hidden overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
             <div className="dark:bg-stone-900 pb-2 bg-white w-[110%] flex justify-center sticky top-0">
               <div className="relative">
                 <input
@@ -771,7 +775,7 @@ const Profile = () => {
               clients?.map((client) => (
                 <div
                   key={client._id}
-                  className="border px-6 py-5 rounded-lg flex items-center w-[95%] justify-between gap-4"
+                  className="border px-6 py-5 rounded-lg flex flex-col md:flex-row items-center w-[95%] justify-between gap-4"
                 >
                   <Image
                     alt={`Profile picture of ${client.username} who is a manager`}
@@ -780,7 +784,7 @@ const Profile = () => {
                     width={60}
                     className="rounded-full aspect-square"
                   />
-                  <div className="w-[900px] overflow-x-hidden">
+                  <div className="md:w-[900px] md:overflow-x-hidden text-center md:text-left">
                     <p>{client.username}</p>
                     <p className="text-sm">{client.email}</p>
                   </div>
@@ -837,25 +841,29 @@ const Profile = () => {
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
-          <div className="px-3 mt-10 relative">
-            <div className="flex items-start justify-center flex-wrap gap-5">
-              <Link href="/orderStatus" className="w-full">
-                <button className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 w-full active:scale-90">
+          <div className="px-3 mt-10 relative flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center flex-wrap gap-5">
+              <Link href="/orderStatus" className="group">
+                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
+                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
                   Order Status
                 </button>
               </Link>
               <Link href={"/billQuery"}>
-                <button className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
+                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
                   Bill Query
                 </button>
               </Link>
               <Link href="/userQuery">
-                <button className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
+                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
                   User Query
                 </button>
               </Link>
               <Link href="/marketQuery">
-                <button className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
+                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
                   Market Query
                 </button>
               </Link>
@@ -886,7 +894,7 @@ const Profile = () => {
         {user.role == "manager" &&
           user.isVerified &&
           user.isManagerVerified && (
-            <div className="col-span-3 pl-6 pb-8 mt-10">
+            <div className="col-span-1 md:col-span-2 lg:col-span-3 pl-6 pb-8 mt-10">
               <p className="font-semibold border border-sky-500 rounded-xl px-4 py-2 relative flex items-center justify-around">
                 <input
                   placeholder="Enter Amount"
@@ -987,7 +995,7 @@ const Profile = () => {
         {user.role == "manager" &&
           user.isVerified &&
           user.isManagerVerified && (
-            <div className="p-10 mt-20">
+            <div className="p-10 mt-20 mx-auto">
               <p className="flex items-center gap-2 mb-5">
                 Current Meal Rate:{" "}
                 <span className="text-blue-500 font-extralight text-4xl">

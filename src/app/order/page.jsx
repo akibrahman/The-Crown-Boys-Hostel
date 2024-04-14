@@ -240,7 +240,7 @@ const Order = () => {
             </p>
           </div>
           {/* Meal Switch  */}
-          <div className="grid grid-cols-1 md:grid-cols-3 align-middle gap-10 md:gap-4 px-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 align-middle gap-10 md:gap-4 px-10 md:px-20">
             {order && (
               <>
                 {/* Breakfast   */}
@@ -249,7 +249,7 @@ const Order = () => {
                     breakfast ? "shadow-2xl shadow-red-500" : ""
                   }`}
                 >
-                  <p className="text-2xl font-semibold">Breakfast:</p>
+                  <p className="text-2xl font-semibold w-[150px]">Breakfast:</p>
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
@@ -289,7 +289,7 @@ const Order = () => {
                     lunch ? "shadow-2xl shadow-green-500" : ""
                   }`}
                 >
-                  <p className="text-2xl font-semibold">Lunch:</p>
+                  <p className="text-2xl font-semibold w-[150px]">Lunch:</p>
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
@@ -325,7 +325,7 @@ const Order = () => {
                     dinner ? "shadow-2xl shadow-blue-500" : ""
                   }`}
                 >
-                  <p className="text-2xl font-semibold">Dinner:</p>
+                  <p className="text-2xl font-semibold w-[150px]">Dinner:</p>
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
@@ -431,13 +431,13 @@ const Order = () => {
                           setLoading(false);
                         }
                       }}
-                      className="my-10 flex items-center justify-around gap-6"
+                      className="my-10 flex flex-col md:flex-row items-center justify-around gap-6"
                     >
                       <div className="flex items-center gap-3">
                         <p className="min-w-[100px]">Breakfast:</p>
                         <input
                           min={0}
-                          className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md"
+                          className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md outline-none"
                           type="number"
                           onChange={(e) => {
                             if (
@@ -459,7 +459,7 @@ const Order = () => {
                         <p className="min-w-[100px]">Lunch:</p>
                         <input
                           min={0}
-                          className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md"
+                          className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md outline-none"
                           type="number"
                           onChange={(e) => {
                             if (
@@ -480,7 +480,7 @@ const Order = () => {
                         <p className="min-w-[100px]">Dinner:</p>
                         <input
                           min={0}
-                          className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md"
+                          className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md outline-none"
                           type="number"
                           onChange={(e) =>
                             setGuestMealDinnerCount(e.target.value)

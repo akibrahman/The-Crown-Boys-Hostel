@@ -104,7 +104,7 @@ const MealRequest = ({
           : "scale-0 bg-transparent"
       }`}
     >
-      <div className="w-[60%] h-[75%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-stone-800 rounded-sm">
+      <div className="w-[90%] md:w-[60%] h-[95%] md:h-[75%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-stone-800 rounded-sm">
         <FaTimes
           className="absolute top-3 right-3 text-xl cursor-pointer"
           onClick={() => {
@@ -216,7 +216,7 @@ const MealRequest = ({
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 name="reason"
-                className="bg-stone-600 p-3 outline-none resize-none rounded-sm w-[70%] h-[100px]"
+                className="bg-stone-600 p-3 outline-none resize-none rounded-sm w-[90%] md:w-[70%] h-[150px]"
                 placeholder="Write your reason..."
               ></textarea>
               {(reqData?.breakfast == true ||

@@ -198,7 +198,8 @@ const OrderStatus = () => {
       // border: "1px solid #EAB308",
       padding: "0",
       width: "90%",
-      height: "90%",
+      // overflow: "scroll",
+      // height: "90%",
     },
     overlay: {
       backgroundColor: "rgba(0,0,0,0.5)",
@@ -348,7 +349,7 @@ const OrderStatus = () => {
         onRequestClose={closeModal}
         style={customStyles}
       >
-        <div className="relative dark:bg-stone-900 bg-white p-4">
+        <div className="relative dark:bg-stone-900 bg-white p-4 overflow-y-scroll h-[90vh]">
           <p className="text-center text-xl text-sky-500 pb-4 font-semibold">
             Floor Meal Analyzation
           </p>
@@ -360,7 +361,7 @@ const OrderStatus = () => {
             {floorAnalysingData.map((d, i) => (
               <>
                 <div
-                  className="dark:bg-stone-700 bg-stone-300 px-6 py-2 rounded-md flex items-center justify-center gap-5 dark:text-white text-stone-900 font-semibold"
+                  className="dark:bg-stone-700 bg-stone-300 px-6 py-2 rounded-md flex flex-wrap md:flex-nowrap items-center justify-center gap-5 dark:text-white text-stone-900 font-semibold"
                   key={i}
                 >
                   <p className="w-[110px]">
@@ -376,7 +377,7 @@ const OrderStatus = () => {
                   <p className="w-[100px]">Total: {d.totalMeal}</p>
                 </div>
                 {d.orders.length > 0 && (
-                  <div className="grid grid-cols-5 gap-3 border rounded-md p-2">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 border rounded-md p-2">
                     {d.orders.map((r, j) => (
                       <>
                         {(r.totalBreakfast == 0 &&
@@ -428,31 +429,33 @@ const OrderStatus = () => {
           </div>
         </div>
       </Modal>
-      <div className="min-h-screen dark:bg-stone-900">
+      <div className="min-h-screen dark:bg-stone-900 px-10">
         <p className="text-center font-semibold text-2xl pt-6 dark:text-white">
           Order Status
         </p>
         {/* Order - Today  */}
-        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
-          <p className="w-[220px]">Today - {todayDateString}</p>
+        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
+          <p className="md:w-[220px]">Today - {todayDateString}</p>
           <p className="">Breakfast - {breakfastOfToday}</p>
           <p className="">Lunch - {lunchOfToday}</p>
           <p className="">Dinner - {dinnerOfToday}</p>
           <p className="">
             Total - {breakfastOfToday + lunchOfToday + dinnerOfToday}
           </p>
-          <button
-            onClick={() => {
-              openModal();
-              floorAnalyzer(orderOfToday);
-            }}
-            className="bg-stone-700 text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-          >
-            Floor Analysis
-          </button>
+          {orderOfToday && (
+            <button
+              onClick={() => {
+                openModal();
+                floorAnalyzer(orderOfToday);
+              }}
+              className="bg-stone-700 text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
+            >
+              Floor Analysis
+            </button>
+          )}
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
           {orderOfToday?.map((order) => (
             <div className="flex items-center gap-8" key={order._id}>
               <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
@@ -484,26 +487,28 @@ const OrderStatus = () => {
         </div>
 
         {/* Order - Tomorrow  */}
-        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
-          <p className="w-[220px]">Tomorrow - {tomorrowDateString}</p>
+        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
+          <p className="md:w-[220px]">Tomorrow - {tomorrowDateString}</p>
           <p className="">Breakfast - {breakfastOfTomorrow}</p>
           <p className="">Lunch - {lunchOfTomorrow}</p>
           <p className="">Dinner - {dinnerOfTomorrow}</p>
           <p className="">
             Total - {breakfastOfTomorrow + lunchOfTomorrow + dinnerOfTomorrow}
           </p>
-          <button
-            onClick={() => {
-              openModal();
-              floorAnalyzer(orderOfTomorrow);
-            }}
-            className="bg-stone-700 text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-          >
-            Floor Analysis
-          </button>
+          {orderOfTomorrow && (
+            <button
+              onClick={() => {
+                openModal();
+                floorAnalyzer(orderOfTomorrow);
+              }}
+              className="bg-stone-700 text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
+            >
+              Floor Analysis
+            </button>
+          )}
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
           {orderOfTomorrow?.map((order) => (
             <div className="flex items-center gap-8" key={order._id}>
               <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
@@ -535,8 +540,8 @@ const OrderStatus = () => {
         </div>
 
         {/* Order - Yesterday  */}
-        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex items-center justify-between">
-          <p className="w-[220px]">Yesterday - {yesterdayDateString}</p>
+        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
+          <p className="md:w-[220px]">Yesterday - {yesterdayDateString}</p>
           <p className="">Breakfast - {breakfastOfYesterday}</p>
           <p className="">Lunch - {lunchOfYesterday}</p>
           <p className="">Dinner - {dinnerOfYesterday}</p>
@@ -544,18 +549,20 @@ const OrderStatus = () => {
             Total -{" "}
             {breakfastOfYesterday + lunchOfYesterday + dinnerOfYesterday}
           </p>
-          <button
-            onClick={() => {
-              openModal();
-              floorAnalyzer(orderOfYesterday);
-            }}
-            className="bg-stone-700 text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-          >
-            Floor Analysis
-          </button>
+          {orderOfYesterday && (
+            <button
+              onClick={() => {
+                openModal();
+                floorAnalyzer(orderOfYesterday);
+              }}
+              className="bg-stone-700 text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
+            >
+              Floor Analysis
+            </button>
+          )}
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-3 gap-6 justify-items-center">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
           {orderOfYesterday?.map((order) => (
             <div className="flex items-center gap-8" key={order._id}>
               <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
