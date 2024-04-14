@@ -104,7 +104,7 @@ const MealRequest = ({
           : "scale-0 bg-transparent"
       }`}
     >
-      <div className="w-[90%] md:w-[60%] h-[95%] md:h-[75%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-stone-800 rounded-sm">
+      <div className="w-[400px] md:w-[60%] h-[600px] md:h-[75%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-stone-800 rounded-sm">
         <FaTimes
           className="absolute top-3 right-3 text-xl cursor-pointer"
           onClick={() => {
