@@ -32,13 +32,6 @@ export const sendEmail = async ({ email, emailType, userId, userName }) => {
       },
     });
 
-    // const mailOptions = {
-    //   from: "checker@hostelplates.com",
-    //   to: email,
-    //   subject: "Verify Email",
-    //   html: `<p>Click <a href="${process.env.CLIENT_SIDE}/verifyemail?token=${hashedToken}"> Here </a> to Verify</p>`,
-    // };
-
     const emailHtml = render(
       TestEmail({
         userFirstname: userName,

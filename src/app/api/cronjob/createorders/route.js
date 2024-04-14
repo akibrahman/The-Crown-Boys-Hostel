@@ -14,7 +14,10 @@ export const GET = async (req) => {
     if (
       req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
     ) {
-      return res.status(401).end("Unauthorized");
+      return NextResponse.json(
+        { success: false, msg: "Unauthorized" },
+        { status: 400 }
+      );
     }
     const transport = nodemailer.createTransport({
       service: "gmail",
@@ -70,6 +73,10 @@ export const GET = async (req) => {
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
+
+    if (test) {
+      console.log("Test Run");
+    }
     //! Last day of any month------------------------------
     if (aboutLastDayOfCurrentMonth.isLastDay) {
       //! <---------->User Bill Creation Start <---------->
@@ -235,17 +242,6 @@ export const GET = async (req) => {
         await managerBill.save();
       }
       //! <---------->Manager Bill Creation End <---------->
-    }
-    if (test) {
-      const mailOptions = {
-        from: "cron-job@hostelplates.com",
-        to: "akibrahman5200@gmail.com",
-        subject: "Cron Job - Last Day",
-        html: `<div>
-          <p>This is the last day of current month</p>
-          </div>`,
-      };
-      await transport.sendMail(mailOptions);
     }
     //! Second Last day of any month------------------------------
     if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {

@@ -854,6 +854,21 @@ const Profile = () => {
                   User Query
                 </button>
               </Link>
+              <Link href="/marketQuery">
+                <button className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90">
+                  Market Query
+                </button>
+              </Link>
+              <button
+                onClick={async () => {
+                  const { data } = await axios.get("/api/cronjob/createorders");
+                  if (data.success) toast.success("Cron Job Done");
+                  else toast.error("Cron Job Error");
+                }}
+                className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 hidden"
+              >
+                Cron Job
+              </button>
             </div>
           </div>
         ) : user.role === "manager" && !user.isVerified ? (
