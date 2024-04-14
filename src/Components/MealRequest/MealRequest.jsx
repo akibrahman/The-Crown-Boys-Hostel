@@ -142,7 +142,7 @@ const MealRequest = ({
         <div className="mt-10 md:mt-20 mb-10 md:mb-20 flex flex-col md:flex-row justify-center items-center gap-10">
           <p className="text-xl font-semibold tracking-widest">Select Date:</p>
           <DatePicker
-            className={""}
+            className={"meal_req_date_picker"}
             format="dd - MM - y"
             value={date}
             calendarIcon={<LuCalendarPlus className="text-2xl" />}

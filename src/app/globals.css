@@ -61,6 +61,10 @@
   top: 110% !important;
   transform: translateX(-20%);
 }
+.meal_req_date_picker
+  .react-date-picker__calendar.react-date-picker__calendar--open {
+  transform: translateX(10%);
+}
 .react-calendar__month-view__weekdays {
   display: grid !important;
   grid-template-columns: repeat(7, minmax(0, 1fr));
