@@ -7,6 +7,7 @@ import { CgSpinner } from "react-icons/cg";
 import { FaTimes } from "react-icons/fa";
 import { LuCalendarPlus } from "react-icons/lu";
 import { TiTick } from "react-icons/ti";
+import Modal from "react-modal";
 
 const MealRequest = ({
   requestPopUp,
@@ -96,15 +97,40 @@ const MealRequest = ({
       setIsRequesting(false);
     }
   };
+  const customStylesForModal = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      padding: "15px",
+      backgroundColor: "#1C1917",
+      color: "#fff",
+      width: "90%",
+      height: "90vh",
+      // border: "1px solid #EAB308",
+    },
+    overlay: {
+      backgroundColor: "rgba(0,0,0,0.5)",
+    },
+  };
+  const openModal = () => {
+    setRequestPopUp(true);
+  };
+
+  const closeModal = () => {
+    setRequestPopUp(false);
+  };
   return (
-    <div
-      className={`w-full h-full fixed z-50 duration-300 transition-all ease-in-out ${
-        requestPopUp
-          ? "top-0 bg-[rgba(0,0,0,0.7)]"
-          : "top-[9999px] bg-transparent"
-      }`}
+    <Modal
+      isOpen={requestPopUp}
+      onRequestClose={closeModal}
+      style={customStylesForModal}
+      // className={"w-[90%]"}
     >
-      <div className="w-[85%] md:w-[60%] h-[90%] md:h-[75%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-stone-800 rounded-sm">
+      <div className="">
         <FaTimes
           className="absolute top-3 right-3 text-2xl cursor-pointer"
           onClick={() => {
@@ -113,7 +139,7 @@ const MealRequest = ({
             setOrder(null);
           }}
         />
-        <div className="my-20 flex flex-col md:flex-row justify-center items-center gap-10">
+        <div className="mt-10 md:mt-20 mb-10 md:mb-20 flex flex-col md:flex-row justify-center items-center gap-10">
           <p className="text-xl font-semibold tracking-widest">Select Date:</p>
           <DatePicker
             className={""}
@@ -135,7 +161,7 @@ const MealRequest = ({
         ) : (
           order && (
             <div className="flex flex-col items-center gap-6">
-              <div className="px-20 flex items-center justify-center gap-8">
+              <div className="px-20 flex flex-col md:flex-row items-center justify-center gap-8">
                 <p className="flex items-center gap-1">
                   <label
                     onClick={() => {
@@ -237,7 +263,7 @@ const MealRequest = ({
           )
         )}
       </div>
-    </div>
+    </Modal>
   );
 };
 
