@@ -98,13 +98,13 @@ const MealRequest = ({
   };
   return (
     <div
-      className={`w-screen h-screen fixed top-0 z-50 duration-300 transition-all ease-in-out ${
+      className={`w-full h-full fixed top-0 z-50 duration-300 transition-all ease-in-out ${
         requestPopUp
           ? "scale-100 bg-[rgba(0,0,0,0.7)]"
           : "scale-0 bg-transparent"
       }`}
     >
-      <div className="w-[95%] md:w-[60%] h-[95%] md:h-[75%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-stone-800 rounded-sm">
+      <div className="w-[85%] md:w-[60%] h-[90%] md:h-[75%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-stone-800 rounded-sm">
         <FaTimes
           className="absolute top-3 right-3 text-2xl cursor-pointer"
           onClick={() => {
