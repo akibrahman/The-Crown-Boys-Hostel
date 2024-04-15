@@ -29,7 +29,7 @@ const UserQuery = () => {
         return data.clients;
       }
     },
-    enabled: user?._id ? true : false,
+    enabled: user?._id && user.role == "manager" ? true : false,
   });
   //! Search
   const searchUserQuery = async (e) => {

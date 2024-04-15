@@ -867,6 +867,12 @@ const Profile = () => {
                   Market Query
                 </button>
               </Link>
+              <Link href="/managerOrder">
+                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
+                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
+                  Meal Updator
+                </button>
+              </Link>
               <button
                 onClick={async () => {
                   const { data } = await axios.get("/api/cronjob/createorders");
