@@ -119,7 +119,7 @@ const Order = () => {
         }
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong!");
+        toast.error(error.message);
         setDate(null);
         setOrder(null);
       } finally {
@@ -180,7 +180,7 @@ const Order = () => {
         }
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong!");
+        toast.error(error.message);
         setDate(null);
         setOrder(null);
       } finally {

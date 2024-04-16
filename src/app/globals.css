@@ -44,6 +44,14 @@
   display: none; /* Webkit/Blink */
 }
 
+/* Side Bar Opener on BillQuery Page  */
+.side_bar_opener_open {
+  clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 50%);
+}
+.side_bar_opener_close {
+  clip-path: polygon(0% 0%, 50% 0%, 100% 50%, 50% 100%, 0% 100%);
+}
+
 /* ScrollBar Styling End */
 
 .react-date-picker__wrapper {
