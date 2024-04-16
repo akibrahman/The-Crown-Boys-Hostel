@@ -1,5 +1,8 @@
+import { dbConfig } from "@/dbConfig/dbConfig";
 import Order from "@/models/orderModel";
 import { NextResponse } from "next/server";
+
+dbConfig();
 
 export const POST = async (req) => {
   try {
