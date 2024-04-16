@@ -429,7 +429,7 @@ const OrderStatus = () => {
           </div>
         </div>
       </Modal>
-      <div className="min-h-screen dark:bg-stone-900 px-10">
+      <div className="min-h-screen dark:bg-stone-900 px-10 pb-20">
         <p className="text-center font-semibold text-2xl pt-6 dark:text-white">
           Order Status
         </p>
@@ -457,11 +457,15 @@ const OrderStatus = () => {
         {/* Order Details  */}
         <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
           {orderOfToday?.map((order) => (
-            <div className="flex items-center gap-8" key={order._id}>
-              <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
+            <div className="flex items-center gap-3 md:gap-8" key={order._id}>
+              <p
+                className={`${
+                  order.isGuestMeal ? "text-blue-500" : ""
+                } text-sm md:text-base w-max md:w-auto`}
+              >
                 {order.user.username}
               </p>
-              <p>
+              <p className="text-sm md:text-base w-max md:w-auto">
                 {order.user.floor + 1} - ( {order.user.floor}
                 <sup>th</sup> Floor )
               </p>
@@ -510,11 +514,15 @@ const OrderStatus = () => {
         {/* Order Details  */}
         <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
           {orderOfTomorrow?.map((order) => (
-            <div className="flex items-center gap-8" key={order._id}>
-              <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
+            <div className="flex items-center gap-3 md:gap-8" key={order._id}>
+              <p
+                className={`${
+                  order.isGuestMeal ? "text-blue-500" : ""
+                } text-sm md:text-base w-max md:w-auto`}
+              >
                 {order.user.username}
               </p>
-              <p>
+              <p className="text-sm md:text-base w-max md:w-auto">
                 {order.user.floor + 1} - ( {order.user.floor}
                 <sup>th</sup> Floor )
               </p>
@@ -562,13 +570,17 @@ const OrderStatus = () => {
           )}
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 mt-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
           {orderOfYesterday?.map((order) => (
-            <div className="flex items-center gap-8" key={order._id}>
-              <p className={`${order.isGuestMeal ? "text-blue-500" : ""}`}>
+            <div className="flex items-center gap-3 md:gap-8" key={order._id}>
+              <p
+                className={`${
+                  order.isGuestMeal ? "text-blue-500" : ""
+                } text-sm md:text-base w-max md:w-auto`}
+              >
                 {order.user.username}
               </p>
-              <p>
+              <p className="text-sm md:text-base w-max md:w-auto">
                 {order.user.floor + 1} - ( {order.user.floor}
                 <sup>th</sup> Floor )
               </p>

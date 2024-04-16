@@ -114,7 +114,11 @@ const ManagerOrder = () => {
             <div className="flex items-center gap-4">
               <p className="text-sky-500 font-semibold">Select User : </p>
               <select
-                onChange={(e) => setClientId(e.target.value)}
+                onChange={(e) => {
+                  setOrder(null);
+                  setDate(null);
+                  setClientId(e.target.value);
+                }}
                 name="clients"
                 className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300 outline-none"
               >
@@ -167,7 +171,7 @@ const ManagerOrder = () => {
                           setLoading(false);
                           console.log(!breakfast);
                           setBreakfast(!breakfast);
-                          toast.success("Order placed");
+                          toast.success("Order Modified");
                         } else {
                           toast.error("Something went wrong!");
                         }
@@ -199,7 +203,7 @@ const ManagerOrder = () => {
                           setLoading(false);
                           console.log(!lunch);
                           setLunch(!lunch);
-                          toast.success("Order placed");
+                          toast.success("Order Modified");
                         } else {
                           toast.error("Something went wrong!");
                         }
@@ -231,7 +235,7 @@ const ManagerOrder = () => {
                           setLoading(false);
                           console.log(!dinner);
                           setDinner(!dinner);
-                          toast.success("Order placed");
+                          toast.success("Order Modified");
                         } else {
                           toast.error("Something went wrong!");
                         }

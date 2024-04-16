@@ -179,15 +179,15 @@ const Registration = () => {
           </div>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="flex justify-between items-cente gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-cente gap-4">
             {/* Left Side  */}
-            <div className="w-1/2">
-              <div className="mb-4">
+            <div className="w-full md:w-1/2">
+              <div className="mb-4 mx-auto">
                 <label
                   htmlFor="username"
                   className="block text-sm font-bold mb-2"
                 >
-                  Username
+                  Name
                 </label>
                 <input
                   type="text"
@@ -317,7 +317,7 @@ const Registration = () => {
               )}
               {/* Area for NID Input  */}
               {isNid && (
-                <div className="mb-8 mt-4 flex items-center justify-center gap-8">
+                <div className="mb-8 mt-10 md:mt-4 flex flex-col md:flex-row items-center justify-center gap-8">
                   <div className="">
                     <label
                       htmlFor="nidFront"
@@ -400,7 +400,7 @@ const Registration = () => {
               )}
               {/* Area for Birth Certificate  */}
               {isNid || (
-                <div className="mb-8 mt-4">
+                <div className="mb-8 mt-10 md:mt-4">
                   <label
                     htmlFor="birthCertificate"
                     className="block text-sm font-bold mb-2 cursor-pointer"
@@ -447,7 +447,7 @@ const Registration = () => {
               )}
             </div>
             {/* Right Side  */}
-            <div className="w-1/2">
+            <div className="w-full md:w-1/2">
               <div className="mb-4">
                 <label
                   htmlFor="messAddress"
@@ -599,8 +599,8 @@ const Registration = () => {
                     className="border border-gray-300 p-2 w-full rounded text-stone-900"
                     required
                   >
-                    <option value="">Select Floor</option>
-                    <option value="0">Ground Floor</option>
+                    {/* <option value="">Select Floor</option>
+                    <option value="0">Ground Floor</option> */}
                     <option value="1">First Floor</option>
                     <option value="2">Second Floor</option>
                     <option value="3">Third Floor</option>

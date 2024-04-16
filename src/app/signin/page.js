@@ -50,7 +50,7 @@ const Signin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center dark:bg-stone-900">
+    <div className="min-h-screen flex items-center justify-center dark:bg-stone-900 px-5">
       <div className="dark:bg-stone-900 p-8 rounded shadow-2xl shadow-sky-500 w-full max-w-md">
         <h2 className="text-2xl font-semibold mb-6 dark:text-white">Login</h2>
         <form onSubmit={handleSubmit}>
@@ -67,7 +67,7 @@ const Signin = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="border border-gray-300 p-2 w-full rounded text-black"
+              className="border border-gray-300 p-2 w-full rounded text-black outline-none"
               required
             />
           </div>
@@ -84,7 +84,7 @@ const Signin = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="border border-gray-300 p-2 w-full rounded text-black"
+              className="border border-gray-300 p-2 w-full rounded text-black outline-none"
               required
             />
           </div>

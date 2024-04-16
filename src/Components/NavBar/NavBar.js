@@ -7,17 +7,22 @@ import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
-  if (loading) return;
+  // if (loading) return;
   return (
     <div className="flex items-center justify-center gap-10 dark:bg-stone-900 bg-white text-black dark:text-white py-5">
       <p className="">
         <Link href="/">Home</Link>
       </p>
-      {user && user?.isClient && user.isClientVerified && (
-        <p>
-          <Link href="/order">Order</Link>
-        </p>
-      )}
+      {loading
+        ? null
+        : user &&
+          user.success &&
+          user.isClient &&
+          user.isClientVerified && (
+            <p>
+              <Link href="/order">Order</Link>
+            </p>
+          )}
       <p>
         <Link href="/blog">Blog</Link>
       </p>
@@ -33,7 +38,7 @@ const NavBar = () => {
       ) : (
         <p>
           <Link
-            className="bg-sky-500 hover:bg-yellow-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
+            className="bg-sky-500 hover:bg-sky-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
             href="/signin"
           >
             Log In

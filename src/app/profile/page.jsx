@@ -494,7 +494,7 @@ const Profile = () => {
       {/*//! Parent Block ------------------------------------------------------------- */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 dark:bg-stone-900 dark:text-white">
         {/*//! Profile Details  */}
-        <div className={`mt-10 px-6 py-8 relative`}>
+        <div className={`mt-10 py-8 flex flex-col items-center relative`}>
           {user && user.role == "manager" && (
             <div className="absolute top-0 right-4 dark:bg-stone-700 bg-stone-300 flex items-center justify-center h-12 w-12 rounded-full cursor-pointer duration-300 active:scale-90 select-none">
               <BsChatSquareQuote className="text-xl" />
@@ -512,8 +512,10 @@ const Profile = () => {
             height={200}
             className="mb-10 rounded-full aspect-square"
           />
-          <p>User Name: {user.username}</p>
-          <p>E-mail: {user.email}</p>
+          <p className="mb-1 text-blue-500 font-medium text-xl">
+            {user.username}
+          </p>
+          <p>{user.email}</p>
           <p>Role: {convertCamelCaseToCapitalized(user.role)}</p>
 
           {user.isVerified ? (
@@ -617,14 +619,14 @@ const Profile = () => {
           user.isVerified &&
           !user.isClientVerified ? (
           <div className="flex items-center justify-center pl-6 py-8 mt-10">
-            <p className="font-semibold shadow-xl shadow-blue-500 px-8 select-none py-2 rounded-full">
+            <p className="font-semibold shadow-xl shadow-blue-500 px-8 select-none py-2 rounded-full w-max">
               Wait till manager accepts you!
             </p>
           </div>
         ) : user.role === "client" &&
           user.isVerified &&
           user.isClientVerified ? (
-          <div className={`mt-10 pl-6 py-8`}>
+          <div className={`mt-10 py-8 flex flex-col items-center`}>
             <Image
               alt={`Profile picture of ${manager.username}`}
               src={manager.profilePicture}
@@ -632,8 +634,11 @@ const Profile = () => {
               height={200}
               className="mb-10 rounded-full aspect-square"
             />
-            <p>Manager&apos;s Name: {manager.username}</p>
-            <p>E-mail: {manager.email}</p>
+            <p className="mb-1 text-blue-500 font-medium text-xl">
+              {manager.username}
+            </p>
+            <p>{manager.email}</p>
+            <p>{manager.contactNumber}</p>
           </div>
         ) : (
           <></>
@@ -841,7 +846,7 @@ const Profile = () => {
         {user.role === "manager" &&
         user.isVerified &&
         user.isManagerVerified ? (
-          <div className="px-3 mt-10 relative flex items-center justify-center">
+          <div className="px-3 my-auto relative flex items-center justify-center">
             <div className="flex flex-col items-center justify-center flex-wrap gap-5">
               <Link href="/orderStatus" className="group">
                 <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
@@ -900,8 +905,8 @@ const Profile = () => {
         {user.role == "manager" &&
           user.isVerified &&
           user.isManagerVerified && (
-            <div className="col-span-1 md:col-span-2 lg:col-span-3 pl-6 pb-8 mt-10">
-              <p className="font-semibold border border-sky-500 rounded-xl px-4 py-2 relative flex items-center justify-around">
+            <div className="col-span-1 md:col-span-2 lg:col-span-3 md:pl-6 pb-8 mt-10">
+              <p className="font-semibold border border-sky-500 rounded-sm px-4 py-2 relative flex items-center justify-around md:justify-around">
                 <input
                   placeholder="Enter Amount"
                   onChange={(e) => setManagerAmount(parseInt(e.target.value))}
@@ -911,29 +916,7 @@ const Profile = () => {
                   className="w-[200px] px-5 py-1 outline-none rounded-full dark:bg-stone-800 bg-stone-300"
                   type="number"
                 />
-                <span className="w-[300px]">{currentMonth}</span>
-                <button
-                  onClick={async () => {
-                    try {
-                      // const res = await axios.get("/api/orders/testapi");
-                      // if (res.data.success) {
-                      //   toast.success("Test success");
-                      // } else {
-                      //   toast.error("Test Failed");
-                      // }
-                    } catch (error) {
-                      console.log(error);
-                      toast.error("Backend error");
-                    }
-                  }}
-                  className="bg-sky-500 px-3 py-1 duration-300 active:scale-90 hidden"
-                >
-                  Test
-                </button>
-                {/* <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-sky-500">
-                {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}
-                BDT
-              </span> */}
+                <span className="md:w-[300px]">{currentMonth}</span>
               </p>
               <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
                 {managerCalanderData?.data?.map((mrkt) => (
@@ -1001,7 +984,7 @@ const Profile = () => {
         {user.role == "manager" &&
           user.isVerified &&
           user.isManagerVerified && (
-            <div className="p-10 mt-20 mx-auto">
+            <div className="py-5 md:py-0 md:p-10 md:mt-20 mx-auto">
               <p className="flex items-center gap-2 mb-5">
                 Current Meal Rate:{" "}
                 <span className="text-blue-500 font-extralight text-4xl">
