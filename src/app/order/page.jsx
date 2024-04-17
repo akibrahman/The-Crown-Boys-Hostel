@@ -97,7 +97,12 @@ const Order = () => {
       // new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Dhaka"})).getMinutes()
     ) {
       setLoading(true);
-
+      toast.success(
+        "User Id: " +
+          user._id +
+          " Date: " +
+          new Date(selectedDate).toLocaleDateString()
+      );
       try {
         setDate(selectedDate);
         const { data } = await axios.post("/api/orders/getorder", {
