@@ -97,16 +97,24 @@ const Order = () => {
       // new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Dhaka"})).getMinutes()
     ) {
       setLoading(true);
-      toast.success(
-        "User Id: " +
-          user._id +
-          " Date: " +
-          new Date(selectedDate).toLocaleDateString()
-      );
       try {
         setDate(selectedDate);
         const { data } = await axios.post("/api/orders/getorder", {
-          date: new Date(selectedDate).toLocaleDateString(),
+          date:
+            new Date(selectedDate).toLocaleDateString("en-US", {
+              timeZone: "Asia/Dhaka",
+              month: "numeric",
+            }) +
+            "/" +
+            new Date(selectedDate).toLocaleDateString("en-US", {
+              timeZone: "Asia/Dhaka",
+              day: "numeric",
+            }) +
+            "/" +
+            new Date(selectedDate).toLocaleDateString("en-US", {
+              timeZone: "Asia/Dhaka",
+              year: "numeric",
+            }),
           userId: user._id,
         });
 
@@ -166,15 +174,23 @@ const Order = () => {
     ) {
       setLoading(true);
       try {
-        toast.success(
-          "User Id: " +
-            user._id +
-            " Date: " +
-            new Date(selectedDate).toLocaleDateString()
-        );
         setDate(selectedDate);
         const { data } = await axios.post("/api/orders/getorder", {
-          date: new Date(selectedDate).toLocaleDateString(),
+          date:
+            new Date(selectedDate).toLocaleDateString("en-US", {
+              timeZone: "Asia/Dhaka",
+              month: "numeric",
+            }) +
+            "/" +
+            new Date(selectedDate).toLocaleDateString("en-US", {
+              timeZone: "Asia/Dhaka",
+              day: "numeric",
+            }) +
+            "/" +
+            new Date(selectedDate).toLocaleDateString("en-US", {
+              timeZone: "Asia/Dhaka",
+              year: "numeric",
+            }),
           userId: user._id,
         });
         if (data.success) {

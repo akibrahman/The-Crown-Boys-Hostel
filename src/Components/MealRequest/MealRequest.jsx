@@ -44,7 +44,21 @@ const MealRequest = ({
     setDate(selectedDate);
     try {
       const { data } = await axios.post("/api/orders/getorder", {
-        date: new Date(selectedDate).toLocaleDateString(),
+        date:
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            month: "numeric",
+          }) +
+          "/" +
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            day: "numeric",
+          }) +
+          "/" +
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            year: "numeric",
+          }),
         userId: user._id,
       });
       if (data.success) {
