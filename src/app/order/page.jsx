@@ -166,6 +166,12 @@ const Order = () => {
     ) {
       setLoading(true);
       try {
+        toast.success(
+          "User Id: " +
+            user._id +
+            " Date: " +
+            new Date(selectedDate).toLocaleDateString()
+        );
         setDate(selectedDate);
         const { data } = await axios.post("/api/orders/getorder", {
           date: new Date(selectedDate).toLocaleDateString(),
