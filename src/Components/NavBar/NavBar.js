@@ -3,6 +3,7 @@
 import { AuthContext } from "@/providers/ContextProvider";
 import Link from "next/link";
 import { useContext } from "react";
+import { CgSpinner } from "react-icons/cg";
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 const NavBar = () => {
@@ -26,7 +27,9 @@ const NavBar = () => {
       <p>
         <Link href="/blog">Blog</Link>
       </p>
-      {loading ? null : user && user.success ? (
+      {loading ? (
+        <CgSpinner className="text-2xl text-sky-500 animate-spin" />
+      ) : user && user.success ? (
         <p>
           <Link
             className="bg-sky-500 hover:bg-blue-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90"
