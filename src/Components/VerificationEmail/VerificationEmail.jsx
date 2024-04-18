@@ -11,15 +11,47 @@ import {
   Text,
 } from "@react-email/components";
 
-export const TestEmail = ({ userFirstname, url }) => (
+export const VerificationEmail = ({ userFirstname, url }) => (
   <Html>
     <Head />
     <Preview>Akib Meal Management System</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Hr style={hr} />
-        <Text style={heading}>Manager Expo</Text>
-        <Hr style={hr} />
+        <Hr
+          style={{
+            borderColor: "#cccccc",
+            // margin: "20px 0",
+          }}
+        />
+        <Text
+          style={{
+            color: "#fff",
+            fontWeight: "bold",
+            textAlign: "center",
+            padding: "0",
+            margin: "0",
+            fontSize: "20px",
+          }}
+        >
+          Manager Expo
+          <Text
+            style={{
+              color: "#fff",
+              fontSize: "10px",
+              textAlign: "right",
+              padding: "0",
+              margin: "0",
+            }}
+          >
+            MD. Mijanur Rahman
+          </Text>
+        </Text>
+        <Hr
+          style={{
+            borderColor: "#cccccc",
+            // margin: "20px 0",
+          }}
+        />
         <Img
           src={
             "https://cdn.templates.unlayer.com/assets/1636808300229-Security_system.jpg"
@@ -54,14 +86,15 @@ export const TestEmail = ({ userFirstname, url }) => (
         </Text>
         <Hr style={hr} />
         <Text style={footer}>
-          Kamarpara, Uttara Sector - 10, Dhaka, Bangladesh
+          © 2024 | Mijan Meal Management System, Kamarpara, Uttara Sector - 10,
+          Dhaka, Bangladesh
         </Text>
       </Container>
     </Body>
   </Html>
 );
 
-export default TestEmail;
+export default VerificationEmail;
 
 const main = {
   borderRadius: "4px",
@@ -77,6 +110,10 @@ const heading = {
   textAlign: "center",
   padding: "2px 0",
   fontSize: "20px",
+};
+const sub_heading = {
+  color: "#fff",
+  fontSize: "10px",
 };
 
 const container = {

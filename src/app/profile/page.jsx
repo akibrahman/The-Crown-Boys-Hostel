@@ -214,7 +214,16 @@ const Profile = () => {
             year: currentYear,
           });
           console.log("Manager All Orders Loading");
-          return data.orders;
+          return data.orders.filter(
+            (d) =>
+              parseInt(d.date.split("/")[1]) <=
+              parseInt(
+                new Date().toLocaleDateString("en-BD", {
+                  day: "numeric",
+                  timeZone: "Asia/Dhaka",
+                })
+              )
+          );
         } catch (error) {
           console.log(error);
           return null;
@@ -267,7 +276,7 @@ const Profile = () => {
       setDinnerCount(dinner + extraDinner);
     }
   }, [calanderData]);
-  // console.log(user);
+  console.log(ordersForTheMonth);
   if (
     !user ||
     (user.role === "owner" && !managers) ||
@@ -1043,11 +1052,22 @@ const Profile = () => {
               <p>
                 Total Market:{" "}
                 <span className="text-blue-500 font-bold text-2xl">
-                  {managerCalanderData?.data.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + currentValue.amount,
-                    0
-                  )}
+                  {managerCalanderData.data
+                    .filter(
+                      (d) =>
+                        parseInt(d.date.split("/")[1]) <=
+                        parseInt(
+                          new Date().toLocaleDateString("en-BD", {
+                            day: "numeric",
+                            timeZone: "Asia/Dhaka",
+                          })
+                        )
+                    )
+                    .reduce(
+                      (accumulator, currentValue) =>
+                        accumulator + currentValue.amount,
+                      0
+                    )}
                 </span>{" "}
                 BDT
               </p>

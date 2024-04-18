@@ -258,6 +258,12 @@ const OrderStatus = () => {
       let lunch = 0;
       let dinner = 0;
       let ordersArray = [];
+      let ab = 0;
+      let al = 0;
+      let ad = 0;
+      let bb = 0;
+      let bl = 0;
+      let bd = 0;
       orders
         .filter((order) => order.user.floor == i)
         .forEach((order) => {
@@ -278,57 +284,66 @@ const OrderStatus = () => {
             order.guestDinnerCount > 0 &&
             (dinner += order.guestDinnerCount);
         });
-      // orders
-      //   .filter((order) => order.user.floor == i)
-      //   .forEach((order) => {
-      //     ordersArray.push({
-      //       username: order.user.username,
-      //       roomNumber: order.user.roomNumber,
-      //       breakfast: order.breakfast,
-      //       lunch: order.lunch,
-      //       diner: order.diner,
-      //       isGuestMeal: order.isGuestMeal,
-      //       guestBreakfastCount: order.guestBreakfastCount,
-      //       guestLunchCount: order.guestLunchCount,
-      //       guestDinnerCount: order.guestDinnerCount,
-      //       totalBreakfast: order.breakfast
-      //         ? order.guestBreakfastCount + 1
-      //         : order.guestBreakfastCount,
-      //       totalLunch: order.lunch
-      //         ? order.guestLunchCount + 1
-      //         : order.guestLunchCount,
-      //       totalDinner: order.dinner
-      //         ? order.guestDinnerCount + 1
-      //         : order.guestDinnerCount,
-      //     });
-      //   });
-      rooms.forEach((room) => {
-        let b = 0,
-          l = 0,
-          d = 0;
-        orders
-          .filter(
-            (order) => order.user.floor == i && order.user.roomNumber == room
-          )
-          .forEach((order) => {
-            order.breakfast ? (b += 1) : null;
-            order.isGuestMeal ? (b += order.guestBreakfastCount) : null;
-            order.lunch ? (l += 1) : null;
-            order.isGuestMeal ? (l += order.guestLunchCount) : null;
-            order.dinner ? (d += 1) : null;
-            order.isGuestMeal ? (d += order.guestDinnerCount) : null;
-          });
-        if (b > 0 || l > 0 || d > 0) {
-          ordersArray.push({
-            roomNumber: room,
-            totalBreakfast: b,
-            totalLunch: l,
-            totalDinner: d,
-          });
-        }
+      orders
+        .filter((order) => order.user.floor == i)
+        .forEach((order) => {
+          if (order.user.roomNumber.split("")[0] == "a") {
+            order.breakfast ? (ab += 1) : null;
+            order.isGuestMeal ? (ab += order.guestBreakfastCount) : null;
+            order.lunch ? (al += 1) : null;
+            order.isGuestMeal ? (al += order.guestLunchCount) : null;
+            order.dinner ? (ad += 1) : null;
+            order.isGuestMeal ? (ad += order.guestDinnerCount) : null;
+          } else {
+            order.breakfast ? (bb += 1) : null;
+            order.isGuestMeal ? (bb += order.guestBreakfastCount) : null;
+            order.lunch ? (bl += 1) : null;
+            order.isGuestMeal ? (bl += order.guestLunchCount) : null;
+            order.dinner ? (bd += 1) : null;
+            order.isGuestMeal ? (bd += order.guestDinnerCount) : null;
+          }
+        });
+      ordersArray.push({
+        block: "A",
+        b: ab,
+        l: al,
+        d: ad,
+        t: ab + al + ad,
+      });
+      ordersArray.push({
+        block: "B",
+        b: bb,
+        l: bl,
+        d: bd,
+        t: bb + bl + bd,
       });
 
-      ordersArray.sort(compareRoomNumbers);
+      // rooms.forEach((room) => {
+      //   let b = 0,
+      //     l = 0,
+      //     d = 0;
+      //   orders
+      //     .filter(
+      //       (order) => order.user.floor == i && order.user.roomNumber == room
+      //     )
+      //     .forEach((order) => {
+      //       order.breakfast ? (b += 1) : null;
+      //       order.isGuestMeal ? (b += order.guestBreakfastCount) : null;
+      //       order.lunch ? (l += 1) : null;
+      //       order.isGuestMeal ? (l += order.guestLunchCount) : null;
+      //       order.dinner ? (d += 1) : null;
+      //       order.isGuestMeal ? (d += order.guestDinnerCount) : null;
+      //     });
+      //   if (b > 0 || l > 0 || d > 0) {
+      //     ordersArray.push({
+      //       roomNumber: room,
+      //       totalBreakfast: b,
+      //       totalLunch: l,
+      //       totalDinner: d,
+      //     });
+      //   }
+      // });
+      // ordersArray.sort(compareRoomNumbers);
       analyzedData.push({
         floor: i,
         orders: ordersArray,
@@ -376,50 +391,40 @@ const OrderStatus = () => {
                   <p className="w-[100px]">Dinner: {d.totalDinner}</p>
                   <p className="w-[100px]">Total: {d.totalMeal}</p>
                 </div>
-                {d.orders.length > 0 && (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 border rounded-md p-2">
+                {(d.orders[0].t != 0 || d.orders[1].t != 0) && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border rounded-md p-2">
                     {d.orders.map((r, j) => (
                       <>
-                        {(r.totalBreakfast == 0 &&
-                          r.totalLunch == 0 &&
-                          r.totalDinner == 0) || (
-                          <table className="border dark:text-white" key={j}>
-                            <thead>
-                              <tr>
-                                <th className="border text-sm font-extralight">
-                                  Room
-                                </th>
-                                <th className="border text-sm font-extralight">
-                                  Breakfast
-                                </th>
-                                <th className="border text-sm font-extralight">
-                                  Lunch
-                                </th>
-                                <th className="border text-sm font-extralight">
-                                  Dinner
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td className="border text-center">
-                                  {r.roomNumber.split("")[0].toUpperCase() +
-                                    "_" +
-                                    r.roomNumber.split("")[1]}
-                                </td>
-                                <td className="border text-center">
-                                  {r.totalBreakfast}
-                                </td>
-                                <td className="border text-center">
-                                  {r.totalLunch}
-                                </td>
-                                <td className="border text-center">
-                                  {r.totalDinner}
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        )}
+                        <table className="border dark:text-white" key={j}>
+                          <thead>
+                            <tr>
+                              <th className="border text-sm font-extralight">
+                                Block
+                              </th>
+                              <th className="border text-sm font-extralight">
+                                Breakfast
+                              </th>
+                              <th className="border text-sm font-extralight">
+                                Lunch
+                              </th>
+                              <th className="border text-sm font-extralight">
+                                Dinner
+                              </th>
+                              <th className="border text-sm font-extralight">
+                                Total
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td className="border text-center">{r.block}</td>
+                              <td className="border text-center">{r.b}</td>
+                              <td className="border text-center">{r.l}</td>
+                              <td className="border text-center">{r.d}</td>
+                              <td className="border text-center">{r.t}</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </>
                     ))}
                   </div>

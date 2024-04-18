@@ -1,4 +1,4 @@
-import TestEmail from "@/Components/VerificationEmail/page";
+import VerificationEmail from "@/Components/VerificationEmail/VerificationEmail";
 import User from "@/models/userModel";
 import { render } from "@react-email/render";
 import bcryptjs from "bcryptjs";
@@ -33,7 +33,7 @@ export const sendEmail = async ({ email, emailType, userId, userName }) => {
     });
 
     const emailHtml = render(
-      TestEmail({
+      VerificationEmail({
         userFirstname: userName,
         url: `${process.env.CLIENT_SIDE}/verifyemail?token=${hashedToken}`,
       })
