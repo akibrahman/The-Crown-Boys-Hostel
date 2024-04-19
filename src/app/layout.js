@@ -1,7 +1,6 @@
+import Footer from "@/Components/Footer/Footer";
 import ContextProvider from "@/providers/ContextProvider";
 import TanstackProvider from "@/providers/TanstackProvider";
-
-import Footer from "@/Components/Footer/Footer";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "react-tooltip/dist/react-tooltip.css";

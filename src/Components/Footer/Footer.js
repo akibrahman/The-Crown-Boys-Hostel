@@ -3,7 +3,7 @@ import Image from "next/image";
 const Footer = () => {
   return (
     <footer className="dark:bg-stone-900 dark:text-white p-5 md:p-8">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between px-4 md:px-10">
         <div>
           <p className="text-xl font-semibold">Hostel Meal Management System</p>
           <p className="mt-2">
@@ -18,7 +18,7 @@ const Footer = () => {
           </ul>
         </div>
         <div>
-          <div className="mt-4 flex items-center">
+          {/* <div className="mt-4 flex items-center">
             <input
               type="text"
               placeholder="Subscribe to our newsletter"
@@ -27,7 +27,7 @@ const Footer = () => {
             <button className="bg-blue-500 text-white px-6 py-2 rounded-r-md hover:bg-red-700 focus:outline-none">
               Subscribe
             </button>
-          </div>
+          </div> */}
           <div className="flex items-center justify-center mt-10">
             <Image
               className="w-44"
