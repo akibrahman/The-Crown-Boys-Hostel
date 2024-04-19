@@ -2,8 +2,8 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <footer className="dark:bg-stone-900 dark:text-white p-5 md:p-[33px]">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between px-4 md:px-10">
+    <footer className="dark:bg-stone-900 dark:text-white p-4 md:p-12">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between">
         <div>
           <p className="text-xl font-semibold">Hostel Meal Management System</p>
           <p className="mt-2">
