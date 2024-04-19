@@ -182,6 +182,22 @@ const Profile = () => {
     },
     enabled: user?._id && user?.role == "client" ? true : false,
   });
+  const { data: depositeAmount } = useQuery({
+    queryKey: ["depositeAmount", "user", user?._id],
+    queryFn: async ({ queryKey }) => {
+      try {
+        const { data } = await axios.get(
+          `/api/bills/getbills?userId=${queryKey[2]}&month=${currentMonth}&year=${currentYear}`
+        );
+        if (data.success) return data.bills[0].paidBillInBDT;
+        else return 0;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    },
+    enabled: user?._id && user?.role == "client" ? true : false,
+  });
 
   const { data: managerCalanderData, refetch: managerCalanderDataRefetch } =
     useQuery({
@@ -276,7 +292,6 @@ const Profile = () => {
       setDinnerCount(dinner + extraDinner);
     }
   }, [calanderData]);
-  console.log(ordersForTheMonth);
   if (
     !user ||
     (user.role === "owner" && !managers) ||
@@ -564,9 +579,13 @@ const Profile = () => {
         {/*//! Clalnder as a Client */}
         {user.role == "client" && user.isVerified && user.isClientVerified && (
           <div className="col-span-1 md:col-span-2 px-6 pb-8 mt-10">
-            <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">
-              {currentMonth}
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-sky-500">
+            <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative flex flex-col md:flex-row gap-3 md:gap-0 items-center justify-between">
+              <span className="text-sm text-sky-500">
+                Deposite Amount - {depositeAmount} BDT
+              </span>
+              <span> {currentMonth}</span>
+              <span className="text-sm text-sky-500">
+                Approx. Bill -{" "}
                 {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}
                 BDT
               </span>
