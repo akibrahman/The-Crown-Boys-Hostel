@@ -5,8 +5,8 @@ import Image from "next/image";
 const Home = () => {
   return (
     <div className="px-10 dark:bg-stone-900">
-      <div className="flex flex-col md:flex-row gap-10 items-center justify-between py-10 md:h-[calc(100vh-65px)] min-h-screen">
-        <div className="w-[90%] md:w-1/2">
+      <div className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-between py-10 md:h-[calc(100vh-65px)] min-h-screen">
+        <div className="w-[98%] md:w-1/2">
           <p className="dark:text-white text-[30px] md:text-[40px] font-semibold mb-4">
             Campus Bites: Elevate Your Dining!
           </p>
@@ -25,14 +25,7 @@ const Home = () => {
               placeholder="Subscribe to our newsletter"
               className="dark:bg-[#282828] bg-stone-300 dark:text-white px-4 py-2 rounded-l-md focus:outline-none w-[200px] md:w-[250px] lg:w-[320px]"
             />
-            <button
-              // onClick={async () => {
-              //   const { data } = await axios.post("/api/orders/testapi");
-              //   if (data.success) alert("E-mail sent");
-              //   else alert("Error");
-              // }}
-              className="bg-blue-500 text-white px-6 py-2 rounded-r-md hover:bg-red-700 focus:outline-none"
-            >
+            <button className="bg-blue-500 text-white text-sm px-3 md:px-6 py-2.5 md:py-2 rounded-r-md hover:bg-red-700 focus:outline-none">
               Subscribe
             </button>
           </div>

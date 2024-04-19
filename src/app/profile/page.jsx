@@ -786,11 +786,12 @@ const Profile = () => {
                 Loading...
               </p>
             ) : (
-              clients?.map((client) => (
+              clients?.map((client, i) => (
                 <div
                   key={client._id}
                   className="border px-6 py-5 rounded-lg flex flex-col md:flex-row items-center w-[95%] justify-between gap-4"
                 >
+                  <p>{i + 1}</p>
                   <Image
                     alt={`Profile picture of ${client.username} who is a manager`}
                     src={client.profilePicture}

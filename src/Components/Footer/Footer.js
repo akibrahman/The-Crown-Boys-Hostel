@@ -33,7 +33,7 @@ const Footer = () => {
               className="w-44"
               height={100}
               width={140}
-              src="/images/logo.png"
+              src="/images/logo-white.png"
               alt="Logo"
             />
           </div>
