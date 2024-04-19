@@ -46,7 +46,7 @@ const MarketQuery = () => {
   };
   if (!user) return <PreLoader />;
   return (
-    <div className="min-h-screen p-10 dark:bg-stone-900">
+    <div className="min-h-screen p-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
       <p className="text-center font-semibold text-2xl dark:text-white">
         Market Query
       </p>
@@ -115,32 +115,35 @@ const MarketQuery = () => {
                 esult found
               </p>
             )}
-            {result && result.markets && result.markets.month}
+            {result && result.markets && result.bill && result.markets.month}
           </p>
           <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
-            {result?.markets?.data?.map((mrkt) => (
-              <div
-                key={mrkt._id}
-                className="relative w-[110px] h-20 rounded-md border-sky-500 border flex items-center justify-center flex-col"
-              >
-                <span className="font-semibold bg-white text-sky-500 px-2 py-1 rounded-md mb-2 select-none">
-                  {" "}
-                  {mrkt.date.split("/")[1] +
-                    "-" +
-                    mrkt.date.split("/")[0] +
-                    "-" +
-                    mrkt.date.split("/")[2]}
-                </span>
+            {result &&
+              result.markets &&
+              result.bill &&
+              result?.markets?.data?.map((mrkt) => (
+                <div
+                  key={mrkt._id}
+                  className="relative w-[110px] h-20 rounded-md border-sky-500 border flex items-center justify-center flex-col"
+                >
+                  <span className="font-semibold bg-white text-sky-500 px-2 py-1 rounded-md mb-2 select-none">
+                    {" "}
+                    {mrkt.date.split("/")[1] +
+                      "-" +
+                      mrkt.date.split("/")[0] +
+                      "-" +
+                      mrkt.date.split("/")[2]}
+                  </span>
 
-                <span className="select-none dark:text-white">
-                  {mrkt.amount} /-
-                </span>
-              </div>
-            ))}
+                  <span className="select-none dark:text-white">
+                    {mrkt.amount} /-
+                  </span>
+                </div>
+              ))}
           </div>
         </div>
       </div>
-      {result && result?.bill && (
+      {result && result.markets && result.bill && result?.bill && (
         <div className="flex justify-center md:py-10 md:my-10 dark:text-white">
           <div className="md:w-1/2">
             <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">

@@ -364,7 +364,7 @@ const OrderStatus = () => {
         onRequestClose={closeModal}
         style={customStyles}
       >
-        <div className="relative dark:bg-stone-900 bg-white p-4 overflow-y-scroll h-[90vh]">
+        <div className="relative dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white p-4 overflow-y-scroll h-[90vh]">
           <p className="text-center text-xl text-sky-500 pb-4 font-semibold">
             Floor Meal Analyzation
           </p>
@@ -434,7 +434,7 @@ const OrderStatus = () => {
           </div>
         </div>
       </Modal>
-      <div className="min-h-screen dark:bg-stone-900 px-10 pb-20">
+      <div className="min-h-screen dark:bg-gradient-to-r dark:from-primary dark:to-secondary px-10 pb-20">
         <p className="text-center font-semibold text-2xl pt-6 dark:text-white">
           Order Status
         </p>

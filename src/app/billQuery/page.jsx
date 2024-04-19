@@ -76,7 +76,7 @@ const BillQuery = () => {
           )}
         </div>
       </div>
-      <div className="min-h-screen p-10 dark:bg-stone-900">
+      <div className="min-h-screen p-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
         <p className="text-center font-semibold text-2xl dark:text-white">
           Bill Query
         </p>

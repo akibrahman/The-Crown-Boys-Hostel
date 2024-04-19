@@ -10,7 +10,7 @@ import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
   return (
-    <div className="dark:bg-stone-900 bg-white text-black dark:text-white py-3 flex flex-col md:flex-row gap-5 md:gap-0 items-center justify-around">
+    <div className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 flex flex-col md:flex-row gap-5 md:gap-0 items-center justify-around">
       <Image
         src="/images/logo-white.png"
         width={"50"}

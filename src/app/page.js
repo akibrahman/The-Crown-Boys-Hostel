@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Home = () => {
   return (
-    <div className="px-10 dark:bg-stone-900">
+    <div className="px-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
       <div className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-between py-10 md:h-[calc(100vh-65px)] min-h-screen">
         <div className="w-[98%] md:w-1/2">
           <p className="dark:text-white text-[30px] md:text-[40px] font-semibold mb-4">

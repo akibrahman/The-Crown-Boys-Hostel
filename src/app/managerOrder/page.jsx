@@ -97,7 +97,7 @@ const ManagerOrder = () => {
   };
   if (!clients) return <PreLoader />;
   return (
-    <div className="relative dark:bg-stone-900 dark:text-white min-h-screen">
+    <div className="relative dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white min-h-screen">
       {loading && (
         <div className="absolute h-full w-full top-0 bg-[rgba(0,0,0,0.6)] z-50"></div>
       )}

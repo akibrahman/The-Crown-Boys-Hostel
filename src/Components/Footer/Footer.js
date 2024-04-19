@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <footer className="dark:bg-stone-900 dark:text-white p-4 md:p-12">
+    <footer className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white p-4 md:p-12">
       <div className="container mx-auto flex flex-col md:flex-row justify-between">
         <div>
           <p className="text-xl font-semibold">Hostel Meal Management System</p>

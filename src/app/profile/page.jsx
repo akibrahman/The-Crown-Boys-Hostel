@@ -296,7 +296,7 @@ const Profile = () => {
         style={customStylesForclientDetailsModal}
       >
         {clientDetails && (
-          <div className="dark:bg-stone-900 bg-white dark:text-white font-semibold p-10 h-[90vh] overflow-y-scroll">
+          <div className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white dark:text-white font-semibold p-10 h-[90vh] overflow-y-scroll">
             <div className="flex items-center gap-10">
               <div className="mb-4">
                 <Image
@@ -475,7 +475,7 @@ const Profile = () => {
         )}
       </Modal>
       {/*//! NavBar Panel  */}
-      <div className="p-6 flex flex-col-reverse gap-3 items-center md:flex-row-reverse md:gap-0 justify-between dark:bg-stone-900 dark:text-white">
+      <div className="p-6 flex flex-col-reverse gap-3 items-center md:flex-row-reverse md:gap-0 justify-between dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white">
         <button
           onClick={logout}
           className="bg-red-600 hover:bg-red-700 text-stone-900 font-bold px-4 py-1 flex items-center gap-3 rounded-lg duration-300 active:scale-90"
@@ -501,7 +501,7 @@ const Profile = () => {
         </p>
       </div>
       {/*//! Parent Block ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 dark:bg-stone-900 dark:text-white">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white">
         {/*//! Profile Details  */}
         <div className={`mt-10 py-8 flex flex-col items-center relative`}>
           {user && user.role == "manager" && (
@@ -768,7 +768,7 @@ const Profile = () => {
         user.isVerified &&
         user.isManagerVerified ? (
           <div className="col-span-1 md:col-span-2 h-[380px] overflow-x-hidden overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
-            <div className="dark:bg-stone-900 pb-2 bg-white w-[110%] flex justify-center sticky top-0">
+            <div className=" pb-2 bg-transparent w-[110%] flex justify-center sticky top-0">
               <div className="relative">
                 <input
                   onChange={(e) => setClientName(e.target.value)}

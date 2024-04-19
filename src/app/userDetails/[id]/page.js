@@ -6,8 +6,8 @@ const page = async ({ params }) => {
   const client = await getClient(id);
   console.log(client);
   return (
-    <div className="min-h-screen dark:bg-stone-900 dark:text-white font-semibold">
-      <div class="bg-gray-100 dark:bg-stone-900">
+    <div className="min-h-screen dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white font-semibold">
+      <div class="bg-gray-100 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
         <div class="container mx-auto px-4 py-16">
           <div class="flex flex-wrap -mx-3">
             <div class="lg:w-1/3 md:w-1/2 px-3 mb-6 md:mb-0">

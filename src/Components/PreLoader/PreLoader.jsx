@@ -1,6 +1,6 @@
 const PreLoader = () => {
   return (
-    <div className="w-full h-screen dark:bg-stone-900 dark:text-white flex items-center justify-center">
+    <div className="w-full h-screen dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white flex items-center justify-center">
       <div className="text-right animate-pulse">
         <p className="text-5xl font-bold mb-3">Manager Expo</p>
         <p className="text-[12px]">A Quality Meal Management System</p>
