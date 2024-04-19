@@ -49,7 +49,7 @@ const ContextProvider = ({ children }) => {
     <>
       <Detector
         render={({ online }) =>
-          online ? (
+          !online ? (
             <AuthContext.Provider value={info}>{children}</AuthContext.Provider>
           ) : (
             <NoInternetPage />
