@@ -98,18 +98,30 @@ export const GET = async (req) => {
       // await transport.sendMail(mailOptions);
       const today = new Date();
       today.setUTCHours(today.getUTCHours() + 6);
-      const currentMonth = today.getUTCMonth();
-      const currentYear = today.getUTCFullYear();
+      const todayDate = today.toLocaleDateString("en-BD", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentMonth = today.toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+      const currentYear = today.toLocaleDateString("en-BD", {
+        year: "numeric",
+        timeZone: "Asia/Dhaka",
+      });
       const lastDayOfMonth = new Date(
         Date.UTC(currentYear, currentMonth + 1, 0)
-      );
+      ).toLocaleDateString("en-BD", {
+        year: "numeric",
+        timeZone: "Asia/Dhaka",
+      });
       const mailOptions = {
         to: "akibrahman5200@gmail.com",
         subject: "Manager Expo - Test Date & Time",
         html: `<div>
         <p><b>Current Month : ${currentMonth}</b></p>
         <p><b>Current Year : ${currentYear}</b></p>
-        <p><b>Date & Time : ${today}</b></p>
+        <p><b>Date & Time : ${todayDate}</b></p>
         <p><b>Last Day : ${lastDayOfMonth}</b></p>
         </div>`,
       };
