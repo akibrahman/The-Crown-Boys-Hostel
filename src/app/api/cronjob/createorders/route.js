@@ -103,7 +103,7 @@ export const GET = async (req) => {
             accumulator + (currentValue.lunch ? 1 : 0),
           0
         );
-        const extraLunch = calanderData
+        const extraLunch = orders
           .filter((d) => d.isGuestMeal && d.guestLunchCount > 0)
           .reduce(
             (accumulator, currentValue) =>
@@ -115,7 +115,7 @@ export const GET = async (req) => {
             accumulator + (currentValue.dinner ? 1 : 0),
           0
         );
-        const extraDinner = calanderData
+        const extraDinner = orders
           .filter((d) => d.isGuestMeal && d.guestDinnerCount > 0)
           .reduce(
             (accumulator, currentValue) =>
