@@ -5,10 +5,11 @@ import ManagerBill from "@/models/managerBillModel";
 import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
+import { render } from "@react-email/render";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-dbConfig();
+await dbConfig();
 
 export const GET = async (req) => {
   try {
@@ -131,16 +132,6 @@ export const GET = async (req) => {
         //!   totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
         //! bill.status = "calculated";
         //! await bill.save();
-        const transport = nodemailer.createTransport({
-          service: "gmail",
-          host: "smtp.gmail.com",
-          port: 465,
-          secure: true,
-          auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_APP_PASS,
-          },
-        });
         const emailHtml = render(
           MonthlyBillEmail({
             name: user.username,
