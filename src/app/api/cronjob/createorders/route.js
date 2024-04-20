@@ -134,31 +134,31 @@ export const GET = async (req) => {
         //! await bill.save();
         const emailHtml = render(
           MonthlyBillEmail({
-            // name: user.username,
-            // email: user.email,
-            // month: month,
-            // date: new Date().toLocaleString("en-US", {
-            //   timeZone: "Asia/Dhaka",
-            // }),
-            // billId: bill._id,
-            // userId: user._id,
-            // totalBreakfast: totalBreakfast,
-            // totalLunch: totalLunch,
-            // totalDinner: totalDinner,
-            // totalDeposit: bill.paidBillInBDT,
-            // totalBill:
-            //   totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500,
-            name: "MD. Akib Rahman",
-            email: "akibrahman5200@gmail.com",
-            month: "December",
-            date: "31/12/2024",
-            billId: "bill_5453135468548",
-            userId: "user_4535413513535",
-            totalBreakfast: "31",
-            totalLunch: "31",
-            totalDinner: "31",
-            totalDeposit: "3000",
-            totalBill: "5150",
+            name: user.username,
+            email: user.email,
+            month: month,
+            date: new Date().toLocaleString("en-US", {
+              timeZone: "Asia/Dhaka",
+            }),
+            billId: bill._id,
+            userId: user._id,
+            totalBreakfast: totalBreakfast,
+            totalLunch: totalLunch,
+            totalDinner: totalDinner,
+            totalDeposit: bill.paidBillInBDT,
+            totalBill:
+              totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500,
+            // name: "MD. Akib Rahman",
+            // email: "akibrahman5200@gmail.com",
+            // month: "December",
+            // date: "31/12/2024",
+            // billId: "bill_5453135468548",
+            // userId: "user_4535413513535",
+            // totalBreakfast: "31",
+            // totalLunch: "31",
+            // totalDinner: "31",
+            // totalDeposit: "3000",
+            // totalBill: "5150",
           })
         );
         const mailOptions = {
