@@ -37,12 +37,9 @@ export const GET = async (req) => {
       today.setUTCHours(today.getUTCHours() + 6);
       const currentMonth = today.getUTCMonth();
       const currentYear = today.getUTCFullYear();
-      // const currentHour = today.getUTCHours();
-      // const currentMinute = today.getUTCMinutes();
       const lastDayOfMonth = new Date(
         Date.UTC(currentYear, currentMonth + 1, 0)
       );
-      console.log(lastDayOfMonth);
       return {
         isLastDay:
           today.getUTCDate() === lastDayOfMonth.getUTCDate() &&
@@ -78,29 +75,46 @@ export const GET = async (req) => {
 
     if (test) {
       console.log("-------------------> Started");
-      const currentDate = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Dhaka",
-      });
-      const currentMonth = new Date().toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      });
-      const currentYear = new Date().toLocaleDateString("en-BD", {
-        year: "numeric",
-        timeZone: "Asia/Dhaka",
-      });
+      // const currentDate = new Date().toLocaleString("en-US", {
+      //   timeZone: "Asia/Dhaka",
+      // });
+      // const currentMonth = new Date().toLocaleDateString("en-BD", {
+      //   month: "long",
+      //   timeZone: "Asia/Dhaka",
+      // });
+      // const currentYear = new Date().toLocaleDateString("en-BD", {
+      //   year: "numeric",
+      //   timeZone: "Asia/Dhaka",
+      // });
+      // const mailOptions = {
+      //   to: "akibrahman5200@gmail.com",
+      //   subject: "Manager Expo - Test Date & Time",
+      //   html: `<div>
+      //   <p><b>Current Month : ${currentMonth}</b></p>
+      //   <p><b>Current Year : ${currentYear}</b></p>
+      //   <p><b>Date & Time : ${currentDate}</b></p>
+      //   </div>`,
+      // };
+      // await transport.sendMail(mailOptions);
+      const today = new Date();
+      today.setUTCHours(today.getUTCHours() + 6);
+      const currentMonth = today.getUTCMonth();
+      const currentYear = today.getUTCFullYear();
+      const lastDayOfMonth = new Date(
+        Date.UTC(currentYear, currentMonth + 1, 0)
+      );
       const mailOptions = {
-        // from: "checker@hostelplates.com",
         to: "akibrahman5200@gmail.com",
         subject: "Manager Expo - Test Date & Time",
         html: `<div>
         <p><b>Current Month : ${currentMonth}</b></p>
         <p><b>Current Year : ${currentYear}</b></p>
-        <p><b>Date & Time : ${currentDate}</b></p>
+        <p><b>Date & Time : ${today}</b></p>
+        <p><b>Last Day : ${lastDayOfMonth}</b></p>
         </div>`,
       };
-
       await transport.sendMail(mailOptions);
+      console.log("-------------------> Ended");
     }
     //! Last day of any month------------------------------
     if (aboutLastDayOfCurrentMonth.isLastDay) {
