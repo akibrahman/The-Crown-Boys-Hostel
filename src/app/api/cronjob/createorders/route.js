@@ -78,6 +78,27 @@ export const GET = async (req) => {
 
     if (test) {
       console.log("-------------------> Started");
+      const today = new Date();
+      today.setUTCHours(today.getUTCHours() + 6);
+      const currentMonth = today.getUTCMonth();
+      const currentYear = today.getUTCFullYear();
+      const mailOptions = {
+        // from: "checker@hostelplates.com",
+        to: "akibrahman5200@gmail.com",
+        subject: "Manager Expo - Test Date & Time",
+        html: `<div>
+        <b>Current Month : ${currentMonth}</b>
+        <b>Current Year : ${currentYear}</b>
+        <b>Date & Time : ${new Date(today).toLocaleString("en-US", {
+          timeZone: "Asia/Dhaka",
+        })}</b>
+        </div>`,
+      };
+
+      await transport.sendMail(mailOptions);
+    }
+    //! Last day of any month------------------------------
+    if (aboutLastDayOfCurrentMonth.isLastDay) {
       //! <---------->User Bill Creation Start <---------->
       const bills = await Bill.find({});
       for (let m = 0; m < bills.length; m++) {
@@ -150,19 +171,6 @@ export const GET = async (req) => {
             totalDeposit: bill.paidBillInBDT,
             totalBill:
               totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500,
-            //!
-            //     name: "MD. Akib Rahman",
-            //     email: "akibrahman5200@gmail.com",
-            //     month: "December",
-            //     date: "31/12/2024",
-            //     billId: "bill_5453135468548",
-            //     userId: "user_4535413513535",
-            //     totalBreakfast: "31",
-            //     totalLunch: "31",
-            //     totalDinner: "31",
-            //     totalDeposit: "3000",
-            //     totalBill: "5150",
-            //!
           })
         );
         const mailOptions = {
@@ -174,41 +182,6 @@ export const GET = async (req) => {
         };
 
         await transport.sendMail(mailOptions);
-      }
-      //! <---------->User Bill Creation End <---------->
-    }
-    //! Last day of any month------------------------------
-    if (aboutLastDayOfCurrentMonth.isLastDay) {
-      //! <---------->User Bill Creation Start <---------->
-      const bills = await Bill.find({});
-      for (let m = 0; m < bills.length; m++) {
-        const bill = await Bill.findById(bills[m]._id);
-        const userId = bill.userId;
-        const month = bill.month;
-        const year = bill.year;
-        const orders = await Order.find({ userId, month, year });
-        const totalBreakfast = orders.reduce(
-          (accumulator, currentValue) =>
-            accumulator + (currentValue.breakfast ? 1 : 0),
-          0
-        );
-        const totalLunch = orders.reduce(
-          (accumulator, currentValue) =>
-            accumulator + (currentValue.lunch ? 1 : 0),
-          0
-        );
-        const totalDinner = orders.reduce(
-          (accumulator, currentValue) =>
-            accumulator + (currentValue.dinner ? 1 : 0),
-          0
-        );
-        bill.totalBreakfast = totalBreakfast;
-        bill.totalLunch = totalLunch;
-        bill.totalDinner = totalDinner;
-        bill.totalBillInBDT =
-          totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
-        bill.status = "calculated";
-        await bill.save();
       }
       //! <---------->User Bill Creation End <---------->
 
