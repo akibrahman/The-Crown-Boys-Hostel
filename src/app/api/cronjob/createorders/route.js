@@ -1,11 +1,9 @@
-import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
 import ManagerBill from "@/models/managerBillModel";
 import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
-import { render } from "@react-email/render";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -132,29 +130,29 @@ export const GET = async (req) => {
         //!   totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
         //! bill.status = "calculated";
         //! await bill.save();
-        const emailHtml = render(
-          MonthlyBillEmail({
-            name: user.username,
-            email: user.email,
-            month: month,
-            date: new Date().toLocaleString("en-US", {
-              timeZone: "Asia/Dhaka",
-            }),
-            billId: bill._id,
-            userId: user._id,
-            totalBreakfast: totalBreakfast,
-            totalLunch: totalLunch,
-            totalDinner: totalDinner,
-            totalDeposit: bill.paidBillInBDT,
-            totalBill:
-              totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500,
-          })
-        );
+        // const emailHtml = render(
+        //   MonthlyBillEmail({
+        //     name: user.username,
+        //     email: user.email,
+        //     month: month,
+        //     date: new Date().toLocaleString("en-US", {
+        //       timeZone: "Asia/Dhaka",
+        //     }),
+        //     billId: bill._id,
+        //     userId: user._id,
+        //     totalBreakfast: totalBreakfast,
+        //     totalLunch: totalLunch,
+        //     totalDinner: totalDinner,
+        //     totalDeposit: bill.paidBillInBDT,
+        //     totalBill:
+        //       totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500,
+        //   })
+        // );
         const mailOptions = {
           from: "checker@hostelplates.com",
           to: user.email,
           subject: "Manager Expo - Test Monthly Bill",
-          html: emailHtml,
+          html: "<b>Test Bill E-mail from Manager Expo</b>",
         };
 
         await transport.sendMail(mailOptions);
