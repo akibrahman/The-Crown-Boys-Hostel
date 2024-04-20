@@ -134,14 +134,14 @@ export const GET = async (req) => {
         //! await bill.save();
         const emailHtml = render(
           MonthlyBillEmail({
-            name: user.username,
-            email: user.email,
+            // name: user.username,
+            // email: user.email,
             month: month,
             date: new Date().toLocaleString("en-US", {
               timeZone: "Asia/Dhaka",
             }),
             billId: bill._id,
-            userId: user._id,
+            // userId: user._id,
             // totalBreakfast: totalBreakfast,
             // totalLunch: totalLunch,
             // totalDinner: totalDinner,
@@ -149,12 +149,12 @@ export const GET = async (req) => {
             // totalBill:
             //   totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500,
             //!
-            // name: "MD. Akib Rahman",
-            // email: "akibrahman5200@gmail.com",
+            name: "MD. Akib Rahman",
+            email: "akibrahman5200@gmail.com",
             // month: "December",
             // date: "31/12/2024",
             // billId: "bill_5453135468548",
-            // userId: "user_4535413513535",
+            userId: "user_4535413513535",
             totalBreakfast: "31",
             totalLunch: "31",
             totalDinner: "31",
