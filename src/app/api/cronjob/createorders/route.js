@@ -434,6 +434,7 @@ export const GET = async (req) => {
 
     return NextResponse.json({ success: true, msg: "Runned successfully" });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error }, { status: 500 });
   }
 };
