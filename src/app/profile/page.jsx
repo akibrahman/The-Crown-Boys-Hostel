@@ -579,7 +579,7 @@ const Profile = () => {
         {/*//! Clalnder as a Client */}
         {user.role == "client" && user.isVerified && user.isClientVerified && (
           <div className="col-span-1 md:col-span-2 px-6 pb-8 mt-10">
-            <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative flex flex-col md:flex-row gap-3 md:gap-0 items-center justify-between">
+            <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative flex flex-col md:flex-row gap-3 md:gap-0+6 items-center justify-between">
               <span className="text-sm text-sky-500">
                 Deposite Amount - {depositeAmount} BDT
               </span>
@@ -674,6 +674,15 @@ const Profile = () => {
         {/*//! Managers as a Owner  */}
         {user.role === "owner" && (
           <div className="col-span-1 md:col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
+            <button
+              onClick={async () => {
+                const { data } = await axios.post("/api/orders/testapi");
+                if (data.success) toast.success("Test E-mail Sent");
+              }}
+              className="font-semibold px-3 py-1 duration-300 bg-sky-500 text-white active:scale-90"
+            >
+              E-mail
+            </button>
             <div className="sticky top-0">
               <input
                 placeholder="Search by name"

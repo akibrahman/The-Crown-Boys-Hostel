@@ -1,3 +1,4 @@
+import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
 import ManagerBill from "@/models/managerBillModel";
@@ -75,7 +76,99 @@ export const GET = async (req) => {
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
 
     if (test) {
-      console.log("Test Run");
+      //! <---------->User Bill Creation Start <---------->
+      const bills = await Bill.find({});
+      for (let m = 0; m < bills.length; m++) {
+        const bill = await Bill.findById(bills[m]._id);
+        const userId = bill.userId;
+        const user = await User.findById(userId);
+        const month = bill.month;
+        const year = bill.year;
+        const orders = await Order.find({ userId, month, year });
+        const breakfast = orders.reduce(
+          (accumulator, currentValue) =>
+            accumulator + (currentValue.breakfast ? 1 : 0),
+          0
+        );
+        const extraBreakfast = orders
+          .filter((d) => d.isGuestMeal && d.guestBreakfastCount > 0)
+          .reduce(
+            (accumulator, currentValue) =>
+              accumulator + parseInt(currentValue.guestBreakfastCount),
+            0
+          );
+        const lunch = orders.reduce(
+          (accumulator, currentValue) =>
+            accumulator + (currentValue.lunch ? 1 : 0),
+          0
+        );
+        const extraLunch = calanderData
+          .filter((d) => d.isGuestMeal && d.guestLunchCount > 0)
+          .reduce(
+            (accumulator, currentValue) =>
+              accumulator + parseInt(currentValue.guestLunchCount),
+            0
+          );
+        const dinner = orders.reduce(
+          (accumulator, currentValue) =>
+            accumulator + (currentValue.dinner ? 1 : 0),
+          0
+        );
+        const extraDinner = calanderData
+          .filter((d) => d.isGuestMeal && d.guestDinnerCount > 0)
+          .reduce(
+            (accumulator, currentValue) =>
+              accumulator + parseInt(currentValue.guestDinnerCount),
+            0
+          );
+        const totalBreakfast = breakfast + extraBreakfast;
+        const totalLunch = lunch + extraLunch;
+        const totalDinner = dinner + extraDinner;
+        //! bill.totalBreakfast = totalBreakfast;
+        //! bill.totalLunch = totalLunch;
+        //! bill.totalDinner = totalDinner;
+        //! bill.totalBillInBDT =
+        //!   totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
+        //! bill.status = "calculated";
+        //! await bill.save();
+        const transport = nodemailer.createTransport({
+          service: "gmail",
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_APP_PASS,
+          },
+        });
+        const emailHtml = render(
+          MonthlyBillEmail({
+            name: user.username,
+            email: user.email,
+            month: month,
+            date: new Date().toLocaleString("en-US", {
+              timeZone: "Asia/Dhaka",
+            }),
+            billId: bill._id,
+            userId: user._id,
+            totalBreakfast: totalBreakfast,
+            totalLunch: totalLunch,
+            totalDinner: totalDinner,
+            totalDeposit: bill.paidBillInBDT,
+            totalBill:
+              totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500,
+          })
+        );
+        const mailOptions = {
+          from: "checker@hostelplates.com",
+          to: user.email,
+          subject: "Manager Expo - Test Monthly Bill",
+          html: emailHtml,
+        };
+
+        await transport.sendMail(mailOptions);
+      }
+      //! <---------->User Bill Creation End <---------->
     }
     //! Last day of any month------------------------------
     if (aboutLastDayOfCurrentMonth.isLastDay) {
@@ -348,7 +441,7 @@ export const GET = async (req) => {
       await transport.sendMail(mailOptions);
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, msg: "Runned successfully" });
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   }
