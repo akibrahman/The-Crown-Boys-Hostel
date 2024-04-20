@@ -676,8 +676,12 @@ const Profile = () => {
           <div className="col-span-1 md:col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
             <button
               onClick={async () => {
-                const { data } = await axios.post("/api/orders/testapi");
-                if (data.success) toast.success("Test E-mail Sent");
+                try {
+                  toast.success("Started");
+                } catch (error) {
+                  console.log(error);
+                }
+                // if (data.success) toast.success("Test E-mail Sent");
               }}
               className="font-semibold px-3 py-1 duration-300 bg-sky-500 text-white active:scale-90"
             >

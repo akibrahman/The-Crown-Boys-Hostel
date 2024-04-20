@@ -1,4 +1,4 @@
-import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail.jsx";
+import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
 import ManagerBill from "@/models/managerBillModel";
@@ -77,6 +77,7 @@ export const GET = async (req) => {
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
 
     if (test) {
+      console.log("-------------------> Started");
       //! <---------->User Bill Creation Start <---------->
       const bills = await Bill.find({});
       for (let m = 0; m < bills.length; m++) {
@@ -132,6 +133,7 @@ export const GET = async (req) => {
         //!   totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
         //! bill.status = "calculated";
         //! await bill.save();
+
         const emailHtml = render(
           MonthlyBillEmail({
             name: user.username,
@@ -140,8 +142,8 @@ export const GET = async (req) => {
             date: new Date().toLocaleString("en-US", {
               timeZone: "Asia/Dhaka",
             }),
-            // billId: bill._id,
-            userId: user._id,
+            billId: bill._id.toString(),
+            userId: user._id.toString(),
             totalBreakfast: totalBreakfast,
             totalLunch: totalLunch,
             totalDinner: totalDinner,
@@ -149,17 +151,18 @@ export const GET = async (req) => {
             totalBill:
               totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500,
             //!
-            // name: "MD. Akib Rahman",
-            // email: "akibrahman5200@gmail.com",
-            // month: "December",
-            // date: "31/12/2024",
-            billId: "bill_5453135468548",
-            // userId: "user_4535413513535",
-            // totalBreakfast: "31",
-            // totalLunch: "31",
-            // totalDinner: "31",
-            // totalDeposit: "3000",
-            // totalBill: "5150",
+            //     name: "MD. Akib Rahman",
+            //     email: "akibrahman5200@gmail.com",
+            //     month: "December",
+            //     date: "31/12/2024",
+            //     billId: "bill_5453135468548",
+            //     userId: "user_4535413513535",
+            //     totalBreakfast: "31",
+            //     totalLunch: "31",
+            //     totalDinner: "31",
+            //     totalDeposit: "3000",
+            //     totalBill: "5150",
+            //!
           })
         );
         const mailOptions = {
@@ -170,9 +173,7 @@ export const GET = async (req) => {
           html: emailHtml,
         };
 
-        if ((user.email = "akibrahman5200@gmail.com")) {
-          await transport.sendMail(mailOptions);
-        }
+        await transport.sendMail(mailOptions);
       }
       //! <---------->User Bill Creation End <---------->
     }
