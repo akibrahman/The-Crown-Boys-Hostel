@@ -75,43 +75,17 @@ export const GET = async (req) => {
 
     if (test) {
       console.log("-------------------> Started");
-      // const currentDate = new Date().toLocaleString("en-US", {
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const currentMonth = new Date().toLocaleDateString("en-BD", {
-      //   month: "long",
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const currentYear = new Date().toLocaleDateString("en-BD", {
-      //   year: "numeric",
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const mailOptions = {
-      //   to: "akibrahman5200@gmail.com",
-      //   subject: "Manager Expo - Test Date & Time",
-      //   html: `<div>
-      //   <p><b>Current Month : ${currentMonth}</b></p>
-      //   <p><b>Current Year : ${currentYear}</b></p>
-      //   <p><b>Date & Time : ${currentDate}</b></p>
-      //   </div>`,
-      // };
-      // await transport.sendMail(mailOptions);
-      const today = new Date();
-      today.setUTCHours(today.getUTCHours() + 6);
-      const todayDate = today.toLocaleDateString("en-BD", {
+      const currentDate = new Date().toLocaleDateString("en-US", {
         timeZone: "Asia/Dhaka",
       });
-      const currentMonth = today.toLocaleDateString("en-BD", {
+      const currentTime = new Date().toLocaleTimeString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentMonth = new Date().toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
       });
-      const currentYear = today.toLocaleDateString("en-BD", {
-        year: "numeric",
-        timeZone: "Asia/Dhaka",
-      });
-      const lastDayOfMonth = new Date(
-        Date.UTC(currentYear, currentMonth + 1, 0)
-      ).toLocaleDateString("en-BD", {
+      const currentYear = new Date().toLocaleDateString("en-BD", {
         year: "numeric",
         timeZone: "Asia/Dhaka",
       });
@@ -121,8 +95,8 @@ export const GET = async (req) => {
         html: `<div>
         <p><b>Current Month : ${currentMonth}</b></p>
         <p><b>Current Year : ${currentYear}</b></p>
-        <p><b>Date & Time : ${todayDate}</b></p>
-        <p><b>Last Day : ${lastDayOfMonth}</b></p>
+        <p><b>Current Date : ${currentDate}</b></p>
+        <p><b>Current Time : ${currentTime}</b></p>
         </div>`,
       };
       await transport.sendMail(mailOptions);
