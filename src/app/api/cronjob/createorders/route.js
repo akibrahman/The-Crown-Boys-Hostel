@@ -78,20 +78,25 @@ export const GET = async (req) => {
 
     if (test) {
       console.log("-------------------> Started");
-      const today = new Date();
-      today.setUTCHours(today.getUTCHours() + 6);
-      const currentMonth = today.getUTCMonth();
-      const currentYear = today.getUTCFullYear();
+      const currentDate = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentMonth = new Date().toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+      const currentYear = new Date().toLocaleDateString("en-BD", {
+        year: "numeric",
+        timeZone: "Asia/Dhaka",
+      });
       const mailOptions = {
         // from: "checker@hostelplates.com",
         to: "akibrahman5200@gmail.com",
         subject: "Manager Expo - Test Date & Time",
         html: `<div>
-        <b>Current Month : ${currentMonth}</b>
-        <b>Current Year : ${currentYear}</b>
-        <b>Date & Time : ${new Date(today).toLocaleString("en-US", {
-          timeZone: "Asia/Dhaka",
-        })}</b>
+        <p><b>Current Month : ${currentMonth}</b></p>
+        <p><b>Current Year : ${currentYear}</b></p>
+        <p><b>Date & Time : ${currentDate}</b></p>
         </div>`,
       };
 
