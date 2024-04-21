@@ -1032,11 +1032,22 @@ const Profile = () => {
                 <span className="text-blue-500 font-extralight text-4xl">
                   {" "}
                   {(
-                    managerCalanderData?.data.reduce(
-                      (accumulator, currentValue) =>
-                        accumulator + currentValue.amount,
-                      0
-                    ) /
+                    managerCalanderData.data
+                      .filter(
+                        (d) =>
+                          parseInt(d.date.split("/")[1]) <=
+                          parseInt(
+                            new Date().toLocaleDateString("en-BD", {
+                              day: "numeric",
+                              timeZone: "Asia/Dhaka",
+                            })
+                          )
+                      )
+                      .reduce(
+                        (accumulator, currentValue) =>
+                          accumulator + currentValue.amount,
+                        0
+                      ) /
                     (ordersForTheMonth.reduce(
                       (accumulator, currentValue) =>
                         accumulator + (currentValue.breakfast ? 0.5 : 0),

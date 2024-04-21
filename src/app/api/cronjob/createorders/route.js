@@ -220,6 +220,46 @@ export const GET = async (req) => {
           month: currentMonth,
           year: currentYear,
         });
+        const totalMeal =
+          orders.reduce(
+            (accumulator, currentValue) =>
+              accumulator + (currentValue.breakfast ? 0.5 : 0),
+            0
+          ) +
+          orders.reduce(
+            (accumulator, currentValue) =>
+              accumulator +
+              (currentValue.isGuestMeal && currentValue.guestBreakfastCount > 0
+                ? currentValue.guestBreakfastCount / 2
+                : 0),
+            0
+          ) +
+          orders.reduce(
+            (accumulator, currentValue) =>
+              accumulator + (currentValue.lunch ? 1 : 0),
+            0
+          ) +
+          orders.reduce(
+            (accumulator, currentValue) =>
+              accumulator +
+              (currentValue.isGuestMeal && currentValue.guestLunchCount > 0
+                ? currentValue.guestLunchCount
+                : 0),
+            0
+          ) +
+          orders.reduce(
+            (accumulator, currentValue) =>
+              accumulator + (currentValue.dinner ? 1 : 0),
+            0
+          ) +
+          orders.reduce(
+            (accumulator, currentValue) =>
+              accumulator +
+              (currentValue.isGuestMeal && currentValue.guestDinnerCount > 0
+                ? currentValue.guestDinnerCount
+                : 0),
+            0
+          );
         const managerBill = new ManagerBill({
           managerId: allManagers[n]._id,
           marketId: market._id,
@@ -229,92 +269,12 @@ export const GET = async (req) => {
             (accumulator, currentValue) => accumulator + currentValue.amount,
             0
           ),
-          totalMeal:
-            orders.reduce(
-              (accumulator, currentValue) =>
-                accumulator + (currentValue.breakfast ? 0.5 : 0),
-              0
-            ) +
-            orders.reduce(
-              (accumulator, currentValue) =>
-                accumulator +
-                (currentValue.isGuestMeal &&
-                currentValue.guestBreakfastCount > 0
-                  ? currentValue.guestBreakfastCount / 2
-                  : 0),
-              0
-            ) +
-            orders.reduce(
-              (accumulator, currentValue) =>
-                accumulator + (currentValue.lunch ? 1 : 0),
-              0
-            ) +
-            orders.reduce(
-              (accumulator, currentValue) =>
-                accumulator +
-                (currentValue.isGuestMeal && currentValue.guestLunchCount > 0
-                  ? currentValue.guestLunchCount
-                  : 0),
-              0
-            ) +
-            orders.reduce(
-              (accumulator, currentValue) =>
-                accumulator + (currentValue.dinner ? 1 : 0),
-              0
-            ) +
-            orders.reduce(
-              (accumulator, currentValue) =>
-                accumulator +
-                (currentValue.isGuestMeal && currentValue.guestDinnerCount > 0
-                  ? currentValue.guestDinnerCount
-                  : 0),
-              0
-            ),
+          totalMeal,
           mealRate: (
             market.data.reduce(
               (accumulator, currentValue) => accumulator + currentValue.amount,
               0
-            ) /
-            (orders.reduce(
-              (accumulator, currentValue) =>
-                accumulator + (currentValue.breakfast ? 0.5 : 0),
-              0
-            ) +
-              orders.reduce(
-                (accumulator, currentValue) =>
-                  accumulator +
-                  (currentValue.isGuestMeal &&
-                  currentValue.guestBreakfastCount > 0
-                    ? currentValue.guestBreakfastCount / 2
-                    : 0),
-                0
-              ) +
-              orders.reduce(
-                (accumulator, currentValue) =>
-                  accumulator + (currentValue.lunch ? 1 : 0),
-                0
-              ) +
-              orders.reduce(
-                (accumulator, currentValue) =>
-                  accumulator +
-                  (currentValue.isGuestMeal && currentValue.guestLunchCount > 0
-                    ? currentValue.guestLunchCount
-                    : 0),
-                0
-              ) +
-              orders.reduce(
-                (accumulator, currentValue) =>
-                  accumulator + (currentValue.dinner ? 1 : 0),
-                0
-              ) +
-              orders.reduce(
-                (accumulator, currentValue) =>
-                  accumulator +
-                  (currentValue.isGuestMeal && currentValue.guestDinnerCount > 0
-                    ? currentValue.guestDinnerCount
-                    : 0),
-                0
-              ))
+            ) / totalMeal
           ).toFixed(2),
         });
         await managerBill.save();
