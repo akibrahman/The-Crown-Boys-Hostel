@@ -4,6 +4,7 @@ import Bill from "@/models/billModel";
 import ManagerBill from "@/models/managerBillModel";
 import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
+import Order2 from "@/models/orderModel2";
 import User from "@/models/userModel";
 import { render } from "@react-email/render";
 import { NextResponse } from "next/server";
@@ -13,14 +14,14 @@ await dbConfig();
 
 export const GET = async (req) => {
   try {
-    if (
-      req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
-    ) {
-      return NextResponse.json(
-        { success: false, msg: "Unauthorized" },
-        { status: 400 }
-      );
-    }
+    // if (
+    //   req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+    // ) {
+    //   return NextResponse.json(
+    //     { success: false, msg: "Unauthorized" },
+    //     { status: 400 }
+    //   );
+    // }
     const transport = nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
@@ -75,31 +76,82 @@ export const GET = async (req) => {
 
     if (test) {
       console.log("-------------------> Started");
-      const currentDate = new Date().toLocaleDateString("en-US", {
+      // const currentDate = new Date().toLocaleDateString("en-US", {
+      //   timeZone: "Asia/Dhaka",
+      // });
+      // const currentTime = new Date().toLocaleTimeString("en-US", {
+      //   timeZone: "Asia/Dhaka",
+      // });
+      // const currentMonth = new Date().toLocaleDateString("en-BD", {
+      //   month: "long",
+      //   timeZone: "Asia/Dhaka",
+      // });
+      // const currentYear = new Date().toLocaleDateString("en-BD", {
+      //   year: "numeric",
+      //   timeZone: "Asia/Dhaka",
+      // });
+      // const mailOptions = {
+      //   to: "akibrahman5200@gmail.com",
+      //   subject: "Manager Expo - Test Date & Time",
+      //   html: `<div>
+      //   <p><b>Current Month : ${currentMonth}</b></p>
+      //   <p><b>Current Year : ${currentYear}</b></p>
+      //   <p><b>Current Date : ${currentDate}</b></p>
+      //   <p><b>Current Time : ${currentTime}</b></p>
+      //   </div>`,
+      // };
+      // await transport.sendMail(mailOptions);
+      let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
-      const currentTime = new Date().toLocaleTimeString("en-US", {
-        timeZone: "Asia/Dhaka",
-      });
-      const currentMonth = new Date().toLocaleDateString("en-BD", {
+      let currentMonth = new Date(currentDate).getMonth();
+      let nextMonthNumber = new Date(currentDate).getMonth() + 1;
+      let nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
+      let currentYear = new Date(currentDate).getFullYear();
+      let nextMonth = new Date(
+        currentYear,
+        currentMonth + 1,
+        1
+      ).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
       });
-      const currentYear = new Date().toLocaleDateString("en-BD", {
-        year: "numeric",
-        timeZone: "Asia/Dhaka",
+      const dayCountOfNextMonth = parseInt(
+        new Date(currentYear, nextNextMonthNumber, 0).getDate()
+      );
+      //! <---------->Order creation for all verified users Start <---------->
+      const allUsers = await User.find({
+        isClient: true,
+        isClientVerified: true,
+        isVerified: true,
       });
-      const mailOptions = {
-        to: "akibrahman5200@gmail.com",
-        subject: "Manager Expo - Test Date & Time",
-        html: `<div>
-        <p><b>Current Month : ${currentMonth}</b></p>
-        <p><b>Current Year : ${currentYear}</b></p>
-        <p><b>Current Date : ${currentDate}</b></p>
-        <p><b>Current Time : ${currentTime}</b></p>
-        </div>`,
-      };
-      await transport.sendMail(mailOptions);
+      for (let j = 0; j < allUsers.length; j++) {
+        for (let i = 1; i <= dayCountOfNextMonth; i++) {
+          const newOrder = new Order2({
+            userId: allUsers[j]._id,
+            managerId: allUsers[j].manager,
+            month: nextMonth,
+            year: currentYear,
+            date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
+              "en-BD",
+              {
+                timeZone: "Asia/Dhaka",
+              }
+            ),
+            breakfast: false,
+            lunch: false,
+            dinner: false,
+          });
+          await newOrder.save();
+        }
+        // const newBill = new Bill({
+        //   userId: allUsers[j]._id,
+        //   month: nextMonth,
+        //   year: currentYear,
+        // });
+        // await newBill.save();
+      }
+      //! <---------->Order creation for all verified users End <---------->
       console.log("-------------------> Ended");
     }
     //! Last day of any month------------------------------
@@ -281,16 +333,16 @@ export const GET = async (req) => {
       }
       //! <---------->Manager Bill Creation End <---------->
     }
-    //! Second Last day of any month------------------------------
+    //! Second Last day of any month-----------------------
     if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
-      const currentDate = new Date().toLocaleString("en-US", {
+      let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
-      const currentMonth = new Date(currentDate).getMonth();
-      const nextMonthNumber = new Date(currentDate).getMonth() + 1;
-      const nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
-      const currentYear = new Date(currentDate).getFullYear();
-      const nextMonth = new Date(
+      let currentMonth = new Date(currentDate).getMonth();
+      let nextMonthNumber = new Date(currentDate).getMonth() + 1;
+      let nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
+      let currentYear = new Date(currentDate).getFullYear();
+      let nextMonth = new Date(
         currentYear,
         currentMonth + 1,
         1
@@ -333,14 +385,14 @@ export const GET = async (req) => {
         });
         await newBill.save();
       }
+      //! <---------->Order creation for all verified users End <---------->
+
+      //! <---------->Market Data creation for all verified managers Start <---------->
       const allManagers = await User.find({
         isManager: true,
         isManagerVerified: true,
         isVerified: true,
       });
-      //! <---------->Order creation for all verified users End <---------->
-
-      //! <---------->Market Data creation for all verified managers Start <---------->
       let dataOfMarket = [];
       for (let k = 0; k < allManagers.length; k++) {
         for (let l = 1; l <= dayCountOfNextMonth; l++) {

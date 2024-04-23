@@ -88,10 +88,10 @@ const MealOffByManager = ({
         managerId: user._id,
       });
       if (data.success) toast.success("Meal state applied by date and data");
-      else toast.error("Something went wrong");
+      else toast.error("Something went wrong 1");
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong 2");
     } finally {
       setIsActing(false);
       setDate(null);

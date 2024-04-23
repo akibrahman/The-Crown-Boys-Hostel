@@ -10,7 +10,7 @@ export const PUT = async (req) => {
     await Order.updateMany({ managerId, date }, reqData);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.log(error);
+    console.log("===========>", error);
     return NextResponse.json({ success: false, error }, { status: 500 });
   }
 };

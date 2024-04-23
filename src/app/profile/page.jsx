@@ -678,8 +678,11 @@ const Profile = () => {
               onClick={async () => {
                 try {
                   toast.success("Started");
+                  await axios.get("/api/cronjob/createorders");
+                  toast.success("Ended");
                 } catch (error) {
                   console.log(error);
+                  toast.error("Error");
                 }
                 // if (data.success) toast.success("Test E-mail Sent");
               }}
