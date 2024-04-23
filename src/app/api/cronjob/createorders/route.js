@@ -4,7 +4,6 @@ import Bill from "@/models/billModel";
 import ManagerBill from "@/models/managerBillModel";
 import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
-import Order2 from "@/models/orderModel2";
 import User from "@/models/userModel";
 import { render } from "@react-email/render";
 import { NextResponse } from "next/server";
@@ -14,14 +13,14 @@ await dbConfig();
 
 export const GET = async (req) => {
   try {
-    // if (
-    //   req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
-    // ) {
-    //   return NextResponse.json(
-    //     { success: false, msg: "Unauthorized" },
-    //     { status: 400 }
-    //   );
-    // }
+    if (
+      req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+    ) {
+      return NextResponse.json(
+        { success: false, msg: "Unauthorized" },
+        { status: 400 }
+      );
+    }
     const transport = nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
@@ -76,88 +75,73 @@ export const GET = async (req) => {
 
     if (test) {
       console.log("-------------------> Started");
-      // const currentDate = new Date().toLocaleDateString("en-US", {
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const currentTime = new Date().toLocaleTimeString("en-US", {
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const currentMonth = new Date().toLocaleDateString("en-BD", {
-      //   month: "long",
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const currentYear = new Date().toLocaleDateString("en-BD", {
-      //   year: "numeric",
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const mailOptions = {
-      //   to: "akibrahman5200@gmail.com",
-      //   subject: "Manager Expo - Test Date & Time",
-      //   html: `<div>
-      //   <p><b>Current Month : ${currentMonth}</b></p>
-      //   <p><b>Current Year : ${currentYear}</b></p>
-      //   <p><b>Current Date : ${currentDate}</b></p>
-      //   <p><b>Current Time : ${currentTime}</b></p>
-      //   </div>`,
-      // };
-      // await transport.sendMail(mailOptions);
+      const currentDate = new Date().toLocaleDateString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentTime = new Date().toLocaleTimeString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentMonth = new Date().toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+      const currentYear = new Date().toLocaleDateString("en-BD", {
+        year: "numeric",
+        timeZone: "Asia/Dhaka",
+      });
+      const mailOptions = {
+        to: "akibrahman5200@gmail.com",
+        subject: "Manager Expo - Test Date & Time",
+        html: `<div>
+        <p><b>Current Month : ${currentMonth}</b></p>
+        <p><b>Current Year : ${currentYear}</b></p>
+        <p><b>Current Date : ${currentDate}</b></p>
+        <p><b>Current Time : ${currentTime}</b></p>
+        </div>`,
+      };
+      await transport.sendMail(mailOptions);
+
+      console.log("-------------------> Ended");
+    }
+    //! Last day of any month------------------------------
+    if (aboutLastDayOfCurrentMonth.isLastDay) {
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
-      let currentMonth = new Date(currentDate).getMonth();
-      let nextMonthNumber = new Date(currentDate).getMonth() + 1;
-      let nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
       let currentYear = new Date(currentDate).getFullYear();
-      let nextMonth = new Date(
+      let currentMonthNumber = new Date(currentDate).getMonth();
+      let currentMonth = new Date(
         currentYear,
-        currentMonth + 1,
+        currentMonthNumber,
         1
       ).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
       });
-      const dayCountOfNextMonth = parseInt(
-        new Date(currentYear, nextNextMonthNumber, 0).getDate()
-      );
-      //! <---------->Order creation for all verified users Start <---------->
-      const allUsers = await User.find({
-        isClient: true,
-        isClientVerified: true,
-        isVerified: true,
-      });
-      for (let j = 0; j < allUsers.length; j++) {
-        for (let i = 1; i <= dayCountOfNextMonth; i++) {
-          const newOrder = new Order2({
-            userId: allUsers[j]._id,
-            managerId: allUsers[j].manager,
-            month: nextMonth,
-            year: currentYear,
-            date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
-              "en-BD",
-              {
-                timeZone: "Asia/Dhaka",
-              }
-            ),
-            breakfast: false,
-            lunch: false,
-            dinner: false,
-          });
-          await newOrder.save();
-        }
-        // const newBill = new Bill({
-        //   userId: allUsers[j]._id,
-        //   month: nextMonth,
-        //   year: currentYear,
-        // });
-        // await newBill.save();
+      let nextMonth;
+      let nextYear;
+      if (currentMonthNumber < 11) {
+        nextMonth = new Date(
+          currentYear,
+          currentMonthNumber + 1,
+          1
+        ).toLocaleDateString("en-BD", {
+          month: "long",
+          timeZone: "Asia/Dhaka",
+        });
+        nextYear = currentYear;
+      } else {
+        nextMonth = new Date(currentYear + 1, 0, 1).toLocaleDateString(
+          "en-BD",
+          {
+            month: "long",
+            timeZone: "Asia/Dhaka",
+          }
+        );
+        nextYear = currentYear + 1;
       }
-      //! <---------->Order creation for all verified users End <---------->
-      console.log("-------------------> Ended");
-    }
-    //! Last day of any month------------------------------
-    if (aboutLastDayOfCurrentMonth.isLastDay) {
       //! <---------->User Bill Creation Start <---------->
-      const bills = await Bill.find({});
+      const bills = await Bill.find({ year: currentYear, month: currentMonth });
       for (let m = 0; m < bills.length; m++) {
         const bill = await Bill.findById(bills[m]._id);
         const userId = bill.userId;
@@ -204,40 +188,79 @@ export const GET = async (req) => {
         const totalBreakfast = breakfast + extraBreakfast;
         const totalLunch = lunch + extraLunch;
         const totalDinner = dinner + extraDinner;
-        //! bill.totalBreakfast = totalBreakfast;
-        //! bill.totalLunch = totalLunch;
-        //! bill.totalDinner = totalDinner;
-        //! bill.totalBillInBDT =
-        //!   totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
-        //! bill.status = "calculated";
-        //! await bill.save();
+        let totalBillInBDT =
+          totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
+        let emailHtml;
+        if (totalBillInBDT >= bill.paidBillInBDT) {
+          bill.totalBreakfast = totalBreakfast;
+          bill.totalLunch = totalLunch;
+          bill.totalDinner = totalDinner;
+          bill.totalBillInBDT = totalBillInBDT;
+          totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
+          bill.status = "calculated";
+          await bill.save();
+          emailHtml = render(
+            MonthlyBillEmail({
+              name: user.username,
+              email: user.email,
+              month: month,
+              date: new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Dhaka",
+              }),
+              billId: bill._id.toString(),
+              userId: user._id.toString(),
+              totalBreakfast: totalBreakfast,
+              totalLunch: totalLunch,
+              totalDinner: totalDinner,
+              totalDeposit: bill.paidBillInBDT,
+              totalBill: totalBillInBDT,
+              isRestDeposite: false,
+            })
+          );
+        } else {
+          let restDeposite = bill.paidBillInBDT - totalBillInBDT;
+          bill.totalBreakfast = totalBreakfast;
+          bill.totalLunch = totalLunch;
+          bill.totalDinner = totalDinner;
+          bill.totalBillInBDT = totalBillInBDT;
+          bill.paidBillInBDT = totalBillInBDT;
+          totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
+          bill.status = "calculated";
+          await bill.save();
+          const nextBill = await Bill.findOne({
+            userId,
+            year: nextYear,
+            month: nextMonth,
+          });
+          nextBill.paidBillInBDT += restDeposite;
+          await nextBill.save();
 
-        const emailHtml = render(
-          MonthlyBillEmail({
-            name: user.username,
-            email: user.email,
-            month: month,
-            date: new Date().toLocaleString("en-US", {
-              timeZone: "Asia/Dhaka",
-            }),
-            billId: bill._id.toString(),
-            userId: user._id.toString(),
-            totalBreakfast: totalBreakfast,
-            totalLunch: totalLunch,
-            totalDinner: totalDinner,
-            totalDeposit: bill.paidBillInBDT,
-            totalBill:
-              totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500,
-          })
-        );
+          emailHtml = render(
+            MonthlyBillEmail({
+              name: user.username,
+              email: user.email,
+              month: month,
+              date: new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Dhaka",
+              }),
+              billId: bill._id.toString(),
+              userId: user._id.toString(),
+              totalBreakfast: totalBreakfast,
+              totalLunch: totalLunch,
+              totalDinner: totalDinner,
+              totalDeposit: totalBillInBDT,
+              totalBill: totalBillInBDT,
+              isRestDeposite: true,
+            })
+          );
+        }
+
         const mailOptions = {
           from: "checker@hostelplates.com",
           to: user.email,
           subject: "Manager Expo - Test Monthly Bill",
-          // html: "<b>Test Bill E-mail from Manager Expo</b>",
           html: emailHtml,
         };
-
         await transport.sendMail(mailOptions);
       }
       //! <---------->User Bill Creation End <---------->
@@ -247,19 +270,6 @@ export const GET = async (req) => {
         isManager: true,
         isManagerVerified: true,
         isVerified: true,
-      });
-      const currentDate = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Dhaka",
-      });
-      const currentMonthNumber = new Date(currentDate).getMonth();
-      const currentYear = new Date(currentDate).getFullYear();
-      const currentMonth = new Date(
-        currentYear,
-        currentMonthNumber,
-        1
-      ).toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
       });
       for (let n = 0; n < allManagers.length; n++) {
         const market = await Market.findOne({
@@ -338,21 +348,43 @@ export const GET = async (req) => {
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
-      let currentMonth = new Date(currentDate).getMonth();
-      let nextMonthNumber = new Date(currentDate).getMonth() + 1;
-      let nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
-      let currentYear = new Date(currentDate).getFullYear();
-      let nextMonth = new Date(
-        currentYear,
-        currentMonth + 1,
-        1
-      ).toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      });
-      const dayCountOfNextMonth = parseInt(
-        new Date(currentYear, nextNextMonthNumber, 0).getDate()
-      );
+      let currentMonthNumber = new Date(currentDate).getMonth();
+      let nextMonthNumber;
+      let nextNextMonthNumber;
+      let currentYear;
+      let nextMonth;
+      let dayCountOfNextMonth;
+      if (currentMonthNumber < 11) {
+        nextMonthNumber = new Date(currentDate).getMonth() + 1;
+        nextNextMonthNumber = new Date(currentDate).getMonth() + 2;
+        currentYear = new Date(currentDate).getFullYear();
+        nextMonth = new Date(
+          currentYear,
+          nextMonthNumber,
+          1
+        ).toLocaleDateString("en-BD", {
+          month: "long",
+          timeZone: "Asia/Dhaka",
+        });
+        dayCountOfNextMonth = parseInt(
+          new Date(currentYear, nextNextMonthNumber, 0).getDate()
+        );
+      } else {
+        nextMonthNumber = 0;
+        nextNextMonthNumber = 1;
+        currentYear = 2025;
+        nextMonth = new Date(
+          currentYear,
+          nextMonthNumber,
+          1
+        ).toLocaleDateString("en-BD", {
+          month: "long",
+          timeZone: "Asia/Dhaka",
+        });
+        dayCountOfNextMonth = parseInt(
+          new Date(currentYear, nextNextMonthNumber, 0).getDate()
+        );
+      }
       //! <---------->Order creation for all verified users Start <---------->
       const allUsers = await User.find({
         isClient: true,
@@ -422,7 +454,7 @@ export const GET = async (req) => {
         to: "akibrahman5200@gmail.com",
         subject: "Cron Job",
         html: `<div>
-          <p>Is Last Day:${aboutSecondLastDayOfCurrentMonth.isSecondLastDay}</p>
+          <p>Second Last Day exe</p>
           <p>Next Month :${nextMonth}</p>
           <p>Current Year :${currentYear}</p>
           <p>Date :${new Date(

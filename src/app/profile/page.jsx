@@ -680,6 +680,7 @@ const Profile = () => {
                   toast.success("Started");
                   await axios.get("/api/cronjob/createorders");
                   toast.success("Ended");
+                  alert();
                 } catch (error) {
                   console.log(error);
                   toast.error("Error");

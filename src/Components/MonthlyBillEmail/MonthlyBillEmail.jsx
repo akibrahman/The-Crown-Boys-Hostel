@@ -26,6 +26,7 @@ export const MonthlyBillEmail = ({
   totalDinner,
   totalDeposit,
   totalBill,
+  isRestDeposite,
 }) => (
   <Html>
     <Head />
@@ -100,6 +101,19 @@ export const MonthlyBillEmail = ({
             match this E-mail data with your profile data. If not same, let Akib
             know.
           </Text>
+          {isRestDeposite && (
+            <Text
+              style={{
+                textAlign: "center",
+                margin: "36px 0 40px 0",
+                fontSize: "14px",
+                fontWeight: "500",
+                color: "#111111",
+              }}
+            >
+              N.B. : Rest Deposite of this month added to the next month
+            </Text>
+          )}
         </Section>
         <Section
           style={{
