@@ -1,5 +1,6 @@
 "use client";
 
+import MealOffByManager from "@/Components/MealOffByManager/MealOffByManager";
 import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +10,7 @@ import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { FaArrowRight } from "react-icons/fa";
 import { LuCalendarPlus } from "react-icons/lu";
 import "../globals.css";
 
@@ -21,6 +23,7 @@ const ManagerOrder = () => {
   const [lunch, setLunch] = useState(false);
   const [dinner, setDinner] = useState(false);
   const [clientId, setClientId] = useState("");
+  const [mealOffPopUp, setMealOffPopUp] = useState(false);
 
   const currentMonth = new Date().toLocaleDateString("en-BD", {
     month: "long",
@@ -74,7 +77,21 @@ const ManagerOrder = () => {
     try {
       setDate(selectedDate);
       const { data } = await axios.post("/api/orders/getorder", {
-        date: new Date(selectedDate).toLocaleDateString(),
+        date:
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            month: "numeric",
+          }) +
+          "/" +
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            day: "numeric",
+          }) +
+          "/" +
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            year: "numeric",
+          }),
         userId: clientId,
       });
 
@@ -95,9 +112,17 @@ const ManagerOrder = () => {
       setLoading(false);
     }
   };
-  if (!clients) return <PreLoader />;
+  if (!clients || !user) return <PreLoader />;
+  if (user?.success == false || user.role != "manager") route.push("/");
   return (
     <div className="relative dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white min-h-screen">
+      <MealOffByManager
+        mealOffPopUp={mealOffPopUp}
+        setMealOffPopUp={setMealOffPopUp}
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        user={user}
+      />
       {loading && (
         <div className="absolute h-full w-full top-0 bg-[rgba(0,0,0,0.6)] z-50"></div>
       )}
@@ -143,6 +168,13 @@ const ManagerOrder = () => {
                 yearPlaceholder="----"
                 onChange={(e) => dateSelected(e)}
               />
+              <p
+                onClick={() => setMealOffPopUp(true)}
+                className="font-semibold text-blue-500 underline flex items-center gap-1 group cursor-pointer"
+              >
+                Off Meal by Date
+                <FaArrowRight className="text-xl duration-300 group-hover:translate-x-2" />
+              </p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 align-middle gap-10 md:gap-4 px-10 md:px-20 pb-10">

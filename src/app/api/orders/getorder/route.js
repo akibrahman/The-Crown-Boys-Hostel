@@ -1,22 +1,24 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Order from "@/models/orderModel";
+import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 dbConfig();
 
 export const POST = async (req) => {
   try {
-    // const token = cookies()?.get("token")?.value;
-    // try {
-    //   var decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-    //   console.log("===============>", decoded);
-    // } catch (error) {
-    //   console.log("============>", error);
-    //   if (error.message == "invalid token" || "jwt malformed") {
-    //     cookies().delete("token");
-    //   }
-    //   return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
-    // }
+    const token = cookies()?.get("token")?.value;
+    try {
+      var decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+      console.log("===============>", decoded);
+    } catch (error) {
+      console.log("============>", error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
+    }
     const { userId, date } = await req.json();
     console.log({ msg: "Order Changed" });
     const order = await Order.findOne({ userId, date });
