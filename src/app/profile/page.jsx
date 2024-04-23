@@ -678,7 +678,7 @@ const Profile = () => {
               onClick={async () => {
                 try {
                   toast.success("Started");
-                  await axios.get("/api/cronjob/createorders");
+                  // await axios.get("/api/cronjob/createorders");
                   toast.success("Ended");
                   alert();
                 } catch (error) {

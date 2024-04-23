@@ -7,11 +7,13 @@ import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Signin = () => {
   const { userRefetch } = useContext(AuthContext);
   const route = useRouter();
   const [loading, setLoading] = useState(false);
+  const [passShown, setPassShown] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -78,15 +80,28 @@ const Signin = () => {
             >
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="border border-gray-300 p-2 w-full rounded text-black outline-none"
-              required
-            />
+            <div className="relative">
+              <input
+                type={passShown ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="border border-gray-300 p-2 w-full rounded text-black outline-none relative"
+                required
+              />
+              {!passShown ? (
+                <FaEye
+                  onClick={() => setPassShown(!passShown)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xl cursor-pointer duration-300 active:scale-90"
+                />
+              ) : (
+                <FaEyeSlash
+                  onClick={() => setPassShown(!passShown)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xl cursor-pointer duration-300 active:scale-90"
+                />
+              )}
+            </div>
           </div>
 
           <button

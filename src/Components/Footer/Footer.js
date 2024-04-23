@@ -1,11 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const Footer = () => {
   return (
     <footer className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white p-4 md:p-12">
       <div className="container mx-auto flex flex-col md:flex-row justify-between">
         <div>
-          <p className="text-xl font-semibold">Hostel Meal Management System</p>
+          <p className="text-xl font-semibold">The Crown Boys Hostel</p>
           <p className="mt-2">
             Manage your hostel meals efficiently with our platform.
           </p>
@@ -16,6 +17,14 @@ const Footer = () => {
               </Link>
             </li> */}
           </ul>
+          <p className="mt-auto">
+            Developed By{" "}
+            <Link href={"https://portfolio-akib.web.app/"} target="_blank">
+              <span className="font-bold text-blue-500 cursor-pointer hover:tracking-widest duration-300">
+                Akib Rahman
+              </span>
+            </Link>
+          </p>
         </div>
         <div>
           {/* <div className="mt-4 flex items-center">
@@ -41,7 +50,9 @@ const Footer = () => {
       </div>
       <p className="text-sm dark:text-gray-400 text-center pt-6 md:py-2">
         &copy; 2024 Hostel Meal Management System - All rights reserved by{" "}
-        <span className="font-bold text-blue-500">Akib Rahman</span>
+        <span className="font-bold text-blue-500">
+          The Crown Boys Hostel Inc.
+        </span>
       </p>
     </footer>
   );
