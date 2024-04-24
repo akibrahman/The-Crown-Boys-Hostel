@@ -96,7 +96,7 @@ const NavBar = () => {
       </div>
       {/*//! For Modile  */}
       <div className={`relative ${deviceWidth <= 500 ? "" : "hidden"}`}>
-        <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 gap-5 md:gap-0 items-center justify-between px-10 z-50">
+        <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 gap-5 md:gap-0 items-center justify-between px-10">
           <Image
             src="/images/logo-white.png"
             width={"45"}
@@ -117,9 +117,9 @@ const NavBar = () => {
           )}
         </div>
         <div
-          className={`duration-300 ease-linear transition-all flex flex-col items-center justify-center gap-5 md:gap-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-5 h-[350px] z-10 absolute w-full ${
-            isSideBarOpen && "top-16"
-          } ${isSideBarOpen || "-top-[500%]"}`}
+          className={`duration-300 ease-linear transition-all flex flex-col items-center justify-center gap-5 md:gap-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-5 absolute w-full ${
+            isSideBarOpen ? "top-32" : "-top-[500%]"
+          }`}
         >
           <p className="">
             <Link onClick={() => setIsSideBarOpen(false)} href="/">
