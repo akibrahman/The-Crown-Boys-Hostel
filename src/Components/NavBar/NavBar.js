@@ -117,7 +117,7 @@ const NavBar = () => {
           )}
         </div>
         <div
-          className={`duration-300 ease-linear transition-all flex flex-col items-center justify-center gap-5 md:gap-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-5 h-[350px] z-10 absolute w-full ${
+          className={`hidden duration-300 ease-linear transition-all lex flex-col items-center justify-center gap-5 md:gap-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-5 h-[350px] z-10 absolute w-full ${
             isSideBarOpen && "top-[100%]"
           } ${isSideBarOpen || "top-0 -translate-y-full"}`}
         >
