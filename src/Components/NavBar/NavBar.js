@@ -3,7 +3,7 @@
 import { AuthContext } from "@/providers/ContextProvider";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { FaBars, FaTimes } from "react-icons/fa";
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
@@ -11,7 +11,21 @@ import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
-  var deviceWidth = parseInt(window.innerWidth);
+  const [deviceWidth, setDeviceWidth] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const width = parseInt(window.innerWidth);
+      setDeviceWidth(width);
+      const handleResize = () => {
+        setDeviceWidth(parseInt(window.innerWidth));
+      };
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
+  }, []);
   return (
     <div className="">
       {/*//! For Desktop  */}
