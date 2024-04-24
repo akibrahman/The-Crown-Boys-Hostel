@@ -11,10 +11,15 @@ import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+  var deviceWidth = parseInt(window.innerWidth);
   return (
     <div className="">
       {/*//! For Desktop  */}
-      <div className="hidden md:flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10">
+      <div
+        className={`${
+          deviceWidth <= 500 ? "hidden" : "flex"
+        } dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10`}
+      >
         <Image
           src="/images/logo-white.png"
           width={"50"}
@@ -76,7 +81,7 @@ const NavBar = () => {
         </div>
       </div>
       {/*//! For Modile  */}
-      <div className="relative md:hidden">
+      <div className={`relative ${deviceWidth <= 500 ? "block" : "hidden"}`}>
         <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 gap-5 md:gap-0 items-center justify-between px-10 z-50">
           <Image
             src="/images/logo-white.png"
