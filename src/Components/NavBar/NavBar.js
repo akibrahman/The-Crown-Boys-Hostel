@@ -95,7 +95,7 @@ const NavBar = () => {
         </div>
       </div>
       {/*//! For Modile  */}
-      <div className={`relative ${deviceWidth <= 500 ? "block" : "hidden"}`}>
+      <div className={`relative ${deviceWidth <= 500 ? "" : "hidden"}`}>
         <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 gap-5 md:gap-0 items-center justify-between px-10 z-50">
           <Image
             src="/images/logo-white.png"
