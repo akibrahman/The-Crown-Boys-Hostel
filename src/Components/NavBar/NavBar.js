@@ -117,8 +117,8 @@ const NavBar = () => {
           )}
         </div>
         <div
-          className={`duration-300 ease-linear transition-all flex flex-col items-center justify-center gap-5 md:gap-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-5  w-full border absolute ${
-            !isSideBarOpen ? "-translate-y-full top-0" : ""
+          className={`duration-300 ease-linear transition-all ffflex flex-col items-center justify-center gap-5 md:gap-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-5  w-full ${
+            isSideBarOpen ? "flex" : "hidden"
           }`}
         >
           <p className="">
