@@ -14,7 +14,7 @@ const NavBar = () => {
   return (
     <>
       {/*//! For Desktop  */}
-      <div className="hidden md:flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-5">
+      <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-5">
         <Image
           src="/images/logo-white.png"
           width={"50"}
@@ -37,7 +37,7 @@ const NavBar = () => {
                 </p>
               )}
           {/* <p> */}
-          <Link className="pointer-events-none text-stone-400" href="/help">
+          {/* <Link className="pointer-events-none text-stone-400" href="/help">
             Support
           </Link>
           <Link className="pointer-events-none text-stone-400" href="/help">
@@ -48,7 +48,7 @@ const NavBar = () => {
           </Link>
           <Link className="pointer-events-none text-stone-400" href="/help">
             Our Gallery
-          </Link>
+          </Link> */}
           {/* </p> */}
           {loading ? (
             <CgSpinner className="text-2xl text-sky-500 animate-spin" />
@@ -76,7 +76,7 @@ const NavBar = () => {
         </div>
       </div>
       {/*//! For Modile  */}
-      <div className="flex md:hidden dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 gap-5 md:gap-0 items-center justify-between px-10">
+      <div className="hidden dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 gap-5 md:gap-0 items-center justify-between px-10">
         <Image
           src="/images/logo-white.png"
           width={"45"}
@@ -94,7 +94,7 @@ const NavBar = () => {
         )}
       </div>
       <div
-        className={`duration-300 ease-linear flex flex-col items-center justify-center gap-5 md:gap-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white ${
+        className={`duration-300 ease-linear hidden flex-col items-center justify-center gap-5 md:gap-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white ${
           isSideBarOpen && "py-5 h-[350px]"
         } ${isSideBarOpen || "h-0 py-0 opacity-0 pointer-events-none"}`}
       >
