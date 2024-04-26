@@ -258,7 +258,7 @@ export const GET = async (req) => {
         const mailOptions = {
           from: "checker@hostelplates.com",
           to: user.email,
-          subject: "Manager Expo - Test Monthly Bill",
+          subject: "Manager Expo - Monthly Bill",
           html: emailHtml,
         };
         await transport.sendMail(mailOptions);
@@ -342,10 +342,20 @@ export const GET = async (req) => {
         await managerBill.save();
       }
       //! <---------->Manager Bill Creation End <---------->
+      const mailOptions2 = {
+        from: "cron-job@hostelplates.com",
+        to: "akibrahman5200@gmail.com",
+        subject: "Cron Job - Last Day Executed",
+        html: `<div>
+          <p>Last Day exe - Successfull</p>
+          <p>Next Month :${nextMonth}</p>
+          <p>Current Year :${currentYear}</p>
+          </div>`,
+      };
+      await transport.sendMail(mailOptions2);
     }
     //! Second Last day of any month-----------------------
-    // if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
-    if (true) {
+    if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -387,8 +397,6 @@ export const GET = async (req) => {
         );
       }
       //! <---------->Order creation for all verified users Start <---------->
-      let a = 0,
-        b = 0;
       const allUsers = await User.find({
         isClient: true,
         isClientVerified: true,
@@ -396,34 +404,30 @@ export const GET = async (req) => {
       });
       for (let j = 0; j < allUsers.length; j++) {
         for (let i = 1; i <= dayCountOfNextMonth; i++) {
-          // const newOrder = new Order({
-          //   userId: allUsers[j]._id,
-          //   managerId: allUsers[j].manager,
-          //   month: nextMonth,
-          //   year: currentYear,
-          //   date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
-          //     "en-BD",
-          //     {
-          //       timeZone: "Asia/Dhaka",
-          //     }
-          //   ),
-          //   breakfast: true,
-          //   lunch: true,
-          //   dinner: true,
-          // });
-          // await newOrder.save();
-          a++;
+          const newOrder = new Order({
+            userId: allUsers[j]._id,
+            managerId: allUsers[j].manager,
+            month: nextMonth,
+            year: currentYear,
+            date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
+              "en-BD",
+              {
+                timeZone: "Asia/Dhaka",
+              }
+            ),
+            breakfast: true,
+            lunch: true,
+            dinner: true,
+          });
+          await newOrder.save();
         }
-        // const newBill = new Bill({
-        //   userId: allUsers[j]._id,
-        //   month: nextMonth,
-        //   year: currentYear,
-        // });
-        // await newBill.save();
-        b++;
+        const newBill = new Bill({
+          userId: allUsers[j]._id,
+          month: nextMonth,
+          year: currentYear,
+        });
+        await newBill.save();
       }
-      console.log("Total Order Created: " + a, " Total Bill Created: " + b);
-      console.log("Current Year: ", currentYear, "Next Month: ", nextMonth);
       //! <---------->Order creation for all verified users End <---------->
 
       //! <---------->Market Data creation for all verified managers Start <---------->
@@ -445,19 +449,13 @@ export const GET = async (req) => {
             amount: 0,
           });
         }
-        // const newMarket = new Market({
-        //   managerId: allManagers[k]._id,
-        //   month: nextMonth,
-        //   year: currentYear,
-        //   data: dataOfMarket,
-        // });
-        // await newMarket.save();
-        console.log("Market Created: ", {
+        const newMarket = new Market({
           managerId: allManagers[k]._id,
           month: nextMonth,
           year: currentYear,
           data: dataOfMarket,
         });
+        await newMarket.save();
         dataOfMarket = [];
       }
       //! <---------->Market Data creation for all verified managers End <---------->
@@ -467,7 +465,7 @@ export const GET = async (req) => {
         to: "akibrahman5200@gmail.com",
         subject: "Cron Job - Second Last Day Executed",
         html: `<div>
-          <p>Second Last Day exe</p>
+          <p>Second Last Day exe - Successfull</p>
           <p>Next Month :${nextMonth}</p>
           <p>Current Year :${currentYear}</p>
           <p>Date :${new Date(
