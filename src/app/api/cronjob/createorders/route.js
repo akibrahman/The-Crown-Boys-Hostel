@@ -344,7 +344,8 @@ export const GET = async (req) => {
       //! <---------->Manager Bill Creation End <---------->
     }
     //! Second Last day of any month-----------------------
-    if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
+    // if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
+    if (true) {
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -372,7 +373,7 @@ export const GET = async (req) => {
       } else {
         nextMonthNumber = 0;
         nextNextMonthNumber = 1;
-        currentYear = 2025;
+        currentYear = new Date(currentDate).getFullYear() + 1;
         nextMonth = new Date(
           currentYear,
           nextMonthNumber,
@@ -393,7 +394,23 @@ export const GET = async (req) => {
       });
       for (let j = 0; j < allUsers.length; j++) {
         for (let i = 1; i <= dayCountOfNextMonth; i++) {
-          const newOrder = new Order({
+          // const newOrder = new Order({
+          //   userId: allUsers[j]._id,
+          //   managerId: allUsers[j].manager,
+          //   month: nextMonth,
+          //   year: currentYear,
+          //   date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
+          //     "en-BD",
+          //     {
+          //       timeZone: "Asia/Dhaka",
+          //     }
+          //   ),
+          //   breakfast: false,
+          //   lunch: false,
+          //   dinner: false,
+          // });
+          // await newOrder.save();
+          console.log("Order Created", {
             userId: allUsers[j]._id,
             managerId: allUsers[j].manager,
             month: nextMonth,
@@ -408,14 +425,18 @@ export const GET = async (req) => {
             lunch: false,
             dinner: false,
           });
-          await newOrder.save();
         }
-        const newBill = new Bill({
+        // const newBill = new Bill({
+        //   userId: allUsers[j]._id,
+        //   month: nextMonth,
+        //   year: currentYear,
+        // });
+        // await newBill.save();
+        console.log("Bill Created", {
           userId: allUsers[j]._id,
           month: nextMonth,
           year: currentYear,
         });
-        await newBill.save();
       }
       //! <---------->Order creation for all verified users End <---------->
 
@@ -438,13 +459,19 @@ export const GET = async (req) => {
             amount: 0,
           });
         }
-        const newMarket = new Market({
+        // const newMarket = new Market({
+        //   managerId: allManagers[k]._id,
+        //   month: nextMonth,
+        //   year: currentYear,
+        //   data: dataOfMarket,
+        // });
+        // await newMarket.save();
+        console.log("Market Created: ", {
           managerId: allManagers[k]._id,
           month: nextMonth,
           year: currentYear,
           data: dataOfMarket,
         });
-        await newMarket.save();
         dataOfMarket = [];
       }
       //! <---------->Market Data creation for all verified managers End <---------->
@@ -452,7 +479,7 @@ export const GET = async (req) => {
       const mailOptions = {
         from: "cron-job@hostelplates.com",
         to: "akibrahman5200@gmail.com",
-        subject: "Cron Job",
+        subject: "Cron Job - Second Last Day Executed",
         html: `<div>
           <p>Second Last Day exe</p>
           <p>Next Month :${nextMonth}</p>
