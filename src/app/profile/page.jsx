@@ -55,6 +55,8 @@ const Profile = () => {
       backgroundColor: "rgba(0,0,0,0.5)",
     },
   };
+  const sms =
+    "The Crown Boys Hostel\r\nTest SMS to Akib Rahman\r\n\r\nFrom WebApp";
 
   const openModalForClientDetails = () => {
     setClientDetailsModalIsOpen(true);
@@ -675,18 +677,21 @@ const Profile = () => {
         {user.role === "owner" && (
           <div className="col-span-1 md:col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
             <button
-              onClick={async () => {
-                try {
-                  toast.success("Started");
-                  // await axios.get("/api/cronjob/createorders");
-                  toast.success("Ended");
-                  alert();
-                } catch (error) {
-                  console.log(error);
-                  toast.error("Error");
-                }
-                // if (data.success) toast.success("Test E-mail Sent");
-              }}
+              // onClick={async () => {
+              //   try {
+              //     toast.success("Started");
+              //     // await axios.get("/api/cronjob/createorders");
+              //     const res = await axios.post(
+              //       `http://bulksmsbd.net/api/smsapi?api_key=WvcwmDFS5UoKaSJ1KJQa&type=text&number=01709605097&senderid=8809617618230&message=${sms}`
+              //     );
+              //     console.log(res);
+              //     toast.success("Ended");
+              //   } catch (error) {
+              //     console.log(error);
+              //     toast.error("Error");
+              //   }
+              //   // if (data.success) toast.success("Test E-mail Sent");
+              // }}
               className="font-semibold px-3 py-1 duration-300 bg-sky-500 text-white active:scale-90"
             >
               E-mail

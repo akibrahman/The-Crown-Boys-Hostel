@@ -36,10 +36,10 @@ const NavBar = () => {
       >
         <Image
           src="/images/logo-white.png"
-          width={"50"}
-          height={"50"}
+          width={"60"}
+          height={"60"}
           alt="Logo"
-          className=""
+          className="dark:bg-transparent bg-secondary h-16 w-16 p-1 rounded-full"
         />
         <div className="flex items-center justify-center gap-5 md:gap-10">
           <p className="">
@@ -96,13 +96,13 @@ const NavBar = () => {
       </div>
       {/*//! For Modile  */}
       <div className={`relative ${deviceWidth <= 500 ? "" : "hidden"}`}>
-        <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 gap-5 md:gap-0 items-center justify-between px-10">
+        <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-1 gap-5 md:gap-0 items-center justify-between px-10">
           <Image
             src="/images/logo-white.png"
-            width={"45"}
-            height={"45"}
+            width={"60"}
+            height={"60"}
             alt="Logo"
-            className=""
+            className="dark:bg-transparent bg-secondary p-1 rounded-full"
           />
           {isSideBarOpen ? (
             <FaTimes

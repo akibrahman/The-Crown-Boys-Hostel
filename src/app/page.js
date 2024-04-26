@@ -5,12 +5,12 @@ import Image from "next/image";
 const Home = () => {
   return (
     <div className="px-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
-      <div className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-between py-10 md:h-[calc(100vh-65px)] min-h-screen">
-        <div className="w-[98%] md:w-1/2">
+      <div className="flex flex-col md:flex-row gap-10 items-center md:justify-between py-10 md:h-[calc(100vh-65px)] md:min-h-screen">
+        <div className="w-full md:w-1/2">
           <p className="dark:text-white text-[30px] md:text-[40px] font-semibold mb-4">
             Campus Bites: Elevate Your Dining!
           </p>
-          <p className="w-[80%] dark:text-white">
+          <p className="w-[95%] dark:text-white">
             Enjoy the ease of having wholesome and nutritious meals delivered
             straight to your university hostel room. Our online meal service
             ensures that you do not have to compromise on quality or flavor,
@@ -30,7 +30,7 @@ const Home = () => {
             </button>
           </div>
         </div>
-        <div className="w-[90%] md:w-1/2">
+        <div className="w-[95%] md:w-1/2">
           <Image
             // placeholder="blur"
             className=""
