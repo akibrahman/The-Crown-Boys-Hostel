@@ -387,6 +387,8 @@ export const GET = async (req) => {
         );
       }
       //! <---------->Order creation for all verified users Start <---------->
+      let a = 0,
+        b = 0;
       const allUsers = await User.find({
         isClient: true,
         isClientVerified: true,
@@ -405,26 +407,12 @@ export const GET = async (req) => {
           //       timeZone: "Asia/Dhaka",
           //     }
           //   ),
-          //   breakfast: false,
-          //   lunch: false,
-          //   dinner: false,
+          //   breakfast: true,
+          //   lunch: true,
+          //   dinner: true,
           // });
           // await newOrder.save();
-          console.log("Order Created", {
-            userId: allUsers[j]._id,
-            managerId: allUsers[j].manager,
-            month: nextMonth,
-            year: currentYear,
-            date: new Date(currentYear, nextMonthNumber, i).toLocaleDateString(
-              "en-BD",
-              {
-                timeZone: "Asia/Dhaka",
-              }
-            ),
-            breakfast: false,
-            lunch: false,
-            dinner: false,
-          });
+          a++;
         }
         // const newBill = new Bill({
         //   userId: allUsers[j]._id,
@@ -432,12 +420,10 @@ export const GET = async (req) => {
         //   year: currentYear,
         // });
         // await newBill.save();
-        console.log("Bill Created", {
-          userId: allUsers[j]._id,
-          month: nextMonth,
-          year: currentYear,
-        });
+        b++;
       }
+      console.log("Total Order Created: " + a, " Total Bill Created: " + b);
+      console.log("Current Year: ", currentYear, "Next Month: ", nextMonth);
       //! <---------->Order creation for all verified users End <---------->
 
       //! <---------->Market Data creation for all verified managers Start <---------->
