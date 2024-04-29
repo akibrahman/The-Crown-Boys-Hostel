@@ -8,7 +8,7 @@ const Home = () => {
       <div className="flex flex-col md:flex-row gap-10 items-center md:justify-between py-10 md:h-[calc(100vh-65px)] md:min-h-screen">
         <div className="w-full md:w-1/2">
           <p className="dark:text-white text-[30px] md:text-[40px] font-semibold mb-4">
-            Campus Bites: Elevate Your Dining!
+            The Crown Boys Hostel
           </p>
           <p className="w-[95%] dark:text-white">
             Enjoy the ease of having wholesome and nutritious meals delivered
@@ -17,7 +17,7 @@ const Home = () => {
             providing a convenient solution for your busy student life.
           </p>
           <p className="w-[80%] dark:text-white mt-2">
-            Akib Meal Management System
+            Mijan Meal Management System
           </p>
           <div className="mt-4 flex items-center">
             <input

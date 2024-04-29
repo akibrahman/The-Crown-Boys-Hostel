@@ -18,7 +18,7 @@ const poppins = Poppins({
 export const metadata = {
   title: "Home",
   description:
-    "Akib Meal management system, Created by Md. Akib Rahman, A completed solution for mess meal management",
+    "The Crown Boys Hostel, Mijan Meal management system, 01709605097, Created by Md. Akib Rahman, A completed solution for mess meal management",
 };
 
 const RootLayout = ({ children }) => {
