@@ -368,7 +368,7 @@ export const GET = async (req) => {
         const apiKey = "WvcwmDFS5UoKaSJ1KJQa";
         const senderId = "8809617618230";
         const numbers = allManagers[n].contactNumber;
-        const message = `Hi, Mr. ${allManagers.username}\nYour monthly market bill with meal count and meal rate has been created. Check it from your profile.\n\nThe Crown Boys Hostel Inc.`;
+        const message = `Hi, Mr. ${allManagers[n].username}\nYour monthly market bill with meal count and meal rate has been created. Check it from your profile.\n\nThe Crown Boys Hostel Inc.`;
         const smsManagerData = {
           api_key: apiKey,
           senderid: senderId,

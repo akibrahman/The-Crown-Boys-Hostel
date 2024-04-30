@@ -14,7 +14,7 @@ import { BsChatSquareQuote } from "react-icons/bs";
 import { CgSpinner } from "react-icons/cg";
 import { FaArrowRight, FaTimes } from "react-icons/fa";
 import { GiPayMoney } from "react-icons/gi";
-import { IoSearchOutline } from "react-icons/io5";
+import { IoSearchOutline, IoSettingsOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import Modal from "react-modal";
 import { Tooltip } from "react-tooltip";
@@ -38,6 +38,8 @@ const Profile = () => {
   const [loggingOut, setLoggingOut] = useState(false);
   const [managerAmount, setManagerAmount] = useState(null);
   const [isMoneyAdding, setIsMoneyAdding] = useState(false);
+
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const customStylesForclientDetailsModal = {
     content: {
@@ -103,7 +105,17 @@ const Profile = () => {
       const { data } = await axios.get(
         `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=0&clientName=${clientName}`
       );
-      return data.clients;
+      const array = data.clients;
+      array.sort((b, a) => {
+        if (a.isClientVerified === b.isClientVerified) {
+          return 0;
+        } else if (a.isClientVerified) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+      return array;
     },
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
@@ -513,7 +525,7 @@ const Profile = () => {
             </p>
           </>
         )}
-        <p className="text-lg bg-sky-500 rounded-xl font-semibold px-6 py-1.5">
+        <p className="text-lg text-sky-500 rounded-xl font-semibold px-6 py-1.5">
           My Profile
         </p>
       </div>
@@ -545,14 +557,37 @@ const Profile = () => {
           <p>Role: {convertCamelCaseToCapitalized(user.role)}</p>
 
           {user.isVerified ? (
-            <p
-              className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold mt-2 ${
-                user.role === "owner" ? "bg-blue-500" : "bg-green-500"
-              }`}
-            >
-              <TiTick className="text-xl" />
-              Verified
-            </p>
+            <div className="flex items-center gap-3 mt-2">
+              {" "}
+              <p
+                className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold ${
+                  user.role === "owner" ? "bg-blue-500" : "bg-green-500"
+                }`}
+              >
+                <TiTick className="text-xl" />
+                Verified
+              </p>
+              <div className="relative">
+                <IoSettingsOutline
+                  onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                  className="font-semibold text-2xl cursor-pointer hover:rotate-180 duration-500 group"
+                />
+                <ul
+                  className={`absolute ${
+                    isSettingsOpen
+                      ? "opacity-1 z-40 top-[180%]"
+                      : "opacity-0 -z-40 top-[500%]"
+                  } left-[50%] -translate-x-1/2 duration-300 ease-linear bg-secondary text-white font-semibold py-6 px-16 space-y-3 shadow-lg shadow-white`}
+                >
+                  <li className="w-[250px] text-center border rounded-full border-white px-10 py-1.5 cursor-pointer duration-300 active:scale-90">
+                    Profile Update
+                  </li>
+                  <li className="w-[250px] text-center border rounded-full border-white px-10 py-1.5 cursor-pointer duration-300 active:scale-90">
+                    Change Password
+                  </li>
+                </ul>
+              </div>
+            </div>
           ) : canVerify ? (
             <button
               onClick={async () => {
@@ -565,9 +600,9 @@ const Profile = () => {
                 });
                 toast.success("Verification E-mail sent");
               }}
-              className="flex items-center gap-1 duration-300 bg-sky-500 w-max px-4 py-1 rounded-full font-semibold mt-2 active:scale-90"
+              className="flex items-center gap-1 duration-300 bg-sky-500 text-sm w-max px-4 py-1 rounded-full font-semibold mt-2 active:scale-90"
             >
-              Verify Please
+              Click to get verification E-mail
             </button>
           ) : (
             <p
@@ -847,10 +882,17 @@ const Profile = () => {
                   {client.isVerified === true ? (
                     <>
                       {client.isClientVerified === true ? (
-                        <p className="text-blue-500 font-semibold flex items-center gap-1">
-                          <TiTick className="text-3xl font-normal" />
-                          Approved
-                        </p>
+                        <>
+                          <p className="text-blue-500 font-semibold flex items-center gap-1">
+                            <TiTick className="text-3xl font-normal" />
+                            Approved
+                          </p>
+                          <Link href={`/userDetails/${client._id}`}>
+                            <button className="font-semibold flex items-center gap-2 bg-blue-500 px-3 py-1 duration-300 active:scale-90">
+                              Details <FaArrowRight />
+                            </button>
+                          </Link>
+                        </>
                       ) : (
                         <>
                           <button
@@ -868,16 +910,18 @@ const Profile = () => {
                       )}
                     </>
                   ) : (
-                    <p className="text-red-500 font-semibold flex items-center gap-1">
-                      <FaTimes className="text-xl font-normal" />
-                      Unverified
-                    </p>
+                    <>
+                      <p className="text-red-500 font-semibold flex items-center gap-1">
+                        <FaTimes className="text-xl font-normal" />
+                        Unverified
+                      </p>
+                      <Link href={`/userDetails/${client._id}`}>
+                        <button className="font-semibold flex items-center gap-2 bg-blue-500 px-3 py-1 duration-300 active:scale-90">
+                          Details <FaArrowRight />
+                        </button>
+                      </Link>
+                    </>
                   )}
-                  <Link href={`/userDetails/${client._id}`}>
-                    <button className="font-semibold flex items-center gap-2 bg-blue-500 px-3 py-1 duration-300 active:scale-90">
-                      Details <FaArrowRight />
-                    </button>
-                  </Link>
                 </div>
               ))
             )}
