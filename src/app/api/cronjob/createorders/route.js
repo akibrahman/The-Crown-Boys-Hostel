@@ -141,7 +141,11 @@ export const GET = async (req) => {
         nextYear = currentYear + 1;
       }
       //! <---------->User Bill Creation Start <---------->
-      const bills = await Bill.find({ year: currentYear, month: currentMonth });
+      const bills = await Bill.find({
+        year: currentYear,
+        month: currentMonth,
+        status: "initiated",
+      });
       for (let m = 0; m < bills.length; m++) {
         const bill = await Bill.findById(bills[m]._id);
         const userId = bill.userId;
