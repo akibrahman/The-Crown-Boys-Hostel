@@ -27,24 +27,6 @@ export const POST = async (req) => {
     if (!res.ok) {
       throw new Error("SMS can't be sent!");
     }
-    // const transport = nodemailer.createTransport({
-    //   service: "thecrownboyshostel",
-    //   // host: "smtp.gmail.com",
-    //   host: "mail.thecrownboyshostel.com",
-    //   port: 465,
-    //   secure: true,
-    //   auth: {
-    //     user: "monthly_bill@thecrownboyshostel.com",
-    //     pass: "thecrownboyshostel2542",
-    //   },
-    // });
-    // const mailOptions = {
-    //   to: "akibrahman5200@gmail.com",
-    //   subject: "Test E-mail",
-    //   html: `<p>This is a Test E-mail</p>`,
-    // };
-
-    // await transport.sendMail(mailOptions);
     return NextResponse.json({ msg: "SMS sent successfully", success: true });
   } catch (error) {
     console.log(error);
