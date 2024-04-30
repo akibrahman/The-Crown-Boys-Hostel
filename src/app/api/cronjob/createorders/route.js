@@ -254,11 +254,30 @@ export const GET = async (req) => {
             })
           );
         }
-
+        //! SMS
+        const url = "http://bulksmsbd.net/api/smsapi";
+        const apiKey = "WvcwmDFS5UoKaSJ1KJQa";
+        const senderId = "8809617618230";
+        const numbers = user.contactNumber;
+        const message = `Hi, Mr. ${user.username}\nYour monthly bill has been created.\nPlease check your E-mail (${user.email}) properly with spam box to get details information.\n\nThe Crown Boys Hostel Inc.`;
+        const smsClientData = {
+          api_key: apiKey,
+          senderid: senderId,
+          number: numbers,
+          message: message,
+        };
+        await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(smsClientData),
+        });
+        //! SMS
         const mailOptions = {
           from: "checker@hostelplates.com",
           to: user.email,
-          subject: "Manager Expo - Monthly Bill",
+          subject: "Monthly Bill - The Crown boys Hostel",
           html: emailHtml,
         };
         await transport.sendMail(mailOptions);
@@ -340,6 +359,26 @@ export const GET = async (req) => {
           ).toFixed(2),
         });
         await managerBill.save();
+        //! SMS
+        const url = "http://bulksmsbd.net/api/smsapi";
+        const apiKey = "WvcwmDFS5UoKaSJ1KJQa";
+        const senderId = "8809617618230";
+        const numbers = allManagers[n].contactNumber;
+        const message = `Hi, Mr. ${allManagers.username}\nYour monthly market bill with meal count and meal rate has been created. Check it from your profile.\n\nThe Crown Boys Hostel Inc.`;
+        const smsManagerData = {
+          api_key: apiKey,
+          senderid: senderId,
+          number: numbers,
+          message: message,
+        };
+        await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(smsManagerData),
+        });
+        //! SMS
       }
       //! <---------->Manager Bill Creation End <---------->
       const mailOptions2 = {

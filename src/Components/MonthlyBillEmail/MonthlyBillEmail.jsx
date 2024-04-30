@@ -88,19 +88,6 @@ export const MonthlyBillEmail = ({
           >
             Your Monthly Bill of &quot;The Crown Boys Hostel&quot;
           </Text>
-          <Text
-            style={{
-              textAlign: "center",
-              margin: "36px 0 40px 0",
-              fontSize: "14px",
-              fontWeight: "500",
-              color: "#111111",
-            }}
-          >
-            N.B. : This is a Test Bill, Just because of testing purpose. Try to
-            match this E-mail data with your profile data. If not same, let Akib
-            know.
-          </Text>
           {isRestDeposite && (
             <Text
               style={{

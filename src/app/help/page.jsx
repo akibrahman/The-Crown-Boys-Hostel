@@ -1,8 +1,11 @@
 "use client";
+import { AuthContext } from "@/providers/ContextProvider";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
+import { useContext } from "react";
 import toast from "react-hot-toast";
 const Help = () => {
+  const { user } = useContext(AuthContext);
   const test = async () => {
     try {
       const res = await axios.post("/api/sms/managersendssmstoall", {
@@ -39,12 +42,14 @@ const Help = () => {
         }}
         initialValue="Welcome to TinyMCE!"
       />
-      <button
-        onClick={test}
-        className="font-semibold px-3 py-1 duration-300 bg-sky-500 text-white active:scale-90 hidden"
-      >
-        Action
-      </button>
+      {user?.role == "manager" && (
+        <button
+          onClick={test}
+          className="font-semibold px-3 py-1 duration-300 bg-sky-500 text-white active:scale-90"
+        >
+          Action
+        </button>
+      )}
     </div>
   );
 };
