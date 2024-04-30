@@ -145,7 +145,7 @@ export const GET = async (req) => {
         // year: currentYear,
         // month: currentMonth,
         // status: "initiated",
-        userId: "662123dfce4b1b685bf1219c",
+        userId: "6621367ef3a1f3b0e2604d64",
         month: "April",
         year: 2024,
       });
@@ -291,7 +291,7 @@ export const GET = async (req) => {
         await transport.sendMail(mailOptions);
       }
       //! <---------->User Bill Creation End <---------->
-      return;
+      return NextResponse.json({ success: true, msg: "Runned successfully" });
       //! <---------->Manager Bill Creation Start <---------->
       const allManagers = await User.find({
         isManager: true,
