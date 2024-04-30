@@ -142,10 +142,14 @@ export const GET = async (req) => {
       }
       //! <---------->User Bill Creation Start <---------->
       const bills = await Bill.find({
-        year: currentYear,
-        month: currentMonth,
-        status: "initiated",
+        // year: currentYear,
+        // month: currentMonth,
+        // status: "initiated",
+        userId: "6621367ef3a1f3b0e2604d64",
+        month: "April",
+        year: 2024,
       });
+      console.log(bills);
       for (let m = 0; m < bills.length; m++) {
         const bill = await Bill.findById(bills[m]._id);
         const userId = bill.userId;
@@ -287,7 +291,7 @@ export const GET = async (req) => {
         await transport.sendMail(mailOptions);
       }
       //! <---------->User Bill Creation End <---------->
-
+      return;
       //! <---------->Manager Bill Creation Start <---------->
       const allManagers = await User.find({
         isManager: true,
