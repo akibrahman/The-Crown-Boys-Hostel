@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaArrowRight, FaTimes } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
+import Swal from "sweetalert2";
 
 const MealChangeRequests = () => {
   const { data: mealRequests, refetch: mealRequestsRefetch } = useQuery({
@@ -23,23 +24,70 @@ const MealChangeRequests = () => {
   const [isDeclining, setIsDeclining] = useState([false, ""]);
   const [isAccepting, setIsAccepting] = useState([false, ""]);
 
-  const decline = async (orderId, reqId) => {
-    setIsDeclining([true, reqId]);
-    try {
-      const { data } = await axios.post("/api/mealrequests/decline", {
-        orderId,
-        reqId,
-      });
-      if (data.success) {
-        toast.success(data.msg);
+  const accept = async (orderId, reqId, breakfast, lunch, dinner) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        let reqData = [];
+        breakfast && reqData.push("breakfast");
+        lunch && reqData.push("lunch");
+        dinner && reqData.push("dinner");
+        setIsAccepting([true, reqId]);
+        try {
+          const { data } = await axios.post("/api/mealrequests/accept", {
+            orderId,
+            reqId,
+            reqData,
+          });
+          if (data.success) {
+            toast.success(data.msg);
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error.response.data.msg);
+        } finally {
+          await mealRequestsRefetch();
+          setIsAccepting([false, ""]);
+        }
       }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.msg);
-    } finally {
-      await mealRequestsRefetch();
-      setIsDeclining([false, ""]);
-    }
+    });
+  };
+  const decline = async (orderId, reqId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setIsDeclining([true, reqId]);
+        try {
+          const { data } = await axios.post("/api/mealrequests/decline", {
+            orderId,
+            reqId,
+          });
+          if (data.success) {
+            toast.success(data.msg);
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error.response.data.msg);
+        } finally {
+          await mealRequestsRefetch();
+          setIsDeclining([false, ""]);
+        }
+      }
+    });
   };
 
   if (!mealRequests) return <PreLoader />;
@@ -136,8 +184,22 @@ const MealChangeRequests = () => {
               </p>
               {!req.isResponded ? (
                 <div className="py-6 flex items-center justify-around">
-                  <button className="px-4 py-1 bg-green-500 text-white font-semibold duration-300 active:scale-90">
-                    Accept
+                  <button
+                    onClick={() =>
+                      accept(
+                        req.order._id,
+                        req._id,
+                        req.breakfast,
+                        req.lunch,
+                        req.dinner
+                      )
+                    }
+                    className="px-4 py-1 bg-green-500 text-white font-semibold duration-300 flex items-center gap-2 active:scale-90"
+                  >
+                    Accept{" "}
+                    {isAccepting[0] && isAccepting[1] == req._id && (
+                      <CgSpinner className="text-xl animate-spin" />
+                    )}
                   </button>
                   <button
                     onClick={() => decline(req.order._id, req._id)}
