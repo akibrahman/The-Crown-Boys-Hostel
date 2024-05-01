@@ -165,14 +165,18 @@ const MealRequest = ({
     >
       <div className="">
         <FaTimes
-          className="absolute top-3 right-3 text-2xl cursor-pointer"
+          style={{ top: "12px", right: "12px" }}
+          className="absolute text-2xl cursor-pointer"
           onClick={() => {
             setRequestPopUp(false);
             setDate(null);
             setOrder(null);
           }}
         />
-        <div className="mt-10 md:mt-20 mb-10 md:mb-20 flex flex-col md:flex-row justify-center items-center gap-10">
+        <div
+          style={{ marginBottom: "40px" }}
+          className="mt-10 md:mt-20  flex flex-col md:flex-row justify-center items-center gap-10"
+        >
           <p className="text-xl font-semibold tracking-widest">Select Date:</p>
           <DatePicker
             className={"meal_req_date_picker"}
