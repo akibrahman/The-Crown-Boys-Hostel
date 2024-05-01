@@ -274,8 +274,12 @@ const MealRequest = ({
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               name="reason"
-              style={{ height: "150px", backgroundColor: "#57534E" }}
-              className="p-3 outline-none rounded-sm w-[90%] md:w-[70%]"
+              style={{
+                padding: "12px",
+                height: "150px",
+                backgroundColor: "#57534E",
+              }}
+              className="outline-none rounded-sm w-[90%] md:w-[70%]"
               placeholder="Write your reason..."
             ></textarea>
             {(reqData?.breakfast == true ||
