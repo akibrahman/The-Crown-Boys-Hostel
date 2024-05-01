@@ -2,22 +2,23 @@
 
 import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
-import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { BsChatSquareQuote } from "react-icons/bs";
 import { CgSpinner } from "react-icons/cg";
-import { FaArrowRight, FaTimes } from "react-icons/fa";
-import { GiPayMoney } from "react-icons/gi";
-import { IoSearchOutline, IoSettingsOutline } from "react-icons/io5";
-import { TiTick } from "react-icons/ti";
 import Modal from "react-modal";
-import { Tooltip } from "react-tooltip";
+import CalenderClient from "./CalenderClient";
+import CalenderManager from "./CalenderManager";
+import ClientsOfManager from "./ClientsOfManager";
+import ManagerDetails from "./ManagerDetails";
+import ManagerMealRate from "./ManagerMealRate";
+import ManagerSettings from "./ManagerSettings";
+import ManagersOfOwner from "./ManagersOfOwner";
+import Navbar from "./Navbar";
+import ProfileDetails from "./ProfileDetails";
 
 const Profile = () => {
   const { user, userRefetch, manager } = useContext(AuthContext);
@@ -57,8 +58,6 @@ const Profile = () => {
       backgroundColor: "rgba(0,0,0,0.5)",
     },
   };
-  const sms =
-    "The Crown Boys Hostel\r\nTest SMS to Akib Rahman\r\n\r\nFrom WebApp";
 
   const openModalForClientDetails = () => {
     setClientDetailsModalIsOpen(true);
@@ -504,720 +503,75 @@ const Profile = () => {
         )}
       </Modal>
       {/*//! NavBar Panel  */}
-      <div className="p-6 flex flex-col-reverse gap-3 items-center md:flex-row-reverse md:gap-0 justify-between dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white">
-        <button
-          onClick={logout}
-          className="bg-red-600 hover:bg-red-700 text-stone-900 font-bold px-4 py-1 flex items-center gap-3 rounded-lg duration-300 active:scale-90"
-        >
-          Logout
-          {loggingOut && <CgSpinner className="animate-spin text-2xl" />}
-        </button>
-        {user.role === "client" && user.isVerified && user.isClientVerified && (
-          <>
-            <p className="text-lg border rounded-xl border-sky-500 px-8 py-1.5">
-              Dinner: {dinnerCount}
-            </p>
-            <p className="text-lg border rounded-xl border-sky-500 px-8 py-1.5">
-              Lunch: {lunchCount}
-            </p>
-            <p className="text-lg border rounded-xl border-sky-500 px-8 py-1.5">
-              Breakfast: {breakfastCount}
-            </p>
-          </>
-        )}
-        <p className="text-lg text-sky-500 rounded-xl font-semibold px-6 py-1.5">
-          My Profile
-        </p>
-      </div>
-      {/*//! Parent Block ------------------------------------------------------------- */}
+      <Navbar
+        logout={logout}
+        loggingOut={loggingOut}
+        user={user}
+        breakfastCount={breakfastCount}
+        lunchCount={lunchCount}
+        dinnerCount={dinnerCount}
+      />
+      {/*//! Parent Block ------------------------------------ */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white">
         {/*//! Profile Details  */}
-        <div className={`mt-10 py-8 flex flex-col items-center relative`}>
-          {user && user.role == "manager" && (
-            <div className="absolute top-0 right-4 dark:bg-stone-700 bg-stone-300 flex items-center justify-center h-12 w-12 rounded-full cursor-pointer duration-300 active:scale-90 select-none">
-              <BsChatSquareQuote className="text-xl" />
-              {parseInt(mealRequestCount) > 0 && (
-                <span className="absolute top-0 right-0 text-sm bg-red-500 rounded-full h-[18px] w-[18px] flex items-center justify-center">
-                  {parseInt(mealRequestCount)}
-                </span>
-              )}
-            </div>
-          )}
-          <Image
-            alt={`Profile picture of ${user.username}`}
-            src={user.profilePicture}
-            width={200}
-            height={200}
-            className="mb-10 rounded-full aspect-square"
-          />
-          <p className="mb-1 text-blue-500 font-medium text-xl">
-            {user.username}
-          </p>
-          <p>{user.email}</p>
-          <p>Role: {convertCamelCaseToCapitalized(user.role)}</p>
-
-          {user.isVerified ? (
-            <div className="flex items-center gap-3 mt-2">
-              {" "}
-              <p
-                className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold ${
-                  user.role === "owner" ? "bg-blue-500" : "bg-green-500"
-                }`}
-              >
-                <TiTick className="text-xl" />
-                Verified
-              </p>
-              <div className="relative">
-                <IoSettingsOutline
-                  onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-                  className="font-semibold text-2xl cursor-pointer hover:rotate-180 duration-500 group"
-                />
-                <ul
-                  className={`absolute ${
-                    isSettingsOpen
-                      ? "opacity-1 z-40 top-[180%]"
-                      : "opacity-0 -z-40 top-[500%]"
-                  } left-[50%] -translate-x-1/2 duration-300 ease-linear bg-secondary text-white font-semibold py-6 px-16 space-y-3 shadow-lg shadow-white`}
-                >
-                  <li className="w-[250px] text-center border rounded-full border-white px-10 py-1.5 cursor-pointer duration-300 active:scale-90">
-                    Profile Update
-                  </li>
-                  <li className="w-[250px] text-center border rounded-full border-white px-10 py-1.5 cursor-pointer duration-300 active:scale-90">
-                    Change Password
-                  </li>
-                </ul>
-              </div>
-            </div>
-          ) : canVerify ? (
-            <button
-              onClick={async () => {
-                setCanVerify(false);
-                axios.post("/api/sendverificationemail", {
-                  userName: user.username,
-                  email: user.email,
-                  emailType: "verify",
-                  userId: user._id,
-                });
-                toast.success("Verification E-mail sent");
-              }}
-              className="flex items-center gap-1 duration-300 bg-sky-500 text-sm w-max px-4 py-1 rounded-full font-semibold mt-2 active:scale-90"
-            >
-              Click to get verification E-mail
-            </button>
-          ) : (
-            <p
-              className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold mt-2 bg-lime-500 select-none`}
-            >
-              <TiTick className="text-xl" />
-              Verification E-mail sent
-            </p>
-          )}
-        </div>
+        <ProfileDetails
+          user={user}
+          mealRequestCount={mealRequestCount}
+          setIsSettingsOpen={setIsSettingsOpen}
+          isSettingsOpen={isSettingsOpen}
+          canVerify={canVerify}
+          setCanVerify={setCanVerify}
+        />
         {/*//! Clalnder as a Client */}
-        {user.role == "client" && user.isVerified && user.isClientVerified && (
-          <div className="col-span-1 md:col-span-2 px-6 pb-8 mt-10">
-            <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative flex flex-col md:flex-row gap-3 md:gap-0+6 items-center justify-between">
-              <span className="text-sm text-sky-500">
-                Deposite Amount - {depositeAmount} BDT
-              </span>
-              <span> {currentMonth}</span>
-              <span className="text-sm text-sky-500">
-                Approx. Bill -{" "}
-                {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500}{" "}
-                BDT
-              </span>
-            </p>
-            <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
-              <Tooltip className="z-50" id="my-tooltip" />
-              {calanderData.map((order) => (
-                <div
-                  data-tooltip-id="my-tooltip"
-                  data-tooltip-content={
-                    order.isGuestMeal
-                      ? "Breakfast : " +
-                        order.guestBreakfastCount +
-                        " Lunch : " +
-                        order.guestLunchCount +
-                        " Dinner : " +
-                        order.guestDinnerCount
-                      : null
-                  }
-                  key={order._id}
-                  className={`${
-                    order.isGuestMeal && "shadow-lg shadow-white"
-                  } relative w-16 h-16 rounded-xl bg-sky-500 flex items-center justify-center z-0`}
-                >
-                  {order.date.split("/")[1]}
-                  <span
-                    className={`absolute w-2 h-2 rounded-full top-2 right-2 ${
-                      order.isGuestMeal ? "bg-blue-600" : "bg-transparent"
-                    }`}
-                  ></span>
-                  <span
-                    className={`absolute w-2 h-2 rounded-full left-2 bottom-1.5 ${
-                      order.breakfast ? "bg-green-600" : "bg-red-600"
-                    }`}
-                  ></span>
-                  <span
-                    className={`absolute w-2 h-2 rounded-full left-1/2 -translate-x-1/2 bottom-1.5 ${
-                      order.lunch ? "bg-green-600" : "bg-red-600"
-                    }`}
-                  ></span>
-                  <span
-                    className={`absolute w-2 h-2 rounded-full right-2 bottom-1.5 ${
-                      order.dinner ? "bg-green-600" : "bg-red-600"
-                    }`}
-                  ></span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+
+        <CalenderClient
+          user={user}
+          depositeAmount={depositeAmount}
+          currentMonth={currentMonth}
+          breakfastCount={breakfastCount}
+          lunchCount={lunchCount}
+          dinnerCount={dinnerCount}
+          calanderData={calanderData}
+        />
         {/*//! Manager's Details  */}
-        {user.role === "client" && !user.isVerified ? (
-          <div className="flex items-center justify-center pl-6 py-8 mt-10">
-            <p className="font-semibold shadow-xl shadow-blue-500 px-8 select-none py-2 rounded-full">
-              At first verify youself!
-            </p>
-          </div>
-        ) : user.role === "client" &&
-          user.isVerified &&
-          !user.isClientVerified ? (
-          <div className="flex items-center justify-center pl-6 py-8 mt-10">
-            <p className="font-semibold shadow-xl shadow-blue-500 px-8 select-none py-2 rounded-full w-max">
-              Wait till manager accepts you!
-            </p>
-          </div>
-        ) : user.role === "client" &&
-          user.isVerified &&
-          user.isClientVerified ? (
-          <div className={`mt-10 py-8 flex flex-col items-center`}>
-            <Image
-              alt={`Profile picture of ${manager.username}`}
-              src={manager.profilePicture}
-              width={200}
-              height={200}
-              className="mb-10 rounded-full aspect-square"
-            />
-            <p className="mb-1 text-blue-500 font-medium text-xl">
-              {manager.username}
-            </p>
-            <p>{manager.email}</p>
-            <p>{manager.contactNumber}</p>
-          </div>
-        ) : (
-          <></>
-        )}
+        <ManagerDetails user={user} manager={manager} />
         {/*//! Managers as a Owner  */}
-        {user.role === "owner" && (
-          <div className="col-span-1 md:col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
-            <button
-              // onClick={async () => {
-              //   try {
-              //     toast.success("Started");
-              //     // await axios.get("/api/cronjob/createorders");
-              //     const res = await axios.post(
-              //       `http://bulksmsbd.net/api/smsapi?api_key=WvcwmDFS5UoKaSJ1KJQa&type=text&number=01709605097&senderid=8809617618230&message=${sms}`
-              //     );
-              //     console.log(res);
-              //     toast.success("Ended");
-              //   } catch (error) {
-              //     console.log(error);
-              //     toast.error("Error");
-              //   }
-              //   // if (data.success) toast.success("Test E-mail Sent");
-              // }}
-              className="font-semibold px-3 py-1 duration-300 bg-sky-500 text-white active:scale-90"
-            >
-              E-mail
-            </button>
-            <div className="sticky top-0">
-              <input
-                placeholder="Search by name"
-                type="text"
-                className="w-80 px-4 pl-12 py-3 rounded-full text-white bg-stone-900 focus:outline-none"
-              />
-              <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
-            </div>
 
-            {managers.map((manager) => (
-              <div
-                key={manager._id}
-                className="border px-6 py-5 rounded-lg flex items-center w-[430px] justify-between gap-4"
-              >
-                <Image
-                  alt={`Profile picture of ${manager.username} who is a manager`}
-                  src={manager.profilePicture}
-                  height={60}
-                  width={60}
-                  className="rounded-full aspect-square"
-                />
-                {/* <p>1</p> */}
-                <div>
-                  <p>{manager.username}</p>
-                  <p className="text-sm">{manager.email}</p>
-                </div>
-                {manager.isVerified === true ? (
-                  <>
-                    {manager.isManagerVerified === true ? (
-                      <p className="text-blue-500 font-semibold flex items-center gap-1">
-                        <TiTick className="text-3xl font-normal" />
-                        Approved
-                      </p>
-                    ) : (
-                      <>
-                        <button
-                          onClick={async () => {
-                            const confirmation = confirm(
-                              "Are you sure to Authorize?"
-                            );
-                            if (confirmation) {
-                              setGivingAuthorization(true);
-                              try {
-                                const { data } = await axios.post(
-                                  "api/managers/approvemanager",
-                                  {
-                                    id: manager._id,
-
-                                    days: parseInt(
-                                      currentDays[currentDays.length - 1]
-                                    ),
-                                    currentMonthName:
-                                      new Date().toLocaleDateString("en-BD", {
-                                        month: "long",
-                                        timeZone: "Asia/Dhaka",
-                                      }),
-                                    currentMonth: new Date(
-                                      new Date().toLocaleString("en-US", {
-                                        timeZone: "Asia/Dhaka",
-                                      })
-                                    ).getMonth(),
-                                    currentYear: new Date(
-                                      new Date().toLocaleString("en-US", {
-                                        timeZone: "Asia/Dhaka",
-                                      })
-                                    ).getFullYear(),
-                                  }
-                                );
-                                if (data.success) {
-                                  await managersRefetch();
-                                  toast.success("Authorization Provided");
-                                }
-                              } catch (error) {
-                                console.log(
-                                  "Frontend problem when authorizing as a manager"
-                                );
-                                console.log(error);
-                                toast.error("Authorization Error!");
-                              } finally {
-                                setGivingAuthorization(false);
-                              }
-                            } else {
-                              toast.success("Cancelled!");
-                            }
-                          }}
-                          className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
-                        >
-                          Approve
-                          {givingAuthorization && (
-                            <CgSpinner className="animate-spin text-2xl" />
-                          )}
-                        </button>
-                        {/* <button className="bg-red-500 text-white font-semibold px-4 py-1 rounded-full duration-300 active:scale-90">
-                        Reject
-                      </button> */}
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-red-500 font-semibold flex items-center gap-1">
-                    <FaTimes className="text-xl font-normal" />
-                    Unverified
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+        <ManagersOfOwner
+          user={user}
+          managers={managers}
+          managersRefetch={managersRefetch}
+          givingAuthorization={givingAuthorization}
+          setGivingAuthorization={setGivingAuthorization}
+        />
         {/*//! Clients as a manager  */}
-        {user.role === "manager" &&
-        user.isVerified &&
-        user.isManagerVerified ? (
-          <div className="col-span-1 md:col-span-2 h-[380px] overflow-x-hidden overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
-            <div className=" pb-2 bg-transparent w-[110%] flex justify-center sticky top-0">
-              <div className="relative">
-                <input
-                  onChange={(e) => setClientName(e.target.value)}
-                  placeholder="Search by name"
-                  type="text"
-                  className="w-80 px-4 pl-12 py-3 rounded-full dark:text-white font-semibold dark:bg-stone-800 bg-stone-300 focus:outline-none"
-                />
-                <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
-              </div>
-            </div>
-
-            {clientName && !clients ? (
-              <p className="mt-4 flex items-center gap-1 font-semibold">
-                <CgSpinner className="animate-spin text-lg" />
-                Loading...
-              </p>
-            ) : (
-              clients?.map((client, i) => (
-                <div
-                  key={client._id}
-                  className="border px-6 py-5 rounded-lg flex flex-col md:flex-row items-center w-[95%] justify-between gap-4"
-                >
-                  <p>{i + 1}</p>
-                  <Image
-                    alt={`Profile picture of ${client.username} who is a manager`}
-                    src={client.profilePicture}
-                    height={60}
-                    width={60}
-                    className="rounded-full aspect-square"
-                  />
-                  <div className="md:w-[900px] md:overflow-x-hidden text-center md:text-left">
-                    <p>{client.username}</p>
-                    <p className="text-sm">{client.email}</p>
-                  </div>
-                  {client.isVerified === true ? (
-                    <>
-                      {client.isClientVerified === true ? (
-                        <>
-                          <p className="text-blue-500 font-semibold flex items-center gap-1">
-                            <TiTick className="text-3xl font-normal" />
-                            Approved
-                          </p>
-                          <Link href={`/userDetails/${client._id}`}>
-                            <button className="font-semibold flex items-center gap-2 bg-blue-500 px-3 py-1 duration-300 active:scale-90">
-                              Details <FaArrowRight />
-                            </button>
-                          </Link>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() =>
-                              getDetailsOfClientForApproval(client._id)
-                            }
-                            className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
-                          >
-                            Details{" "}
-                            {clientDetailsIsLoading && (
-                              <CgSpinner className="animate-spin text-2xl" />
-                            )}
-                          </button>
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-red-500 font-semibold flex items-center gap-1">
-                        <FaTimes className="text-xl font-normal" />
-                        Unverified
-                      </p>
-                      <Link href={`/userDetails/${client._id}`}>
-                        <button className="font-semibold flex items-center gap-2 bg-blue-500 px-3 py-1 duration-300 active:scale-90">
-                          Details <FaArrowRight />
-                        </button>
-                      </Link>
-                    </>
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-        ) : user.role === "manager" && !user.isVerified ? (
-          <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
-            <p>Verify Email</p>
-          </div>
-        ) : user.role === "manager" && !user.isManagerVerified ? (
-          <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
-            <p>Verify as a manager</p>
-          </div>
-        ) : (
-          <></>
-        )}
+        <ClientsOfManager
+          user={user}
+          setClientName={setClientName}
+          clientName={clientName}
+          clients={clients}
+          getDetailsOfClientForApproval={getDetailsOfClientForApproval}
+          clientDetailsIsLoading={clientDetailsIsLoading}
+        />
         {/*//! Settings Part & me as a manager  */}
-        {user.role === "manager" &&
-        user.isVerified &&
-        user.isManagerVerified ? (
-          <div className="px-3 my-auto relative flex items-center justify-center">
-            <div className="flex flex-col items-center justify-center flex-wrap gap-5">
-              <Link href="/orderStatus" className="group">
-                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
-                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
-                  Order Status
-                </button>
-              </Link>
-              <Link href={"/billQuery"}>
-                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
-                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
-                  Bill Query
-                </button>
-              </Link>
-              <Link href="/userQuery">
-                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
-                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
-                  User Query
-                </button>
-              </Link>
-              <Link href="/marketQuery">
-                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
-                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
-                  Market Query
-                </button>
-              </Link>
-              <Link href="/managerOrder">
-                <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
-                  <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
-                  Meal Updator
-                </button>
-              </Link>
-              <button
-                onClick={async () => {
-                  const { data } = await axios.get("/api/cronjob/createorders");
-                  if (data.success) toast.success("Cron Job Done");
-                  else toast.error("Cron Job Error");
-                }}
-                className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 hidden"
-              >
-                Cron Job
-              </button>
-            </div>
-          </div>
-        ) : user.role === "manager" && !user.isVerified ? (
-          <div className="h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
-            <p>Verify Email</p>
-          </div>
-        ) : user.role === "manager" && !user.isManagerVerified ? (
-          <div className="col-span-2 h-[380px] border-l-4 border-blue-500 overflow-y-scroll px-3 flex items-center justify-center gap-4 mt-10 relative">
-            <p>Verify as a manager</p>
-          </div>
-        ) : (
-          <></>
-        )}
+        <ManagerSettings user={user} />
         {/*//! Clalnder as a Manager*/}
-        {user.role == "manager" &&
-          user.isVerified &&
-          user.isManagerVerified && (
-            <div className="col-span-1 md:col-span-2 lg:col-span-3 md:pl-6 pb-8 mt-10">
-              <p className="font-semibold border border-sky-500 rounded-sm px-4 py-2 relative flex items-center justify-around md:justify-around">
-                <input
-                  placeholder="Enter Amount"
-                  onChange={(e) => setManagerAmount(parseInt(e.target.value))}
-                  value={
-                    managerAmount || managerAmount == 0 ? managerAmount : ""
-                  }
-                  className="w-[200px] px-5 py-1 outline-none rounded-full dark:bg-stone-800 bg-stone-300"
-                  type="number"
-                />
-                <span className="md:w-[300px]">{currentMonth}</span>
-              </p>
-              <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
-                {managerCalanderData?.data?.map((mrkt) => (
-                  <div
-                    key={mrkt._id}
-                    className="relative w-[110px] h-20 rounded-md bg-sky-500 flex items-center justify-center flex-col cursor-pointer after:h-0 after:w-full after:absolute after:bg-[rgba(0,0,0,0.5)] hover:after:h-full after:duration-300 transition-all group"
-                  >
-                    {!isMoneyAdding ? (
-                      <GiPayMoney
-                        onClick={async () => {
-                          if (managerAmount != null && managerAmount >= 0) {
-                            setIsMoneyAdding(true);
-                            await axios.put("/api/markets/updatemarket", {
-                              id1: managerCalanderData._id,
-                              id2: mrkt._id,
-                              amount: managerAmount,
-                            });
-                            await managerCalanderDataRefetch();
-                            setManagerAmount(null);
-                            setIsMoneyAdding(false);
-                            toast.success("Amount updated");
-                          } else {
-                            toast.error("Please enter amount");
-                          }
-                        }}
-                        className="scale-0 group-hover:scale-100 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sky-500 bg-white z-10 text-[40px] p-1 rounded-md duration-300 transition-all active:scale-90"
-                      />
-                    ) : (
-                      <div className="bg-white z-10 hidden group-hover:block absolute rounded-md">
-                        {" "}
-                        <CgSpinner className="text-sky-500 text-[40px] p-1  duration-300 transition-all active:scale-90 group-hover:animate-spin" />
-                      </div>
-                    )}
-                    <span className="font-semibold bg-white text-sky-500 px-2 py-1 rounded-md mb-2 select-none">
-                      {" "}
-                      {mrkt.date.split("/")[1] +
-                        "-" +
-                        mrkt.date.split("/")[0] +
-                        "-" +
-                        mrkt.date.split("/")[2]}
-                    </span>
-
-                    <span className="select-none">{mrkt.amount} /-</span>
-                    {/* <span
-                      className={`absolute w-2 h-2 rounded-full left-2 bottom-1.5 ${
-                        order.breakfast ? "bg-green-600" : "bg-red-600"
-                      }`}
-                    ></span>
-                    <span
-                      className={`absolute w-2 h-2 rounded-full left-1/2 -translate-x-1/2 bottom-1.5 ${
-                        order.lunch ? "bg-green-600" : "bg-red-600"
-                      }`}
-                    ></span>
-                    <span
-                      className={`absolute w-2 h-2 rounded-full right-2 bottom-1.5 ${
-                        order.dinner ? "bg-green-600" : "bg-red-600"
-                      }`}
-                    ></span> */}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        {/*//! Meal Rate as a Manager ------------ Working Stage*/}
-        {user.role == "manager" &&
-          user.isVerified &&
-          user.isManagerVerified && (
-            <div className="py-5 md:py-0 md:p-10 md:mt-20 mx-auto">
-              <p className="flex items-center gap-2 mb-5">
-                Current Meal Rate:{" "}
-                <span className="text-blue-500 font-extralight text-4xl">
-                  {" "}
-                  {(
-                    managerCalanderData.data
-                      .filter(
-                        (d) =>
-                          parseInt(d.date.split("/")[1]) <=
-                          parseInt(
-                            new Date().toLocaleDateString("en-BD", {
-                              day: "numeric",
-                              timeZone: "Asia/Dhaka",
-                            })
-                          )
-                      )
-                      .reduce(
-                        (accumulator, currentValue) =>
-                          accumulator + currentValue.amount,
-                        0
-                      ) /
-                    (ordersForTheMonth.reduce(
-                      (accumulator, currentValue) =>
-                        accumulator + (currentValue.breakfast ? 0.5 : 0),
-                      0
-                    ) +
-                      ordersForTheMonth.reduce(
-                        (accumulator, currentValue) =>
-                          accumulator +
-                          (currentValue.isGuestMeal &&
-                          currentValue.guestBreakfastCount > 0
-                            ? currentValue.guestBreakfastCount / 2
-                            : 0),
-                        0
-                      ) +
-                      ordersForTheMonth.reduce(
-                        (accumulator, currentValue) =>
-                          accumulator + (currentValue.lunch ? 1 : 0),
-                        0
-                      ) +
-                      ordersForTheMonth.reduce(
-                        (accumulator, currentValue) =>
-                          accumulator +
-                          (currentValue.isGuestMeal &&
-                          currentValue.guestLunchCount > 0
-                            ? currentValue.guestLunchCount
-                            : 0),
-                        0
-                      ) +
-                      ordersForTheMonth.reduce(
-                        (accumulator, currentValue) =>
-                          accumulator + (currentValue.dinner ? 1 : 0),
-                        0
-                      ) +
-                      ordersForTheMonth.reduce(
-                        (accumulator, currentValue) =>
-                          accumulator +
-                          (currentValue.isGuestMeal &&
-                          currentValue.guestDinnerCount > 0
-                            ? currentValue.guestDinnerCount
-                            : 0),
-                        0
-                      ))
-                  ).toFixed(2)}
-                </span>
-              </p>
-              <p>
-                Total Market:{" "}
-                <span className="text-blue-500 font-bold text-2xl">
-                  {managerCalanderData.data
-                    .filter(
-                      (d) =>
-                        parseInt(d.date.split("/")[1]) <=
-                        parseInt(
-                          new Date().toLocaleDateString("en-BD", {
-                            day: "numeric",
-                            timeZone: "Asia/Dhaka",
-                          })
-                        )
-                    )
-                    .reduce(
-                      (accumulator, currentValue) =>
-                        accumulator + currentValue.amount,
-                      0
-                    )}
-                </span>{" "}
-                BDT
-              </p>
-              <p>
-                Total meal count:
-                <span className="text-blue-500 font-bold text-2xl">
-                  {" "}
-                  {ordersForTheMonth.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + (currentValue.breakfast ? 0.5 : 0),
-                    0
-                  ) +
-                    ordersForTheMonth.reduce(
-                      (accumulator, currentValue) =>
-                        accumulator +
-                        (currentValue.isGuestMeal &&
-                        currentValue.guestBreakfastCount > 0
-                          ? currentValue.guestBreakfastCount / 2
-                          : 0),
-                      0
-                    ) +
-                    ordersForTheMonth.reduce(
-                      (accumulator, currentValue) =>
-                        accumulator + (currentValue.lunch ? 1 : 0),
-                      0
-                    ) +
-                    ordersForTheMonth.reduce(
-                      (accumulator, currentValue) =>
-                        accumulator +
-                        (currentValue.isGuestMeal &&
-                        currentValue.guestLunchCount > 0
-                          ? currentValue.guestLunchCount
-                          : 0),
-                      0
-                    ) +
-                    ordersForTheMonth.reduce(
-                      (accumulator, currentValue) =>
-                        accumulator + (currentValue.dinner ? 1 : 0),
-                      0
-                    ) +
-                    ordersForTheMonth.reduce(
-                      (accumulator, currentValue) =>
-                        accumulator +
-                        (currentValue.isGuestMeal &&
-                        currentValue.guestDinnerCount > 0
-                          ? currentValue.guestDinnerCount
-                          : 0),
-                      0
-                    )}
-                </span>
-              </p>
-            </div>
-          )}
+        <CalenderManager
+          user={user}
+          setManagerAmount={setManagerAmount}
+          managerAmount={managerAmount}
+          currentMonth={currentMonth}
+          managerCalanderData={managerCalanderData}
+          isMoneyAdding={isMoneyAdding}
+          setIsMoneyAdding={setIsMoneyAdding}
+          managerCalanderDataRefetch={managerCalanderDataRefetch}
+        />
+        {/*//! Meal Rate as a Manager*/}
+        <ManagerMealRate
+          user={user}
+          managerCalanderData={managerCalanderData}
+          ordersForTheMonth={ordersForTheMonth}
+        />
       </div>
     </div>
   );
