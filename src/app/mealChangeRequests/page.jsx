@@ -138,8 +138,13 @@ const MealChangeRequests = () => {
                   <span>{req.breakfast && "Breakfast:"}</span>
                   <div className="flex items-center gap-1">
                     <span>{req.order.breakfast ? "On" : "Off"}</span>
-                    <FaArrowRight />
-                    <span>{!req.order.breakfast ? "On" : "Off"}</span>
+                    {(req.isResponded && req.isAccepted) || (
+                      <>
+                        {" "}
+                        <FaArrowRight />
+                        <span>{!req.order.breakfast ? "On" : "Off"}</span>
+                      </>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -150,8 +155,12 @@ const MealChangeRequests = () => {
                   <span>{req.lunch && "Lunch:"}</span>
                   <div className="flex items-center gap-1">
                     <span>{req.order.lunch ? "On" : "Off"}</span>
-                    <FaArrowRight />
-                    <span>{!req.order.lunch ? "On" : "Off"}</span>
+                    {(req.isResponded && req.isAccepted) || (
+                      <>
+                        <FaArrowRight />
+                        <span>{!req.order.lunch ? "On" : "Off"}</span>
+                      </>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -162,8 +171,12 @@ const MealChangeRequests = () => {
                   <span>{req.dinner && "Dinner:"}</span>
                   <div className="flex items-center gap-1">
                     <span>{req.order.dinner ? "On" : "Off"}</span>
-                    <FaArrowRight />
-                    <span>{!req.order.dinner ? "On" : "Off"}</span>
+                    {(req.isResponded && req.isAccepted) || (
+                      <>
+                        <FaArrowRight />
+                        <span>{!req.order.dinner ? "On" : "Off"}</span>
+                      </>
+                    )}
                   </div>
                 </div>
               ) : (
