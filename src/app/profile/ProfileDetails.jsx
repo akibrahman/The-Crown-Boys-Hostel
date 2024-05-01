@@ -180,7 +180,7 @@ const ProfileDetails = ({
                 </label>
                 <div className="relative">
                   <input
-                    className="shadow appearance-none border rounded w-[200px] md:w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-[100%] md:w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="oldPassword"
                     type={oldPassShown ? "text" : "password"}
                     placeholder="Enter password"
@@ -210,7 +210,7 @@ const ProfileDetails = ({
                 <div className="relative">
                   <input
                     onChange={(e) => newPassCgange(e.target.value)}
-                    className="shadow appearance-none border rounded w-[200px] md:w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-[100%] md:w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="newPassword"
                     type={newPassShown ? "text" : "password"}
                     placeholder="Enter password"
@@ -298,7 +298,7 @@ const ProfileDetails = ({
                 </label>
                 <div className="relative mb-3">
                   <input
-                    className="shadow appearance-none border rounded w-[200px] md:w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-[100%] md:w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="confirmNewPassword"
                     type={confirmNewPassShown ? "text" : "password"}
                     placeholder="Confirm password"
