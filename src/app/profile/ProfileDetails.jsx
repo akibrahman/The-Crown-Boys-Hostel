@@ -1,6 +1,7 @@
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { BsChatSquareQuote } from "react-icons/bs";
@@ -342,14 +343,16 @@ const ProfileDetails = ({
       </Modal>
       <div className={`mt-10 py-8 flex flex-col items-center relative`}>
         {user && user.role == "manager" && (
-          <div className="absolute top-0 right-4 dark:bg-stone-700 bg-stone-300 flex items-center justify-center h-12 w-12 rounded-full cursor-pointer duration-300 active:scale-90 select-none">
-            <BsChatSquareQuote className="text-xl" />
-            {parseInt(mealRequestCount) > 0 && (
-              <span className="absolute top-0 right-0 text-sm bg-red-500 rounded-full h-[18px] w-[18px] flex items-center justify-center">
-                {parseInt(mealRequestCount)}
-              </span>
-            )}
-          </div>
+          <Link href={"/mealChangeRequests"}>
+            <div className="absolute top-0 right-4 dark:bg-stone-700 bg-stone-300 flex items-center justify-center h-12 w-12 rounded-full cursor-pointer duration-300 active:scale-90 select-none">
+              <BsChatSquareQuote className="text-xl" />
+              {parseInt(mealRequestCount) > 0 && (
+                <span className="absolute top-0 right-0 text-sm bg-red-500 rounded-full h-[18px] w-[18px] flex items-center justify-center">
+                  {parseInt(mealRequestCount)}
+                </span>
+              )}
+            </div>
+          </Link>
         )}
         <Image
           alt={`Profile picture of ${user.username}`}

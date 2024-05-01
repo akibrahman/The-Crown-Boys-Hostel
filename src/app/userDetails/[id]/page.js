@@ -135,7 +135,7 @@ const page = async ({ params }) => {
                 </div>
               </div>
               {client.nidAuth ? (
-                <div className="flex items-center justify-around">
+                <div className="flex flex-col md:flex-row items-center justify-around">
                   <div>
                     <p className="mb-2">NID Front</p>
                     <Image

@@ -1,13 +1,16 @@
 "use client";
 
+import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import Modal from "react-modal";
 
 const OrderStatus = () => {
+  const route = useRouter();
   const { user } = useContext(AuthContext);
 
   const currentDate = new Date();
@@ -357,6 +360,11 @@ const OrderStatus = () => {
     console.log(analyzedData);
     setFloorAnalysingData(analyzedData);
   };
+  if (!user) return <PreLoader />;
+  if (user.role != "manager") {
+    route.push("/");
+    return;
+  }
   return (
     <>
       <Modal

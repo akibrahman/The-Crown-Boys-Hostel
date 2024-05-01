@@ -5,6 +5,10 @@ const mealRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: String,
+    required: true,
+  },
   breakfast: {
     type: Boolean,
   },
@@ -15,6 +19,14 @@ const mealRequestSchema = new mongoose.Schema({
     type: Boolean,
   },
   isResponded: {
+    type: Boolean,
+    default: false,
+  },
+  isAccepted: {
+    type: Boolean,
+    default: false,
+  },
+  isDeclined: {
     type: Boolean,
     default: false,
   },

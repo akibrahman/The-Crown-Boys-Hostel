@@ -1,14 +1,18 @@
+import { dbConfig } from "@/dbConfig/dbConfig";
 import MealRequest from "@/models/mealRequestModel";
 import Order from "@/models/orderModel";
 import { NextResponse } from "next/server";
 
+await dbConfig();
+
 //! Creating meal request
 export const POST = async (req) => {
   try {
-    const { reqData, orderId, reason } = await req.json();
+    const { reqData, orderId, userId, reason } = await req.json();
     console.log(orderId);
     const request = new MealRequest({
       orderId,
+      userId,
       breakfast: reqData?.breakfast,
       lunch: reqData?.lunch,
       dinner: reqData?.dinner,
@@ -25,7 +29,7 @@ export const POST = async (req) => {
   }
 };
 
-//! GEtting Meal Request(s)
+//! Getting Meal Request(s)
 export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
@@ -66,6 +70,11 @@ export const GET = async (req) => {
       {
         $addFields: {
           userId: "$order.userId",
+        },
+      },
+      {
+        $sort: {
+          isResponded: 1,
         },
       },
     ];
