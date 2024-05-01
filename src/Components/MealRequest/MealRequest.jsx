@@ -346,7 +346,7 @@ const MealRequest = ({
                       <span>{req.breakfast && "Breakfast:"}</span>
                       <div className="flex items-center gap-1">
                         <span>{req.order.breakfast ? "On" : "Off"}</span>
-                        {req.isResponded && req.isAccepted && (
+                        {(req.isResponded && req.isAccepted) || (
                           <>
                             <FaArrowRight />
                             <span>{!req.order.breakfast ? "On" : "Off"}</span>
@@ -360,7 +360,7 @@ const MealRequest = ({
                       <span>{req.lunch && "Lunch:"}</span>
                       <div className="flex items-center gap-1">
                         <span>{req.order.lunch ? "On" : "Off"}</span>
-                        {req.isResponded && req.isAccepted && (
+                        {(req.isResponded && req.isAccepted) || (
                           <>
                             {" "}
                             <FaArrowRight />
@@ -375,7 +375,7 @@ const MealRequest = ({
                       <span>{req.dinner && "Dinner:"}</span>
                       <div className="flex items-center gap-1">
                         <span>{req.order.dinner ? "On" : "Off"}</span>
-                        {req.isResponded && req.isAccepted && (
+                        {(req.isResponded && req.isAccepted) || (
                           <>
                             {" "}
                             <FaArrowRight />
