@@ -81,7 +81,7 @@ export const GET = async (req) => {
         const apiKey = process.env.SMS_API_KEY;
         const senderId = "8809617618230";
         const numbers = user.contactNumber;
-        const message = `Hi, Mr. ${user.username}\nTest SMS\n\nThe Crown Boys Hostel Inc.`;
+        const message = `Hi, Mr. ${user.username}\nGood Evening\nTest SMS\n\nThe Crown Boys Hostel Inc.`;
         const smsClientData = {
           api_key: apiKey,
           senderid: senderId,
