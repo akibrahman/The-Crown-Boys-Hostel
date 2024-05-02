@@ -75,7 +75,7 @@ export const GET = async (req) => {
 
     if (test) {
       console.log("-------------------> Started");
-      const users = await User.find({});
+      const users = await User.find({ role: "client" });
       users.forEach(async (user) => {
         const url = "http://bulksmsbd.net/api/smsapi";
         const apiKey = process.env.SMS_API_KEY;
