@@ -75,24 +75,28 @@ export const GET = async (req) => {
 
     if (test) {
       console.log("-------------------> Started");
-      const url = "http://bulksmsbd.net/api/smsapi";
-      const apiKey = "WvcwmDFS5UoKaSJ1KJQa";
-      const senderId = "8809617618230";
-      const numbers = "01709605097";
-      const message = `Hi, Mr. Akib Rahman\nTest SMS\n\nThe Crown Boys Hostel Inc.`;
-      const smsClientData = {
-        api_key: apiKey,
-        senderid: senderId,
-        number: numbers,
-        message: message,
-      };
-      await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(smsClientData),
+      const users = await User.find({});
+      users.forEach(async (user) => {
+        const url = "http://bulksmsbd.net/api/smsapi";
+        const apiKey = process.env.SMS_API_KEY;
+        const senderId = "8809617618230";
+        const numbers = user.contactNumber;
+        const message = `Hi, Mr. ${user.username}\nTest SMS\n\nThe Crown Boys Hostel Inc.`;
+        const smsClientData = {
+          api_key: apiKey,
+          senderid: senderId,
+          number: numbers,
+          message: message,
+        };
+        await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(smsClientData),
+        });
       });
+      //!
       const currentDate = new Date().toLocaleDateString("en-US", {
         timeZone: "Asia/Dhaka",
       });
