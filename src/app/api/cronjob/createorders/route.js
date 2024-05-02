@@ -88,13 +88,15 @@ export const GET = async (req) => {
           number: numbers,
           message: message,
         };
-        await fetch(url, {
+        console.log("Sending SMS to - ", user.username);
+        const res = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(smsClientData),
         });
+        console.log(res);
       });
       //!
       const currentDate = new Date().toLocaleDateString("en-US", {
