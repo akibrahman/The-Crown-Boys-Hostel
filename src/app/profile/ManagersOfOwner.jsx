@@ -17,24 +17,14 @@ const ManagersOfOwner = ({
     user.role === "owner" && (
       <div className="col-span-1 md:col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
         <button
-          // onClick={async () => {
-          //   try {
-          //     toast.success("Started");
-          //     // await axios.get("/api/cronjob/createorders");
-          //     const res = await axios.post(
-          //       `http://bulksmsbd.net/api/smsapi?api_key=WvcwmDFS5UoKaSJ1KJQa&type=text&number=01709605097&senderid=8809617618230&message=${sms}`
-          //     );
-          //     console.log(res);
-          //     toast.success("Ended");
-          //   } catch (error) {
-          //     console.log(error);
-          //     toast.error("Error");
-          //   }
-          //   // if (data.success) toast.success("Test E-mail Sent");
-          // }}
-          className="font-semibold px-3 py-1 duration-300 bg-sky-500 text-white active:scale-90"
+          onClick={async () => {
+            const { data } = await axios.get("/api/cronjob/createorders");
+            if (data.success) toast.success("Cron Job Done");
+            else toast.error("Cron Job Error");
+          }}
+          className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
         >
-          E-mail
+          Cron Job
         </button>
         <div className="sticky top-0">
           <input

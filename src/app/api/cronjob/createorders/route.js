@@ -13,14 +13,14 @@ await dbConfig();
 
 export const GET = async (req) => {
   try {
-    // if (
-    //   req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
-    // ) {
-    //   return NextResponse.json(
-    //     { success: false, msg: "Unauthorized" },
-    //     { status: 400 }
-    //   );
-    // }
+    if (
+      req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+    ) {
+      return NextResponse.json(
+        { success: false, msg: "Unauthorized" },
+        { status: 400 }
+      );
+    }
     const transport = nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
@@ -72,9 +72,13 @@ export const GET = async (req) => {
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
-
+    async function delay(s) {
+      await new Promise((resolve) => setTimeout(resolve, s));
+      console.log("Delayed function executed!");
+    }
     if (test) {
       console.log("-------------------> Started");
+      await delay(60000);
       const currentDate = new Date().toLocaleDateString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -89,27 +93,38 @@ export const GET = async (req) => {
         year: "numeric",
         timeZone: "Asia/Dhaka",
       });
-      const mailOptions = {
-        to: "akibrahman5200@gmail.com",
-        subject: "Manager Expo - Test Date & Time",
-        html: `<div>
-        <p><b>Current Month : ${currentMonth}</b></p>
-        <p><b>Current Year : ${currentYear}</b></p>
-        <p><b>Current Date : ${currentDate}</b></p>
-        <p><b>Current Time : ${currentTime}</b></p>
-        </div>`,
-      };
-      const transportZoho = nodemailer.createTransport({
-        service: "zoho",
-        host: "smtppro.zoho.com",
+
+      const transportGmail = nodemailer.createTransport({
+        service: "gmail",
+        host: "smtp.gmail.com",
         port: 465,
         secure: true,
         auth: {
-          user: "admin@thecrownboyshostel.com",
-          pass: "EXZp8hffSy7p#d3",
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_APP_PASS,
         },
       });
-      await transportZoho.sendMail(mailOptions);
+      // const allUsers = await User.find({ role: "client" });
+      // for (let x = 0; x < allUsers.length; x++) {
+      //   let forgotPasswordRenderedEmail = render(
+      //     ForgotPasswordEmail({
+      //       verificationCode: "123456789",
+      //       name: allUsers[x].username,
+      //     })
+      //   );
+      //   const mailOptions = {
+      //     to: allUsers[x].email,
+      //     subject: "Test E-mail from Akib Rahman",
+      //     // html: `<div>
+      //     // <p><b>Current Month : ${currentMonth}</b></p>
+      //     // <p><b>Current Year : ${currentYear}</b></p>
+      //     // <p><b>Current Date : ${currentDate}</b></p>
+      //     // <p><b>Current Time : ${currentTime}</b></p>
+      //     // </div>`,
+      //     html: forgotPasswordRenderedEmail,
+      //   };
+      //   await transportGmail.sendMail(mailOptions);
+      // }
 
       console.log("-------------------> Ended");
     }
