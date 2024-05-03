@@ -1,3 +1,4 @@
+import ForgotPasswordEmail from "@/Components/ForgotPasswordEmail/ForgotPasswordEmail";
 import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
@@ -106,24 +107,26 @@ export const GET = async (req) => {
       });
       // const allUsers = await User.find({ role: "client" });
       // for (let x = 0; x < allUsers.length; x++) {
-      //   let forgotPasswordRenderedEmail = render(
-      //     ForgotPasswordEmail({
-      //       verificationCode: "123456789",
-      //       name: allUsers[x].username,
-      //     })
-      //   );
-      //   const mailOptions = {
-      //     to: allUsers[x].email,
-      //     subject: "Test E-mail from Akib Rahman",
-      //     // html: `<div>
-      //     // <p><b>Current Month : ${currentMonth}</b></p>
-      //     // <p><b>Current Year : ${currentYear}</b></p>
-      //     // <p><b>Current Date : ${currentDate}</b></p>
-      //     // <p><b>Current Time : ${currentTime}</b></p>
-      //     // </div>`,
-      //     html: forgotPasswordRenderedEmail,
-      //   };
-      //   await transportGmail.sendMail(mailOptions);
+      let forgotPasswordRenderedEmail = render(
+        ForgotPasswordEmail({
+          verificationCode: "123456789",
+          // name: allUsers[x].username,
+          name: "Akib Rahman",
+        })
+      );
+      const mailOptions = {
+        // to: allUsers[x].email,
+        to: "akibrahman5200@gmail.com",
+        subject: "Test E-mail from Akib Rahman",
+        // html: `<div>
+        // <p><b>Current Month : ${currentMonth}</b></p>
+        // <p><b>Current Year : ${currentYear}</b></p>
+        // <p><b>Current Date : ${currentDate}</b></p>
+        // <p><b>Current Time : ${currentTime}</b></p>
+        // </div>`,
+        html: forgotPasswordRenderedEmail,
+      };
+      await transportGmail.sendMail(mailOptions);
       // }
 
       console.log("-------------------> Ended");
