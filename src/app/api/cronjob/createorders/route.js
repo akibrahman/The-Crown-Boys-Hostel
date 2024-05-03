@@ -74,42 +74,42 @@ export const GET = async (req) => {
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
 
     if (test) {
-      // console.log("-------------------> Started");
-      // const currentDate = new Date().toLocaleDateString("en-US", {
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const currentTime = new Date().toLocaleTimeString("en-US", {
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const currentMonth = new Date().toLocaleDateString("en-BD", {
-      //   month: "long",
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const currentYear = new Date().toLocaleDateString("en-BD", {
-      //   year: "numeric",
-      //   timeZone: "Asia/Dhaka",
-      // });
-      // const mailOptions = {
-      //   to: "akibrahman5200@gmail.com",
-      //   subject: "Manager Expo - Test Date & Time",
-      //   html: `<div>
-      //   <p><b>Current Month : ${currentMonth}</b></p>
-      //   <p><b>Current Year : ${currentYear}</b></p>
-      //   <p><b>Current Date : ${currentDate}</b></p>
-      //   <p><b>Current Time : ${currentTime}</b></p>
-      //   </div>`,
-      // };
-      // const transportZoho = nodemailer.createTransport({
-      //   service: "zoho",
-      //   host: "smtppro.zoho.com",
-      //   port: 465,
-      //   secure: true,
-      //   auth: {
-      //     user: "admin@thecrownboyshostel.com",
-      //     pass: "EXZp8hffSy7p#d3",
-      //   },
-      // });
-      // await transportZoho.sendMail(mailOptions);
+      console.log("-------------------> Started");
+      const currentDate = new Date().toLocaleDateString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentTime = new Date().toLocaleTimeString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentMonth = new Date().toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+      const currentYear = new Date().toLocaleDateString("en-BD", {
+        year: "numeric",
+        timeZone: "Asia/Dhaka",
+      });
+      const mailOptions = {
+        to: "akibrahman5200@gmail.com",
+        subject: "Manager Expo - Test Date & Time",
+        html: `<div>
+        <p><b>Current Month : ${currentMonth}</b></p>
+        <p><b>Current Year : ${currentYear}</b></p>
+        <p><b>Current Date : ${currentDate}</b></p>
+        <p><b>Current Time : ${currentTime}</b></p>
+        </div>`,
+      };
+      const transportZoho = nodemailer.createTransport({
+        service: "zoho",
+        host: "smtppro.zoho.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "admin@thecrownboyshostel.com",
+          pass: "EXZp8hffSy7p#d3",
+        },
+      });
+      await transportZoho.sendMail(mailOptions);
 
       console.log("-------------------> Ended");
     }

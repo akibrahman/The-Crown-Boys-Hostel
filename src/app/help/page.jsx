@@ -45,7 +45,7 @@ const Help = () => {
       {user?.role == "manager" && (
         <button
           onClick={test}
-          className="font-semibold px-3 py-1 duration-300 bg-sky-500 text-white active:scale-90"
+          className="font-semibold px-3 py-1 duration-300 bg-sky-500 text-white active:scale-90 hidden"
         >
           Action
         </button>

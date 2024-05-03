@@ -45,7 +45,7 @@ const ManagerSettings = ({ user }) => {
             if (data.success) toast.success("Cron Job Done");
             else toast.error("Cron Job Error");
           }}
-          className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90"
+          className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 hidden"
         >
           Cron Job
         </button>
