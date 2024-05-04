@@ -32,14 +32,14 @@ const NavBar = () => {
       <div
         className={`${
           deviceWidth <= 500 ? "hidden" : "flex"
-        } dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-3 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10`}
+        } dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10`}
       >
         <Image
-          src="/images/logo-white.png"
-          width={"60"}
-          height={"60"}
+          src="/images/logo.png"
+          width={"80"}
+          height={"80"}
           alt="Logo"
-          className="dark:bg-transparent bg-secondary h-16 w-16 p-1 rounded-full"
+          className="dark:bg-transparent bg-secondary h-20 w-20 p-1 rounded-full"
         />
         <div className="flex items-center justify-center gap-5 md:gap-10">
           <p className="">
@@ -98,7 +98,7 @@ const NavBar = () => {
       <div className={`relative ${deviceWidth <= 500 ? "" : "hidden"}`}>
         <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-1 gap-5 md:gap-0 items-center justify-between px-10">
           <Image
-            src="/images/logo-white.png"
+            src="/images/logo.png"
             width={"60"}
             height={"60"}
             alt="Logo"

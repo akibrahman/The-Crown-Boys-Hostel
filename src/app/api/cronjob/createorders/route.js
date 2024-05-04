@@ -1,4 +1,3 @@
-import ForgotPasswordEmail from "@/Components/ForgotPasswordEmail/ForgotPasswordEmail";
 import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
@@ -7,6 +6,7 @@ import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import { render } from "@react-email/render";
+import axios from "axios";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -32,6 +32,8 @@ export const GET = async (req) => {
         pass: process.env.GMAIL_APP_PASS,
       },
     });
+    // MIM SMS
+    // Alpha Net BD
     //!!!!!!!!!!!!!!!!!!!!
     const isLastDayOfCurrentMonthInBangladesh = () => {
       const today = new Date();
@@ -69,7 +71,7 @@ export const GET = async (req) => {
           today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
       };
     };
-    const test = true;
+    const test = false;
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
@@ -77,9 +79,35 @@ export const GET = async (req) => {
       await new Promise((resolve) => setTimeout(resolve, s));
       console.log("Delayed function executed!");
     }
+    if (false) {
+      console.log("Started");
+      try {
+        const optionss = {
+          method: "GET",
+          url: "https://mailcheck.p.rapidapi.com/",
+          params: {
+            domain: "admin@thecrownboyshostel.com",
+          },
+          headers: {
+            "X-RapidAPI-Key":
+              "05dfe90dc8msh44f03885168ce7ap1d6b6ajsnb2b494fd51f3",
+            "X-RapidAPI-Host": "mailcheck.p.rapidapi.com",
+          },
+        };
+        const { data } = await axios.request(optionss);
+        console.log(data);
+        return NextResponse.json({ success: true, data: data });
+      } catch (error) {
+        console.log("+", error);
+        return NextResponse.json({ success: true, data: error });
+      } finally {
+        console.log("Finished");
+      }
+    }
     if (test) {
       console.log("-------------------> Started");
-      await delay(60000);
+      // const testArray = ["01709605097", "01521787402"];
+      // await delay(60000);
       const currentDate = new Date().toLocaleDateString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -105,30 +133,44 @@ export const GET = async (req) => {
           pass: process.env.GMAIL_APP_PASS,
         },
       });
-      // const allUsers = await User.find({ role: "client" });
-      // for (let x = 0; x < allUsers.length; x++) {
-      let forgotPasswordRenderedEmail = render(
-        ForgotPasswordEmail({
-          verificationCode: "123456789",
-          // name: allUsers[x].username,
-          name: "Akib Rahman",
-        })
-      );
-      const mailOptions = {
-        // to: allUsers[x].email,
-        to: "akibrahman5200@gmail.com",
-        subject: "Test E-mail from Akib Rahman",
-        // html: `<div>
-        // <p><b>Current Month : ${currentMonth}</b></p>
-        // <p><b>Current Year : ${currentYear}</b></p>
-        // <p><b>Current Date : ${currentDate}</b></p>
-        // <p><b>Current Time : ${currentTime}</b></p>
-        // </div>`,
-        html: forgotPasswordRenderedEmail,
-      };
-      await transportGmail.sendMail(mailOptions);
-      // }
-
+      const allUsers = await User.find({ role: "client" });
+      for (let x = 0; x < allUsers.length; x++) {
+        //! SMS
+        const url = "http://bulksmsbd.net/api/smsapi";
+        const apiKey = process.env.SMS_API_KEY;
+        const senderId = "8809617618230";
+        const numbers = allUsers[x].contactNumber;
+        // const message = `Hi, Mr. Akib Rahman\nYour monthly bill has been created\nPlease check your E-mail properly with spam box to get details.\n\nThe Crown Boys Hostel`;
+        const message = `Hi, Mr. ${allUsers[x].username}\nGood Evening\n\nThe Crown Boys Hostel`;
+        const smsClientData = {
+          api_key: apiKey,
+          senderid: senderId,
+          number: numbers,
+          message: message,
+        };
+        const ress = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(smsClientData),
+        });
+        console.log(ress.ok);
+        //! SMS
+        await delay(1000);
+        const mailOptions = {
+          to: allUsers[x].email,
+          subject: "Test E-mail from Akib Rahman",
+          html: `<div>
+          <p><b>Current Month : ${currentMonth}</b></p>
+          <p><b>Current Year : ${currentYear}</b></p>
+          <p><b>Current Date : ${currentDate}</b></p>
+          <p><b>Current Time : ${currentTime}</b></p>
+          </div>`,
+        };
+        await transportGmail.sendMail(mailOptions);
+        await delay(1000);
+      }
       console.log("-------------------> Ended");
     }
     //! Last day of any month------------------------------
@@ -288,10 +330,10 @@ export const GET = async (req) => {
         }
         //! SMS
         const url = "http://bulksmsbd.net/api/smsapi";
-        const apiKey = "WvcwmDFS5UoKaSJ1KJQa";
+        const apiKey = process.env.SMS_API_KEY;
         const senderId = "8809617618230";
         const numbers = user.contactNumber;
-        const message = `Hi, Mr. ${user.username}\nYour monthly bill has been created.\nPlease check your E-mail (${user.email}) properly with spam box to get details information.\n\nThe Crown Boys Hostel Inc.`;
+        const message = `Hi, Mr. ${user.username}\nYour monthly bill has been created\nPlease check your E-mail properly with spam box to get details.\n\nThe Crown Boys Hostel`;
         const smsClientData = {
           api_key: apiKey,
           senderid: senderId,
