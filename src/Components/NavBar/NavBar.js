@@ -102,7 +102,7 @@ const NavBar = () => {
             width={"60"}
             height={"60"}
             alt="Logo"
-            className="dark:bg-transparent bg-secondary p-1 rounded-full"
+            className="p-1 rounded-full"
           />
           {isSideBarOpen ? (
             <FaTimes
