@@ -39,7 +39,7 @@ const NavBar = () => {
           width={"80"}
           height={"80"}
           alt="Logo"
-          className="dark:bg-transparent bg-secondary h-20 w-20 p-1 rounded-full"
+          className="h-20 w-20 p-1 rounded-full"
         />
         <div className="flex items-center justify-center gap-5 md:gap-10">
           <p className="">
