@@ -23,6 +23,8 @@ const Registration = () => {
   const [role, setRole] = useState("client");
   const [loading, setLoading] = useState(false);
   const [isNid, setIsNid] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(false);
+  const [isValidEmailLoading, setIsValidEmailLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -51,6 +53,31 @@ const Registration = () => {
     },
   });
 
+  const emailChecker = async (email) => {
+    toast.success("Checking E-mail address...");
+    try {
+      setIsValidEmailLoading(true);
+      setLoading(true);
+      const { data } = await axios.post("/api/emailchecker", { email });
+      console.log(data);
+      if (data.success && data.valid) {
+        setIsValidEmail(true);
+        setIsValidEmailLoading(false);
+        setLoading(false);
+        toast.success("E-mail address verified");
+        return true;
+      } else {
+        setIsValidEmail(false);
+        setIsValidEmailLoading(false);
+        setLoading(false);
+        return false;
+      }
+    } catch (error) {
+      setIsValidEmail(false);
+      return false;
+    }
+  };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -58,14 +85,14 @@ const Registration = () => {
     });
   };
 
-  const testHandler = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     let finalData = { ...formData, role };
+    const checkResult = await emailChecker(finalData.email);
+    if (!checkResult) {
+      toast.error("Invalid E-mail address!!!");
+      return;
+    }
     if (finalData.password !== finalData.confirmPassword) {
       toast.error("Passwords are not same !");
       return;
@@ -121,6 +148,20 @@ const Registration = () => {
     console.log(finalData);
     // return;
     try {
+      // setIsValidEmailLoading(true);
+      // const { data } = await axios.post("/api/emailchecker", {
+      //   email: finalData.email,
+      // });
+      // console.log(data);
+      // if (data.success && data.valid) {
+      //   setIsValidEmail(true);
+      // } else {
+      //   setIsValidEmail(false);
+      //   setIsValidEmailLoading(false);
+      //   toast.error("Invalid E-mail address!");
+      //   return;
+      // }
+
       const res = await axios.post("/api/users/signup", finalData);
       console.log(res.data);
       if (res.data.success) {
@@ -203,15 +244,31 @@ const Registration = () => {
                 <label htmlFor="email" className="block text-sm font-bold mb-2">
                   Email
                 </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                  required
-                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={async (e) => {
+                      handleChange(e);
+                      setIsValidEmail(false);
+                    }}
+                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    required
+                  />
+                  <div className="text-sky-500 border border-primary p-2 rounded-full">
+                    {isValidEmailLoading && (
+                      <CgSpinner className="text-2xl font-bold animate-spin" />
+                    )}
+                    {!isValidEmailLoading && isValidEmail && (
+                      <p className="text-green-500 text-xs">Valid</p>
+                    )}
+                    {!isValidEmailLoading && !isValidEmail && (
+                      <p className="text-red-500 text-xs">Invalid</p>
+                    )}
+                  </div>
+                </div>
               </div>
               <div className="mb-4">
                 <label

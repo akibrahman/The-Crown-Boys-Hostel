@@ -79,7 +79,7 @@ export const GET = async (req) => {
       await new Promise((resolve) => setTimeout(resolve, s));
       console.log("Delayed function executed!");
     }
-    if (false) {
+    if (true) {
       console.log("Started");
       try {
         const optionss = {
@@ -89,9 +89,8 @@ export const GET = async (req) => {
             domain: "admin@thecrownboyshostel.com",
           },
           headers: {
-            "X-RapidAPI-Key":
-              "05dfe90dc8msh44f03885168ce7ap1d6b6ajsnb2b494fd51f3",
-            "X-RapidAPI-Host": "mailcheck.p.rapidapi.com",
+            "X-RapidAPI-Key": process.env.GMAIL_CHECKER_API_KEY,
+            "X-RapidAPI-Host": process.env.GMAIL_CHECKER_API_HOST,
           },
         };
         const { data } = await axios.request(optionss);
