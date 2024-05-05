@@ -23,7 +23,7 @@ const page = () => {
         width={1200}
         className="mx-auto"
       />
-      <p className="w-[95%] md:w-[80%] mx-auto text-justify mt-4 text-[#c7cecf] leading-9">
+      <p className="w-[95%] md:w-[80%] mx-auto text-justify mt-4 text-[#c7cecf] leading-7 md:leading-9">
         <span className="text-5xl">ঢা</span>কার উত্তরা-১০ কামারপাড়া রোড-১৬ এ
         অবস্থিত &quot;দ্যা ক্রাউন বয়েজ হোস্টেল&quot; মেসের অত্যন্ত আদরণীয়
         পরিবেশে আপনাকে স্বাগতম। মেসটির পরিবেশ প্রাকৃতিক আলো এবং বাতাসে পরিপূর্ণ।
@@ -59,8 +59,9 @@ const page = () => {
           মেস এবং মেসের ওয়েবসাইট ব্যাবহারের সম্পুর্ণ গাইডলাইন ভিডিও
         </p>
         <iframe
-          width="560"
-          height="315"
+          className="w-[400px] h-[225px] md:w-[560px] md:h-[315px]"
+          // width="400"
+          // height="315"
           src="https://www.youtube.com/embed/dbt8qhV2m40?si=Zzsq6oGLJI2hHJdR"
           title="YouTube video player"
           frameborder="0"
