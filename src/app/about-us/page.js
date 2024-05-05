@@ -54,7 +54,10 @@ const page = () => {
           ))}
         </Marquee>
       </div>
-      <div className="py-7 w-[95%] md:w-[80%] mx-auto flex items-center justify-center">
+      <div className="py-7 w-[95%] md:w-[80%] mx-auto flex flex-col items-center justify-cente">
+        <p className="mb-8 text-xl underline">
+          মেস এবং মেসের ওয়েবসাইট ব্যাবহারের সম্পুর্ণ গাইডলাইন ভিডিও
+        </p>
         <iframe
           width="560"
           height="315"
