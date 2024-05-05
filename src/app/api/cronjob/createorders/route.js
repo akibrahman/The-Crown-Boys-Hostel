@@ -6,7 +6,6 @@ import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import { render } from "@react-email/render";
-import axios from "axios";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -78,30 +77,6 @@ export const GET = async (req) => {
     async function delay(s) {
       await new Promise((resolve) => setTimeout(resolve, s));
       console.log("Delayed function executed!");
-    }
-    if (true) {
-      console.log("Started");
-      try {
-        const optionss = {
-          method: "GET",
-          url: "https://mailcheck.p.rapidapi.com/",
-          params: {
-            domain: "admin@thecrownboyshostel.com",
-          },
-          headers: {
-            "X-RapidAPI-Key": process.env.GMAIL_CHECKER_API_KEY,
-            "X-RapidAPI-Host": process.env.GMAIL_CHECKER_API_HOST,
-          },
-        };
-        const { data } = await axios.request(optionss);
-        console.log(data);
-        return NextResponse.json({ success: true, data: data });
-      } catch (error) {
-        console.log("+", error);
-        return NextResponse.json({ success: true, data: error });
-      } finally {
-        console.log("Finished");
-      }
     }
     if (test) {
       console.log("-------------------> Started");

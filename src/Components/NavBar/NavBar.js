@@ -62,7 +62,7 @@ const NavBar = () => {
           <Link className="pointer-events-none text-stone-400" href="/help">
             Contact Us
           </Link>
-          <Link className="pointer-events-none text-stone-400" href="/help">
+          <Link className="" href="/about-us">
             About Us
           </Link>
           <Link className="pointer-events-none text-stone-400" href="/help">
@@ -155,8 +155,8 @@ const NavBar = () => {
           </Link>
           <Link
             onClick={() => setIsSideBarOpen(false)}
-            className="pointer-events-none text-stone-400"
-            href="/help"
+            className=""
+            href="/about-us"
           >
             About Us
           </Link>
