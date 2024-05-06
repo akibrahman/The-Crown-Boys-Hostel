@@ -21,7 +21,7 @@ export const metadata = {
     template: "%s || The Crown Boys Hostel",
   },
   description:
-    "The Crown Boys Hostel - Mijan Meal management system - 01709605097 - Created by Md. Akib Rahman - A completed solution for mess meal management",
+    "The Crown Boys Hostel | Mijanur Rahman | Phone No.:01788-422002 | Created by Md. Akib Rahman | A completed solution for mess meal management | Best hostel in Uttara",
 };
 
 const RootLayout = ({ children }) => {

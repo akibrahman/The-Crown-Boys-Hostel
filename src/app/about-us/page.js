@@ -49,7 +49,7 @@ const page = () => {
               alt="About page banner picture"
               height={100}
               width={300}
-              className="mx-auto w-[150px] md:w-[230px] rounded-md ml-4"
+              className="mx-auto w-[190px] md:w-[230px] rounded-md ml-4"
             />
           ))}
         </Marquee>
