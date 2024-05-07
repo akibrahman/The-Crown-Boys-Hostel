@@ -15,7 +15,7 @@ const page = () => {
     "/images/room/10.jpg",
   ];
   return (
-    <div className="min-h-screen dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-stone-300">
+    <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-stone-300">
       <Image
         src="/images/WebSite.png"
         alt="About page banner picture"
@@ -40,6 +40,34 @@ const page = () => {
         মেসে সকলের জন্য প্রয়োজনীয় সুবিধা সরবরাহ করা হয়েছে যাতে তারা নিখুঁত ও
         সুবিধাজনক মানের সরঞ্জাম অনুভব করতে পারেন।
       </p>
+      <div className="py-7 w-[95%] md:w-[80%] mx-auto flex flex-col items-center justify-cente">
+        <p className="mb-8 text-xl underline text-center">
+          মেস এবং মেসের ওয়েবসাইট ব্যাবহারের সম্পুর্ণ গাইডলাইন ভিডিও এবং গুগল
+          লোকেশন
+        </p>
+        <div className="w-full flex flex-col md:flex-row items-center justify-center gap-4">
+          <iframe
+            className="w-[400px] h-[225px] md:w-[50%] md:h-[315px]"
+            // width="400"
+            // height="315"
+            src="https://www.youtube.com/embed/dbt8qhV2m40?si=Zzsq6oGLJI2hHJdR"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10318.026380387855!2d90.37922014003685!3d23.890568612945046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c50029e3d6a9%3A0xb3fab592c2f157d9!2sThe%20Crown%20Boys%20Hostel!5e0!3m2!1sen!2sbd!4v1714991040841!5m2!1sen!2sbd"
+            // width="600"
+            // height="450"
+            className="w-[400px] h-[225px] md:w-[50%] md:h-[315px] border-none"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>{" "}
       <div className="py-7 w-[95%] md:w-[80%] mx-auto">
         <Marquee pauseOnHover={true}>
           {photos.map((photo, i) => (
@@ -49,26 +77,22 @@ const page = () => {
               alt="About page banner picture"
               height={100}
               width={300}
-              className="mx-auto w-[190px] md:w-[230px] rounded-md ml-4"
+              className="mx-auto w-[230px] md:w-[230px] rounded-md ml-4"
             />
           ))}
         </Marquee>
       </div>
-      <div className="py-7 w-[95%] md:w-[80%] mx-auto flex flex-col items-center justify-cente">
-        <p className="mb-8 text-xl underline">
-          মেস এবং মেসের ওয়েবসাইট ব্যাবহারের সম্পুর্ণ গাইডলাইন ভিডিও
-        </p>
-        <iframe
-          className="w-[400px] h-[225px] md:w-[560px] md:h-[315px]"
-          // width="400"
-          // height="315"
-          src="https://www.youtube.com/embed/dbt8qhV2m40?si=Zzsq6oGLJI2hHJdR"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
-        ></iframe>
+      <div className="w-[95%] md:w-[80%] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="w-full">
+          <p className="font-medium underline text-xl text-center">
+            মেসের তথ্যঃ
+          </p>
+        </div>
+        <div className="w-full">
+          <p className="font-medium underline text-xl text-center">
+            স্পেসিয়াল ফিচার্সঃ
+          </p>
+        </div>
       </div>
     </div>
   );

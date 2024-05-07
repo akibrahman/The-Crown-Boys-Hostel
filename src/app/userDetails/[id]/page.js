@@ -30,7 +30,7 @@ const page = async ({ params }) => {
                   Father&apos;s Number: {client.fathersNumber}
                 </p>
                 <p class="text-gray-600 dark:text-gray-400">
-                  Father&apos;s Number: {client.mothersNumber}
+                  Mother&apos;s Number: {client.mothersNumber}
                 </p>
                 <p class="text-gray-600 dark:text-gray-400">
                   Authentication: {client.nidAuth ? "NID" : "Birth Certificate"}
