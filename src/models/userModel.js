@@ -61,6 +61,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  files: {
+    type: [{ path: String, link: String, fileType: String }],
+    default: [],
+  },
   nidAuth: Boolean,
   floor: Number,
   roomNumber: String,

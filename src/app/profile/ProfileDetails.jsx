@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { BsChatSquareQuote } from "react-icons/bs";
 import { CgSpinner } from "react-icons/cg";
 import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
+import { GoFileDirectoryFill } from "react-icons/go";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import Modal from "react-modal";
@@ -372,7 +373,7 @@ const ProfileDetails = ({
             {" "}
             <p
               className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold ${
-                user.role === "owner" ? "bg-blue-500" : "bg-green-500"
+                user.role === "owner" ? "text-blue-500" : "text-green-500"
               }`}
             >
               <TiTick className="text-xl" />
@@ -429,6 +430,11 @@ const ProfileDetails = ({
             Verification E-mail sent
           </p>
         )}
+        <Link href={"/fileManager"}>
+          <button className="w-max px-4 py-1 rounded-full font-semibold bg-orange-500 mt-3 flex items-center gap-2 duration-300 active:scale-90">
+            File Manager <GoFileDirectoryFill className="text-xl" />
+          </button>
+        </Link>
       </div>
     </>
   );
