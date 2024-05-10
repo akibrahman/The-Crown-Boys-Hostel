@@ -56,18 +56,18 @@ const NavBar = () => {
                 </p>
               )}
           {/* <p> */}
-          <Link className="pointer-events-none text-stone-400" href="/help">
+          {/* <Link className="pointer-events-none text-stone-400" href="/help">
             Support
-          </Link>
-          <Link className="pointer-events-none text-stone-400" href="/help">
+          </Link> */}
+          {/* <Link className="pointer-events-none text-stone-400" href="/help">
             Contact Us
-          </Link>
+          </Link> */}
           <Link className="" href="/about-us">
             About Us
           </Link>
-          <Link className="pointer-events-none text-stone-400" href="/help">
+          {/* <Link className="pointer-events-none text-stone-400" href="/help">
             Our Gallery
-          </Link>
+          </Link> */}
           {/* </p> */}
           {loading ? (
             <CgSpinner className="text-2xl text-sky-500 animate-spin" />
@@ -139,20 +139,20 @@ const NavBar = () => {
                 </p>
               )}
           {/* <p> */}
-          <Link
+          {/* <Link
             onClick={() => setIsSideBarOpen(false)}
             className="pointer-events-none text-stone-400"
             href="/help"
           >
             Support
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             onClick={() => setIsSideBarOpen(false)}
             className="pointer-events-none text-stone-400"
             href="/help"
           >
             Contact Us
-          </Link>
+          </Link> */}
           <Link
             onClick={() => setIsSideBarOpen(false)}
             className=""
@@ -160,13 +160,13 @@ const NavBar = () => {
           >
             About Us
           </Link>
-          <Link
+          {/* <Link
             onClick={() => setIsSideBarOpen(false)}
             className="pointer-events-none text-stone-400"
             href="/help"
           >
             Our Gallery
-          </Link>
+          </Link> */}
           {/* </p> */}
           {loading ? (
             <CgSpinner className="text-2xl text-sky-500 animate-spin" />
