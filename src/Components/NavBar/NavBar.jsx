@@ -90,14 +90,14 @@ const NavBar = () => {
           {/* </p> */}
 
           {loading ? (
-            <CgSpinner className="text-2xl text-purple-500 animate-spin" />
+            <CgSpinner className="text-2xl text-sky-500 animate-spin" />
           ) : (
             (user && user.success) || (
               <p
                 onClick={() => {
                   guardianModalOpen();
                 }}
-                className="bg-purple-500 hover:bg-purple-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90 w-max cursor-pointer"
+                className="bg-sky-500 hover:bg-sky-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90 w-max cursor-pointer"
               >
                 Guardian&apos;s query
               </p>
@@ -205,7 +205,7 @@ const NavBar = () => {
           </Link> */}
           {/* </p> */}
           {loading ? (
-            <CgSpinner className="text-2xl text-purple-500 animate-spin" />
+            <CgSpinner className="text-2xl text-sky-500 animate-spin" />
           ) : (
             (user && user.success) || (
               <p
@@ -213,7 +213,7 @@ const NavBar = () => {
                   setIsSideBarOpen(false);
                   guardianModalOpen();
                 }}
-                className="bg-purple-500 hover:bg-purple-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90 w-max cursor-pointer"
+                className="bg-sky-500 hover:bg-sky-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90 w-max cursor-pointer"
               >
                 Guardian&apos;s query
               </p>
