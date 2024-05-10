@@ -41,7 +41,7 @@ const NavBar = () => {
           alt="Logo"
           className="h-20 w-20 p-1 rounded-full"
         />
-        <div className="flex items-center justify-center gap-5 md:gap-10">
+        <div className="flex items-center justify-center gap-5 md:gap-11">
           <p className="">
             <Link href="/">Home</Link>
           </p>

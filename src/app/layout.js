@@ -1,10 +1,10 @@
 import Footer from "@/Components/Footer/Footer";
+import NavBar from "@/Components/NavBar/NavBar.jsx";
 import ContextProvider from "@/providers/ContextProvider";
 import TanstackProvider from "@/providers/TanstackProvider";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "react-tooltip/dist/react-tooltip.css";
-import NavBar from "../Components/NavBar/NavBar";
 import "./globals.css";
 
 // const inter = Inter({ subsets: ["latin"] });

@@ -17,8 +17,8 @@ import ManagerDetails from "./ManagerDetails";
 import ManagerMealRate from "./ManagerMealRate";
 import ManagerSettings from "./ManagerSettings";
 import ManagersOfOwner from "./ManagersOfOwner";
-import Navbar from "./Navbar";
 import ProfileDetails from "./ProfileDetails";
+import ProfileNavbar from "./ProfileNavbar";
 
 const Profile = () => {
   const { user, userRefetch, manager } = useContext(AuthContext);
@@ -503,7 +503,7 @@ const Profile = () => {
         )}
       </Modal>
       {/*//! NavBar Panel  */}
-      <Navbar
+      <ProfileNavbar
         logout={logout}
         loggingOut={loggingOut}
         user={user}

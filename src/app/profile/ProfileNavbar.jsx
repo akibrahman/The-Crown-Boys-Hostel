@@ -1,6 +1,6 @@
 import { CgSpinner } from "react-icons/cg";
 
-const Navbar = ({
+const ProfileNavbar = ({
   logout,
   loggingOut,
   user,
@@ -37,4 +37,4 @@ const Navbar = ({
   );
 };
 
-export default Navbar;
+export default ProfileNavbar;
