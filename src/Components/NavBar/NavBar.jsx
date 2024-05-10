@@ -4,7 +4,6 @@ import { AuthContext } from "@/providers/ContextProvider";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaBars, FaTimes } from "react-icons/fa";
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
@@ -13,6 +12,8 @@ const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
   const [deviceWidth, setDeviceWidth] = useState(0);
+
+  const [guardianMoadl, setGuardianModal] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -27,8 +28,25 @@ const NavBar = () => {
       };
     }
   }, []);
+  const guardianModalOpen = () => {
+    setGuardianModal(true);
+  };
+  const guardianModalClose = () => {
+    setGuardianModal(false);
+  };
   return (
-    <div className="">
+    <div className="relative">
+      {/* Modal  */}
+      {guardianMoadl && (
+        <div className="z-50 fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.7)] flex items-center justify-center">
+          <div className="w-[90%] h-[90%] dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white relative">
+            <FaTimes
+              onClick={guardianModalClose}
+              className="text-xl absolute top-5 right-5 cursor-pointer"
+            />
+          </div>
+        </div>
+      )}
       {/*//! For Desktop  */}
       <div
         className={`${
@@ -77,7 +95,7 @@ const NavBar = () => {
             (user && user.success) || (
               <p
                 onClick={() => {
-                  toast.success("Comming soon!");
+                  guardianModalOpen();
                 }}
                 className="bg-purple-500 hover:bg-purple-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90 w-max cursor-pointer"
               >
@@ -143,6 +161,7 @@ const NavBar = () => {
               Home
             </Link>
           </p>
+
           {loading
             ? null
             : user &&
@@ -185,6 +204,21 @@ const NavBar = () => {
             Our Gallery
           </Link> */}
           {/* </p> */}
+          {loading ? (
+            <CgSpinner className="text-2xl text-purple-500 animate-spin" />
+          ) : (
+            (user && user.success) || (
+              <p
+                onClick={() => {
+                  setIsSideBarOpen(false);
+                  guardianModalOpen();
+                }}
+                className="bg-purple-500 hover:bg-purple-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90 w-max cursor-pointer"
+              >
+                Guardian&apos;s query
+              </p>
+            )
+          )}
           {loading ? (
             <CgSpinner className="text-2xl text-sky-500 animate-spin" />
           ) : user && user.success ? (
