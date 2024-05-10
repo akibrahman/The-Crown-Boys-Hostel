@@ -4,6 +4,7 @@ import { AuthContext } from "@/providers/ContextProvider";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaBars, FaTimes } from "react-icons/fa";
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
@@ -69,6 +70,22 @@ const NavBar = () => {
             Our Gallery
           </Link> */}
           {/* </p> */}
+
+          {loading ? (
+            <CgSpinner className="text-2xl text-purple-500 animate-spin" />
+          ) : (
+            (user && user.success) || (
+              <p
+                onClick={() => {
+                  toast.success("Comming soon!");
+                }}
+                className="bg-purple-500 hover:bg-purple-600 text-stone-900 font-bold px-4 py-1 rounded-lg duration-300 active:scale-90 w-max cursor-pointer"
+              >
+                Guardian&apos;s query
+              </p>
+            )
+          )}
+
           {loading ? (
             <CgSpinner className="text-2xl text-sky-500 animate-spin" />
           ) : user && user.success ? (
