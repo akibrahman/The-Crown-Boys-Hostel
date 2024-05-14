@@ -16,12 +16,26 @@ const page = () => {
   ];
   return (
     <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-stone-300">
+      <div className="flex flex-col md:flex-row gap-3 items-center justify-center pt-4">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-3">
+          <p className="md:font-medium underline">
+            বুকিং এর জন্যে পাশের বাটনে ক্লিক করে কল করুনঃ
+          </p>{" "}
+          <a
+            href="tel:8801788422002"
+            className="duration-300 px-3 py-1 bg-green-600 text-white font-medium active:scale-90 cursor-pointer select-none inline-block w-max"
+          >
+            Call Us
+          </a>
+        </div>
+        <p>অথবা, ডায়াল করুন -- 01788422002</p>
+      </div>
       <Image
-        src="/images/WebSite.png"
+        src="/images/aboutUsBanner.png"
         alt="About page banner picture"
         height={300}
-        width={1200}
-        className="mx-auto"
+        width={800}
+        className="mx-auto px-8 md:p-0 mt-5 md:mt-0"
       />
       <p className="w-[95%] md:w-[80%] mx-auto text-justify mt-4 text-[#c7cecf] leading-7 md:leading-9">
         <span className="text-5xl">ঢা</span>কার উত্তরা-১০ কামারপাড়া রোড-১৬ এ
