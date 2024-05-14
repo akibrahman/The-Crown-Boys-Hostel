@@ -15,7 +15,7 @@ const page = () => {
     "/images/room/10.jpg",
   ];
   return (
-    <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-stone-300">
+    <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300">
       <div className="flex flex-col md:flex-row gap-3 items-center justify-center pt-4">
         <div className="flex flex-col md:flex-row items-center justify-center gap-3">
           <p className="md:font-medium underline">
@@ -35,7 +35,7 @@ const page = () => {
         alt="About page banner picture"
         height={300}
         width={800}
-        className="mx-auto px-8 md:p-0 mt-5 md:mt-0"
+        className="mx-auto px-8 md:p-0 mt-5"
       />
       <p className="w-[95%] md:w-[80%] mx-auto text-justify mt-4 text-[#c7cecf] leading-7 md:leading-9">
         <span className="text-5xl">ঢা</span>কার উত্তরা-১০ কামারপাড়া রোড-১৬ এ
