@@ -37,6 +37,12 @@ const ManagerSettings = ({ user }) => {
             Meal Updator
           </button>
         </Link>
+        <Link href="/RFIDIssue">
+          <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[200px] flex items-center gap-5">
+            <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
+            RFID Section
+          </button>
+        </Link>
       </div>
     </div>
   ) : user.role === "manager" && !user.isVerified ? (
