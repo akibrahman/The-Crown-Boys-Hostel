@@ -9,7 +9,9 @@ export const POST = async (req) => {
     const body = await req.json();
     const newRFID = new RFID({
       cardId: body.cardId,
-      createdAt: body.createdAt,
+      createdAt: new Date().toISOString("en-US", {
+        timeZone: "Asia/Dhaka",
+      }),
     });
     await newRFID.save();
     return NextResponse.json({

@@ -3,12 +3,14 @@
 import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
 
 const RFIDIssue = () => {
+  const route = useRouter();
   const { user } = useContext(AuthContext);
   const [loading, setloading] = useState(true);
   const { data: rfids, refetch: rfidsRefetch } = useQuery({
@@ -40,6 +42,9 @@ const RFIDIssue = () => {
   const issueCard = async (id) => {
     toast.success("Comming soon !");
   };
+  if (!user) {
+    route.push("/");
+  }
   return (
     <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300">
       <p className="text-center py-5 text-lg">RFID Issue</p>
@@ -48,7 +53,6 @@ const RFIDIssue = () => {
           try {
             const { data } = await axios.post("/api/rfid", {
               cardId: "EE FF GG HH",
-              createdAt: new Date().toISOString(),
             });
             if (data.success) {
               await rfidsRefetch();
