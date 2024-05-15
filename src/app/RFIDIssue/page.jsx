@@ -1,5 +1,6 @@
 "use client";
 
+import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -42,9 +43,8 @@ const RFIDIssue = () => {
   const issueCard = async (id) => {
     toast.success("Comming soon !");
   };
-  if (!user) {
-    route.push("/");
-  }
+  if (!user) return <PreLoader />;
+  if (user?.success == false || user?.role != "manager") return route.push("/");
   return (
     <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300">
       <p className="text-center py-5 text-lg">RFID Issue</p>
