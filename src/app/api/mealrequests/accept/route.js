@@ -48,7 +48,11 @@ export const POST = async (req) => {
     });
     //! SMS
 
-    return NextResponse.json({ msg: "Acception successfully", success: true });
+    return NextResponse.json({
+      msg: "Acception successfully",
+      data: [process.env.SMS_API_KEY, contactNumber],
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ msg: error.message, success: false });

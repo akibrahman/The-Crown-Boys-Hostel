@@ -51,6 +51,7 @@ const MealChangeRequests = () => {
           });
           if (data.success) {
             toast.success(data.msg);
+            console.log(data);
           }
         } catch (error) {
           console.log(error);
