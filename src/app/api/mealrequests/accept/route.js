@@ -50,7 +50,6 @@ export const POST = async (req) => {
 
     return NextResponse.json({
       msg: "Acception successfully",
-      data: [process.env.SMS_API_KEY, contactNumber],
       success: true,
     });
   } catch (error) {

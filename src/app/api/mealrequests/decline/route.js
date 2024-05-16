@@ -13,11 +13,7 @@ export const POST = async (req) => {
     const request = await MealRequest.findById(reqId);
     const user = await User.findById(order.userId);
     const { contactNumber, username } = user;
-    const message = `Hi ${username},\nYour meal change request has been declined\nDate: ${
-      order.date
-    }\nMeal: ${reqData
-      .map((meal) => meal)
-      .join(", ")}\n\nThe Crown Boys Hostel`;
+    const message = `Hi ${username},\nSorry to inform you that your meal change request has been declined\nDate: ${order.date}\n\nThe Crown Boys Hostel`;
     order.isRequested = false;
     request.isResponded = true;
     request.isAccepted = false;
