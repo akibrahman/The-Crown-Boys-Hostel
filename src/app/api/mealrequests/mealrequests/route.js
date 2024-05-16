@@ -75,6 +75,7 @@ export const GET = async (req) => {
       {
         $sort: {
           isResponded: 1,
+          _id: -1,
         },
       },
     ];

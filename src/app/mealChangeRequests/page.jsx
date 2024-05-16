@@ -26,13 +26,16 @@ const MealChangeRequests = () => {
 
   const accept = async (orderId, reqId, breakfast, lunch, dinner) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
+      title: "Do you want to accept this request?",
+      // text: "You won't be able to revert this!",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "#1493EA",
+      cancelButtonColor: "#EF4444",
+      confirmButtonText: "Accept",
+      cancelButtonText: "No",
+      background: "#141E30",
+      color: "#fff",
     }).then(async (result) => {
       if (result.isConfirmed) {
         let reqData = [];
@@ -61,13 +64,16 @@ const MealChangeRequests = () => {
   };
   const decline = async (orderId, reqId) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "Do you want to decline this request?",
+      // text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "#1493EA",
+      cancelButtonColor: "#EF4444",
+      confirmButtonText: "Decline",
+      cancelButtonText: "No",
+      background: "#141E30",
+      color: "#fff",
     }).then(async (result) => {
       if (result.isConfirmed) {
         setIsDeclining([true, reqId]);

@@ -70,7 +70,7 @@ export const GET = async (req) => {
           today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
       };
     };
-    const test = false;
+    const test = true;
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
@@ -97,54 +97,66 @@ export const GET = async (req) => {
         timeZone: "Asia/Dhaka",
       });
 
-      const transportGmail = nodemailer.createTransport({
-        service: "gmail",
-        host: "smtp.gmail.com",
-        port: 465,
+      const transportCustom = nodemailer.createTransport({
+        // service: "gmail",
+        host: "smtp.elasticemail.com",
+        port: 2525,
         secure: true,
         auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_APP_PASS,
+          user: "info@thecrownboyshostel.com",
+          pass: "642B40A38D336FF0201B74AC257AB90A13D0",
         },
       });
-      const allUsers = await User.find({ role: "client" });
-      for (let x = 0; x < allUsers.length; x++) {
-        //! SMS
-        const url = "http://bulksmsbd.net/api/smsapi";
-        const apiKey = process.env.SMS_API_KEY;
-        const senderId = "8809617618230";
-        const numbers = allUsers[x].contactNumber;
-        // const message = `Hi, Mr. Akib Rahman\nYour monthly bill has been created\nPlease check your E-mail properly with spam box to get details.\n\nThe Crown Boys Hostel`;
-        const message = `Hi, Mr. ${allUsers[x].username}\nGood Evening\n\nThe Crown Boys Hostel`;
-        const smsClientData = {
-          api_key: apiKey,
-          senderid: senderId,
-          number: numbers,
-          message: message,
-        };
-        const ress = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(smsClientData),
-        });
-        console.log(ress.ok);
-        //! SMS
-        await delay(1000);
-        const mailOptions = {
-          to: allUsers[x].email,
-          subject: "Test E-mail from Akib Rahman",
-          html: `<div>
+      const mailOptions = {
+        to: "akibrahman5200@gmail.com",
+        subject: "Test E-mail from SMTP",
+        html: `<div>
           <p><b>Current Month : ${currentMonth}</b></p>
           <p><b>Current Year : ${currentYear}</b></p>
           <p><b>Current Date : ${currentDate}</b></p>
           <p><b>Current Time : ${currentTime}</b></p>
           </div>`,
-        };
-        await transportGmail.sendMail(mailOptions);
-        await delay(1000);
-      }
+      };
+      await transportCustom.sendMail(mailOptions);
+
+      // const allUsers = await User.find({ role: "client" });
+      // for (let x = 0; x < allUsers.length; x++) {
+      //   //! SMS
+      //   const url = "http://bulksmsbd.net/api/smsapi";
+      //   const apiKey = process.env.SMS_API_KEY;
+      //   const senderId = "8809617618230";
+      //   const numbers = allUsers[x].contactNumber;
+      //   // const message = `Hi, Mr. Akib Rahman\nYour monthly bill has been created\nPlease check your E-mail properly with spam box to get details.\n\nThe Crown Boys Hostel`;
+      //   const message = `Hi, Mr. ${allUsers[x].username}\nGood Evening\n\nThe Crown Boys Hostel`;
+      //   const smsClientData = {
+      //     api_key: apiKey,
+      //     senderid: senderId,
+      //     number: numbers,
+      //     message: message,
+      //   };
+      //   const ress = await fetch(url, {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(smsClientData),
+      //   });
+      //   console.log(ress.ok);
+      //   //! SMS
+      //   await delay(1000);
+      //   const mailOptions = {
+      //     to: allUsers[x].email,
+      //     subject: "Test E-mail from Akib Rahman",
+      //     html: `<div>
+      //     <p><b>Current Month : ${currentMonth}</b></p>
+      //     <p><b>Current Year : ${currentYear}</b></p>
+      //     <p><b>Current Date : ${currentDate}</b></p>
+      //     <p><b>Current Time : ${currentTime}</b></p>
+      //     </div>`,
+      //   };
+      //   await transportGmail.sendMail(mailOptions);
+      //   await delay(1000);
+      // }
       console.log("-------------------> Ended");
     }
     //! Last day of any month------------------------------
