@@ -19,7 +19,6 @@ const MealChangeRequests = () => {
       return data;
     },
   });
-  console.log(mealRequests);
 
   const [isDeclining, setIsDeclining] = useState([false, ""]);
   const [isAccepting, setIsAccepting] = useState([false, ""]);
