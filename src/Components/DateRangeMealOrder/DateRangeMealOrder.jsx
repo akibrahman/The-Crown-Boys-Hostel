@@ -255,7 +255,8 @@ const DateRangeMealOrder = ({
                     onClick={() =>
                       breakfast === 1 ? setBreakfast(0) : setBreakfast(1)
                     }
-                    className={`text-stone-300 font-medium w-[100px] h-[50px] rounded cursor-pointer duration-300 active:scale-90 ${
+                    style={{ height: "50px" }}
+                    className={`text-stone-300 font-medium w-[100px] rounded cursor-pointer duration-300 active:scale-90 ${
                       breakfast === 1 ? "bg-green-500" : "bg-stone-800"
                     }`}
                   >
@@ -265,7 +266,8 @@ const DateRangeMealOrder = ({
                     onClick={() =>
                       breakfast === -1 ? setBreakfast(0) : setBreakfast(-1)
                     }
-                    className={`text-stone-300 font-medium w-[100px] h-[50px] rounded cursor-pointer duration-300 active:scale-90 ${
+                    style={{ height: "50px" }}
+                    className={`text-stone-300 font-medium w-[100px] rounded cursor-pointer duration-300 active:scale-90 ${
                       breakfast === -1 ? "bg-red-500" : "bg-stone-800"
                     }`}
                   >
@@ -280,7 +282,8 @@ const DateRangeMealOrder = ({
                 <div className="flex gap-4 items-center">
                   <button
                     onClick={() => (lunch === 1 ? setLunch(0) : setLunch(1))}
-                    className={`text-stone-300 font-medium w-[100px] h-[50px] rounded cursor-pointer duration-300 active:scale-90 ${
+                    style={{ height: "50px" }}
+                    className={`text-stone-300 font-medium w-[100px] rounded cursor-pointer duration-300 active:scale-90 ${
                       lunch === 1 ? "bg-green-500" : "bg-stone-800"
                     }`}
                   >
@@ -288,7 +291,8 @@ const DateRangeMealOrder = ({
                   </button>
                   <button
                     onClick={() => (lunch === -1 ? setLunch(0) : setLunch(-1))}
-                    className={`text-stone-300 font-medium w-[100px] h-[50px] rounded cursor-pointer duration-300 active:scale-90 ${
+                    style={{ height: "50px" }}
+                    className={`text-stone-300 font-medium w-[100px] rounded cursor-pointer duration-300 active:scale-90 ${
                       lunch === -1 ? "bg-red-500" : "bg-stone-800"
                     }`}
                   >
@@ -302,7 +306,8 @@ const DateRangeMealOrder = ({
                 <div className="flex gap-4 items-center">
                   <button
                     onClick={() => (dinner === 1 ? setDinner(0) : setDinner(1))}
-                    className={`text-stone-300 font-medium w-[100px] h-[50px] rounded cursor-pointer duration-300 active:scale-90 ${
+                    style={{ height: "50px" }}
+                    className={`text-stone-300 font-medium w-[100px] rounded cursor-pointer duration-300 active:scale-90 ${
                       dinner === 1 ? "bg-green-500" : "bg-stone-800"
                     }`}
                   >
@@ -312,7 +317,8 @@ const DateRangeMealOrder = ({
                     onClick={() =>
                       dinner === -1 ? setDinner(0) : setDinner(-1)
                     }
-                    className={`text-stone-300 font-medium w-[100px] h-[50px] rounded cursor-pointer duration-300 active:scale-90 ${
+                    style={{ height: "50px" }}
+                    className={`text-stone-300 font-medium w-[100px] rounded cursor-pointer duration-300 active:scale-90 ${
                       dinner === -1 ? "bg-red-500" : "bg-stone-800"
                     }`}
                   >
