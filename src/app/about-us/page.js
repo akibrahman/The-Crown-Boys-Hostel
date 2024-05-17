@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Marquee from "react-fast-marquee";
 
 const page = () => {
@@ -20,7 +21,7 @@ const page = () => {
         <div className="flex flex-col md:flex-row items-center justify-center gap-3">
           <p className="md:font-medium underline">
             বুকিং এর জন্যে পাশের বাটনে ক্লিক করে কল করুনঃ
-          </p>{" "}
+          </p>
           <a
             href="tel:8801788422002"
             className="duration-300 px-3 py-1 bg-green-600 text-white font-medium active:scale-90 cursor-pointer select-none inline-block w-max"
@@ -37,10 +38,21 @@ const page = () => {
         width={800}
         className="mx-auto px-8 md:p-0 mt-5"
       />
+      <div className="flex flex-col md:flex-row items-center justify-center gap-3 mt-8">
+        <p className="md:font-medium underline">
+          রুম সম্পর্কে বিস্তারিত জানতে অথবা বুকিং এর জন্যে পাশের বাটনে ক্লিক
+          করুনঃ
+        </p>
+        <Link href={"/rooms"}>
+          <button className="duration-300 px-3 py-1 bg-green-600 text-white font-medium active:scale-90 cursor-pointer select-none inline-block w-max">
+            Book now
+          </button>
+        </Link>
+      </div>
       <div className="w-[95%] md:w-[80%] mx-auto flex flex-col md:flex-row gap-10 mt-10">
         <Image
           src="/images/aboutUsPoster.png"
-          alt="About page banner picture"
+          alt="About page poster picture"
           height={100}
           width={400}
           className="w-[300px] md:w-[400px] mx-auto"

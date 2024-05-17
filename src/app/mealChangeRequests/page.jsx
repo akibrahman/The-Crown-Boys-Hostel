@@ -1,10 +1,12 @@
 "use client";
 
 import PreLoader from "@/Components/PreLoader/PreLoader";
+import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaArrowRight, FaTimes } from "react-icons/fa";
@@ -12,12 +14,15 @@ import { TiTick } from "react-icons/ti";
 import Swal from "sweetalert2";
 
 const MealChangeRequests = () => {
+  const { user } = useContext(AuthContext);
+  const route = useRouter();
   const { data: mealRequests, refetch: mealRequestsRefetch } = useQuery({
     queryKey: ["mealRequests", "manager"],
     queryFn: async () => {
       const { data } = await axios.get(`/api/mealrequests/mealrequests`);
       return data;
     },
+    enabled: user && user?.role == "manager" ? true : false,
   });
 
   const [isDeclining, setIsDeclining] = useState([false, ""]);
@@ -96,6 +101,8 @@ const MealChangeRequests = () => {
     });
   };
 
+  if (!user) return <PreLoader />;
+  if (user?.success == false || user?.role != "manager") return route.push("/");
   if (!mealRequests) return <PreLoader />;
   return (
     <div className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white min-h-screen pb-32">

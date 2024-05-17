@@ -1,10 +1,12 @@
 "use client";
 
+import DateRangeMealOrder from "@/Components/DateRangeMealOrder/DateRangeMealOrder";
 import MealRequest from "@/Components/MealRequest/MealRequest";
 import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
 import moment from "moment";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
@@ -14,6 +16,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { LuCalendarPlus } from "react-icons/lu";
 import "../globals.css";
 const Order = () => {
+  const route = useRouter();
   const { user } = useContext(AuthContext);
   const [breakfast, setBreakfast] = useState(false);
   const [lunch, setLunch] = useState(false);
@@ -27,6 +30,7 @@ const Order = () => {
   const [order, setOrder] = useState(null);
 
   const [requestPopUp, setRequestPopUp] = useState(false);
+  const [requestPopUp2, setRequestPopUp2] = useState(false);
 
   const currentMonthNumber =
     parseInt(
@@ -219,6 +223,7 @@ const Order = () => {
     }
   };
   if (!user) return <PreLoader />;
+  if (user?.success == false) return route.push("/signin");
 
   return (
     <div className="relative dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white min-h-screen">
@@ -227,6 +232,15 @@ const Order = () => {
         requestPopUp={requestPopUp}
         setRequestPopUp={setRequestPopUp}
         currentMonth={currentMonth}
+        currentYear={currentYear}
+        user={user}
+      />
+      <DateRangeMealOrder
+        requestPopUp={requestPopUp2}
+        setRequestPopUp={setRequestPopUp2}
+        currentDate={currentDate}
+        currentMonth={currentMonth}
+        currentMonthNumber={currentMonthNumber}
         currentYear={currentYear}
         user={user}
       />
@@ -258,13 +272,22 @@ const Order = () => {
               yearPlaceholder="----"
               onChange={(e) => dateSelected(e)}
             />
-            <p
-              onClick={() => setRequestPopUp(true)}
-              className="font-semibold text-blue-500 underline flex items-center gap-1 group cursor-pointer"
-            >
-              Request Meal Change
-              <FaArrowRight className="text-xl duration-300 group-hover:translate-x-2" />
-            </p>
+            <div className="space-y-4 text-lg">
+              <p
+                onClick={() => setRequestPopUp2(true)}
+                className="font-semibold text-green-500 underline flex items-center gap-1 group cursor-pointer"
+              >
+                Date Range Order
+                <FaArrowRight className="text-xl duration-300 group-hover:translate-x-2" />
+              </p>
+              <p
+                onClick={() => setRequestPopUp(true)}
+                className="font-semibold text-blue-500 underline flex items-center gap-1 group cursor-pointer"
+              >
+                Request Meal Change
+                <FaArrowRight className="text-xl duration-300 group-hover:translate-x-2" />
+              </p>
+            </div>
           </div>
           {/* Meal Switch  */}
           <div className="grid grid-cols-1 md:grid-cols-3 align-middle gap-10 md:gap-4 px-10 md:px-20">

@@ -155,7 +155,7 @@ const MealRequest = ({
     setRequestPopUp(false);
   };
 
-  if (!myMealRequests) return <PreLoader />;
+  if (!myMealRequests && requestPopUp) return <PreLoader />;
   return (
     <Modal
       isOpen={requestPopUp}
@@ -303,7 +303,7 @@ const MealRequest = ({
           </div>
         ) : (
           <div className="w-[90%] mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-            {myMealRequests.map((req) => (
+            {myMealRequests?.map((req) => (
               <div
                 className={`bg-stone-800 rounded-md shadow-inner p-6 relative ${
                   !req.isResponded

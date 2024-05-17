@@ -33,7 +33,7 @@ const NavBar = () => {
       <div
         className={`${
           deviceWidth <= 500 ? "hidden" : "flex"
-        } dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10`}
+        } dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-stone-300 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10`}
       >
         <Image
           src="/images/logo.png"
