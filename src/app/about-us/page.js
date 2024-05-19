@@ -38,7 +38,7 @@ const page = () => {
         width={800}
         className="mx-auto px-8 md:p-0 mt-5"
       />
-      <div className="flex flex-col md:flex-row items-center justify-center gap-3 mt-8">
+      <div className="hidden flex-col md:flex-row items-center justify-center gap-3 mt-8">
         <p className="md:font-medium underline">
           রুম সম্পর্কে বিস্তারিত জানতে অথবা বুকিং এর জন্যে পাশের বাটনে ক্লিক
           করুনঃ

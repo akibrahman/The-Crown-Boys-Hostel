@@ -1,5 +1,6 @@
 import { getClient } from "@/lib/blogs";
 import Image from "next/image";
+import Link from "next/link";
 
 const page = async ({ params }) => {
   const { id } = params;
@@ -8,7 +9,7 @@ const page = async ({ params }) => {
   return (
     <div className="min-h-screen dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white font-semibold">
       <div class="bg-gray-100 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
-        <div class="container mx-auto px-4 py-16">
+        <div class="container mx-auto px-4 pb-16 pt-16">
           <div class="flex flex-wrap -mx-3">
             <div class="lg:w-1/3 md:w-1/2 px-3 mb-6 md:mb-0">
               <div class="flex flex-col items-center text-center">
@@ -35,6 +36,11 @@ const page = async ({ params }) => {
                 <p class="text-gray-600 dark:text-gray-400">
                   Authentication: {client.nidAuth ? "NID" : "Birth Certificate"}
                 </p>
+                <Link href={`/userDetails/edit/${client._id}`}>
+                  <button className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-red-500 active:scale-90 mt-3">
+                    Edit
+                  </button>
+                </Link>
               </div>
             </div>
             <div class="lg:w-2/3 md:w-1/2 px-3">
@@ -42,61 +48,65 @@ const page = async ({ params }) => {
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-gray-700 font-bold mb-2"
-                    for="grid-city"
+                    for="messAddress"
                   >
                     Mess Address
                   </label>
                   <input
                     readOnly
                     class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="grid-city"
+                    name="messAddress"
+                    id="messAddress"
                     type="text"
-                    value={client.messAddress}
+                    defaultValue={client.messAddress}
                   />
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-gray-700 font-bold mb-2"
-                    for="grid-state"
+                    for="institution"
                   >
                     Institution
                   </label>
                   <input
                     readOnly
                     class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="grid-state"
+                    name="institution"
+                    id="institution"
                     type="text"
-                    value={client.institution}
+                    defaultValue={client.institution}
                   />
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-gray-700 font-bold mb-2"
-                    for="grid-zip"
+                    for="floor"
                   >
                     Floor Number
                   </label>
                   <input
                     readOnly
                     class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="grid-zip"
+                    id="floor"
+                    name="floor"
                     type="text"
-                    value={`${client.floor} th Floor`}
+                    defaultValue={`${client.floor} th Floor`}
                   />
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-gray-700 font-bold mb-2"
-                    for="grid-state"
+                    for="roomNumber"
                   >
                     Room Number
                   </label>
                   <input
                     readOnly
                     class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="grid-state"
+                    id="roomNumber"
+                    name="roomNumber"
                     type="text"
-                    value={
+                    defaultValue={
                       client.roomNumber.split("")[0].toUpperCase() +
                       " " +
                       client.roomNumber.split("")[1]
@@ -106,31 +116,65 @@ const page = async ({ params }) => {
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-gray-700 font-bold mb-2"
-                    for="grid-state"
+                    for="utilityCharge"
+                  >
+                    Utility Charge
+                  </label>
+                  <input
+                    readOnly
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="utilityCharge"
+                    name="utilityCharge"
+                    type="text"
+                    defaultValue={client.utilityCharge}
+                  />
+                </div>
+                <div class="lg:w-1/2 md:w-full px-3 mb-6">
+                  <label
+                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    for="wifiCharge"
+                  >
+                    Wifi Charge
+                  </label>
+                  <input
+                    readOnly
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="wifiCharge"
+                    name="wifiCharge"
+                    type="text"
+                    defaultValue={client.wifiCharge}
+                  />
+                </div>
+                <div class="lg:w-1/2 md:w-full px-3 mb-6">
+                  <label
+                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    for="bloodGroup"
                   >
                     Blood Group
                   </label>
                   <input
                     readOnly
                     class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="grid-state"
+                    id="bloodGroup"
+                    name="bloodGroup"
                     type="text"
-                    value={client.bloodGroup}
+                    defaultValue={client.bloodGroup}
                   />
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-gray-700 font-bold mb-2"
-                    for="grid-state"
+                    for="studentId"
                   >
                     Student or Job ID
                   </label>
                   <input
                     readOnly
                     class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="grid-state"
+                    id="studentId"
+                    name="studentId"
                     type="text"
-                    value={client.studentId}
+                    defaultValue={client.studentId}
                   />
                 </div>
               </div>

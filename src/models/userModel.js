@@ -61,6 +61,14 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  wifiCharge: {
+    type: Number,
+    default: 0,
+  },
+  utilityCharge: {
+    type: Number,
+    default: 0,
+  },
   files: {
     type: [{ path: String, link: String, fileType: String }],
     default: [],
