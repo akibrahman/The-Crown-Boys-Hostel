@@ -1,16 +1,25 @@
 "use client";
 
 import PreLoader from "@/Components/PreLoader/PreLoader";
+import { base64 } from "@/utils/base64";
+import { imageUpload } from "@/utils/imageUpload";
+import { makeFile } from "@/utils/makeFile";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
+import { CiImageOn } from "react-icons/ci";
 
 const Page = ({ params }) => {
   const { id } = params;
   console.log(id);
-  // const client = await getClient(id);
-  const { data: client } = useQuery({
+
+  const [newProfilePictureUploading, setNewProfilePictureUploading] =
+    useState(false);
+
+  const { data: client, refetch: clientRefetch } = useQuery({
     queryKey: ["userEdit", id],
     queryFn: async () => {
       const { data } = await axios.get(`/api/clients/getclient?id=${id}`);
@@ -88,6 +97,82 @@ const Page = ({ params }) => {
     }
   };
 
+  const [newPhotos, setNewPhotos] = useState({
+    profilePicture: "",
+    nidFront: "",
+    nidBack: "",
+    birthCertificate: "",
+  });
+
+  const selectingNewProfilePicture = async (e, target) => {
+    if (e.target.files[0]) {
+      if (target == "profilePicture") {
+        const base = await base64(e.target.files[0]);
+        setNewPhotos({ ...newPhotos, profilePicture: base });
+      } else if (target == "nidFront") {
+        const base = await base64(e.target.files[0]);
+        setNewPhotos({ ...newPhotos, nidFront: base });
+      } else if (target == "nidBack") {
+        const base = await base64(e.target.files[0]);
+        setNewPhotos({ ...newPhotos, nidBack: base });
+      }
+    }
+  };
+
+  const newPictureUploader = async (target) => {
+    setNewProfilePictureUploading(true);
+    let newPictureFile;
+    let newPictureUrl;
+    let newData = {};
+    if (target == "profilePicture") {
+      newPictureFile = await makeFile(
+        newPhotos.profilePicture,
+        `New Profile Picture of ${client.username}`,
+        "image/png"
+      );
+      newPictureUrl = await imageUpload(newPictureFile);
+      newData = { profilePicture: newPictureUrl };
+    } else if (target == "nidFront") {
+      newPictureFile = await makeFile(
+        newPhotos.nidFront,
+        `New Nid Front Picture of ${client.username}`,
+        "image/png"
+      );
+      newPictureUrl = await imageUpload(newPictureFile);
+      newData = { nidFrontPicture: newPictureUrl };
+    } else if (target == "nidBack") {
+      newPictureFile = await makeFile(
+        newPhotos.nidBack,
+        `New Nid Back Picture of ${client.username}`,
+        "image/png"
+      );
+      newPictureUrl = await imageUpload(newPictureFile);
+      newData = { nidBackPicture: newPictureUrl };
+    }
+    try {
+      const { data } = await axios.put("/api/clients/editclient", {
+        changedData: newData,
+        _id: client._id,
+      });
+      if (data.success) {
+        await clientRefetch();
+        toast.success(data.msg);
+      }
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.msg);
+    } finally {
+      setNewProfilePictureUploading(false);
+      setNewPhotos({
+        profilePicture: "",
+        nidFront: "",
+        nidBack: "",
+        birthCertificate: "",
+      });
+    }
+  };
+
   if (!client) return <PreLoader />;
 
   return (
@@ -98,13 +183,71 @@ const Page = ({ params }) => {
           <form onSubmit={handleSave} class="flex flex-wrap -mx-3">
             <div class="lg:w-1/3 md:w-1/2 px-3 mb-6 md:mb-0">
               <div class="flex flex-col justify-center items-center">
-                <Image
-                  alt="User Profile"
-                  width={100}
-                  height={100}
-                  class="w-48 h-48 rounded-full mb-3"
-                  src={client.profilePicture}
-                />
+                <div className="w-48 h-48 rounded-full mb-3 relative group">
+                  <Image
+                    alt="User Profile"
+                    width={192}
+                    height={192}
+                    class="w-48 h-48 rounded-full"
+                    src={
+                      newPhotos.profilePicture
+                        ? newPhotos.profilePicture
+                        : client.profilePicture
+                    }
+                  />
+                  <input
+                    onChange={(e) =>
+                      selectingNewProfilePicture(e, "profilePicture")
+                    }
+                    accept="image/*"
+                    type="file"
+                    name="newProfilePicture"
+                    id="newProfilePicture"
+                    className="hidden"
+                  />
+                  {newPhotos.profilePicture == "" && (
+                    <label
+                      htmlFor="newProfilePicture"
+                      className={`h-full w-full top-0 bg-[rgba(0,0,0,0.7)] -z-10 group-hover:z-10 rounded-full duration-100 ease-linear cursor-pointer absolute overflow-hidden`}
+                    >
+                      <div className="w-full h-[2px] bg-white absolute top-[70%] left-1/2 -translate-x-1/2"></div>
+                      <p className="absolute top-[60%] left-1/2 -translate-x-1/2 text-xs">
+                        Click to change
+                      </p>
+                      <CiImageOn className="text-3xl absolute bottom-[10%] left-1/2 -translate-x-1/2" />
+                    </label>
+                  )}
+                  {newPhotos.profilePicture != "" && (
+                    <div
+                      // htmlFor="newProfilePicture"
+                      className={`h-full w-full top-0 bg-[rgba(0,0,0,0.7)] -z-10 group-hover:z-10 rounded-full duration-100 ease-linear cursor-pointer absolute overflow-hidden flex flex-col items-center justify-center gap-3`}
+                    >
+                      <p
+                        onClick={() => newPictureUploader("profilePicture")}
+                        className="px-2 py-1 bg-[rgba(0,0,0,0.5)] hover:scale-105 duration-300 text-stone-400 cursor-pointer select-none text-center active:scale-90"
+                      >
+                        {newProfilePictureUploading ? (
+                          <CgSpinner className="animate-spin" />
+                        ) : (
+                          "Save"
+                        )}
+                      </p>
+                      <label htmlFor="newProfilePicture">
+                        <p className="px-2 py-1 bg-[rgba(0,0,0,0.5)] hover:scale-105 duration-300 text-stone-400 cursor-pointer select-none active:scale-90">
+                          Change
+                        </p>
+                      </label>
+                      <p
+                        onClick={() =>
+                          setNewPhotos({ ...newPhotos, profilePicture: "" })
+                        }
+                        className="px-2 py-1 bg-[rgba(255,0,0,0.5)] hover:scale-105 duration-300 text-stone-400 cursor-pointer select-none active:scale-90"
+                      >
+                        Clear
+                      </p>
+                    </div>
+                  )}
+                </div>
                 <div class="w-full md:w-[280px] px-3 mb-2">
                   <label
                     class="block tracking-wide text-white font-bold mb-1"
@@ -338,26 +481,144 @@ const Page = ({ params }) => {
                 </div>
               </div>
               {client.nidAuth ? (
-                <div className="flex flex-col md:flex-row items-center justify-around">
-                  <div>
+                <div className="flex flex-col md:flex-row justify-around items-start">
+                  <div className="">
                     <p className="mb-2">NID Front</p>
-                    <Image
-                      src={client.nidFrontPicture}
-                      width={350}
-                      height={60}
-                      className="rounded-md"
-                      alt={`NID front of ${client.username}`}
-                    />
+                    <div className="rounded-md relative group">
+                      <Image
+                        src={
+                          newPhotos.nidFront
+                            ? newPhotos.nidFront
+                            : client.nidFrontPicture
+                        }
+                        width={350}
+                        height={60}
+                        className="rounded-md"
+                        alt={`NID front of ${client.username}`}
+                      />
+                      <input
+                        onChange={(e) =>
+                          selectingNewProfilePicture(e, "nidFront")
+                        }
+                        accept="image/*"
+                        type="file"
+                        name="newNidFront"
+                        id="newNidFront"
+                        className="hidden"
+                      />
+                      {newPhotos.nidFront == "" && (
+                        <label
+                          htmlFor="newNidFront"
+                          className={`h-full w-full top-0 bg-[rgba(0,0,0,0.7)] -z-10 group-hover:z-10 rounded-md duration-100 ease-linear cursor-pointer absolute overflow-hidden block`}
+                        >
+                          <div className="w-full h-[2px] bg-white absolute top-[70%] left-1/2 -translate-x-1/2"></div>
+                          <p className="absolute top-[60%] left-1/2 -translate-x-1/2 text-xs">
+                            Click to change
+                          </p>
+                          <CiImageOn className="text-3xl absolute bottom-[10%] left-1/2 -translate-x-1/2" />
+                        </label>
+                      )}
+
+                      {newPhotos.nidFront != "" && (
+                        <div
+                          // htmlFor="newProfilePicture"
+                          className={`h-full w-full top-0 bg-[rgba(0,0,0,0.7)] -z-10 group-hover:z-10 rounded-md duration-100 ease-linear cursor-pointer absolute overflow-hidden flex flex-col items-center justify-center gap-3`}
+                        >
+                          <p
+                            onClick={() => newPictureUploader("nidFront")}
+                            className="px-2 py-1 bg-[rgba(0,0,0,0.5)] hover:scale-105 duration-300 text-stone-400 cursor-pointer select-none text-center active:scale-90"
+                          >
+                            {newProfilePictureUploading ? (
+                              <CgSpinner className="animate-spin" />
+                            ) : (
+                              "Save"
+                            )}
+                          </p>
+                          <label htmlFor="newNidFront">
+                            <p className="px-2 py-1 bg-[rgba(0,0,0,0.5)] hover:scale-105 duration-300 text-stone-400 cursor-pointer select-none active:scale-90">
+                              Change
+                            </p>
+                          </label>
+                          <p
+                            onClick={() =>
+                              setNewPhotos({ ...newPhotos, nidFront: "" })
+                            }
+                            className="px-2 py-1 bg-[rgba(255,0,0,0.5)] hover:scale-105 duration-300 text-stone-400 cursor-pointer select-none active:scale-90"
+                          >
+                            Clear
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div>
                     <p className="mb-2">NID Back</p>
-                    <Image
-                      src={client.nidBackPicture}
-                      width={350}
-                      height={60}
-                      className="rounded-md"
-                      alt={`NID back of ${client.username}`}
-                    />
+                    <div className="rounded-md relative group">
+                      <Image
+                        src={
+                          newPhotos.nidBack
+                            ? newPhotos.nidBack
+                            : client.nidBackPicture
+                        }
+                        width={350}
+                        height={60}
+                        className="rounded-md"
+                        alt={`NID back of ${client.username}`}
+                      />
+                      <input
+                        onChange={(e) =>
+                          selectingNewProfilePicture(e, "nidBack")
+                        }
+                        accept="image/*"
+                        type="file"
+                        name="newNidBack"
+                        id="newNidBack"
+                        className="hidden"
+                      />
+                      {newPhotos.nidBack == "" && (
+                        <label
+                          htmlFor="newNidBack"
+                          className={`h-full w-full top-0 bg-[rgba(0,0,0,0.7)] -z-10 group-hover:z-10 rounded-md duration-100 ease-linear cursor-pointer absolute overflow-hidden block`}
+                        >
+                          <div className="w-full h-[2px] bg-white absolute top-[70%] left-1/2 -translate-x-1/2"></div>
+                          <p className="absolute top-[60%] left-1/2 -translate-x-1/2 text-xs">
+                            Click to change
+                          </p>
+                          <CiImageOn className="text-3xl absolute bottom-[10%] left-1/2 -translate-x-1/2" />
+                        </label>
+                      )}
+
+                      {newPhotos.nidBack != "" && (
+                        <div
+                          // htmlFor="newProfilePicture"
+                          className={`h-full w-full top-0 bg-[rgba(0,0,0,0.7)] -z-10 group-hover:z-10 rounded-md duration-100 ease-linear cursor-pointer absolute overflow-hidden flex flex-col items-center justify-center gap-3`}
+                        >
+                          <p
+                            onClick={() => newPictureUploader("nidBack")}
+                            className="px-2 py-1 bg-[rgba(0,0,0,0.5)] hover:scale-105 duration-300 text-stone-400 cursor-pointer select-none text-center active:scale-90"
+                          >
+                            {newProfilePictureUploading ? (
+                              <CgSpinner className="animate-spin" />
+                            ) : (
+                              "Save"
+                            )}
+                          </p>
+                          <label htmlFor="newNidBack">
+                            <p className="px-2 py-1 bg-[rgba(0,0,0,0.5)] hover:scale-105 duration-300 text-stone-400 cursor-pointer select-none active:scale-90">
+                              Change
+                            </p>
+                          </label>
+                          <p
+                            onClick={() =>
+                              setNewPhotos({ ...newPhotos, nidBack: "" })
+                            }
+                            className="px-2 py-1 bg-[rgba(255,0,0,0.5)] hover:scale-105 duration-300 text-stone-400 cursor-pointer select-none active:scale-90"
+                          >
+                            Clear
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ) : (
