@@ -47,14 +47,14 @@ const page = async ({ params }) => {
               <div class="flex flex-wrap">
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
-                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    class="block tracking-wide text-white font-bold mb-2"
                     for="messAddress"
                   >
                     Mess Address
                   </label>
                   <input
                     readOnly
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     name="messAddress"
                     id="messAddress"
                     type="text"
@@ -63,14 +63,14 @@ const page = async ({ params }) => {
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
-                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    class="block tracking-wide text-white font-bold mb-2"
                     for="institution"
                   >
                     Institution
                   </label>
                   <input
                     readOnly
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     name="institution"
                     id="institution"
                     type="text"
@@ -79,14 +79,14 @@ const page = async ({ params }) => {
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
-                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    class="block tracking-wide text-white font-bold mb-2"
                     for="floor"
                   >
                     Floor Number
                   </label>
                   <input
                     readOnly
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="floor"
                     name="floor"
                     type="text"
@@ -95,14 +95,14 @@ const page = async ({ params }) => {
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
-                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    class="block tracking-wide text-white font-bold mb-2"
                     for="roomNumber"
                   >
                     Room Number
                   </label>
                   <input
                     readOnly
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="roomNumber"
                     name="roomNumber"
                     type="text"
@@ -113,16 +113,16 @@ const page = async ({ params }) => {
                     }
                   />
                 </div>
-                <div class="lg:w-1/2 md:w-full px-3 mb-6">
+                {/* <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
-                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    class="block tracking-wide text-white font-bold mb-2"
                     for="utilityCharge"
                   >
                     Utility Charge
                   </label>
                   <input
                     readOnly
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="utilityCharge"
                     name="utilityCharge"
                     type="text"
@@ -131,30 +131,30 @@ const page = async ({ params }) => {
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
-                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    class="block tracking-wide text-white font-bold mb-2"
                     for="wifiCharge"
                   >
                     Wifi Charge
                   </label>
                   <input
                     readOnly
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="wifiCharge"
                     name="wifiCharge"
                     type="text"
                     defaultValue={client.wifiCharge}
                   />
-                </div>
+                </div> */}
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
-                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    class="block tracking-wide text-white font-bold mb-2"
                     for="bloodGroup"
                   >
                     Blood Group
                   </label>
                   <input
                     readOnly
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="bloodGroup"
                     name="bloodGroup"
                     type="text"
@@ -163,20 +163,54 @@ const page = async ({ params }) => {
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
-                    class="block tracking-wide text-gray-700 font-bold mb-2"
+                    class="block tracking-wide text-white font-bold mb-2"
                     for="studentId"
                   >
                     Student or Job ID
                   </label>
                   <input
                     readOnly
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="studentId"
                     name="studentId"
                     type="text"
                     defaultValue={client.studentId}
                   />
                 </div>
+              </div>
+              <div className="pb-16">
+                <div className="flex items-center justify-center gap-4">
+                  <p class="text-center tracking-wide text-white font-bold">
+                    Charges
+                  </p>
+                </div>
+                {client.charges.length == 0 && (
+                  <p className="text-center text-sm mt-4 select-none">
+                    No added charges
+                  </p>
+                )}
+                {client.charges.length != 0 && (
+                  <table className="w-[90%] md:w-[50%] mx-auto mt-4">
+                    <thead className="bg-[rgba(0,0,250,0.2)]">
+                      <tr>
+                        <td className="border text-center py-1.5">Note</td>
+                        <td className="border text-center py-1.5">Amount</td>
+                      </tr>
+                    </thead>
+                    {client.charges.map((crg, i) => (
+                      <tbody key={i} className="text-sm">
+                        <tr>
+                          <td className="border text-center py-1">
+                            {crg.note}
+                          </td>
+                          <td className="border text-center py-1">
+                            {crg.amount}
+                          </td>
+                        </tr>
+                      </tbody>
+                    ))}
+                  </table>
+                )}
               </div>
               {client.nidAuth ? (
                 <div className="flex flex-col md:flex-row items-center justify-around">

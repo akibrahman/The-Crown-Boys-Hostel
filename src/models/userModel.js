@@ -57,17 +57,13 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  balance: {
-    type: Number,
-    default: 0,
-  },
-  wifiCharge: {
-    type: Number,
-    default: 0,
-  },
-  utilityCharge: {
-    type: Number,
-    default: 0,
+  // balance: {
+  //   type: Number,
+  //   default: 0,
+  // },
+  charges: {
+    type: [{}],
+    default: [],
   },
   files: {
     type: [{ path: String, link: String, fileType: String }],

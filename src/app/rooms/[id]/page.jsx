@@ -81,7 +81,7 @@ const Page = ({ params }) => {
             </div>
           </div>
         </div>
-        <div className="w-[65%] flex flex-col items-center gap-4">
+        <div className="w-[55%] flex flex-col items-center gap-4">
           <p>Room Image</p>
           <Image
             height={100}

@@ -11,10 +11,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { CiImageOn } from "react-icons/ci";
+import { FaPlus } from "react-icons/fa";
 
 const Page = ({ params }) => {
   const { id } = params;
-  console.log(id);
 
   const [newProfilePictureUploading, setNewProfilePictureUploading] =
     useState(false);
@@ -27,7 +27,18 @@ const Page = ({ params }) => {
     },
   });
 
-  console.log(client);
+  const testHandler = async () => {
+    console.log(client);
+    try {
+      const { data } = await axios.patch("/api/clients/editclient", {
+        id: client._id,
+      });
+      if (data.success) toast.success(data.msg);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error");
+    }
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -38,11 +49,9 @@ const Page = ({ params }) => {
     const mothersNumber = e.target.mothersNumber.value;
     const messAddress = e.target.messAddress.value;
     const floor = e.target.floor.value;
-    const utilityCharge = e.target.utilityCharge.value;
     const bloodGroup = e.target.bloodGroup.value;
     const institution = e.target.institution.value;
     const roomNumber = e.target.roomNumber.value;
-    const wifiCharge = e.target.wifiCharge.value;
     const studentId = e.target.studentId.value;
     if (
       username == client.username &&
@@ -52,11 +61,9 @@ const Page = ({ params }) => {
       mothersNumber == client.mothersNumber &&
       messAddress == client.messAddress &&
       floor == client.floor &&
-      utilityCharge == client.utilityCharge &&
       bloodGroup == client.bloodGroup &&
       institution == client.institution &&
       roomNumber == client.roomNumber &&
-      wifiCharge == client.wifiCharge &&
       studentId == client.studentId
     ) {
       toast.error("No Change");
@@ -74,16 +81,12 @@ const Page = ({ params }) => {
     if (messAddress != client.messAddress)
       changedData.messAddress = messAddress;
     if (floor != client.floor) changedData.floor = floor;
-    if (utilityCharge != client.utilityCharge)
-      changedData.utilityCharge = utilityCharge;
     if (bloodGroup != client.bloodGroup) changedData.bloodGroup = bloodGroup;
     if (institution != client.institution)
       changedData.institution = institution;
     if (roomNumber != client.roomNumber) changedData.roomNumber = roomNumber;
-    if (wifiCharge != client.wifiCharge) changedData.wifiCharge = wifiCharge;
     if (studentId != client.studentId) changedData.studentId = studentId;
 
-    console.log(changedData);
     try {
       const { data } = await axios.put("/api/clients/editclient", {
         changedData,
@@ -170,6 +173,35 @@ const Page = ({ params }) => {
         nidBack: "",
         birthCertificate: "",
       });
+    }
+  };
+
+  const [chargeNote, setChargeNote] = useState("");
+  const [chargeAmount, setChargeAmount] = useState(0);
+  const [isChargeFormVisible, setIsChargeFormVisible] = useState(false);
+  const [isChargeAdding, setIsChargeAdding] = useState(false);
+
+  const handleChargeAdder = async () => {
+    if (!chargeNote || chargeAmount <= 0)
+      return toast.error("Enter note or amount!");
+    try {
+      setIsChargeAdding(true);
+      const { data } = await axios.put("/api/clients/chargeclient", {
+        chargeData: { note: chargeNote, amount: parseInt(chargeAmount) },
+        _id: client._id,
+      });
+      if (data.success) {
+        await clientRefetch();
+        setChargeNote("");
+        setChargeAmount(0);
+        setIsChargeFormVisible(false);
+        toast.success("Charge added to the user");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong, Try again!");
+    } finally {
+      setIsChargeAdding(false);
     }
   };
 
@@ -344,7 +376,7 @@ const Page = ({ params }) => {
                     Mess Address
                   </label>
                   <input
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     name="messAddress"
                     id="messAddress"
                     type="text"
@@ -359,7 +391,7 @@ const Page = ({ params }) => {
                     Institution
                   </label>
                   <input
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     name="institution"
                     id="institution"
                     type="text"
@@ -377,7 +409,7 @@ const Page = ({ params }) => {
                     id="floor"
                     name="floor"
                     defaultValue={client.floor}
-                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    className="border border-gray-300 p-2 py-0.5 w-full rounded text-stone-900"
                   >
                     <option value="1">First Floor</option>
                     <option value="2">Second Floor</option>
@@ -404,7 +436,7 @@ const Page = ({ params }) => {
                     id="roomNumber"
                     name="roomNumber"
                     defaultValue={client.roomNumber}
-                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                    className="border border-gray-300 p-2 py-0.5 w-full rounded text-stone-900"
                   >
                     <option value="">Select Room</option>
                     <option value="a1">A 1</option>
@@ -419,7 +451,7 @@ const Page = ({ params }) => {
                     <option value="b4">B 4</option>
                   </select>
                 </div>
-                <div class="lg:w-1/2 md:w-full px-3 mb-6">
+                {/* <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
                     for="utilityCharge"
@@ -427,7 +459,7 @@ const Page = ({ params }) => {
                     Utility Charge
                   </label>
                   <input
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="utilityCharge"
                     name="utilityCharge"
                     type="text"
@@ -442,13 +474,13 @@ const Page = ({ params }) => {
                     Wifi Charge
                   </label>
                   <input
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="wifiCharge"
                     name="wifiCharge"
                     type="text"
                     defaultValue={client.wifiCharge}
                   />
-                </div>
+                </div> */}
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
@@ -457,7 +489,7 @@ const Page = ({ params }) => {
                     Blood Group
                   </label>
                   <input
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="bloodGroup"
                     name="bloodGroup"
                     type="text"
@@ -472,13 +504,82 @@ const Page = ({ params }) => {
                     Student or Job ID
                   </label>
                   <input
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     id="studentId"
                     name="studentId"
                     type="text"
                     defaultValue={client.studentId}
                   />
                 </div>
+              </div>
+              <div className="pb-16">
+                <div className="flex items-center justify-center gap-4">
+                  <p class="text-center tracking-wide text-white font-bold">
+                    Charges
+                  </p>
+                  <div
+                    onClick={() => setIsChargeFormVisible(!isChargeFormVisible)}
+                    className="w-8 h-8 flex items-center justify-center cursor-pointer bg-[rgba(0,0,255,0.2)] rounded-full duration-300 active:scale-90"
+                  >
+                    <FaPlus className="text-blue-500" />
+                  </div>
+                </div>
+                {isChargeFormVisible && (
+                  <div className="flex items-center justify-center gap-3 my-4">
+                    <input
+                      className="border rounded-md px-4 py-1 bg-transparent text-white"
+                      type="text"
+                      placeholder="Note"
+                      name="note"
+                      required
+                      onChange={(e) => setChargeNote(e.target.value)}
+                      value={chargeNote}
+                    />
+                    <input
+                      className="border rounded-md px-4 py-1 bg-transparent text-white"
+                      type="number"
+                      placeholder="Amount"
+                      name="amount"
+                      required
+                      onChange={(e) => setChargeAmount(e.target.value)}
+                      value={chargeAmount}
+                    />
+                    <p
+                      className="text-white px-3 py-1 rounded-md border hover:scale-105 bg-transparent select-none cursor-pointer duration-300 flex items-center gap-3 active:scale-90"
+                      onClick={handleChargeAdder}
+                    >
+                      Add
+                      {isChargeAdding && <CgSpinner className="animate-spin" />}
+                    </p>
+                  </div>
+                )}
+                {client.charges.length == 0 && (
+                  <p className="text-center text-sm mt-4 select-none">
+                    No added charges
+                  </p>
+                )}
+                {client.charges.length != 0 && (
+                  <table className="w-[90%] md:w-[50%] mx-auto mt-4">
+                    <thead className="bg-[rgba(0,0,250,0.2)]">
+                      <tr>
+                        <td className="border text-center py-1.5">Note</td>
+                        <td className="border text-center py-1.5">Amount</td>
+                      </tr>
+                    </thead>
+                    {client.charges.map((crg, i) => (
+                      <tbody key={i} className="text-sm">
+                        <tr>
+                          <td className="border text-center py-1">
+                            {crg.note}
+                          </td>
+                          <td className="border text-center py-1">
+                            {crg.amount}
+                          </td>
+                        </tr>
+                      </tbody>
+                    ))}
+                  </table>
+                )}
               </div>
               {client.nidAuth ? (
                 <div className="flex flex-col md:flex-row justify-around items-start">
@@ -635,6 +736,12 @@ const Page = ({ params }) => {
               )}
             </div>
           </form>
+          <button
+            onClick={testHandler}
+            className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-green-500 active:scale-90 mt-5"
+          >
+            Test
+          </button>
         </div>
       </div>
     </div>

@@ -17,3 +17,18 @@ export const PUT = async (req) => {
     );
   }
 };
+export const PATCH = async (req) => {
+  try {
+    const { id } = await req.json();
+    const user = await User.findById(id);
+    user.charges = [...user.charges, { wifi: 200 }];
+    await user.save();
+    return NextResponse.json({ success: true, msg: "Test success" });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, msg: "Server error!" },
+      { status: 500 }
+    );
+  }
+};
