@@ -527,7 +527,7 @@ const Page = ({ params }) => {
                 {isChargeFormVisible && (
                   <div className="flex items-center justify-center gap-3 my-4">
                     <input
-                      className="border rounded-md px-4 py-1 bg-transparent text-white"
+                      className="border rounded-md px-4 py-1 bg-transparent text-white w-[45%] md:w-[30%]"
                       type="text"
                       placeholder="Note"
                       name="note"
@@ -536,7 +536,7 @@ const Page = ({ params }) => {
                       value={chargeNote}
                     />
                     <input
-                      className="border rounded-md px-4 py-1 bg-transparent text-white"
+                      className="border rounded-md px-4 py-1 bg-transparent text-white w-[45%] md:w-[30%]"
                       type="number"
                       placeholder="Amount"
                       name="amount"
