@@ -738,7 +738,7 @@ const Page = ({ params }) => {
           </form>
           <button
             onClick={testHandler}
-            className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-green-500 active:scale-90 mt-5"
+            className="hidden duration-300 transition-all px-4 py-1 rounded-md font-medium bg-green-500 active:scale-90 mt-5"
           >
             Test
           </button>
