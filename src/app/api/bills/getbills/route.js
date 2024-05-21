@@ -22,11 +22,25 @@ export const GET = async (req) => {
 };
 export const PATCH = async (req) => {
   try {
-    const { billId, amount } = await req.json();
-    const bill = await Bill.findById(billId);
-    bill.paidBillInBDT = amount;
-    await bill.save();
-    return NextResponse.json({ success: true });
+    const { billId, amount, method } = await req.json();
+    if (method == "set") {
+      const bill = await Bill.findById(billId);
+      bill.paidBillInBDT = amount;
+      await bill.save();
+      return NextResponse.json({ success: true });
+    } else if (method == "credite") {
+      const bill = await Bill.findById(billId);
+      bill.paidBillInBDT = bill.paidBillInBDT + amount;
+      await bill.save();
+      return NextResponse.json({ success: true });
+    } else if (method == "debite") {
+      const bill = await Bill.findById(billId);
+      bill.paidBillInBDT = bill.paidBillInBDT - amount;
+      await bill.save();
+      return NextResponse.json({ success: true });
+    } else {
+      throw new Error();
+    }
   } catch (error) {
     console.log(error);
     return NextResponse.json({ success: false, error }, { status: 500 });

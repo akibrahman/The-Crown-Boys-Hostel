@@ -1,14 +1,13 @@
 "use client";
 
 import PreLoader from "@/Components/PreLoader/PreLoader";
+import Receipt from "@/Components/Receipt/Receipt";
 import { AuthContext } from "@/providers/ContextProvider";
-import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
-import { FaPlus } from "react-icons/fa";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
 const BillQuery = () => {
@@ -16,7 +15,6 @@ const BillQuery = () => {
   const [result, setResult] = useState(null);
   const [searching, setSearching] = useState(false);
   const [managerAmount, setManagerAmount] = useState(null);
-  const [isMoneyAdding, setIsMoneyAdding] = useState({ id: "", state: false });
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -60,7 +58,9 @@ const BillQuery = () => {
     const month = e.target.month.value;
     const year = e.target.year.value;
     if (!clientId) {
-      toast.error("Please select all fields!");
+      toast.error("Please select User!");
+      setSearching(false);
+      setResult(null);
       return;
     }
     const { data } = await axios.get(
@@ -188,7 +188,7 @@ const BillQuery = () => {
               />
             )}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 py-5">
             {result &&
               result.length > 0 &&
               result
@@ -197,77 +197,20 @@ const BillQuery = () => {
                     monthOrder.indexOf(b.month) - monthOrder.indexOf(a.month)
                 )
                 .map((bill) => (
-                  <div
+                  <Receipt
                     key={bill._id}
-                    className="border border-blue-500 px-4 py-4 my-4 dark:text-white"
-                  >
-                    <div className="flex items-center justify-center gap-4">
-                      <p className="font-semibold text-lg bg-blue-500 text-white px-10 py-1 rounded-full w-max">
-                        {bill.month}
-                      </p>
-                      {isMoneyAdding.state && isMoneyAdding.id == bill._id ? (
-                        <CgSpinner className="text-xl text-blue-500 cursor-pointer animate-spin" />
-                      ) : (
-                        <div
-                          className="flex items-center gap-2 border px-3 py-1 rounded-full cursor-pointer select-none duration-300 active:scale-90"
-                          onClick={async () => {
-                            if (managerAmount != null && managerAmount >= 0) {
-                              setIsMoneyAdding({
-                                id: bill._id,
-                                state: true,
-                              });
-                              await axios.patch("/api/bills/getbills", {
-                                billId: bill._id,
-                                amount: managerAmount,
-                              });
-                              setManagerAmount(null);
-                              setIsMoneyAdding({ id: "", state: false });
-                              toast.success("Amount updated");
-                            } else {
-                              toast.error("Please enter amount");
-                            }
-                          }}
-                        >
-                          <FaPlus className="md:text-xl text-blue-500 cursor-pointer duration-300 active:scale-90" />
-                          Add
-                        </div>
-                      )}
-                    </div>
-                    <div className="py-3 space-y-3 select-none">
-                      <p>Year: {bill.year}</p>
-                      <p>Total Brakefast: {bill.totalBreakfast}</p>
-                      <p>Total Lunch: {bill.totalLunch}</p>
-                      <p>Total Dinner: {bill.totalDinner}</p>
-                      <p>
-                        Total Bill:{" "}
-                        <span className="bg-sky-500 font-semibold px-3 w-max py-1 rounded-md ml-3">
-                          {bill.totalBillInBDT} BDT
-                        </span>
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p>Deposite:</p>{" "}
-                        <div className="flex items-center gap-5">
-                          <span className="bg-sky-500 font-semibold px-3 w-max py-1 rounded-md ml-3">
-                            {bill.paidBillInBDT} BDT
-                          </span>
-                        </div>
-                      </div>
-                      <p>
-                        Status:{" "}
-                        <span
-                          className={`${
-                            bill?.status == "calculated"
-                              ? "bg-green-500"
-                              : bill?.status == "initiated"
-                              ? "bg-orange-500"
-                              : "bg-blue-500"
-                          }  font-semibold px-3 py-1 rounded-md ml-3`}
-                        >
-                          {convertCamelCaseToCapitalized(bill?.status)}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
+                    id={bill._id}
+                    month={bill.month}
+                    year={bill.year}
+                    totalBillInBDT={bill.totalBillInBDT}
+                    paidBillInBDT={bill.paidBillInBDT}
+                    totalBreakfast={bill.totalBreakfast}
+                    totalLunch={bill.totalLunch}
+                    totalDinner={bill.totalDinner}
+                    status={bill.status}
+                    managerAmount={managerAmount}
+                    setManagerAmount={setManagerAmount}
+                  />
                 ))}
           </div>
         </div>
