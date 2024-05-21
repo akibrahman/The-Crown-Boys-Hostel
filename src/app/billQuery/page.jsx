@@ -20,6 +20,21 @@ const BillQuery = () => {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const monthOrder = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   //! Current Year in Bangladesh
   const currentDateBangladesh = new Date();
   currentDateBangladesh.setUTCHours(currentDateBangladesh.getUTCHours() + 6);
@@ -161,88 +176,99 @@ const BillQuery = () => {
           </p>
         )}
         <div className="">
-          <div className="text-center text-xl font-semibold border border-sky-500 px-4 py-2 relative dark:text-white mt-4">
+          <div className="border border-sky-500 px-4 py-2 relative dark:text-white mt-4 flex items-center justify-center gap-4">
+            <p className="text-center text-xl font-semibold">Bill Details</p>
             {result && result.length > 0 && (
               <input
                 placeholder="Enter Amount"
                 onChange={(e) => setManagerAmount(parseInt(e.target.value))}
                 value={managerAmount || managerAmount == 0 ? managerAmount : ""}
-                className="text-sm w-[200px] px-5 py-2 outline-none rounded-full dark:bg-stone-800 bg-stone-300 md:absolute md:top-1/2 md:-translate-y-1/2 md:left-3 mr-3 md:mr-0"
+                className="text-sm w-[200px] px-5 py-2 outline-none rounded-full dark:bg-stone-800 bg-stone-300"
                 type="number"
               />
             )}
-            Bill Details
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {result &&
               result.length > 0 &&
-              result.map((bill) => (
-                <div
-                  key={bill._id}
-                  className="border border-blue-500 px-4 py-4 my-4 dark:text-white"
-                >
-                  <p className="font-semibold text-lg mb-4 bg-blue-500 text-white px-10 py-1 rounded-full w-max mx-auto">
-                    {bill.month}
-                  </p>
-                  <div className="py-3 space-y-3 select-none">
-                    <p>Year: {bill.year}</p>
-                    <p>Total Brakefast: {bill.totalBreakfast}</p>
-                    <p>Total Lunch: {bill.totalLunch}</p>
-                    <p>Total Dinner: {bill.totalDinner}</p>
-                    <p>
-                      Total Amount:{" "}
-                      <span className="bg-sky-500 font-semibold px-3 py-1 rounded-md ml-3">
-                        {bill.totalBillInBDT} BDT
-                      </span>
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <p>Paid Amount:</p>{" "}
-                      <div className="flex items-center gap-5">
-                        <span className="bg-sky-500 font-semibold px-3 py-1 rounded-md ml-3">
-                          {bill.paidBillInBDT} BDT
-                        </span>
-                        {isMoneyAdding.state && isMoneyAdding.id == bill._id ? (
-                          <CgSpinner className="text-xl text-blue-500 cursor-pointer animate-spin" />
-                        ) : (
-                          <FaPlus
-                            onClick={async () => {
-                              if (managerAmount != null && managerAmount >= 0) {
-                                setIsMoneyAdding({ id: bill._id, state: true });
-                                await axios.patch("/api/bills/getbills", {
-                                  billId: bill._id,
-                                  amount: managerAmount,
-                                });
-                                // await managerCalanderDataRefetch();
-
-                                setManagerAmount(null);
-                                setIsMoneyAdding({ id: "", state: false });
-                                toast.success("Amount updated");
-                              } else {
-                                toast.error("Please enter amount");
-                              }
-                            }}
-                            className="text-xl text-blue-500 cursor-pointer duration-300 active:scale-90"
-                          />
-                        )}
-                      </div>
+              result
+                .sort(
+                  (a, b) =>
+                    monthOrder.indexOf(b.month) - monthOrder.indexOf(a.month)
+                )
+                .map((bill) => (
+                  <div
+                    key={bill._id}
+                    className="border border-blue-500 px-4 py-4 my-4 dark:text-white"
+                  >
+                    <div className="flex items-center justify-center gap-4">
+                      <p className="font-semibold text-lg bg-blue-500 text-white px-10 py-1 rounded-full w-max">
+                        {bill.month}
+                      </p>
+                      {isMoneyAdding.state && isMoneyAdding.id == bill._id ? (
+                        <CgSpinner className="text-xl text-blue-500 cursor-pointer animate-spin" />
+                      ) : (
+                        <div
+                          className="flex items-center gap-2 border px-3 py-1 rounded-full cursor-pointer select-none duration-300 active:scale-90"
+                          onClick={async () => {
+                            if (managerAmount != null && managerAmount >= 0) {
+                              setIsMoneyAdding({
+                                id: bill._id,
+                                state: true,
+                              });
+                              await axios.patch("/api/bills/getbills", {
+                                billId: bill._id,
+                                amount: managerAmount,
+                              });
+                              setManagerAmount(null);
+                              setIsMoneyAdding({ id: "", state: false });
+                              toast.success("Amount updated");
+                            } else {
+                              toast.error("Please enter amount");
+                            }
+                          }}
+                        >
+                          <FaPlus className="md:text-xl text-blue-500 cursor-pointer duration-300 active:scale-90" />
+                          Add
+                        </div>
+                      )}
                     </div>
-                    <p>
-                      Status:{" "}
-                      <span
-                        className={`${
-                          bill?.status == "calculated"
-                            ? "bg-green-500"
-                            : bill?.status == "initiated"
-                            ? "bg-orange-500"
-                            : "bg-blue-500"
-                        }  font-semibold px-3 py-1 rounded-md ml-3`}
-                      >
-                        {convertCamelCaseToCapitalized(bill?.status)}
-                      </span>
-                    </p>
+                    <div className="py-3 space-y-3 select-none">
+                      <p>Year: {bill.year}</p>
+                      <p>Total Brakefast: {bill.totalBreakfast}</p>
+                      <p>Total Lunch: {bill.totalLunch}</p>
+                      <p>Total Dinner: {bill.totalDinner}</p>
+                      <p>
+                        Total Bill:{" "}
+                        <span className="bg-sky-500 font-semibold px-3 w-max py-1 rounded-md ml-3">
+                          {bill.totalBillInBDT} BDT
+                        </span>
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <p>Deposite:</p>{" "}
+                        <div className="flex items-center gap-5">
+                          <span className="bg-sky-500 font-semibold px-3 w-max py-1 rounded-md ml-3">
+                            {bill.paidBillInBDT} BDT
+                          </span>
+                        </div>
+                      </div>
+                      <p>
+                        Status:{" "}
+                        <span
+                          className={`${
+                            bill?.status == "calculated"
+                              ? "bg-green-500"
+                              : bill?.status == "initiated"
+                              ? "bg-orange-500"
+                              : "bg-blue-500"
+                          }  font-semibold px-3 py-1 rounded-md ml-3`}
+                        >
+                          {convertCamelCaseToCapitalized(bill?.status)}
+                        </span>
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
           </div>
         </div>
       </div>

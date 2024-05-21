@@ -191,7 +191,7 @@ const page = async ({ params }) => {
                 )}
                 {client.charges.length != 0 && (
                   <table className="w-[90%] md:w-[50%] mx-auto mt-4">
-                    <thead className="bg-[rgba(0,0,250,0.2)]">
+                    <thead className="bg-[rgba(0,0,200,0.2)]">
                       <tr>
                         <td className="border text-center py-1.5">Note</td>
                         <td className="border text-center py-1.5">Amount</td>

@@ -11,7 +11,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { CiImageOn } from "react-icons/ci";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTimes } from "react-icons/fa";
 
 const Page = ({ params }) => {
   const { id } = params;
@@ -195,7 +195,25 @@ const Page = ({ params }) => {
         setChargeNote("");
         setChargeAmount(0);
         setIsChargeFormVisible(false);
-        toast.success("Charge added to the user");
+        toast.success(data.msg);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong, Try again!");
+    } finally {
+      setIsChargeAdding(false);
+    }
+  };
+
+  const deleteCharge = async (note) => {
+    try {
+      const { data } = await axios.patch("/api/clients/chargeclient", {
+        note,
+        _id: client._id,
+      });
+      if (data.success) {
+        await clientRefetch();
+        toast.success(data.msg);
       }
     } catch (error) {
       console.log(error);
@@ -559,11 +577,12 @@ const Page = ({ params }) => {
                   </p>
                 )}
                 {client.charges.length != 0 && (
-                  <table className="w-[90%] md:w-[50%] mx-auto mt-4">
-                    <thead className="bg-[rgba(0,0,250,0.2)]">
+                  <table className="w-[90%] md:w-[70%] mx-auto mt-4">
+                    <thead className="bg-[rgba(0,0,200,0.2)]">
                       <tr>
                         <td className="border text-center py-1.5">Note</td>
                         <td className="border text-center py-1.5">Amount</td>
+                        <td className="border text-center py-1.5">Action</td>
                       </tr>
                     </thead>
                     {client.charges.map((crg, i) => (
@@ -574,6 +593,12 @@ const Page = ({ params }) => {
                           </td>
                           <td className="border text-center py-1">
                             {crg.amount}
+                          </td>
+                          <td
+                            onClick={() => deleteCharge(crg.note)}
+                            className="border"
+                          >
+                            <FaTimes className="block mx-auto text-xl text-red-500 cursor-pointer" />
                           </td>
                         </tr>
                       </tbody>

@@ -11,8 +11,27 @@ export const PUT = async (req) => {
     const user = await User.findById(_id);
     user.charges = [...user.charges, chargeData];
     await user.save();
-    return NextResponse.json({ success: true, msg: "User Updated" });
+    return NextResponse.json({
+      success: true,
+      msg: "Charge added to the user",
+    });
   } catch (error) {
+    return NextResponse.json(
+      { success: false, msg: "Server error!" },
+      { status: 500 }
+    );
+  }
+};
+
+export const PATCH = async (req) => {
+  try {
+    const { note, _id } = await req.json();
+    const user = await User.findById(_id);
+    user.charges = user.charges.filter((crg) => crg.note != note);
+    await user.save();
+    return NextResponse.json({ success: true, msg: "Charge deleted" });
+  } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { success: false, msg: "Server error!" },
       { status: 500 }
