@@ -87,15 +87,15 @@ const Receipt = ({
   };
   return (
     <div className="font-medium">
-      <div className="bg-[#61DFB9] pr-10 py-3 rounded-t-xl">
+      <div className="bg-sky-600 pr-10 py-3 rounded-t-xl">
         <p className="text-white text-lg text-right">The Crown Inc.</p>
       </div>
-      <div className="bg-[#6EE6C2] px-12 py-3">
+      <div className="bg-sky-500 px-12 py-3">
         <p className="text-white">Receipt For</p>
         <p className="text-white text-lg">MD. Akib Rahman</p>
       </div>
 
-      <div className="bg-white px-12 py-4 grid grid-cols-4 place-items-center gap-5 text-center">
+      <div className="bg-white px-12 py-4 grid grid-cols-2 md:grid-cols-4 place-items-center gap-5 text-center">
         <div className="">
           <p className="uppercase text-[#989898] text-sm">Month</p>
           <p className="text-[#061D53]">{month}</p>
@@ -174,14 +174,14 @@ const Receipt = ({
             )}
         </button>
       </div>
-      <div className="bg-[#61DFB9] pr-10 py-3 flex items-center justify-end gap-4 rounded-b-xl">
+      <div className="border border-sky-600 pr-10 py-3 flex items-center justify-end gap-4 rounded-b-xl">
         {status == "initiated" ? (
-          <p className=" text-gray-600 font-bold">Not Calculated</p>
+          <p className=" text-blue-600 font-bold">Not Calculated</p>
         ) : totalBillInBDT == paidBillInBDT ? (
           <p className=" text-green-600 font-bold">Paid</p>
         ) : (
           <>
-            <button className="bg-green-500 text-white px-4 py-0.5 duration-300 rounded active:scale-90">
+            <button className="bg-green-500 text-white px-4 py-0.5 duration-300 rounded active:scale-90 hidden">
               Make Paid
             </button>
             <p className=" text-red-600 font-bold">Due</p>
@@ -190,7 +190,7 @@ const Receipt = ({
         {status == "calculated" && (
           <p className="text-white">
             Total:{" "}
-            <span className="text-[#061D53] font-bold">
+            <span className="text-blue-500 font-bold">
               {totalBillInBDT} BDT
             </span>
           </p>
