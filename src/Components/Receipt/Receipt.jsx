@@ -98,8 +98,11 @@ const Receipt = ({
   };
 
   return (
-    <div className="font-medium">
-      <div className="bg-blue-500 border-b pr-10 py-3 rounded-t-xl">
+    <div className="font-medium rounded-xl">
+      <div
+        style={{ paddingRight: "40px", borderBottomWidth: "1px" }}
+        className="bg-blue-500 py-3 rounded-t-xl"
+      >
         <p className="text-white text-lg text-right">The Crown Inc.</p>
       </div>
       <div className="bg-blue-500 px-12 py-3">
