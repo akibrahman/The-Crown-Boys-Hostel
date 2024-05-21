@@ -100,7 +100,15 @@ const Receipt = ({
   return (
     <div className="font-medium rounded-xl">
       <div
-        style={{ paddingRight: "40px", borderBottomWidth: "1px" }}
+        style={{
+          paddingRight: "40px",
+          borderBottomWidth: "1px",
+          paddingTop: "0.75rem",
+          paddingBottom: "0.75rem",
+          borderTopLeftRadius: "0.75rem",
+          borderTopRightRadius: "0.75rem",
+          backgroundColor: "#3B82F6",
+        }}
         className="bg-blue-500 py-3 rounded-t-xl"
       >
         <p className="text-white text-lg text-right">The Crown Inc.</p>
@@ -110,37 +118,100 @@ const Receipt = ({
         <p className="text-white text-lg">Student Name</p>
       </div>
 
-      <div className="bg-white px-12 py-4 grid grid-cols-2 md:grid-cols-4 place-items-center gap-5 text-center">
+      <div className="bg-white px-12 py-4 grid grid-cols-2 md:!grid-cols-4 place-items-center gap-5 text-center">
         <div className="">
-          <p className="uppercase text-[#989898] text-sm">Month</p>
-          <p className="text-[#061D53]">{month}</p>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textTransform: "uppercase",
+              color: "#989898",
+            }}
+          >
+            Month
+          </p>
+          <p style={{ color: "#061D53" }}>{month}</p>
         </div>
         <div className="">
-          <p className="uppercase text-[#989898] text-sm">Year</p>
-          <p className="text-[#061D53]">{year}</p>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textTransform: "uppercase",
+              color: "#989898",
+            }}
+          >
+            Year
+          </p>
+          <p style={{ color: "#061D53" }}>{year}</p>
         </div>
         <div className="">
-          <p className="uppercase text-[#989898] text-sm">Deposit</p>
-          <p className="text-[#061D53]">{paidBillInBDT} BDT</p>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textTransform: "uppercase",
+              color: "#989898",
+            }}
+          >
+            Deposit
+          </p>
+          <p style={{ color: "#061D53" }}>{paidBillInBDT} BDT</p>
         </div>
         <div className="">
-          <p className="uppercase text-[#989898] text-sm">Total</p>
-          <p className="text-[#061D53]">{totalBillInBDT} BDT</p>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textTransform: "uppercase",
+              color: "#989898",
+            }}
+          >
+            Total
+          </p>
+          <p style={{ color: "#061D53" }}>{totalBillInBDT} BDT</p>
         </div>
       </div>
 
       <div className="bg-white px-12 pb-2 grid grid-cols-3 place-items-center gap-5 text-center">
         <div className="">
-          <p className="uppercase text-[#989898] text-sm">Breakfast</p>
-          <p className="text-[#061D53]">{totalBreakfast}</p>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textTransform: "uppercase",
+              color: "#989898",
+            }}
+          >
+            Breakfast
+          </p>
+          <p style={{ color: "#061D53" }}>{totalBreakfast}</p>
         </div>
         <div className="">
-          <p className="uppercase text-[#989898] text-sm">Lunch</p>
-          <p className="text-[#061D53]">{totalLunch}</p>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textTransform: "uppercase",
+              color: "#989898",
+            }}
+          >
+            Lunch
+          </p>
+          <p style={{ color: "#061D53" }}>{totalLunch}</p>
         </div>
         <div className="">
-          <p className="uppercase text-[#989898] text-sm">Dinner</p>
-          <p className="text-[#061D53]">{totalDinner}</p>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textTransform: "uppercase",
+              color: "#989898",
+            }}
+          >
+            Dinner
+          </p>
+          <p style={{ color: "#061D53" }}>{totalDinner}</p>
         </div>
       </div>
       {charges && charges.length > 0 && (
@@ -151,8 +222,17 @@ const Receipt = ({
           <div className="bg-white px-12 pb-4 grid grid-cols-3 place-items-center gap-5 text-center">
             {charges.map((crg, i) => (
               <div key={i} className="">
-                <p className="uppercase text-[#989898] text-sm">{crg.note}</p>
-                <p className="text-[#061D53]">{crg.amount} BDT</p>
+                <p
+                  style={{
+                    fontSize: "0.875rem",
+                    lineHeight: "1.25rem",
+                    textTransform: "uppercase",
+                    color: "#989898",
+                  }}
+                >
+                  {crg.note}
+                </p>
+                <p style={{ color: "#061D53" }}>{crg.amount} BDT</p>
               </div>
             ))}
           </div>
@@ -196,7 +276,22 @@ const Receipt = ({
           </button>
         </div>
       )}
-      <div className="border border-blue-600 pr-2 md:pr-10 py-3 flex items-center justify-end gap-4 rounded-b-xl">
+      <div
+        style={{
+          display: "flex",
+          paddingTop: "0.75rem",
+          paddingBottom: "0.75rem",
+          paddingRight: "1rem",
+          gap: "1rem",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          borderBottomRightRadius: "0.75rem",
+          borderBottomLeftRadius: "0.75rem",
+          borderWidth: "1px",
+          borderColor: "#2563EB",
+          "@media (min-width: 768px)": { paddingRight: "2.5rem" },
+        }}
+      >
         {status == "initiated" ? (
           <p className=" text-blue-600 font-bold">Not Calculated</p>
         ) : totalBillInBDT == paidBillInBDT ? (
