@@ -22,7 +22,6 @@ const Receipt = ({
     state: false,
     method: "",
   });
-
   const set = async () => {
     if (managerAmount != null && managerAmount >= 0) {
       setIsMoneyAdding({
@@ -118,7 +117,7 @@ const Receipt = ({
         <p className="text-white text-lg">Student Name</p>
       </div>
 
-      <div className="bg-white px-12 py-4 flex items-center justify-center gap-4 md:gap-0 md:justify-evenly flex-wrap md:flex-nowrap text-center">
+      <div className="bg-white px-12 py-4 flex items-center justify-center gap-6 md:gap-0 md:justify-evenly flex-wrap md:flex-nowrap text-center">
         <div className="">
           <p
             style={{
@@ -167,9 +166,11 @@ const Receipt = ({
               color: "#989898",
             }}
           >
-            Total
+            Bill
           </p>
-          <p style={{ color: "#061D53" }}>{totalBillInBDT} BDT</p>
+          <p style={{ color: "#061D53" }}>
+            {totalBillInBDT + charges.reduce((a, b) => a + b.amount, 0)} BDT
+          </p>
         </div>
       </div>
 
@@ -294,7 +295,8 @@ const Receipt = ({
       >
         {status == "initiated" ? (
           <p className=" text-blue-600 font-bold">Not Calculated</p>
-        ) : totalBillInBDT == paidBillInBDT ? (
+        ) : paidBillInBDT ==
+          totalBillInBDT + charges.reduce((a, b) => a + b.amount, 0) ? (
           <p className=" text-green-600 font-bold">Paid</p>
         ) : (
           <>
@@ -309,17 +311,24 @@ const Receipt = ({
                   <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
                 )}
             </button>
-            <p className=" text-red-600 font-bold">Due</p>
+            <p style={{ fontWeight: 700, color: "#DC2626" }}>Due</p>
           </>
         )}
-        {status == "calculated" && (
-          <p className="text-white">
-            Total:{" "}
-            <span className="text-blue-500 font-bold">
-              {totalBillInBDT - paidBillInBDT} BDT
-            </span>
-          </p>
-        )}
+        {status == "calculated" &&
+          paidBillInBDT !=
+            totalBillInBDT + charges.reduce((a, b) => a + b.amount, 0) && (
+            <p className="text-white">
+              Total:{" "}
+              <span className="text-blue-500 font-bold">
+                {!charges || charges.length == 0
+                  ? totalBillInBDT - paidBillInBDT
+                  : totalBillInBDT -
+                    paidBillInBDT +
+                    charges.reduce((a, b) => a + b.amount, 0)}{" "}
+                BDT
+              </span>
+            </p>
+          )}
       </div>
     </div>
   );

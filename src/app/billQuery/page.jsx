@@ -210,6 +210,7 @@ const BillQuery = () => {
                     status={bill.status}
                     managerAmount={managerAmount}
                     setManagerAmount={setManagerAmount}
+                    charges={bill?.charges}
                   />
                 ))}
           </div>

@@ -37,6 +37,10 @@ const billSchema = new mongoose.Schema({
     type: String,
     default: "initiated",
   },
+  charges: {
+    type: [{}],
+    default: [],
+  },
 });
 
 delete mongoose.models.bills;
