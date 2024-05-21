@@ -99,12 +99,12 @@ const Receipt = ({
 
   return (
     <div className="font-medium">
-      <div className="bg-sky-600 pr-10 py-3 rounded-t-xl">
+      <div className="bg-blue-500 border-b pr-10 py-3 rounded-t-xl">
         <p className="text-white text-lg text-right">The Crown Inc.</p>
       </div>
-      <div className="bg-sky-500 px-12 py-3">
+      <div className="bg-blue-500 px-12 py-3">
         <p className="text-white">Bill For</p>
-        <p className="text-white text-lg">Null</p>
+        <p className="text-white text-lg">Student Name</p>
       </div>
 
       <div className="bg-white px-12 py-4 grid grid-cols-2 md:grid-cols-4 place-items-center gap-5 text-center">
@@ -193,7 +193,7 @@ const Receipt = ({
           </button>
         </div>
       )}
-      <div className="border border-sky-600 pr-10 py-3 flex items-center justify-end gap-4 rounded-b-xl">
+      <div className="border border-blue-600 pr-2 md:pr-10 py-3 flex items-center justify-end gap-4 rounded-b-xl">
         {status == "initiated" ? (
           <p className=" text-blue-600 font-bold">Not Calculated</p>
         ) : totalBillInBDT == paidBillInBDT ? (
