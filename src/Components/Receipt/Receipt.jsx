@@ -118,7 +118,7 @@ const Receipt = ({
         <p className="text-white text-lg">Student Name</p>
       </div>
 
-      <div className="bg-white px-12 py-4 grid grid-cols-2 md:!grid-cols-4 place-items-center gap-5 text-center">
+      <div className="bg-white px-12 py-4 flex items-center justify-center gap-4 md:gap-0 md:justify-evenly flex-wrap md:flex-nowrap text-center">
         <div className="">
           <p
             style={{
