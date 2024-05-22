@@ -1,5 +1,6 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
+import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 
 dbConfig();
@@ -10,10 +11,16 @@ export const GET = async (req) => {
     const userId = searchParams.get("userId");
     const month = searchParams.get("month");
     const year = searchParams.get("year");
+    const user = await User.findById(userId);
+    const userName = user.username;
     let query = { userId };
     if (month) query = { ...query, month };
     if (year) query = { ...query, year };
-    const bills = await Bill.find(query);
+    const billsWithoutName = await Bill.find(query);
+    const bills = billsWithoutName.map((bill) => ({
+      ...bill.toObject(),
+      userName,
+    }));
     return NextResponse.json({ bills, success: true });
   } catch (error) {
     console.log(error);

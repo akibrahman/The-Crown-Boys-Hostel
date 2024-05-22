@@ -70,7 +70,7 @@ export const GET = async (req) => {
           today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
       };
     };
-    const test = true;
+    const test = false;
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
@@ -206,6 +206,7 @@ export const GET = async (req) => {
         const bill = await Bill.findById(bills[m]._id);
         const userId = bill.userId;
         const user = await User.findById(userId);
+        const userCharges = user?.charges ? user.charges : [];
         const month = bill.month;
         const year = bill.year;
         const orders = await Order.find({ userId, month, year });
@@ -248,15 +249,19 @@ export const GET = async (req) => {
         const totalBreakfast = breakfast + extraBreakfast;
         const totalLunch = lunch + extraLunch;
         const totalDinner = dinner + extraDinner;
-        let totalBillInBDT =
+        let totalMealBillInBDT =
           totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
+        bill.charges = userCharges;
+        let totalBillInBDT =
+          totalMealBillInBDT +
+          userCharges.reduce((a, b) => a + parseInt(b.amount), 0);
         let emailHtml;
         if (totalBillInBDT >= bill.paidBillInBDT) {
           bill.totalBreakfast = totalBreakfast;
           bill.totalLunch = totalLunch;
           bill.totalDinner = totalDinner;
           bill.totalBillInBDT = totalBillInBDT;
-          totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
+          // totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
           bill.status = "calculated";
           await bill.save();
           emailHtml = render(
@@ -275,6 +280,7 @@ export const GET = async (req) => {
               totalDeposit: bill.paidBillInBDT,
               totalBill: totalBillInBDT,
               isRestDeposite: false,
+              charges: userCharges,
             })
           );
         } else {
@@ -284,7 +290,7 @@ export const GET = async (req) => {
           bill.totalDinner = totalDinner;
           bill.totalBillInBDT = totalBillInBDT;
           bill.paidBillInBDT = totalBillInBDT;
-          totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
+          // totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
           bill.status = "calculated";
           await bill.save();
           const nextBill = await Bill.findOne({
@@ -311,6 +317,7 @@ export const GET = async (req) => {
               totalDeposit: totalBillInBDT,
               totalBill: totalBillInBDT,
               isRestDeposite: true,
+              charges: userCharges,
             })
           );
         }

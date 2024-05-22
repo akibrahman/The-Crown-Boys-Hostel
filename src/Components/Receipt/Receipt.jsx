@@ -16,7 +16,9 @@ const Receipt = ({
   charges,
   managerAmount,
   setManagerAmount,
+  userName,
 }) => {
+  console.log(charges);
   const [isMoneyAdding, setIsMoneyAdding] = useState({
     id: "",
     state: false,
@@ -114,7 +116,7 @@ const Receipt = ({
       </div>
       <div className="bg-blue-500 px-12 py-3">
         <p className="text-white">Bill For</p>
-        <p className="text-white text-lg">Student Name</p>
+        <p className="text-white text-lg">{userName}</p>
       </div>
 
       <div className="bg-white px-12 py-4 flex items-center justify-center gap-6 md:gap-0 md:justify-evenly flex-wrap md:flex-nowrap text-center">
@@ -168,9 +170,7 @@ const Receipt = ({
           >
             Bill
           </p>
-          <p style={{ color: "#061D53" }}>
-            {totalBillInBDT + charges.reduce((a, b) => a + b.amount, 0)} BDT
-          </p>
+          <p style={{ color: "#061D53" }}>{totalBillInBDT} BDT</p>
         </div>
       </div>
 
@@ -295,8 +295,7 @@ const Receipt = ({
       >
         {status == "initiated" ? (
           <p className=" text-blue-600 font-bold">Not Calculated</p>
-        ) : paidBillInBDT ==
-          totalBillInBDT + charges.reduce((a, b) => a + b.amount, 0) ? (
+        ) : paidBillInBDT == totalBillInBDT ? (
           <p className=" text-green-600 font-bold">Paid</p>
         ) : (
           <>
@@ -314,21 +313,14 @@ const Receipt = ({
             <p style={{ fontWeight: 700, color: "#DC2626" }}>Due</p>
           </>
         )}
-        {status == "calculated" &&
-          paidBillInBDT !=
-            totalBillInBDT + charges.reduce((a, b) => a + b.amount, 0) && (
-            <p className="text-white">
-              Total:{" "}
-              <span className="text-blue-500 font-bold">
-                {!charges || charges.length == 0
-                  ? totalBillInBDT - paidBillInBDT
-                  : totalBillInBDT -
-                    paidBillInBDT +
-                    charges.reduce((a, b) => a + b.amount, 0)}{" "}
-                BDT
-              </span>
-            </p>
-          )}
+        {status == "calculated" && paidBillInBDT != totalBillInBDT && (
+          <p className="text-white">
+            Total:{" "}
+            <span className="text-blue-500 font-bold">
+              {totalBillInBDT - paidBillInBDT} BDT
+            </span>
+          </p>
+        )}
       </div>
     </div>
   );

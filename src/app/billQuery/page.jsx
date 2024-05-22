@@ -200,6 +200,7 @@ const BillQuery = () => {
                   <Receipt
                     key={bill._id}
                     id={bill._id}
+                    userName={bill.userName}
                     month={bill.month}
                     year={bill.year}
                     totalBillInBDT={bill.totalBillInBDT}

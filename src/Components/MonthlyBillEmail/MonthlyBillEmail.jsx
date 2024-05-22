@@ -27,6 +27,7 @@ export const MonthlyBillEmail = ({
   totalDeposit,
   totalBill,
   isRestDeposite,
+  charges = [],
 }) => (
   <Html>
     <Head />
@@ -397,6 +398,51 @@ export const MonthlyBillEmail = ({
           >
             Dinner: {totalDinner}
           </Text>
+          {charges.length > 0 && (
+            <>
+              {" "}
+              <Section
+                style={{
+                  borderCollapse: "collapse",
+                  borderSpacing: "0px",
+                  color: "rgb(51,51,51)",
+                  backgroundColor: "rgb(250,250,250)",
+                  borderRadius: "3px",
+                  fontSize: "12px",
+                  margin: "10px 0 15px 0",
+                  height: "24px",
+                }}
+              >
+                <Text
+                  style={{
+                    background: "#fafafa",
+                    paddingLeft: "10px",
+                    fontSize: "16px",
+                    fontWeight: "800",
+                    margin: "0",
+                  }}
+                >
+                  Charges
+                </Text>
+              </Section>
+              {charges.map((crg, i) => (
+                <Text
+                  key={i}
+                  style={{
+                    margin: "0",
+                    // padding: "0",
+                    lineHeight: 1.4,
+                    color: "rgb(102,102,102)",
+                    fontSize: "14px",
+                    paddingLeft: "15px",
+                  }}
+                >
+                  {crg.note}: {crg.amount}
+                </Text>
+              ))}
+            </>
+          )}
+
           <Text
             style={{
               marginTop: "25px",
