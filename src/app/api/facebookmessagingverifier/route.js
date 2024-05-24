@@ -15,9 +15,9 @@ export const GET = async (req) => {
   const token = searchParams.get("hub.verify_token");
   const challenge = searchParams.get("hub.challenge");
   if (mode && token) {
-    if (mode === "subscribe" && token === process.env.FACEBOOK_VERIFY_TOKEN) {
+    if (mode == "subscribe" && token == process.env.FACEBOOK_VERIFY_TOKEN) {
       console.log("WEBHOOK_VERIFIED");
-      return NextResponse.json(challenge, { status: 200 });
+      return NextResponse.json(parseInt(challenge), { status: 200 });
     } else {
       return NextResponse.json("ERROR", { status: 403 });
     }
