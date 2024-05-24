@@ -1,3 +1,5 @@
+"use client";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
@@ -15,10 +17,16 @@ const page = () => {
     "/images/room/9.jpg",
     "/images/room/10.jpg",
   ];
+  //Page Token From Developers.facebook.com == EAAFMh9dNl8sBOwtGZAuZBuNxFt1giH9v3WKrrGkp1eReSsEANpJLKZBjVc8cKV5V380W1rGQXxxIFSf2x7107fN5ertl5LWtIfOUtFrHFzlbu09x3XkdLAyEK7MmajoaB9ZCs69Ej8o6fZAkTSaikpxAKlxwpPzbBM8yAXCW893PkemBGuzSP53GtmdkcXkSa
   return (
     <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300">
       <div className="flex flex-col md:flex-row gap-3 items-center justify-center pt-4">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-3">
+        <motion.div
+          initial={false}
+          animate={{ x: 0 }}
+          transition={{ type: "spring" }}
+          className="flex flex-col md:flex-row items-center justify-center gap-3"
+        >
           <p className="md:font-medium underline">
             বুকিং এর জন্যে পাশের বাটনে ক্লিক করে কল করুনঃ
           </p>
@@ -28,7 +36,7 @@ const page = () => {
           >
             Call Us
           </a>
-        </div>
+        </motion.div>
         <p>অথবা, ডায়াল করুন -- 01788422002</p>
       </div>
       <Image

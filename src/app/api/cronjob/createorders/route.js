@@ -70,7 +70,7 @@ export const GET = async (req) => {
           today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
       };
     };
-    const test = false;
+    const test = true;
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
@@ -96,18 +96,7 @@ export const GET = async (req) => {
         year: "numeric",
         timeZone: "Asia/Dhaka",
       });
-
-      const transportCustom = nodemailer.createTransport({
-        // service: "gmail",
-        host: "smtp.elasticemail.com",
-        port: 2525,
-        secure: true,
-        auth: {
-          user: "info@thecrownboyshostel.com",
-          pass: "642B40A38D336FF0201B74AC257AB90A13D0",
-        },
-      });
-      const mailOptions = {
+      const mailOptionsTest = {
         to: "akibrahman5200@gmail.com",
         subject: "Test E-mail from SMTP",
         html: `<div>
@@ -117,7 +106,7 @@ export const GET = async (req) => {
           <p><b>Current Time : ${currentTime}</b></p>
           </div>`,
       };
-      await transportCustom.sendMail(mailOptions);
+      await transport.sendMail(mailOptionsTest);
 
       // const allUsers = await User.find({ role: "client" });
       // for (let x = 0; x < allUsers.length; x++) {
