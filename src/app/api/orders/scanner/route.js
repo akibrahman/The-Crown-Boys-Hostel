@@ -25,6 +25,6 @@ export const GET = async (req) => {
       year,
     });
   } catch (error) {
-    return NextResponse.json({ code: 4002, success: false });
+    return NextResponse.json({ code: 4002, success: false, error });
   }
 };
