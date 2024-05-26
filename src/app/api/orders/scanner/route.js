@@ -4,14 +4,14 @@ const { dbConfig } = require("@/dbConfig/dbConfig");
 
 await dbConfig();
 
-export const GET = async (req) => {
+export const POST = async (req) => {
   try {
-    const { searchParams } = new URL(req.url);
-    const tagId = searchParams.get("tagId");
-    const meal = searchParams.get("meal");
-    const date = searchParams.get("date");
-    const month = searchParams.get("month");
-    const year = searchParams.get("year");
+    const body = await req.json();
+    const tagId = body.tagId;
+    const meal = body.meal;
+    const date = body.date;
+    const month = body.month;
+    const year = body.year;
     if (!tagId || !meal || !date || !month || !year) {
       return NextResponse.json({ code: 4001, success: false });
     }
