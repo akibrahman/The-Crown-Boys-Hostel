@@ -16,13 +16,9 @@ export const POST = async (req) => {
       return NextResponse.json({ code: 4001, success: false });
     }
     return NextResponse.json({
-      code: 2000,
       success: true,
-      tagId,
-      meal,
-      date,
-      month,
-      year,
+      "E3 23 AB 15": "true",
+      "43 1A 23 17": "true",
     });
   } catch (error) {
     return NextResponse.json({ code: 4002, success: false, error });
