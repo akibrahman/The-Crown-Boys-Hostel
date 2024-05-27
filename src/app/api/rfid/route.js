@@ -7,6 +7,19 @@ await dbConfig();
 export const POST = async (req) => {
   try {
     const body = await req.json();
+    const isExists = await RFID.findOne({ cardId: body.cardId });
+    if (isExists) {
+      if (isExists.isIssued) {
+        return NextResponse.json({
+          msg: "Card already registered!",
+          success: false,
+        });
+      }
+      return NextResponse.json({
+        msg: "Card already scanned!",
+        success: false,
+      });
+    }
     const newRFID = new RFID({
       cardId: body.cardId,
       createdAt: new Date().toISOString("en-US", {
@@ -15,7 +28,7 @@ export const POST = async (req) => {
     });
     await newRFID.save();
     return NextResponse.json({
-      msg: "RFID created successfully",
+      msg: "Card scanned successfully",
       success: true,
     });
   } catch (error) {
