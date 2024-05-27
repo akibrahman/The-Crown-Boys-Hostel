@@ -10,18 +10,19 @@ export const GET = async (req) => {
     const id = searchParams.get("id");
     const onlyApproved = searchParams.get("onlyApproved");
     const clientName = searchParams.get("clientName");
+    const regexPattern = new RegExp(clientName, "i");
     //! For User's Query
     if (onlyApproved === "1") {
       const clients = await User.find({
         isClient: true,
         manager: id,
         isClientVerified: true,
+        username: regexPattern,
       });
       return NextResponse.json({ clients, success: true });
     }
     //! For Manager's Profile
     else {
-      const regexPattern = new RegExp(clientName, "i");
       const clients = await User.find({
         isClient: true,
         manager: id,
