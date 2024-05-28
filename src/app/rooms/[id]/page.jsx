@@ -55,10 +55,29 @@ const Page = ({ params }) => {
           Floor
         </span>
       </p>
-      <div className="flex items-start justify-center gap-4 p-10">
-        <div className="w-[45%] flex flex-col items-center gap-4 relative">
+      <div
+        style={{
+          display: "flex",
+          padding: "2.5rem",
+          gap: "1rem",
+          justifyContent: "center",
+          alignItems: "flex-start",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            position: "relative",
+            flexDirection: "column",
+            gap: "1rem",
+            alignItems: "center",
+            width: "45%",
+          }}
+        >
           <p>Room Sketch</p>
-          <div className="w-full relative select-none">
+          <div
+            style={{ position: "relative", width: "100%", userSelect: "none" }}
+          >
             <Image
               height={100}
               width={450}
