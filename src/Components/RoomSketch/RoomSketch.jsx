@@ -9,7 +9,14 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a31");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            style={{
+              fontSize: "4.5rem",
+              lineHeight: 1,
+              transitionProperty: "all",
+              transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+              transitionDuration: ["300ms", "300ms"],
+            }}
+            className={`${
               selectedSeat.find((seat) => seat.bedNo == "a31")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -19,9 +26,29 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
                 : "text-green-600"
             }`}
           />
-          <p className="text-primary text-center text-sm">A 31</p>
+          <p
+            className=""
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textAlign: "center",
+              color: "#141515",
+            }}
+          >
+            A 31
+          </p>
           {selectedSeat.find((seat) => seat.bedNo == "a31") && (
-            <p className="text-green-500 text-center text-sm">Selected</p>
+            <p
+              className=""
+              style={{
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                textAlign: "center",
+                color: "#10B981",
+              }}
+            >
+              Selected
+            </p>
           )}
         </div>
         <div className="absolute cursor-pointer top-[30%] right-[4%]">
@@ -29,7 +56,14 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a32");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            style={{
+              fontSize: "4.5rem",
+              lineHeight: 1,
+              transitionProperty: "all",
+              transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+              transitionDuration: ["300ms", "300ms"],
+            }}
+            className={`${
               selectedSeat.find((seat) => seat.bedNo == "a32")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -39,9 +73,29 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
                 : "text-green-600"
             }`}
           />
-          <p className="text-primary text-center text-sm">A 32</p>
+          <p
+            className=""
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textAlign: "center",
+              color: "#141515",
+            }}
+          >
+            A 32
+          </p>
           {selectedSeat.find((seat) => seat.bedNo == "a32") && (
-            <p className="text-green-500 text-center text-sm">Selected</p>
+            <p
+              className=""
+              style={{
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                textAlign: "center",
+                color: "#10B981",
+              }}
+            >
+              Selected
+            </p>
           )}
         </div>
         <div className="absolute cursor-pointer bottom-[2%] right-[20%] rotate-90">
@@ -49,7 +103,14 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a33");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            style={{
+              fontSize: "4.5rem",
+              lineHeight: 1,
+              transitionProperty: "all",
+              transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+              transitionDuration: ["300ms", "300ms"],
+            }}
+            className={`${
               selectedSeat.find((seat) => seat.bedNo == "a33")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -59,9 +120,29 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
                 : "text-green-600"
             }`}
           />
-          <p className="text-primary text-center text-sm">A 33</p>
+          <p
+            className=""
+            style={{
+              fontSize: "0.875rem",
+              lineHeight: "1.25rem",
+              textAlign: "center",
+              color: "#141515",
+            }}
+          >
+            A 33
+          </p>
           {selectedSeat.find((seat) => seat.bedNo == "a33") && (
-            <p className="text-green-500 text-center text-sm">Selected</p>
+            <p
+              className=""
+              style={{
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                textAlign: "center",
+                color: "#10B981",
+              }}
+            >
+              Selected
+            </p>
           )}
         </div>
       </>
