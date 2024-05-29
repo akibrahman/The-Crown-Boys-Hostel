@@ -144,10 +144,7 @@ export const GET = async (req) => {
     //! Last day of any month------------------------------
     //! Second Last day of any month-----------------------
 
-    if (
-      aboutLastDayOfCurrentMonth.isLastDay ||
-      aboutSecondLastDayOfCurrentMonth.isSecondLastDay
-    ) {
+    if (true) {
       const lastDayOfMonthEmail = {
         to: "akibrahman5200@gmail.com",
         subject: "Last Day Execution Reminder",
