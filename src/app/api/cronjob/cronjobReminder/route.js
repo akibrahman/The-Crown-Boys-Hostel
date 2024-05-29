@@ -103,7 +103,10 @@ export const GET = async (req) => {
     //! Last day of any month------------------------------
     //! Second Last day of any month-----------------------
 
-    if (true) {
+    if (
+      aboutLastDayOfCurrentMonth.isLastDay ||
+      aboutSecondLastDayOfCurrentMonth.isSecondLastDay
+    ) {
       console.log("-------------------> sTARTED tARGET");
       const currentDate = new Date().toLocaleDateString("en-US", {
         timeZone: "Asia/Dhaka",

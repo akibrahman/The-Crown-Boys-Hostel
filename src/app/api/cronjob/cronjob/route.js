@@ -55,8 +55,6 @@ export const GET = async (req) => {
       today.setUTCHours(today.getUTCHours() + 6);
       const currentMonth = today.getUTCMonth();
       const currentYear = today.getUTCFullYear();
-      // const currentHour = today.getUTCHours();
-      // const currentMinute = today.getUTCMinutes();
       const lastDayOfMonth = new Date(
         Date.UTC(currentYear, currentMonth + 1, 0)
       );
