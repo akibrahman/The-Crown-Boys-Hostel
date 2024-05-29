@@ -503,7 +503,7 @@ export const GET = async (req) => {
       };
       await transport.sendMail(mailOptions);
     }
-
+    console.log("Runned successfully");
     return NextResponse.json({ success: true, msg: "Runned successfully" });
   } catch (error) {
     console.log(error);
