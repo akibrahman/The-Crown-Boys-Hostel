@@ -1,8 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/cronjob/createorders",
-      "schedule": "0 13 * * *"
+      "path": "/api/cronjob/cronjobReminder",
+      "schedule": "0 18 * * *"
     }
   ]
 }

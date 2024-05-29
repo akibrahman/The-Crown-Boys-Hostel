@@ -70,86 +70,12 @@ export const GET = async (req) => {
           today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
       };
     };
-    const test = false;
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     async function delay(s) {
       await new Promise((resolve) => setTimeout(resolve, s * 1000));
       console.log("Delayed function executed!!!!");
-    }
-    if (true) {
-      await delay(60);
-    }
-    if (test) {
-      console.log("-------------------> Started");
-      // const testArray = ["01709605097", "01521787402"];
-      // await delay(60000);
-      const currentDate = new Date().toLocaleDateString("en-US", {
-        timeZone: "Asia/Dhaka",
-      });
-      const currentTime = new Date().toLocaleTimeString("en-US", {
-        timeZone: "Asia/Dhaka",
-      });
-      const currentMonth = new Date().toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      });
-      const currentYear = new Date().toLocaleDateString("en-BD", {
-        year: "numeric",
-        timeZone: "Asia/Dhaka",
-      });
-      const mailOptionsTest = {
-        to: "akibrahman5200@gmail.com",
-        subject: "Test E-mail from SMTP",
-        html: `<div>
-          <p><b>Current Month : ${currentMonth}</b></p>
-          <p><b>Current Year : ${currentYear}</b></p>
-          <p><b>Current Date : ${currentDate}</b></p>
-          <p><b>Current Time : ${currentTime}</b></p>
-          </div>`,
-      };
-      await transport.sendMail(mailOptionsTest);
-
-      // const allUsers = await User.find({ role: "client" });
-      // for (let x = 0; x < allUsers.length; x++) {
-      //   //! SMS
-      //   const url = "http://bulksmsbd.net/api/smsapi";
-      //   const apiKey = process.env.SMS_API_KEY;
-      //   const senderId = "8809617618230";
-      //   const numbers = allUsers[x].contactNumber;
-      //   // const message = `Hi, Mr. Akib Rahman\nYour monthly bill has been created\nPlease check your E-mail properly with spam box to get details.\n\nThe Crown Boys Hostel`;
-      //   const message = `Hi, Mr. ${allUsers[x].username}\nGood Evening\n\nThe Crown Boys Hostel`;
-      //   const smsClientData = {
-      //     api_key: apiKey,
-      //     senderid: senderId,
-      //     number: numbers,
-      //     message: message,
-      //   };
-      //   const ress = await fetch(url, {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify(smsClientData),
-      //   });
-      //   console.log(ress.ok);
-      //   //! SMS
-      //   await delay(1000);
-      //   const mailOptions = {
-      //     to: allUsers[x].email,
-      //     subject: "Test E-mail from Akib Rahman",
-      //     html: `<div>
-      //     <p><b>Current Month : ${currentMonth}</b></p>
-      //     <p><b>Current Year : ${currentYear}</b></p>
-      //     <p><b>Current Date : ${currentDate}</b></p>
-      //     <p><b>Current Time : ${currentTime}</b></p>
-      //     </div>`,
-      //   };
-      //   await transportGmail.sendMail(mailOptions);
-      //   await delay(1000);
-      // }
-      console.log("-------------------> Ended");
     }
     //! Last day of any month------------------------------
     if (aboutLastDayOfCurrentMonth.isLastDay) {
