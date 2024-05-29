@@ -145,6 +145,7 @@ export const GET = async (req) => {
     //! Second Last day of any month-----------------------
 
     if (true) {
+      console.log("-------------------> sTARTED tARGET");
       const lastDayOfMonthEmail = {
         to: "akibrahman5200@gmail.com",
         subject: "Last Day Execution Reminder",
