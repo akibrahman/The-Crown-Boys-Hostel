@@ -35,7 +35,7 @@ export const allRooms = [
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
     floor: 1,
-    image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+    image: "/images/room/a2.jpeg",
     seats: 4,
     beds: [
       {
@@ -44,7 +44,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a21",
         isBooked: false,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a21.jpeg",
       },
       {
         user: "idOfUserOf-a22",
@@ -52,7 +52,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a22",
         isBooked: false,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a22.jpeg",
       },
       {
         user: "",
@@ -60,7 +60,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a23",
         isBooked: false,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a23.jpeg",
       },
       {
         user: "idOfUserOf-a24",
@@ -68,7 +68,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a24",
         isBooked: false,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a24.jpeg",
       },
     ],
   },
@@ -292,7 +292,7 @@ export const allRooms = [
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
     floor: 3,
-    image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+    image: "/images/room/a2.jpeg",
     seats: 4,
     beds: [
       {
@@ -301,7 +301,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a21",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a21.jpeg",
       },
       {
         user: "idOfUserOf-a22",
@@ -309,7 +309,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a22",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a22.jpeg",
       },
       {
         user: "idOfUserOf-a23",
@@ -317,7 +317,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a23",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a23.jpeg",
       },
       {
         user: "idOfUserOf-a24",
@@ -325,7 +325,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a24",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a24.jpeg",
       },
     ],
   },
@@ -549,7 +549,7 @@ export const allRooms = [
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
     floor: 4,
-    image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+    image: "/images/room/a2.jpeg",
     seats: 4,
     beds: [
       {
@@ -558,7 +558,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a21",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a21.jpeg",
       },
       {
         user: "idOfUserOf-a22",
@@ -566,7 +566,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a22",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a22.jpeg",
       },
       {
         user: "idOfUserOf-a23",
@@ -574,7 +574,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a23",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a23.jpeg",
       },
       {
         user: "idOfUserOf-a24",
@@ -582,7 +582,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a24",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a24.jpeg",
       },
     ],
   },
@@ -806,7 +806,7 @@ export const allRooms = [
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
     floor: 6,
-    image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+    image: "/images/room/a2.jpeg",
     seats: 4,
     beds: [
       {
@@ -815,7 +815,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a21",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a21.jpeg",
       },
       {
         user: "idOfUserOf-a22",
@@ -823,7 +823,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a22",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a22.jpeg",
       },
       {
         user: "idOfUserOf-a23",
@@ -831,7 +831,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a23",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a23.jpeg",
       },
       {
         user: "idOfUserOf-a24",
@@ -839,7 +839,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a24",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a24.jpeg",
       },
     ],
   },
@@ -1063,7 +1063,7 @@ export const allRooms = [
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
     floor: 7,
-    image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+    image: "/images/room/a2.jpeg",
     seats: 4,
     beds: [
       {
@@ -1072,7 +1072,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a21",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a21.jpeg",
       },
       {
         user: "idOfUserOf-a22",
@@ -1080,7 +1080,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a22",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a22.jpeg",
       },
       {
         user: "idOfUserOf-a23",
@@ -1088,7 +1088,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a23",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a23.jpeg",
       },
       {
         user: "idOfUserOf-a24",
@@ -1096,7 +1096,7 @@ export const allRooms = [
         bookingCharge: 2000,
         bedNo: "a24",
         isBooked: true,
-        image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
+        image: "/images/room/a24.jpeg",
       },
     ],
   },

@@ -70,13 +70,16 @@ export const GET = async (req) => {
           today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
       };
     };
-    const test = true;
+    const test = false;
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     async function delay(s) {
-      await new Promise((resolve) => setTimeout(resolve, s));
-      console.log("Delayed function executed!");
+      await new Promise((resolve) => setTimeout(resolve, s * 1000));
+      console.log("Delayed function executed!!!!");
+    }
+    if (true) {
+      await delay(60);
     }
     if (test) {
       console.log("-------------------> Started");

@@ -189,7 +189,7 @@ const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
               <div className="h-full w-max flex items-center">
                 <Image
                   height={100}
-                  width={200}
+                  width={160}
                   src={room.image}
                   alt={`Image of  room number ${room.name} of 'The Crown Boys Hostel'`}
                   className="block rounded-e-full"
