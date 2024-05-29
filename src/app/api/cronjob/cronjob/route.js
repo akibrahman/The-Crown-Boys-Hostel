@@ -482,7 +482,6 @@ export const GET = async (req) => {
       //! <---------->Market Data creation for all verified managers End <---------->
 
       const mailOptions = {
-        from: "cron-job@hostelplates.com",
         to: "akibrahman5200@gmail.com",
         subject: "Cron Job - Second Last Day Executed",
         html: `<div>

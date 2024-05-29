@@ -156,7 +156,7 @@ const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
           Change Floor
         </Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-20 gap-x-10 px-20">
         {rooms
           .sort((roomA, roomB) => {
             const hasFalseA = roomA.beds.some((bed) => bed.isBooked === false);
@@ -189,10 +189,10 @@ const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
               <div className="h-full w-max flex items-center">
                 <Image
                   height={100}
-                  width={160}
+                  width={180}
                   src={room.image}
                   alt={`Image of  room number ${room.name} of 'The Crown Boys Hostel'`}
-                  className="block rounded-e-full"
+                  className="block ounded-e-full rounded-xl"
                 />
               </div>
               <div className="border-l-4 border-blue-500 pl-4 py-3">
