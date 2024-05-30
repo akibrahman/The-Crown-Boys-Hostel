@@ -3,6 +3,7 @@ export const allRooms = [
   {
     _id: "ID001",
     name: "a1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
@@ -31,6 +32,7 @@ export const allRooms = [
   {
     _id: "ID002",
     name: "a2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
@@ -75,6 +77,7 @@ export const allRooms = [
   {
     _id: "ID003",
     name: "a3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
@@ -111,6 +114,7 @@ export const allRooms = [
   // {
   //   _id: "ID004",
   //   name: "a4",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a4-sketch.png",
@@ -147,6 +151,7 @@ export const allRooms = [
   // {
   //   _id: "ID005",
   //   name: "a5",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a5-sketch.png",
@@ -167,6 +172,7 @@ export const allRooms = [
   {
     _id: "ID006",
     name: "b1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
@@ -203,6 +209,7 @@ export const allRooms = [
   {
     _id: "ID007",
     name: "b2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
@@ -231,6 +238,7 @@ export const allRooms = [
   {
     _id: "ID008",
     name: "b3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",
@@ -260,6 +268,7 @@ export const allRooms = [
   {
     _id: "ID009",
     name: "a1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
@@ -288,6 +297,7 @@ export const allRooms = [
   {
     _id: "ID010",
     name: "a2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
@@ -332,6 +342,7 @@ export const allRooms = [
   {
     _id: "ID011",
     name: "a3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
@@ -368,6 +379,7 @@ export const allRooms = [
   // {
   //   _id: "ID012",
   //   name: "a4",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a4-sketch.png",
@@ -404,6 +416,7 @@ export const allRooms = [
   // {
   //   _id: "ID013",
   //   name: "a5",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a5-sketch.png",
@@ -424,6 +437,7 @@ export const allRooms = [
   {
     _id: "ID014",
     name: "b1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
@@ -460,6 +474,7 @@ export const allRooms = [
   {
     _id: "ID015",
     name: "b2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
@@ -488,6 +503,7 @@ export const allRooms = [
   {
     _id: "ID016",
     name: "b3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",
@@ -517,6 +533,7 @@ export const allRooms = [
   {
     _id: "ID017",
     name: "a1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
@@ -545,6 +562,7 @@ export const allRooms = [
   {
     _id: "ID018",
     name: "a2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
@@ -589,6 +607,7 @@ export const allRooms = [
   {
     _id: "ID019",
     name: "a3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
@@ -625,6 +644,7 @@ export const allRooms = [
   // {
   //   _id: "ID020",
   //   name: "a4",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a4-sketch.png",
@@ -661,6 +681,7 @@ export const allRooms = [
   // {
   //   _id: "ID021",
   //   name: "a5",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a5-sketch.png",
@@ -681,6 +702,7 @@ export const allRooms = [
   {
     _id: "ID022",
     name: "b1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
@@ -717,6 +739,7 @@ export const allRooms = [
   {
     _id: "ID023",
     name: "b2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
@@ -745,6 +768,7 @@ export const allRooms = [
   {
     _id: "ID024",
     name: "b3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",
@@ -774,6 +798,7 @@ export const allRooms = [
   {
     _id: "ID025",
     name: "a1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
@@ -802,6 +827,7 @@ export const allRooms = [
   {
     _id: "ID026",
     name: "a2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
@@ -846,6 +872,7 @@ export const allRooms = [
   {
     _id: "ID027",
     name: "a3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
@@ -882,6 +909,7 @@ export const allRooms = [
   // {
   //   _id: "ID028",
   //   name: "a4",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a4-sketch.png",
@@ -918,6 +946,7 @@ export const allRooms = [
   // {
   //   _id: "ID029",
   //   name: "a5",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a5-sketch.png",
@@ -938,6 +967,7 @@ export const allRooms = [
   {
     _id: "ID030",
     name: "b1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
@@ -974,6 +1004,7 @@ export const allRooms = [
   {
     _id: "ID031",
     name: "b2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
@@ -1002,6 +1033,7 @@ export const allRooms = [
   {
     _id: "ID032",
     name: "b3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",
@@ -1031,6 +1063,7 @@ export const allRooms = [
   {
     _id: "ID033",
     name: "a1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
@@ -1059,6 +1092,7 @@ export const allRooms = [
   {
     _id: "ID034",
     name: "a2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a2-sketch.png",
@@ -1103,6 +1137,7 @@ export const allRooms = [
   {
     _id: "ID035",
     name: "a3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
@@ -1139,6 +1174,7 @@ export const allRooms = [
   // {
   //   _id: "ID036",
   //   name: "a4",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a4-sketch.png",
@@ -1175,6 +1211,7 @@ export const allRooms = [
   // {
   //   _id: "ID037",
   //   name: "a5",
+  //   video:"https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
   //   block: "a",
   //   type: "wooden",
   //   sketch: "/images/sketch/a5-sketch.png",
@@ -1195,6 +1232,7 @@ export const allRooms = [
   {
     _id: "ID038",
     name: "b1",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
@@ -1231,6 +1269,7 @@ export const allRooms = [
   {
     _id: "ID039",
     name: "b2",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
@@ -1259,6 +1298,7 @@ export const allRooms = [
   {
     _id: "ID040",
     name: "b3",
+    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",

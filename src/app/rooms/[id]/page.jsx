@@ -80,6 +80,17 @@ const Page = ({ params }) => {
               Available
             </div>
           </div>
+          <p>Room Video</p>
+          <iframe
+            width="560"
+            height="550"
+            src={room.video}
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
         </div>
         <div className="w-[55%] flex flex-col items-center gap-4">
           <p>Room Image</p>
