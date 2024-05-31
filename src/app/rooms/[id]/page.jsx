@@ -3,21 +3,23 @@
 import RoomSketch from "@/Components/RoomSketch/RoomSketch";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { allRooms } from "@/utils/rooms";
+import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
 import { FaArrowLeft, FaTimes } from "react-icons/fa";
 
 const Page = ({ params }) => {
   const { id } = params;
   const route = useRouter();
-  const emVideo = `<iframe width="560" height="315" src="https://www.youtube.com/embed/dRAU3EdsXcE?si=YJ6_GifJ8lc0Nv_e" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
-
   const room = allRooms.find((singleRoom) => singleRoom._id == id);
   console.log(room);
 
   const [selectedSeat, setSelectedSeat] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [isBooking, setIsBooking] = useState(false);
   const targetDivRef = useRef();
 
   const scrollToTable = () => {
@@ -38,8 +40,87 @@ const Page = ({ params }) => {
     }
   };
 
+  const userFormSubmit = async (e) => {
+    e.preventDefault();
+    setIsBooking(true);
+    const name = e.target.name.value;
+    const phoneNumber = e.target.phoneNumber.value;
+    const email = e.target.email.value;
+    const beds = selectedSeat.map((seat) => {
+      return { bedNo: seat.bedNo, roomId: seat.singleRoom._id };
+    });
+    const bookingData = { name, phoneNumber, email, beds };
+    try {
+      const { data } = await axios.post("/api/booking", bookingData);
+      if (data.success) {
+        e.target.reset();
+        setShowForm(false);
+        setSelectedSeat([]);
+        toast.success(data.msg);
+      } else toast.error(data.msg);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.msg);
+    } finally {
+      setIsBooking(false);
+    }
+  };
+
   return (
     <div className="min-h-screen pt-5 md:pt-10 pb-20 md:pb-32 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300 relative">
+      {/*//! User Form  */}
+      <div
+        className={`${
+          showForm
+            ? "opacity-1 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        } fixed top-0 left-0 bg-[rgba(0,0,0,0.5)] z-50 w-full h-screen duration-300 transition-all`}
+      >
+        <div className="h-[600px] md:h-[400px] w-[390px] md:w-[500px] fixed top-10 md:top-1/2 md:-translate-y-1/2 left-1/2 -translate-x-1/2 bg-secondary rounded-xl duration-300 transition-all">
+          <FaTimes
+            onClick={() => setShowForm(false)}
+            className="absolute top-5 right-5 text-xl cursor-pointer"
+          />
+          <div className="flex flex-col h-full items-center justify-center">
+            <p className="text-xl text-center font-semibold text-white pb-10">
+              Information
+            </p>
+            <form
+              onSubmit={userFormSubmit}
+              className="flex flex-col items-center space-y-4"
+            >
+              <input
+                required
+                name="name"
+                type="text"
+                placeholder="You Name ?"
+                className="bg-transparent w-[350px] outline-none focus-visible:shadow-xl shadow-sky-500 text-sky-500 border-sky-500 border rounded-full px-8 py-3"
+              />
+              <input
+                required
+                name="phoneNumber"
+                type="number"
+                placeholder="You Contact Number ?"
+                className="bg-transparent w-[350px] outline-none focus-visible:shadow-xl shadow-sky-500 text-sky-500 border-sky-500 border rounded-full px-8 py-3"
+              />
+              <input
+                required
+                name="email"
+                type="email"
+                placeholder="You E-mail ?"
+                className="bg-transparent w-[350px] outline-none focus-visible:shadow-xl shadow-sky-500 text-sky-500 border-sky-500 border rounded-full px-8 py-3"
+              />
+              <button
+                type="submit"
+                className="bg-sky-500 px-4 py-1 rounded-full active:scale-90 duration-300 font-medium flex items-center gap-4"
+              >
+                Confirm Booking{" "}
+                {isBooking && <CgSpinner className="text-xl animate-spin" />}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
       <FaArrowLeft
         onClick={() => route.back()}
         className="absolute top-5 md:top-10 left-5 md:left-10 text-4xl bg-blue-500 p-2 rounded-full duration-300 transition-all active:scale-90 cursor-pointer"
@@ -69,7 +150,7 @@ const Page = ({ params }) => {
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
+            allowfullscreen={true}
           ></iframe>
         </div>
         {/*//! Sketch Div  */}
@@ -293,21 +374,34 @@ const Page = ({ params }) => {
             )}
           </div>
           {selectedSeat.length != 0 && (
+            // <div className="flex items-center justify-center gap-3 mt-6">
+            //   <p className="md:font-medium underline">
+            //     বুকিং কনফার্ম করতে পাশের বাটনে ক্লিক করে বুকিং চার্জ -{" "}
+            //     {selectedSeat.reduce(
+            //       (a, c) =>
+            //         a +
+            //         c.singleRoom.beds.find((bed) => bed.bedNo == c.bedNo)
+            //           .bookingCharge,
+            //       0
+            //     )}{" "}
+            //     টাকা পরিশোধ করুনঃ
+            //   </p>
+            //   {/* <Link href={"/rooms"}> */}
+            //   <button className="duration-300 px-3 py-1 bg-green-600 text-white font-medium active:scale-90 cursor-pointer select-none inline-block w-max">
+            //     Pay Booking Charge
+            //   </button>
+            //   {/* </Link> */}
+            // </div>
             <div className="flex items-center justify-center gap-3 mt-6">
               <p className="md:font-medium underline">
-                বুকিং কনফার্ম করতে পাশের বাটনে ক্লিক করে বুকিং চার্জ -{" "}
-                {selectedSeat.reduce(
-                  (a, c) =>
-                    a +
-                    c.singleRoom.beds.find((bed) => bed.bedNo == c.bedNo)
-                      .bookingCharge,
-                  0
-                )}{" "}
-                টাকা পরিশোধ করুনঃ
+                বুকিং কনফার্ম করতে পাশের বাটনে ক্লিক করুনঃ
               </p>
               {/* <Link href={"/rooms"}> */}
-              <button className="duration-300 px-3 py-1 bg-green-600 text-white font-medium active:scale-90 cursor-pointer select-none inline-block w-max">
-                Pay Booking Charge
+              <button
+                onClick={() => setShowForm(true)}
+                className="duration-300 px-3 py-1 bg-green-600 text-white font-medium active:scale-90 cursor-pointer select-none inline-block w-max"
+              >
+                Confirm Booking
               </button>
               {/* </Link> */}
             </div>
