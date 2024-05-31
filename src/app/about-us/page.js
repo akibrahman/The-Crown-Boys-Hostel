@@ -36,7 +36,7 @@ const page = () => {
         <p>অথবা, ডায়াল করুন -- 01788422002</p>
       </div>
       <div className="flex flex-col md:flex-row items-center justify-center gap-3 mt-8">
-        <p className="md:font-medium underline">
+        <p className="md:font-medium underline text-center px-4">
           রুম সম্পর্কে বিস্তারিত জানতে অথবা বুকিং এর জন্যে পাশের বাটনে ক্লিক
           করুনঃ
         </p>
