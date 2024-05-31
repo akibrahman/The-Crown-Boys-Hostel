@@ -6,16 +6,12 @@ import Marquee from "react-fast-marquee";
 
 const page = () => {
   const photos = [
-    "/images/room/1.jpg",
-    "/images/room/2.jpg",
-    "/images/room/3.jpg",
-    "/images/room/4.jpg",
-    "/images/room/5.jpg",
-    "/images/room/6.jpg",
-    "/images/room/7.jpg",
-    "/images/room/8.jpg",
-    "/images/room/9.jpg",
-    "/images/room/10.jpg",
+    "/images/room/a1.jpeg",
+    "/images/room/a2.jpeg",
+    "/images/room/a3.jpeg",
+    "/images/room/b1.jpeg",
+    "/images/room/b2.jpeg",
+    "/images/room/b3.jpeg",
   ];
   //Page Token From Developers.facebook.com == EAAFMh9dNl8sBOwtGZAuZBuNxFt1giH9v3WKrrGkp1eReSsEANpJLKZBjVc8cKV5V380W1rGQXxxIFSf2x7107fN5ertl5LWtIfOUtFrHFzlbu09x3XkdLAyEK7MmajoaB9ZCs69Ej8o6fZAkTSaikpxAKlxwpPzbBM8yAXCW893PkemBGuzSP53GtmdkcXkSa
   return (
@@ -39,14 +35,7 @@ const page = () => {
         </motion.div>
         <p>অথবা, ডায়াল করুন -- 01788422002</p>
       </div>
-      <Image
-        src="/images/aboutUsBanner.png"
-        alt="About page banner picture"
-        height={300}
-        width={800}
-        className="mx-auto px-8 md:p-0 mt-5"
-      />
-      <div className="hidden flex-col md:flex-row items-center justify-center gap-3 mt-8">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-3 mt-8">
         <p className="md:font-medium underline">
           রুম সম্পর্কে বিস্তারিত জানতে অথবা বুকিং এর জন্যে পাশের বাটনে ক্লিক
           করুনঃ
@@ -57,6 +46,13 @@ const page = () => {
           </button>
         </Link>
       </div>
+      <Image
+        src="/images/aboutUsBanner.png"
+        alt="About page banner picture"
+        height={300}
+        width={800}
+        className="mx-auto px-8 md:p-0 mt-5"
+      />
       <div className="w-[95%] md:w-[80%] mx-auto flex flex-col md:flex-row gap-10 mt-10">
         <Image
           src="/images/aboutUsPoster.png"

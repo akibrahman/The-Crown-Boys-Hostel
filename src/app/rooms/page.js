@@ -45,7 +45,7 @@ const Rooms = () => {
       ) : (
         <div>
           <Floors allRooms={allRooms} />
-          <div className="absolute top-0 left-0 w-[400px] h-[100%] flex items-center justify-center flex-col">
+          <div className="lg:absolute mt-10 lg:mt-0 top-0 left-0 lg:w-[400px] h-[100%] flex items-center justify-center flex-col">
             <p className="w-[200px] flex items-center gap-2">
               Total Rooms:
               <span className="text-blue-500 text-3xl font-medium">
@@ -138,14 +138,14 @@ const Floors = ({ allRooms }) => {
 const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
   return (
     <div>
-      <div className="flex items-center justify-center gap-4 py-6 px-20">
-        <div className="text-lg flex-grow text-center space-x-6">
-          <span>Total Seats: {totalRooms}</span>
-          <span className="underline font-semibold">
+      <div className="flex items-center justify-center gap-4 py-3 md:py-6 px-8 md:px-20">
+        <div className="flex flex-col md:flex-row items-center justify-center text-lg flex-grow text-center gap-1 md:gap-6 pb-6">
+          <span className="block">Total Seats: {totalRooms}</span>
+          <span className="underline font-semibold block">
             Rooms of {floor}
             <sup>{floor == 1 ? "st" : floor == 3 ? "rd" : "th"}</sup> Floor
           </span>
-          <span className="text-green-500">
+          <span className="text-green-500 block">
             Available Seats: {availableRooms}
           </span>
         </div>
@@ -156,7 +156,7 @@ const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
           Change Floor
         </Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-20 gap-x-10 px-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-y-20 gap-y-16 md:gap-x-10 px-5 lg:px-20">
         {rooms
           .sort((roomA, roomB) => {
             const hasFalseA = roomA.beds.some((bed) => bed.isBooked === false);
@@ -173,10 +173,10 @@ const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
           .map((room, i) => (
             <div
               key={i}
-              className="h-[200px] bg-stone-800 rounded-s-full flex gap-10 items-center relative"
+              className="h-[200px] bg-stone-800 rounded-s-full flex gap-3 lg:gap-10 items-center relative"
             >
               <Link href={`/rooms/${room._id}`}>
-                <button className="absolute bottom-6 right-6 px-4 py-1 bg-blue-500 text-white flex items-center gap-3 duration-300 active:scale-90">
+                <button className="absolute bottom-0 lg:bottom-6 right-0 lg:right-6 px-2 md:px-4 py-0.5 md:py-1 bg-blue-500 text-white flex items-center gap-3 duration-300 active:scale-90">
                   Details
                   <FaArrowRight />
                 </button>
@@ -195,7 +195,7 @@ const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
                   className="block ounded-e-full rounded-xl"
                 />
               </div>
-              <div className="border-l-4 border-blue-500 pl-4 py-3">
+              <div className="border-l-4 border-blue-500 pl-2 md:pl-4 py-3">
                 <p className="text-blue-500 font-medium text-lg">
                   Rooma Name:{" "}
                   <span>

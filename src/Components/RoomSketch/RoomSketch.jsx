@@ -9,7 +9,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a31");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a31")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -29,7 +29,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a32");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a32")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -49,7 +49,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a33");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a33")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -74,7 +74,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a11");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a11")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -94,7 +94,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a12");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a12")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -119,7 +119,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a21");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a21")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -139,7 +139,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a22");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a22")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -159,7 +159,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a23");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a23")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -179,7 +179,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a24");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a24")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -204,7 +204,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a41");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a41")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -224,7 +224,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a42");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a42")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -244,7 +244,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a43");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a43")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -269,7 +269,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("a51");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "a51")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -294,7 +294,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("b11");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "b11")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -314,7 +314,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("b12");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "b12")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -334,7 +334,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("b13");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "b13")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -359,7 +359,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("b21");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "b21")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -379,7 +379,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("b22");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "b22")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -404,7 +404,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("b31");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "b31")
                 ? "shadow-inner"
                 : "shadow-inner-none"
@@ -424,7 +424,7 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             onClick={() => {
               selectSeat("b32");
             }}
-            className={`text-7xl duration-300 transition-all shadow-green-600 ${
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
               selectedSeat.find((seat) => seat.bedNo == "b32")
                 ? "shadow-inner"
                 : "shadow-inner-none"

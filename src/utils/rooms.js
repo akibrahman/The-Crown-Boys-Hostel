@@ -3,13 +3,15 @@ export const allRooms = [
   {
     _id: "ID001",
     name: "a1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/pT8LyeET7OE?si=jH0-x1qAO1V83Kp9",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
     floor: 1,
     image: "/images/room/a1.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/a1at.jpeg" },
+    balcony: { state: true, image: "/images/room/a1b.jpeg" },
     beds: [
       {
         user: "",
@@ -39,6 +41,8 @@ export const allRooms = [
     floor: 1,
     image: "/images/room/a2.jpeg",
     seats: 4,
+    toilet: { type: "attached", image: "/images/room/a2at.jpeg" },
+    balcony: { state: true, image: "/images/room/a2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a21",
@@ -77,13 +81,15 @@ export const allRooms = [
   {
     _id: "ID003",
     name: "a3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/6IqhrJ8ZNMM?si=a40H2Q2-lSrBCfAt",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
     floor: 1,
     image: "/images/room/a3.jpeg",
     seats: 3,
+    toilet: { type: "attached", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/a3b.jpeg" },
     beds: [
       {
         user: "",
@@ -121,6 +127,8 @@ export const allRooms = [
   //   floor: 1,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 3,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a41",
@@ -158,6 +166,8 @@ export const allRooms = [
   //   floor: 1,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 1,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a51",
@@ -172,13 +182,15 @@ export const allRooms = [
   {
     _id: "ID006",
     name: "b1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/VdCCt_c_q8s?si=9HYCi2dwHsdgtqo3",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
     floor: 1,
     image: "/images/room/b1.jpeg",
     seats: 3,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/b1b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b11",
@@ -209,13 +221,15 @@ export const allRooms = [
   {
     _id: "ID007",
     name: "b2",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/apDcNAXa0jA?si=9P1fIqAvWpCLGl0W",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
     floor: 1,
     image: "/images/room/b2.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/b2at.jpeg" },
+    balcony: { state: true, image: "/images/room/b2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b21",
@@ -238,13 +252,15 @@ export const allRooms = [
   {
     _id: "ID008",
     name: "b3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/tC8amRV2g3M?si=YgQ7UWGLO7HjrOsK",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",
     floor: 1,
     image: "/images/room/b3.jpeg",
     seats: 2,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: false, image: "" },
     beds: [
       {
         user: "idOfUserOf-b31",
@@ -268,13 +284,15 @@ export const allRooms = [
   {
     _id: "ID009",
     name: "a1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/pT8LyeET7OE?si=jH0-x1qAO1V83Kp9",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
     floor: 3,
     image: "/images/room/a1.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/a1at.jpeg" },
+    balcony: { state: true, image: "/images/room/a1b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a11",
@@ -304,6 +322,8 @@ export const allRooms = [
     floor: 3,
     image: "/images/room/a2.jpeg",
     seats: 4,
+    toilet: { type: "attached", image: "/images/room/a2at.jpeg" },
+    balcony: { state: true, image: "/images/room/a2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a21",
@@ -342,13 +362,15 @@ export const allRooms = [
   {
     _id: "ID011",
     name: "a3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/6IqhrJ8ZNMM?si=a40H2Q2-lSrBCfAt",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
     floor: 3,
     image: "/images/room/a3.jpeg",
     seats: 3,
+    toilet: { type: "attached", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/a3b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a31",
@@ -386,6 +408,8 @@ export const allRooms = [
   //   floor: 3,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 3,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a41",
@@ -423,6 +447,8 @@ export const allRooms = [
   //   floor: 3,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 1,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a51",
@@ -437,13 +463,15 @@ export const allRooms = [
   {
     _id: "ID014",
     name: "b1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/VdCCt_c_q8s?si=9HYCi2dwHsdgtqo3",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
     floor: 3,
     image: "/images/room/b1.jpeg",
     seats: 3,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/b1b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b11",
@@ -474,13 +502,15 @@ export const allRooms = [
   {
     _id: "ID015",
     name: "b2",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/apDcNAXa0jA?si=9P1fIqAvWpCLGl0W",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
     floor: 3,
     image: "/images/room/b2.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/b2at.jpeg" },
+    balcony: { state: true, image: "/images/room/b2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b21",
@@ -503,13 +533,15 @@ export const allRooms = [
   {
     _id: "ID016",
     name: "b3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/tC8amRV2g3M?si=YgQ7UWGLO7HjrOsK",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",
     floor: 3,
     image: "/images/room/b3.jpeg",
     seats: 2,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: false, image: "" },
     beds: [
       {
         user: "idOfUserOf-b31",
@@ -533,13 +565,15 @@ export const allRooms = [
   {
     _id: "ID017",
     name: "a1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/pT8LyeET7OE?si=jH0-x1qAO1V83Kp9",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
     floor: 4,
     image: "/images/room/a1.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/a1at.jpeg" },
+    balcony: { state: true, image: "/images/room/a1b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a11",
@@ -569,6 +603,8 @@ export const allRooms = [
     floor: 4,
     image: "/images/room/a2.jpeg",
     seats: 4,
+    toilet: { type: "attached", image: "/images/room/a2at.jpeg" },
+    balcony: { state: true, image: "/images/room/a2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a21",
@@ -607,13 +643,15 @@ export const allRooms = [
   {
     _id: "ID019",
     name: "a3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/6IqhrJ8ZNMM?si=a40H2Q2-lSrBCfAt",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
     floor: 4,
     image: "/images/room/a3.jpeg",
     seats: 3,
+    toilet: { type: "attached", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/a3b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a31",
@@ -651,6 +689,8 @@ export const allRooms = [
   //   floor: 4,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 3,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a41",
@@ -688,6 +728,8 @@ export const allRooms = [
   //   floor: 4,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 1,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a51",
@@ -702,13 +744,15 @@ export const allRooms = [
   {
     _id: "ID022",
     name: "b1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/VdCCt_c_q8s?si=9HYCi2dwHsdgtqo3",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
     floor: 4,
     image: "/images/room/b1.jpeg",
     seats: 3,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/b1b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b11",
@@ -739,13 +783,15 @@ export const allRooms = [
   {
     _id: "ID023",
     name: "b2",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/apDcNAXa0jA?si=9P1fIqAvWpCLGl0W",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
     floor: 4,
     image: "/images/room/b2.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/b2at.jpeg" },
+    balcony: { state: true, image: "/images/room/b2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b21",
@@ -768,13 +814,15 @@ export const allRooms = [
   {
     _id: "ID024",
     name: "b3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/tC8amRV2g3M?si=YgQ7UWGLO7HjrOsK",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",
     floor: 4,
     image: "/images/room/b3.jpeg",
     seats: 2,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: false, image: "" },
     beds: [
       {
         user: "idOfUserOf-b31",
@@ -798,13 +846,15 @@ export const allRooms = [
   {
     _id: "ID025",
     name: "a1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/pT8LyeET7OE?si=jH0-x1qAO1V83Kp9",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
     floor: 6,
     image: "/images/room/a1.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/a1at.jpeg" },
+    balcony: { state: true, image: "/images/room/a1b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a11",
@@ -834,6 +884,8 @@ export const allRooms = [
     floor: 6,
     image: "/images/room/a2.jpeg",
     seats: 4,
+    toilet: { type: "attached", image: "/images/room/a2at.jpeg" },
+    balcony: { state: true, image: "/images/room/a2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a21",
@@ -872,13 +924,15 @@ export const allRooms = [
   {
     _id: "ID027",
     name: "a3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/6IqhrJ8ZNMM?si=a40H2Q2-lSrBCfAt",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
     floor: 6,
     image: "/images/room/a3.jpeg",
     seats: 3,
+    toilet: { type: "attached", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/a3b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a31",
@@ -916,6 +970,8 @@ export const allRooms = [
   //   floor: 6,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 3,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a41",
@@ -953,6 +1009,8 @@ export const allRooms = [
   //   floor: 6,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 1,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a51",
@@ -967,13 +1025,15 @@ export const allRooms = [
   {
     _id: "ID030",
     name: "b1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/VdCCt_c_q8s?si=9HYCi2dwHsdgtqo3",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
     floor: 6,
     image: "/images/room/b1.jpeg",
     seats: 3,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/b1b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b11",
@@ -1004,13 +1064,15 @@ export const allRooms = [
   {
     _id: "ID031",
     name: "b2",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/apDcNAXa0jA?si=9P1fIqAvWpCLGl0W",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
     floor: 6,
     image: "/images/room/b2.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/b2at.jpeg" },
+    balcony: { state: true, image: "/images/room/b2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b21",
@@ -1033,13 +1095,15 @@ export const allRooms = [
   {
     _id: "ID032",
     name: "b3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/tC8amRV2g3M?si=YgQ7UWGLO7HjrOsK",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",
     floor: 6,
     image: "/images/room/b3.jpeg",
     seats: 2,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: false, image: "" },
     beds: [
       {
         user: "idOfUserOf-b31",
@@ -1063,13 +1127,15 @@ export const allRooms = [
   {
     _id: "ID033",
     name: "a1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/pT8LyeET7OE?si=jH0-x1qAO1V83Kp9",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a1-sketch.png",
     floor: 7,
     image: "/images/room/a1.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/a1at.jpeg" },
+    balcony: { state: true, image: "/images/room/a1b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a11",
@@ -1099,6 +1165,8 @@ export const allRooms = [
     floor: 7,
     image: "/images/room/a2.jpeg",
     seats: 4,
+    toilet: { type: "attached", image: "/images/room/a2at.jpeg" },
+    balcony: { state: true, image: "/images/room/a2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a21",
@@ -1137,13 +1205,15 @@ export const allRooms = [
   {
     _id: "ID035",
     name: "a3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/6IqhrJ8ZNMM?si=a40H2Q2-lSrBCfAt",
     block: "a",
     type: "concrete",
     sketch: "/images/sketch/a3-sketch.png",
     floor: 7,
     image: "/images/room/a3.jpeg",
     seats: 3,
+    toilet: { type: "attached", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/a3b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-a31",
@@ -1181,6 +1251,8 @@ export const allRooms = [
   //   floor: 7,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 3,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a41",
@@ -1218,6 +1290,8 @@ export const allRooms = [
   //   floor: 7,
   //   image: "https://i.ibb.co/Lgj3BHG/main-Image.jpg",
   //   seats: 1,
+  //   toilet:{type:"attached",image:"/images/room/"},
+  //   balcony:{state:"true",image:"/images/room/"}//   ,
   //   beds: [
   //     {
   //       user: "idOfUserOf-a51",
@@ -1232,13 +1306,15 @@ export const allRooms = [
   {
     _id: "ID038",
     name: "b1",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/VdCCt_c_q8s?si=9HYCi2dwHsdgtqo3",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b1-sketch.png",
     floor: 7,
     image: "/images/room/b1.jpeg",
     seats: 3,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: true, image: "/images/room/b1b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b11",
@@ -1269,13 +1345,15 @@ export const allRooms = [
   {
     _id: "ID039",
     name: "b2",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/apDcNAXa0jA?si=9P1fIqAvWpCLGl0W",
     block: "b",
     type: "concrete",
     sketch: "/images/sketch/b2-sketch.png",
     floor: 7,
     image: "/images/room/b2.jpeg",
     seats: 2,
+    toilet: { type: "attached", image: "/images/room/b2at.jpeg" },
+    balcony: { state: true, image: "/images/room/b2b.jpeg" },
     beds: [
       {
         user: "idOfUserOf-b21",
@@ -1298,13 +1376,15 @@ export const allRooms = [
   {
     _id: "ID040",
     name: "b3",
-    video: "https://www.youtube.com/embed/0J6PI8LyA5Y?si=M3rN24hIUtVy9MAA",
+    video: "https://www.youtube.com/embed/tC8amRV2g3M?si=YgQ7UWGLO7HjrOsK",
     block: "b",
     type: "wooden",
     sketch: "/images/sketch/b3-sketch.png",
     floor: 7,
     image: "/images/room/b3.jpeg",
     seats: 2,
+    toilet: { type: "common", image: "/images/room/a3at.jpeg" },
+    balcony: { state: false, image: "" },
     beds: [
       {
         user: "idOfUserOf-b31",
