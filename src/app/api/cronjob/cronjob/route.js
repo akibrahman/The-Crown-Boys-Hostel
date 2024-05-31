@@ -343,7 +343,7 @@ export const GET = async (req) => {
         await managerBill.save();
         //! SMS
         const url = "http://bulksmsbd.net/api/smsapi";
-        const apiKey = "WvcwmDFS5UoKaSJ1KJQa";
+        const apiKey = process.env.SMS_API_KEY;
         const senderId = "8809617618230";
         const numbers = allManagers[n].contactNumber;
         const message = `Hi, Mr. ${allManagers[n].username}\nYour monthly market bill with meal count and meal rate has been created. Check it from your profile.\n\nThe Crown Boys Hostel Inc.`;
