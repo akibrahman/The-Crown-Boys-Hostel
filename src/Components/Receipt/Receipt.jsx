@@ -246,7 +246,7 @@ const Receipt = ({
             onClick={credite}
             className="flex items-center gap-3 px-4 py-1 bg-green-500 text-white duration-300 rounded active:scale-90"
           >
-            Credite
+            Credit
             {isMoneyAdding.state &&
               isMoneyAdding.id == id &&
               isMoneyAdding.method == "credite" && (
@@ -257,7 +257,7 @@ const Receipt = ({
             onClick={debite}
             className="flex items-center gap-3 px-4 py-1 bg-red-500 text-white duration-300 rounded active:scale-90"
           >
-            Debite
+            Debit
             {isMoneyAdding.state &&
               isMoneyAdding.id == id &&
               isMoneyAdding.method == "debite" && (
