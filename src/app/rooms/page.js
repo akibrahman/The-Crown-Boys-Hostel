@@ -70,7 +70,9 @@ const Rooms = () => {
                     accumulator +
                     currentValue.beds.reduce(
                       (accumulator2, currentValue2) =>
-                        accumulator2 + currentValue2.isBooked == true ? 0 : 1,
+                        currentValue2.isBooked == false
+                          ? accumulator2 + 1
+                          : accumulator2,
                       0
                     ),
                   0
