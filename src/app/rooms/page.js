@@ -118,11 +118,10 @@ const Floors = ({ allRooms }) => {
               {allRooms
                 .filter((room) => room.floor == floor)
                 .reduce(
-                  (accumulator, currentValue) =>
-                    accumulator +
-                    currentValue.beds.reduce(
-                      (accumulator2, currentValue2) =>
-                        accumulator2 + currentValue2.isBooked == true ? 0 : 1,
+                  (a, c) =>
+                    a +
+                    c.beds.reduce(
+                      (a2, c2) => (c2.isBooked == false ? a2 + 1 : a2),
                       0
                     ),
                   0
