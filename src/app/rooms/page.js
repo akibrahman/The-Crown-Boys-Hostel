@@ -197,7 +197,7 @@ const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
               </div>
               <div className="border-l-4 border-blue-500 pl-2 md:pl-4 py-3">
                 <p className="text-blue-500 font-medium text-lg">
-                  Rooma Name:{" "}
+                  Room Name:{" "}
                   <span>
                     {room.name.split("")[0].toUpperCase() +
                       " " +
