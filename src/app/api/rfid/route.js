@@ -11,14 +11,17 @@ export const POST = async (req) => {
     const isExists = await RFID.findOne({ cardId: body.cardId });
     if (isExists) {
       if (isExists.isIssued) {
+        const user = await User.findById(isExists.userId);
         return NextResponse.json({
-          msg: "Card already registered!",
+          msg: `Card is assigned to ${user.username}`,
           success: false,
+          code: "402",
         });
       }
       return NextResponse.json({
-        msg: "Card already scanned!",
+        msg: "Card is already scanned!",
         success: false,
+        code: "401",
       });
     }
     const newRFID = new RFID({
@@ -31,12 +34,14 @@ export const POST = async (req) => {
     return NextResponse.json({
       msg: "Card scanned successfully",
       success: true,
+      code: "200",
     });
   } catch (error) {
     return NextResponse.json(
       {
         msg: error.message,
         success: false,
+        code: "500",
       },
       {
         status: 500,
