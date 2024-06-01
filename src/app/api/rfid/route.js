@@ -71,24 +71,6 @@ export const GET = async () => {
         rfids.push(rfidData);
       }
     }
-    // const rfids = await RFID.aggregate([
-    //   {
-    //     $addFields: {
-    //       userIdObj: { $toObjectId: "$userId" },
-    //     },
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: "users",
-    //       localField: "userIdObj",
-    //       foreignField: "_id",
-    //       as: "user",
-    //     },
-    //   },
-    //   {
-    //     $unwind: "$user",
-    //   },
-    // ]);
     return NextResponse.json({
       rfids,
       success: true,

@@ -3,7 +3,7 @@ import Bill from "@/models/billModel";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 
-dbConfig();
+await dbConfig();
 
 export const GET = async (req) => {
   try {
