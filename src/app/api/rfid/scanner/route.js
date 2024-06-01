@@ -7,7 +7,7 @@ export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
     const cardId = searchParams.get("cardId");
-    const mela = searchParams.get("mela");
+    const meal = searchParams.get("meal");
     const date = searchParams.get("date");
     const month = searchParams.get("month");
     const year = searchParams.get("year");
