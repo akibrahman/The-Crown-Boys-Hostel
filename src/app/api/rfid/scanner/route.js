@@ -40,6 +40,8 @@ export const GET = async (req) => {
     const count = order[mealPropertyForGuestMeal] + (order[meal] ? 1 : 0);
     if (!isMeal)
       return NextResponse.json({
+        isMeal,
+        data: [order[meal], order[mealPropertyForGuestMeal]],
         success: false,
         msg: "You Haven't Order Meal",
       });
