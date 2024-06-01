@@ -41,10 +41,8 @@ export const GET = async (req) => {
     if (!isMeal)
       return NextResponse.json({
         isMeal,
-        // data: [order[meal], meal, order[mealPropertyForGuestMeal]],
-        data: [orderDate, meal],
         success: false,
-        msg: "You Haven't Order Meal",
+        msg: "No Ordered Meal",
       });
     return NextResponse.json({
       isMeal,
