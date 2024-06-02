@@ -41,7 +41,7 @@ const ManagerOrder = () => {
     queryKey: ["myClients", "managerOrder", user?._id],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
-        `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=1`
+        `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=1&clientName=`
       );
       if (data.success) {
         return data.clients;
