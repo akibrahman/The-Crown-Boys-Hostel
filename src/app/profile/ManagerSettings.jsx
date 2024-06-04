@@ -5,13 +5,19 @@ const ManagerSettings = ({ user }) => {
   return user.role === "manager" &&
     user.isVerified &&
     user.isManagerVerified ? (
-    <div className="px-3 mt-10 pt-40 relative flex items-center justify-center h-[380px] overflow-x-hidden overflow-y-scroll">
+    <div className="px-3 mt-10 pt-60 relative flex items-center justify-center h-[380px] overflow-x-hidden overflow-y-scroll">
       {/* <p>Accessibilities</p> */}
       <div className="flex flex-col items-center justify-center flex-wrap gap-5">
         <Link href="/orderStatus" className="group">
           <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[250px] flex items-center gap-5">
             <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
             Order Status
+          </button>
+        </Link>
+        <Link href="/sms" className="group">
+          <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[250px] flex items-center gap-5">
+            <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
+            Send SMS
           </button>
         </Link>
         <Link href={"/billQuery"}>

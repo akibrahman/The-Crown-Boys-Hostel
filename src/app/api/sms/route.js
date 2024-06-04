@@ -36,3 +36,26 @@ export const POST = async (req) => {
     );
   }
 };
+
+export const GET = async () => {
+  try {
+    const smsApi = process.env.SMS_API_KEY;
+    if (!smsApi) throw new Error("API not found!");
+    const url = `http://bulksmsbd.net/api/getBalanceApi?api_key=${smsApi}`;
+    const response = await fetch(url);
+    if (!response.ok)
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    const data = await response.json();
+    return NextResponse.json({
+      success: true,
+      balance: data.balance,
+      msg: "Balance Retrived Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error, success: false, msg: "Server Error1" },
+      { status: 500 }
+    );
+  }
+};

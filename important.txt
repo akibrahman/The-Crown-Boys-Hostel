@@ -1,0 +1,6 @@
+if (!user) return <PreLoader />;
+  if (user.role != "manager") {
+    route.push("/");
+    return;
+  }
+  if (user?.success == false) return route.push("/signin");

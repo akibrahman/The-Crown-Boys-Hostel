@@ -3,7 +3,13 @@ import { NextResponse } from "next/server";
 export function middleware(req) {
   const path = req.nextUrl.pathname;
   const token = req.cookies.get("token")?.value || "";
-  if ((path === "/order" || path === "/profile") && !token) {
+  if (
+    (path === "/order" ||
+      path === "/profile" ||
+      path === "/orderStatus" ||
+      path === "/sms") &&
+    !token
+  ) {
     // return NextResponse.redirect("/");
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
@@ -14,5 +20,13 @@ export function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/", "/profile", "/login", "/signup", "/order", "/orderStatus"],
+  matcher: [
+    "/",
+    "/profile",
+    "/login",
+    "/signup",
+    "/order",
+    "/orderStatus",
+    "/sms",
+  ],
 };
