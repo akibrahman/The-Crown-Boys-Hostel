@@ -5,17 +5,18 @@ await dbConfig();
 
 export const POST = async (req) => {
   try {
-    const { sms } = await req.json();
+    const { msg, sendState, receiver } = await req.json();
+    // console.log(msg, sendState, receiver);
+    //
     const url = "http://bulksmsbd.net/api/smsapi";
-    const apiKey = "WvcwmDFS5UoKaSJ1KJQa";
+    const apiKey = process.env.SMS_API_KEY;
     const senderId = "8809617618230";
-    const numbers = "+8801709605097";
-    const message = `Monthly Bill has been created for you Mr. Akib Rahman.\n\nPlease check your E-mail properly with spam box.\n\n${sms}`;
+    const numbers = receiver.map((r) => r.number).join(",");
     const data = {
       api_key: apiKey,
       senderid: senderId,
       number: numbers,
-      message: message,
+      message: msg,
     };
     const res = await fetch(url, {
       method: "POST",
@@ -27,6 +28,7 @@ export const POST = async (req) => {
     if (!res.ok) {
       throw new Error("SMS can't be sent!");
     }
+    //
     return NextResponse.json({ msg: "SMS sent successfully", success: true });
   } catch (error) {
     console.log(error);
