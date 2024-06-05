@@ -4,7 +4,7 @@ import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -12,7 +12,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 const Signin = () => {
   const { userRefetch } = useContext(AuthContext);
   const route = useRouter();
+  const email = useRef();
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [passShown, setPassShown] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -53,7 +55,7 @@ const Signin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center dark:bg-gradient-to-r dark:from-primary dark:to-secondary px-5">
-      <div className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary p-8 rounded shadow-2xl shadow-sky-500 w-full max-w-md">
+      <div className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary p-8 rounded shadow shadow-sky-500 w-full max-w-md">
         <h2 className="text-2xl font-semibold mb-6 dark:text-white">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -64,6 +66,7 @@ const Signin = () => {
               Email
             </label>
             <input
+              ref={email}
               type="email"
               id="email"
               name="email"
@@ -114,13 +117,36 @@ const Signin = () => {
               "Login"
             )}
           </button>
-          <div className="mt-4">
+          <div className="mt-4 flex items-center justify-between">
             <Link href={"/signup"}>
               <span className="dark:text-white">Or,</span>{" "}
               <span className="text-sky-500 font-semibold underline">
                 SignUp
               </span>
             </Link>
+            <span
+              onClick={async () => {
+                if (!email.current.value)
+                  return toast.error("Enter your E-mail");
+                setLoading2(true);
+                const { data } = await axios.post(
+                  "/api/sendverificationemail",
+                  {
+                    email: email.current.value,
+                    emailType: "reset",
+                    userId: "",
+                    userName: "",
+                  }
+                );
+                if (data.success) toast.success("Verification E-mail sent");
+                else toast.error(data.msg);
+                setLoading2(false);
+              }}
+              className="text-sky-500 font-semibold underline cursor-pointer flex items-center gap-3 duration-300"
+            >
+              Forgot Password
+              {loading2 && <CgSpinner className="text-xl animate-spin" />}
+            </span>
           </div>
         </form>
       </div>

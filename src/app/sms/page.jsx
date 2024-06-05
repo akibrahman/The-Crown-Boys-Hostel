@@ -12,7 +12,7 @@ import Select from "react-select";
 
 const SMS = () => {
   const { user } = useContext(AuthContext);
-  const [sendState, setSendState] = useState("single");
+  const [sendState, setSendState] = useState("");
   const [receiver, setReceiver] = useState([]);
   const [isSending, setIsSending] = useState(false);
 
@@ -49,6 +49,7 @@ const SMS = () => {
   });
   const sendSms = async (e) => {
     e.preventDefault();
+    if (!sendState) return toast.error("Select option!");
     if (
       parseFloat(Math.ceil(character / 145) * 0.25).toFixed(2) *
         receiver.length >=
@@ -73,9 +74,8 @@ const SMS = () => {
       console.log(error);
       toast.error("Something went wrong, Try again!");
     } finally {
-      if (sendState == "single") setSendState("multiple");
-      else setSendState("single");
       e.target.reset();
+      setSendState("");
       setReceiver([]);
       setCharacter(0);
       await smsBalanceRefetch();
@@ -128,6 +128,20 @@ const SMS = () => {
                 }`}
               >
                 Multiple
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSendState("all");
+                  setReceiver(clients);
+                }}
+                className={`px-10 py-2 duration-300 active:scale-90 hover:scale-105 rounded-full font-medium tracking-wider text-white border ${
+                  sendState == "all"
+                    ? "bg-sky-500 border-sky-500"
+                    : "bg-transparent border-white"
+                }`}
+              >
+                All
               </button>
             </div>
           </div>

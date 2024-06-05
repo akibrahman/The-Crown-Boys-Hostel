@@ -11,7 +11,7 @@ import {
   Text,
 } from "@react-email/components";
 
-export const VerificationEmail = ({ userFirstname, url }) => (
+export const ForgotEmail = ({ userFirstname, url }) => (
   <Html>
     <Head />
     <Preview>The Crown Boys Hostel</Preview>
@@ -54,7 +54,7 @@ export const VerificationEmail = ({ userFirstname, url }) => (
         />
         <Img
           src={
-            "https://cdn.templates.unlayer.com/assets/1636808300229-Security_system.jpg"
+            "https://i.ibb.co/GCKb4jM/2302-i402-021-S-m004-c13-Smartphone-data-protection-flat-composition.jpg"
           }
           width="500"
           height="250"
@@ -62,21 +62,13 @@ export const VerificationEmail = ({ userFirstname, url }) => (
           style={logo}
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
+        <Text style={paragraph}>Welcome to The Crown Boys Hostel.</Text>
         <Text style={paragraph}>
-          Welcome to The Crown Boys Hostel. To begin your culinary journey,
-          simply click the inviting button below
-        </Text>
-        <Text style={paragraph}>
-          Unlocking the potential for streamlined and scalable meal system
-          management demands a digital solution of unparalleled efficiency and
-          elegance. Crafting an exquisite digital ecosystem ensures not only
-          enhanced efficiency but also scalability. With the right digital
-          tools, meal management transcends mere functionality, blossoming into
-          a symphony of seamless operations and boundless scalability
+          Click below button to change your password
         </Text>
         <Section style={btnContainer}>
           <Button style={button} href={url}>
-            Verify
+            Change Password
           </Button>
         </Section>
         <Text style={paragraph}>
@@ -94,7 +86,7 @@ export const VerificationEmail = ({ userFirstname, url }) => (
   </Html>
 );
 
-export default VerificationEmail;
+export default ForgotEmail;
 
 const main = {
   borderRadius: "4px",
