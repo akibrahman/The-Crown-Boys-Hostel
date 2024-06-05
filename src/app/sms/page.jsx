@@ -1,8 +1,10 @@
 "use client";
 
+import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
@@ -13,7 +15,11 @@ const SMS = () => {
   const [sendState, setSendState] = useState("single");
   const [receiver, setReceiver] = useState([]);
   const [isSending, setIsSending] = useState(false);
-  const { data: smsBalance } = useQuery({
+
+  const [character, setCharacter] = useState(0);
+
+  const route = useRouter();
+  const { data: smsBalance, refetch: smsBalanceRefetch } = useQuery({
     queryKey: ["smsBalance", "managerOnly"],
     queryFn: async () => {
       const { data } = await axios.get("/api/sms");
@@ -43,10 +49,15 @@ const SMS = () => {
   });
   const sendSms = async (e) => {
     e.preventDefault();
-    if (parseInt(smsBalance) <= 5) {
+    if (
+      parseFloat(Math.ceil(character / 145) * 0.25).toFixed(2) *
+        receiver.length >=
+      smsBalance
+    ) {
       toast.error("Balance is low! Please recharge.");
       return;
     }
+
     if (receiver.length == 0) return toast.error("Select receiver(s)");
     const msg = e.target.msg.value;
     setIsSending(true);
@@ -66,9 +77,17 @@ const SMS = () => {
       else setSendState("single");
       e.target.reset();
       setReceiver([]);
+      setCharacter(0);
+      await smsBalanceRefetch();
       setIsSending(false);
     }
   };
+  if (!user) return <PreLoader />;
+  if (user.role != "manager") {
+    route.push("/");
+    return;
+  }
+  if (user?.success == false) return route.push("/signin");
   return (
     <div className="min-h-screen p-6 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
       <p className="text-center font-semibold text-2xl dark:text-white relative">
@@ -130,8 +149,12 @@ const SMS = () => {
             )}
           </div>
         </div>
-        <div className="flex justify-center my-10">
+        <div className="flex flex-col items-center justify-center gap-4 my-10">
           <textarea
+            onChange={(e) => {
+              setCharacter(e.target.value.length);
+              console.log(e.target.value.length);
+            }}
             placeholder="Enter the Message........"
             required
             name="msg"
@@ -139,6 +162,27 @@ const SMS = () => {
             rows="10"
             id=""
           ></textarea>
+          <div className="text-white font-medium flex items-center gap-5">
+            <p>
+              Character:{" "}
+              <span className="text-sky-500 font-medium">{character}</span>
+            </p>
+            <p>
+              Section:{" "}
+              <span className="text-sky-500 font-medium">
+                {Math.ceil(character / 145)}
+              </span>
+            </p>
+            <p>
+              Charge:{" "}
+              <span className="text-sky-500 font-medium">
+                {parseFloat(
+                  Math.ceil(character / 145) * 0.25 * receiver.length
+                ).toFixed(2)}
+              </span>
+              BDT
+            </p>
+          </div>
         </div>
         <button className="bg-sky-500 px-6 py-1 rounded-full font-medium text-white duration-300 active:scale-90 hover:scale-105 select-none mx-auto flex items-center gap-3">
           Send
