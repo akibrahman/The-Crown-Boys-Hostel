@@ -1,10 +1,8 @@
 "use client";
 
-import NoInternetPage from "@/Components/NoInternetPage/NoInternetPage";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { createContext, useState } from "react";
-import { Detector } from "react-detect-offline";
 
 export const AuthContext = createContext(null);
 
@@ -45,19 +43,7 @@ const ContextProvider = ({ children }) => {
     enabled: user?.manager ? true : false,
   });
   const info = { user, userRefetch, loading, manager, managerRefetch };
-  return (
-    <>
-      <Detector
-        render={({ online }) =>
-          online ? (
-            <AuthContext.Provider value={info}>{children}</AuthContext.Provider>
-          ) : (
-            <NoInternetPage />
-          )
-        }
-      />
-    </>
-  );
+  return <AuthContext.Provider value={info}>{children}</AuthContext.Provider>;
 };
 
 export default ContextProvider;

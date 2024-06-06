@@ -30,6 +30,14 @@ const ManagersOfOwner = ({
         >
           Cron Job
         </button>
+        <button
+          onClick={async () => {
+            const { data } = await axios.post("/api/orders/testapi");
+            if (data.success) return toast.success("Completed");
+          }}
+        >
+          User Data Delete
+        </button>
         <div className="sticky top-0">
           <input
             placeholder="Search by name"

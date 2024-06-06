@@ -5,7 +5,7 @@ await dbConfig();
 
 export const POST = async (req) => {
   try {
-    const { msg, sendState, receiver } = await req.json();
+    const { msg, receiver } = await req.json();
     // console.log(msg, sendState, receiver);
     //
     const url = "http://bulksmsbd.net/api/smsapi";
@@ -25,8 +25,10 @@ export const POST = async (req) => {
       },
       body: JSON.stringify(data),
     });
-    if (!res.ok) {
-      throw new Error("SMS can't be sent!");
+    if (!res.ok) throw new Error("SMS can't be sent!");
+    const ress = await res.json();
+    if (ress.response_code == 1007) {
+      throw new Error("Insufficiant Balance !");
     }
     //
     return NextResponse.json({ msg: "SMS sent successfully", success: true });
