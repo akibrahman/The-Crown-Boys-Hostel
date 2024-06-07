@@ -1,18 +1,20 @@
 "use client";
 
 import PreLoader from "@/Components/PreLoader/PreLoader";
+import Receipt from "@/Components/Receipt/Receipt";
 import { AuthContext } from "@/providers/ContextProvider";
-import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { Tooltip } from "react-tooltip";
 
 const UserQuery = () => {
   const { user } = useContext(AuthContext);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [managerAmount, setManagerAmount] = useState(null);
 
   //! Current Year in Bangladesh
   const currentDateBangladesh = new Date();
@@ -56,7 +58,12 @@ const UserQuery = () => {
       setLoading(false);
     }
   };
-  if (!myClients) return <PreLoader />;
+  if (!myClients || !user) return <PreLoader />;
+  if (user?.success == false) return route.push("/signin");
+  if (user.role != "manager") {
+    route.push("/");
+    return;
+  }
   return (
     <div className="min-h-screen p-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
       <p className="text-center font-semibold text-2xl dark:text-white">
@@ -145,10 +152,24 @@ const UserQuery = () => {
             {result && result.orders.length > 0 && result.orders[0].month}
           </p>
           <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
+            <Tooltip className="z-50" id="userQuery-tooltip" />
             {result?.orders?.map((order) => (
               <div
+                data-tooltip-id="userQuery-tooltip"
+                data-tooltip-content={
+                  order.isGuestMeal
+                    ? "Breakfast : " +
+                      order.guestBreakfastCount +
+                      " Lunch : " +
+                      order.guestLunchCount +
+                      " Dinner : " +
+                      order.guestDinnerCount
+                    : null
+                }
                 key={order._id}
-                className="relative w-16 h-16 rounded-xl border-sky-500 border dark:text-white font-semibold flex items-center justify-center"
+                className={`relative w-16 h-16 rounded-xl border-sky-500 border dark:text-white font-semibold flex items-center justify-center ${
+                  order.isGuestMeal && "shadow-lg shadow-sky-500"
+                }`}
               >
                 {order.date.split("/")[1]}
                 <span
@@ -172,42 +193,34 @@ const UserQuery = () => {
         </div>
       </div>
       {result && result?.bill && (
-        <div className="border-2 flex justify-center py-10 my-10 dark:text-white">
+        <div className=" border-2 flex justify-center py-10 my-10 dark:text-white">
           <div className="w-1/2">
             <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">
               Bill Details
             </p>
-            <div className="py-3 space-y-3 select-none">
-              <p>Total Brakefast: {result.bill.totalBreakfast}</p>
-              <p>Total Lunch: {result.bill.totalLunch}</p>
-              <p>Total Dinner: {result.bill.totalDinner}</p>
-              <p>
-                Total Amount:{" "}
-                <span className="bg-sky-500 font-semibold px-3 py-1 rounded-md ml-3">
-                  {result.bill.totalBillInBDT} BDT
-                </span>
-              </p>
-              <p>
-                Paid Amount:{" "}
-                <span className="bg-sky-500 font-semibold px-3 py-1 rounded-md ml-3">
-                  {result.bill.paidBillInBDT} BDT
-                </span>
-              </p>
-              <p>
-                Status:{" "}
-                <span
-                  className={`${
-                    result?.bill?.status == "calculated"
-                      ? "bg-green-500"
-                      : result?.bill?.status == "initiated"
-                      ? "bg-orange-500"
-                      : "bg-blue-500"
-                  }  font-semibold px-3 py-1 rounded-md ml-3`}
-                >
-                  {convertCamelCaseToCapitalized(result?.bill?.status)}
-                </span>
-              </p>
-            </div>
+            <input
+              placeholder="Enter Amount"
+              onChange={(e) => setManagerAmount(parseInt(e.target.value))}
+              value={managerAmount || managerAmount == 0 ? managerAmount : ""}
+              className="text-sm w-[200px] mx-auto block my-3 px-5 py-2 outline-none rounded-full dark:bg-stone-800 bg-stone-300"
+              type="number"
+            />
+            <Receipt
+              key={result.bill._id}
+              id={result.bill._id}
+              // userName={bill.userName}
+              month={result.bill.month}
+              year={result.bill.year}
+              totalBillInBDT={result.bill.totalBillInBDT}
+              paidBillInBDT={result.bill.paidBillInBDT}
+              totalBreakfast={result.bill.totalBreakfast}
+              totalLunch={result.bill.totalLunch}
+              totalDinner={result.bill.totalDinner}
+              status={result.bill.status}
+              managerAmount={managerAmount}
+              setManagerAmount={setManagerAmount}
+              charges={result.bill?.charges}
+            />
           </div>
         </div>
       )}
