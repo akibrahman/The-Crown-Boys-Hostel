@@ -43,7 +43,19 @@ const ContextProvider = ({ children }) => {
     enabled: user?.manager ? true : false,
   });
   const info = { user, userRefetch, loading, manager, managerRefetch };
-  return <AuthContext.Provider value={info}>{children}</AuthContext.Provider>;
+  return (
+    // <>
+    //   <Detector
+    //     render={({ online }) =>
+    //       online ? (
+    <AuthContext.Provider value={info}>{children}</AuthContext.Provider>
+    //       ) : (
+    //         <NoInternetPage />
+    //       )
+    //     }
+    //   />
+    // </>
+  );
 };
 
 export default ContextProvider;

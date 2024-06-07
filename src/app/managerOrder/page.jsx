@@ -22,6 +22,10 @@ const ManagerOrder = () => {
   const [breakfast, setBreakfast] = useState(false);
   const [lunch, setLunch] = useState(false);
   const [dinner, setDinner] = useState(false);
+  const [isGuestMeal, setIsGuestMeal] = useState(false);
+  const [guestMealBreakfastCount, setGuestMealBreakfastCount] = useState(0);
+  const [guestMealLunchCount, setGuestMealLunchCount] = useState(0);
+  const [guestMealDinnerCount, setGuestMealDinnerCount] = useState(0);
   const [clientId, setClientId] = useState("");
   const [mealOffPopUp, setMealOffPopUp] = useState(false);
 
@@ -101,6 +105,10 @@ const ManagerOrder = () => {
         setBreakfast(data.order.breakfast);
         setLunch(data.order.lunch);
         setDinner(data.order.dinner);
+        setIsGuestMeal(data.order.isGuestMeal);
+        setGuestMealBreakfastCount(data.order.guestBreakfastCount);
+        setGuestMealLunchCount(data.order.guestLunchCount);
+        setGuestMealDinnerCount(data.order.guestDinnerCount);
         toast.success("Day selected");
       }
     } catch (error) {
@@ -280,16 +288,12 @@ const ManagerOrder = () => {
                     <div class="duration-700 transition-all ease-in-out relative w-20 h-8 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-[170%] rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500"></div>
                   </label>
                 </div>
-                {/* <div className="my-20">
+                <div className="my-20">
                   <div className="flex items-center gap-3">
                     <p>Guest Meal</p>
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         onClick={async () => {
-                          if (moment(date).isSame(moment(new Date()), "day")) {
-                            toast.error("Today's Guest meal cann't be edited");
-                            return;
-                          }
                           if (isGuestMeal) {
                             setLoading(true);
                             const { data } = await axios.patch(
@@ -369,15 +373,6 @@ const ManagerOrder = () => {
                           className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md outline-none"
                           type="number"
                           onChange={(e) => {
-                            if (
-                              moment(date).isSame(moment(new Date()), "day")
-                            ) {
-                              toast.error(
-                                "Today's Guest-Breakfast cann't be edited"
-                              );
-                              return;
-                            }
-
                             setGuestMealBreakfastCount(e.target.value);
                           }}
                           value={guestMealBreakfastCount}
@@ -391,14 +386,6 @@ const ManagerOrder = () => {
                           className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md outline-none"
                           type="number"
                           onChange={(e) => {
-                            if (
-                              moment(date).isSame(moment(new Date()), "day")
-                            ) {
-                              toast.error(
-                                "Today's Guest-Lunch cann't be edited"
-                              );
-                              return;
-                            }
                             setGuestMealLunchCount(e.target.value);
                           }}
                           value={guestMealLunchCount}
@@ -426,7 +413,7 @@ const ManagerOrder = () => {
                       </button>
                     </form>
                   )}
-                </div> */}
+                </div>
               </>
             )}
           </div>
