@@ -535,8 +535,41 @@ const Profile = () => {
         />
         {/*//! Manager's Details  */}
         <ManagerDetails user={user} manager={manager} />
-        {/*//! Managers as a Owner  */}
 
+        {/*//! Client's Charges  */}
+        {user.role == "client" && user.isVerified && user.isClientVerified && (
+          <div className="pb-16">
+            <div className="flex items-center justify-center gap-4">
+              <p class="text-center tracking-wide text-white font-bold">
+                Charges
+              </p>
+            </div>
+            {user.charges.length == 0 && (
+              <p className="text-center text-sm mt-4 select-none">
+                No added charges
+              </p>
+            )}
+            {user.charges.length != 0 && (
+              <table className="w-[90%] mx-auto mt-4">
+                <thead className="bg-[rgba(0,0,200,0.2)]">
+                  <tr>
+                    <td className="border text-center py-1.5">Note</td>
+                    <td className="border text-center py-1.5">Amount</td>
+                  </tr>
+                </thead>
+                {user.charges.map((crg, i) => (
+                  <tbody key={i} className="text-sm">
+                    <tr>
+                      <td className="border text-center py-1">{crg.note}</td>
+                      <td className="border text-center py-1">{crg.amount}</td>
+                    </tr>
+                  </tbody>
+                ))}
+              </table>
+            )}
+          </div>
+        )}
+        {/*//! Managers as a Owner  */}
         <ManagersOfOwner
           user={user}
           managers={managers}
