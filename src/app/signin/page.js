@@ -3,7 +3,7 @@
 import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
@@ -12,6 +12,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 const Signin = () => {
   const { userRefetch } = useContext(AuthContext);
   const route = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
   const email = useRef();
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
@@ -37,7 +39,7 @@ const Signin = () => {
       console.log(res);
       if (res.data.success && res.data.code === 2121) {
         await userRefetch();
-        route.push("/profile");
+        route.push(callbackUrl || "/profile");
         toast.success(res.data.msg);
       }
     } catch (error) {

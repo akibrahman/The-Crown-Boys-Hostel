@@ -121,7 +121,7 @@ const NavBar = () => {
       </div>
       {/*//! For Modile  */}
       <div className={`relative ${deviceWidth <= 500 ? "" : "hidden"}`}>
-        <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-1 gap-5 md:gap-0 items-center justify-between px-10">
+        <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-1 gap-5 md:gap-0 items-center justify-between px-3 md:px-10">
           <div className="flex items-center">
             <Image
               src="/images/logo.png"
@@ -130,7 +130,7 @@ const NavBar = () => {
               alt="Logo"
               className="h-20 w-20 p-1 rounded-full"
             />
-            <p className="text-sky-500 text-sm">
+            <p className="text-sky-500 text-xs">
               For any Query Call:{" "}
               <Link href={"tel:01709605097"} className="underline">
                 01709-605097
