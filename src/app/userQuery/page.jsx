@@ -194,7 +194,7 @@ const UserQuery = () => {
       </div>
       {result && result?.bill && (
         <div className=" border-2 flex justify-center py-10 my-10 dark:text-white">
-          <div className="w-1/2">
+          <div className="md:w-1/2">
             <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative">
               Bill Details
             </p>

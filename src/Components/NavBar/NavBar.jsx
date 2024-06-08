@@ -35,13 +35,21 @@ const NavBar = () => {
           deviceWidth <= 500 ? "hidden" : "flex"
         } dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-stone-300 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10`}
       >
-        <Image
-          src="/images/logo.png"
-          width={"80"}
-          height={"80"}
-          alt="Logo"
-          className="h-20 w-20 p-1 rounded-full"
-        />
+        <div className="flex items-center">
+          <Image
+            src="/images/logo.png"
+            width={"80"}
+            height={"80"}
+            alt="Logo"
+            className="h-20 w-20 p-1 rounded-full"
+          />
+          <p className="text-sky-500 text-sm">
+            For any Query Call:{" "}
+            <Link href={"tel:01709605097"} className="underline">
+              01709-605097
+            </Link>
+          </p>
+        </div>
         <div className="flex items-center justify-center gap-10">
           <p className="">
             <Link href="/">Home</Link>
@@ -114,13 +122,21 @@ const NavBar = () => {
       {/*//! For Modile  */}
       <div className={`relative ${deviceWidth <= 500 ? "" : "hidden"}`}>
         <div className="flex dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white text-black dark:text-white py-1 gap-5 md:gap-0 items-center justify-between px-10">
-          <Image
-            src="/images/logo.png"
-            width={"60"}
-            height={"60"}
-            alt="Logo"
-            className="p-1 rounded-full"
-          />
+          <div className="flex items-center">
+            <Image
+              src="/images/logo.png"
+              width={"60"}
+              height={"60"}
+              alt="Logo"
+              className="h-20 w-20 p-1 rounded-full"
+            />
+            <p className="text-sky-500 text-sm">
+              For any Query Call:{" "}
+              <Link href={"tel:01709605097"} className="underline">
+                01709-605097
+              </Link>
+            </p>
+          </div>
           {isSideBarOpen ? (
             <FaTimes
               className="text-2xl"
