@@ -61,8 +61,7 @@ const UserQuery = () => {
   if (!myClients || !user) return <PreLoader />;
   if (user?.success == false) return route.push("/signin");
   if (user.role != "manager") {
-    route.push("/");
-    return;
+    return route.push("/");
   }
   return (
     <div className="min-h-screen p-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
@@ -220,6 +219,7 @@ const UserQuery = () => {
               managerAmount={managerAmount}
               setManagerAmount={setManagerAmount}
               charges={result.bill?.charges}
+              isManageable={true}
             />
           </div>
         </div>

@@ -212,6 +212,7 @@ const BillQuery = () => {
                     managerAmount={managerAmount}
                     setManagerAmount={setManagerAmount}
                     charges={bill?.charges}
+                    isManageable={true}
                   />
                 ))}
           </div>

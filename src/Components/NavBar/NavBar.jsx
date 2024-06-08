@@ -63,6 +63,18 @@ const NavBar = () => {
                 <p>
                   <Link href="/order">Order</Link>
                 </p>
+              )}{" "}
+          {loading
+            ? null
+            : user &&
+              user.success &&
+              user.isClient &&
+              user.isClientVerified && (
+                <p>
+                  <Link onClick={() => setIsSideBarOpen(false)} href="/myBills">
+                    My Bills
+                  </Link>
+                </p>
               )}
           {/* <p> */}
           {/* <Link className="pointer-events-none text-stone-400" href="/help">
@@ -78,7 +90,6 @@ const NavBar = () => {
             Our Gallery
           </Link> */}
           {/* </p> */}
-
           {loading ? (
             <CgSpinner className="text-2xl text-lime-500 animate-spin" />
           ) : (
@@ -93,7 +104,6 @@ const NavBar = () => {
               </p>
             )
           )}
-
           {loading ? (
             <CgSpinner className="text-2xl text-sky-500 animate-spin" />
           ) : user && user.success ? (
@@ -115,7 +125,6 @@ const NavBar = () => {
               </Link>
             </p>
           )}
-
           <ThemeSwitch />
         </div>
       </div>
@@ -169,6 +178,18 @@ const NavBar = () => {
                 <p>
                   <Link onClick={() => setIsSideBarOpen(false)} href="/order">
                     Order
+                  </Link>
+                </p>
+              )}
+          {loading
+            ? null
+            : user &&
+              user.success &&
+              user.isClient &&
+              user.isClientVerified && (
+                <p>
+                  <Link onClick={() => setIsSideBarOpen(false)} href="/myBills">
+                    My Bills
                   </Link>
                 </p>
               )}

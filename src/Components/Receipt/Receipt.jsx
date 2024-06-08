@@ -17,8 +17,8 @@ const Receipt = ({
   managerAmount,
   setManagerAmount,
   userName,
+  isManageable = false,
 }) => {
-  console.log(charges);
   const [isMoneyAdding, setIsMoneyAdding] = useState({
     id: "",
     state: false,
@@ -239,44 +239,45 @@ const Receipt = ({
           </div>
         </>
       )}
-      {(status == "initiated" ||
-        (paidBillInBDT != totalBillInBDT && status == "calculated")) && (
-        <div className="bg-white py-3 flex items-center justify-around">
-          <button
-            onClick={credite}
-            className="flex items-center gap-3 px-4 py-1 bg-green-500 text-white duration-300 rounded active:scale-90"
-          >
-            Credit
-            {isMoneyAdding.state &&
-              isMoneyAdding.id == id &&
-              isMoneyAdding.method == "credite" && (
-                <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
-              )}
-          </button>
-          <button
-            onClick={debite}
-            className="flex items-center gap-3 px-4 py-1 bg-red-500 text-white duration-300 rounded active:scale-90"
-          >
-            Debit
-            {isMoneyAdding.state &&
-              isMoneyAdding.id == id &&
-              isMoneyAdding.method == "debite" && (
-                <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
-              )}
-          </button>
-          <button
-            onClick={set}
-            className="flex items-center gap-3 px-4 py-1 bg-orange-500 text-white duration-300 rounded active:scale-90"
-          >
-            Set
-            {isMoneyAdding.state &&
-              isMoneyAdding.id == id &&
-              isMoneyAdding.method == "set" && (
-                <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
-              )}
-          </button>
-        </div>
-      )}
+      {(isManageable || status == "initiated") &&
+        paidBillInBDT != totalBillInBDT &&
+        status == "calculated" && (
+          <div className="bg-white py-3 flex items-center justify-around">
+            <button
+              onClick={credite}
+              className="flex items-center gap-3 px-4 py-1 bg-green-500 text-white duration-300 rounded active:scale-90"
+            >
+              Credit
+              {isMoneyAdding.state &&
+                isMoneyAdding.id == id &&
+                isMoneyAdding.method == "credite" && (
+                  <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
+                )}
+            </button>
+            <button
+              onClick={debite}
+              className="flex items-center gap-3 px-4 py-1 bg-red-500 text-white duration-300 rounded active:scale-90"
+            >
+              Debit
+              {isMoneyAdding.state &&
+                isMoneyAdding.id == id &&
+                isMoneyAdding.method == "debite" && (
+                  <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
+                )}
+            </button>
+            <button
+              onClick={set}
+              className="flex items-center gap-3 px-4 py-1 bg-orange-500 text-white duration-300 rounded active:scale-90"
+            >
+              Set
+              {isMoneyAdding.state &&
+                isMoneyAdding.id == id &&
+                isMoneyAdding.method == "set" && (
+                  <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
+                )}
+            </button>
+          </div>
+        )}
       <div
         style={{
           display: "flex",
@@ -299,17 +300,19 @@ const Receipt = ({
           <p className=" text-green-600 font-bold">Paid</p>
         ) : (
           <>
-            <button
-              onClick={makePaid}
-              className="bg-green-500 text-white px-4 py-0.5 duration-300 rounded flex items-center gap-3 active:scale-90"
-            >
-              Make Paid
-              {isMoneyAdding.state &&
-                isMoneyAdding.id == id &&
-                isMoneyAdding.method == "makePaid" && (
-                  <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
-                )}
-            </button>
+            {isManageable && (
+              <button
+                onClick={makePaid}
+                className="bg-green-500 text-white px-4 py-0.5 duration-300 rounded flex items-center gap-3 active:scale-90"
+              >
+                Make Paid
+                {isMoneyAdding.state &&
+                  isMoneyAdding.id == id &&
+                  isMoneyAdding.method == "makePaid" && (
+                    <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
+                  )}
+              </button>
+            )}
             <p style={{ fontWeight: 700, color: "#DC2626" }}>Due</p>
           </>
         )}

@@ -546,7 +546,7 @@ const Profile = () => {
             </div>
             {user.charges.length == 0 && (
               <p className="text-center text-sm mt-4 select-none">
-                No added charges
+                No Added Charges
               </p>
             )}
             {user.charges.length != 0 && (
