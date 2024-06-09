@@ -31,12 +31,22 @@ const ManagersOfOwner = ({
           Cron Job
         </button>
         <button
+          className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
           onClick={async () => {
             const { data } = await axios.post("/api/orders/testapi");
             if (data.success) return toast.success("Completed");
           }}
         >
           User Data Delete
+        </button>
+        <button
+          className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
+          onClick={async () => {
+            const { data } = await axios.put("/api/orders/testapi");
+            if (data.success) return toast.success("Completed");
+          }}
+        >
+          Test
         </button>
         <div className="sticky top-0">
           <input

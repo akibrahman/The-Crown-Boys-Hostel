@@ -247,6 +247,18 @@ const page = async ({ params }) => {
                   />
                 </div>
               )}
+              <div className="flex items-center gap-3 mt-8 ml-4">
+                <p className="text-red-600 font-semibold">Block Date:</p>
+                {client.blockDate ? (
+                  <div className="flex items-center gap-3">
+                    <p>{new Date(client.blockDate).toDateString()}</p>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <p>Not Scheduled</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

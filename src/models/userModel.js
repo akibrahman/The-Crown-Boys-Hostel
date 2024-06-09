@@ -61,6 +61,7 @@ const userSchema = new mongoose.Schema({
   //   type: Number,
   //   default: 0,
   // },
+  blockDate: String,
   charges: {
     type: [{}],
     default: [],

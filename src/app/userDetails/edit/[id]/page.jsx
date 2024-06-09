@@ -8,16 +8,21 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
+import DatePicker from "react-date-picker";
+import "react-date-picker/dist/DatePicker.css";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { CiImageOn } from "react-icons/ci";
 import { FaPlus, FaTimes } from "react-icons/fa";
+import { LuCalendarPlus } from "react-icons/lu";
 
 const Page = ({ params }) => {
   const { id } = params;
 
   const [newProfilePictureUploading, setNewProfilePictureUploading] =
     useState(false);
+  const [date, setDate] = useState("");
+  const [calenderShow, setCalenderShow] = useState(false);
 
   const { data: client, refetch: clientRefetch } = useQuery({
     queryKey: ["userEdit", id],
@@ -26,19 +31,6 @@ const Page = ({ params }) => {
       return data.client;
     },
   });
-
-  const testHandler = async () => {
-    console.log(client);
-    try {
-      const { data } = await axios.patch("/api/clients/editclient", {
-        id: client._id,
-      });
-      if (data.success) toast.success(data.msg);
-    } catch (error) {
-      console.log(error);
-      toast.error("Error");
-    }
-  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -97,6 +89,60 @@ const Page = ({ params }) => {
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.msg);
+    }
+  };
+
+  const saveBlockDate = async () => {
+    if (!date) return toast.error("Date is not selected!");
+    try {
+      const { data } = await axios.put("/api/clients/editclient", {
+        changedData: { blockDate: new Date(date).toISOString() },
+        _id: client._id,
+      });
+      if (data.success) toast.success(data.msg);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.msg);
+    } finally {
+      await clientRefetch();
+      setCalenderShow(false);
+      setDate("");
+    }
+  };
+  const changeBlockDate = async () => {
+    if (!date) return toast.error("Date is not selected!");
+    try {
+      const { data } = await axios.put("/api/clients/editclient", {
+        changedData: { blockDate: new Date(date).toISOString() },
+        _id: client._id,
+      });
+      if (data.success) toast.success(data.msg);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.msg);
+    } finally {
+      await clientRefetch();
+      setCalenderShow(false);
+      setDate("");
+    }
+  };
+  const clearBlockDate = async () => {
+    try {
+      const { data } = await axios.put("/api/clients/editclient", {
+        changedData: { blockDate: "" },
+        _id: client._id,
+      });
+      if (data.success) toast.success(data.msg);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.msg);
+    } finally {
+      await clientRefetch();
+      setCalenderShow(false);
+      setDate("");
     }
   };
 
@@ -759,14 +805,91 @@ const Page = ({ params }) => {
                   />
                 </div>
               )}
+              <div className="flex items-center gap-3 mt-8 ml-4">
+                <p className="text-red-600 font-semibold">Block Date:</p>
+                {client.blockDate ? (
+                  <div className="flex items-center gap-3">
+                    <p>{new Date(client.blockDate).toDateString()}</p>
+                    <button
+                      onClick={() => {
+                        setCalenderShow(!calenderShow);
+                        setDate("");
+                      }}
+                      type="button"
+                      className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-blue-500 select-none cursor-pointer"
+                    >
+                      Change
+                    </button>
+                    <button
+                      onClick={clearBlockDate}
+                      type="button"
+                      className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-orange-500 select-none cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                    {calenderShow && (
+                      <DatePicker
+                        className={""}
+                        format="dd - MM - y"
+                        value={date}
+                        calendarIcon={<LuCalendarPlus className="text-2xl" />}
+                        clearIcon={null}
+                        dayPlaceholder="--"
+                        monthPlaceholder="--"
+                        yearPlaceholder="----"
+                        onChange={(e) => setDate(e)}
+                      />
+                    )}
+                    {date && (
+                      <button
+                        onClick={changeBlockDate}
+                        type="button"
+                        className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-green-500 select-none cursor-pointer"
+                      >
+                        Save
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <p>Not Scheduled</p>
+                    <button
+                      onClick={() => {
+                        setCalenderShow(!calenderShow);
+                        setDate("");
+                      }}
+                      type="button"
+                      className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-blue-500 select-none cursor-pointer"
+                    >
+                      Set
+                    </button>
+                    {calenderShow && (
+                      <DatePicker
+                        className={""}
+                        format="dd - MM - y"
+                        value={date}
+                        calendarIcon={<LuCalendarPlus className="text-2xl" />}
+                        clearIcon={null}
+                        dayPlaceholder="--"
+                        monthPlaceholder="--"
+                        yearPlaceholder="----"
+                        onChange={(e) => setDate(e)}
+                      />
+                    )}
+                    {date && (
+                      <button
+                        onClick={saveBlockDate}
+                        type="button"
+                        className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-green-500 select-none cursor-pointer"
+                      >
+                        Save
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </form>
-          <button
-            onClick={testHandler}
-            className="hidden duration-300 transition-all px-4 py-1 rounded-md font-medium bg-green-500 active:scale-90 mt-5"
-          >
-            Test
-          </button>
         </div>
       </div>
     </div>

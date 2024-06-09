@@ -545,12 +545,12 @@ const Profile = () => {
               </p>
             </div>
             {user.charges.length == 0 && (
-              <p className="text-center text-sm mt-4 select-none">
+              <p className="text-center text-sm my-2 select-none">
                 No Added Charges
               </p>
             )}
             {user.charges.length != 0 && (
-              <table className="w-[90%] mx-auto mt-4">
+              <table className="w-[90%] mx-auto yt-2">
                 <thead className="bg-[rgba(0,0,200,0.2)]">
                   <tr>
                     <td className="border text-center py-1.5">Note</td>
@@ -566,6 +566,16 @@ const Profile = () => {
                   </tbody>
                 ))}
               </table>
+            )}
+            <div className="flex items-center justify-center gap-4">
+              <p class="text-center tracking-wide text-white font-bold">
+                Block Date
+              </p>
+            </div>
+            {user.charges.length == 0 && (
+              <p className="text-center text-sm my-2 text-green-500 select-none">
+                You are not scheduled to be Blocked
+              </p>
             )}
           </div>
         )}
