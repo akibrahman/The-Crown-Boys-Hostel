@@ -1,5 +1,6 @@
 "use client";
 
+import BlockMsg from "@/Components/BlockMsg/BlockMsg";
 import DateRangeMealOrder from "@/Components/DateRangeMealOrder/DateRangeMealOrder";
 import MealRequest from "@/Components/MealRequest/MealRequest";
 import PreLoader from "@/Components/PreLoader/PreLoader";
@@ -224,6 +225,8 @@ const Order = () => {
   };
   if (!user) return <PreLoader />;
   if (user?.success == false) return route.push("/signin");
+  if (user.blockDate && moment(user.blockDate).isBefore(moment.now()))
+    return <BlockMsg />;
 
   return (
     <div className="relative dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white min-h-screen">

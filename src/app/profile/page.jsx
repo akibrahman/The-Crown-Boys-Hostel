@@ -1,9 +1,11 @@
 "use client";
 
+import BlockMsg from "@/Components/BlockMsg/BlockMsg";
 import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -314,6 +316,8 @@ const Profile = () => {
   )
     return <PreLoader />;
   if (user?.success == false) return route.push("/signin");
+  if (user.blockDate && moment(user.blockDate).isBefore(moment.now()))
+    return <BlockMsg />;
   return (
     <div className="select-none">
       {/*//! Modal for Client Details  */}
@@ -572,7 +576,11 @@ const Profile = () => {
                 Block Date
               </p>
             </div>
-            {user.charges.length == 0 && (
+            {user.blockDate ? (
+              <p className="text-center text-sm my-2 text-red-500 select-none">
+                {new Date(user.blockDate).toDateString()}
+              </p>
+            ) : (
               <p className="text-center text-sm my-2 text-green-500 select-none">
                 You are not scheduled to be Blocked
               </p>
