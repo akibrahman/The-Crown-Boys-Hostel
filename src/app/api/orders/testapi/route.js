@@ -33,3 +33,20 @@ export const PUT = async () => {
     );
   }
 };
+export const GET = async () => {
+  try {
+    const allUsers = await User.find({
+      isClient: true,
+      isClientVerified: true,
+      isVerified: true,
+    });
+    console.log(allUsers);
+    return NextResponse.json({ allUsers, success: true });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { msg: "Backend Error", error, success: false },
+      { status: 500 }
+    );
+  }
+};

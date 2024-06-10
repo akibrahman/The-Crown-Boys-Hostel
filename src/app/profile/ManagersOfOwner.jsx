@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
@@ -42,8 +43,49 @@ const ManagersOfOwner = ({
         <button
           className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
           onClick={async () => {
-            const { data } = await axios.put("/api/orders/testapi");
-            if (data.success) return toast.success("Completed");
+            const { data } = await axios.get("/api/orders/testapi");
+            const all = data.allUsers;
+            const allF = all.filter((a) => {
+              if (a.blockDate) {
+                if (
+                  moment(a.blockDate).isSame(moment.now(), "month") &&
+                  moment(a.blockDate).isSame(moment.now(), "year")
+                ) {
+                  return false;
+                } else if (
+                  !moment(a.blockDate).isSame(moment.now(), "month") &&
+                  !moment(a.blockDate).isSame(moment.now(), "year")
+                ) {
+                  if (moment(a.blockDate).isBefore(moment.now())) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                } else if (
+                  moment(a.blockDate).isSame(moment.now(), "month") &&
+                  !moment(a.blockDate).isSame(moment.now(), "year")
+                ) {
+                  if (moment(a.blockDate).isBefore(moment.now(), "year")) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                } else if (
+                  moment(a.blockDate).isSame(moment.now(), "year") &&
+                  !moment(a.blockDate).isSame(moment.now(), "month")
+                ) {
+                  if (moment(a.blockDate).isBefore(moment.now(), "month")) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                }
+              } else {
+                return true;
+              }
+            });
+            if (data.success) toast.success("Completed");
+            console.log(allF);
           }}
         >
           Test

@@ -418,10 +418,49 @@ export const GET = async (req) => {
         );
       }
       //! <---------->Order creation for all verified users Start <---------->
-      const allUsers = await User.find({
+      const allUsersF = await User.find({
         isClient: true,
         isClientVerified: true,
         isVerified: true,
+      });
+      const allUsers = allUsersF.filter((a) => {
+        if (a.blockDate) {
+          if (
+            moment(a.blockDate).isSame(moment.now(), "month") &&
+            moment(a.blockDate).isSame(moment.now(), "year")
+          ) {
+            return false;
+          } else if (
+            !moment(a.blockDate).isSame(moment.now(), "month") &&
+            !moment(a.blockDate).isSame(moment.now(), "year")
+          ) {
+            if (moment(a.blockDate).isBefore(moment.now())) {
+              return false;
+            } else {
+              return true;
+            }
+          } else if (
+            moment(a.blockDate).isSame(moment.now(), "month") &&
+            !moment(a.blockDate).isSame(moment.now(), "year")
+          ) {
+            if (moment(a.blockDate).isBefore(moment.now(), "year")) {
+              return false;
+            } else {
+              return true;
+            }
+          } else if (
+            moment(a.blockDate).isSame(moment.now(), "year") &&
+            !moment(a.blockDate).isSame(moment.now(), "month")
+          ) {
+            if (moment(a.blockDate).isBefore(moment.now(), "month")) {
+              return false;
+            } else {
+              return true;
+            }
+          }
+        } else {
+          return true;
+        }
       });
       for (let j = 0; j < allUsers.length; j++) {
         for (let i = 1; i <= dayCountOfNextMonth; i++) {
