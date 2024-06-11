@@ -240,8 +240,7 @@ const Receipt = ({
         </>
       )}
       {(isManageable || status == "initiated") &&
-        paidBillInBDT != totalBillInBDT &&
-        status == "calculated" && (
+        paidBillInBDT != totalBillInBDT && (
           <div className="bg-white py-3 flex items-center justify-around">
             <button
               onClick={credite}
