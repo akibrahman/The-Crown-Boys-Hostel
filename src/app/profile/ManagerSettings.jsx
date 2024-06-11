@@ -5,7 +5,7 @@ const ManagerSettings = ({ user }) => {
   return user.role === "manager" &&
     user.isVerified &&
     user.isManagerVerified ? (
-    <div className="px-3 mt-10 pt-60 relative flex items-center justify-center h-[380px] overflow-x-hidden overflow-y-scroll">
+    <div className="px-3 mt-10 pt-100 relative flex items-center justify-center h-[380px] overflow-x-hidden overflow-y-scroll">
       {/* <p>Accessibilities</p> */}
       <div className="flex flex-col items-center justify-center flex-wrap gap-5">
         <Link href="/orderStatus" className="group">
