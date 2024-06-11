@@ -50,6 +50,12 @@ const ManagerSettings = ({ user }) => {
             RFID Section
           </button>
         </Link>
+        <Link href="/bookings">
+          <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[250px] flex items-center gap-5">
+            <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
+            All Bookings
+          </button>
+        </Link>
         <Link
           href="https://business.facebook.com/latest/home?nav_ref=bm_home_redirect&business_id=263483153525937&mio=0&asset_id=263473766860209"
           target="_blank"
@@ -66,6 +72,12 @@ const ManagerSettings = ({ user }) => {
           <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[250px] flex items-center gap-5">
             <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
             Mails
+          </button>
+        </Link>
+        <Link href="/manualInvoice">
+          <button className="border-sky-500 border text-white p-2 font-semibold duration-300 active:scale-90 w-[250px] flex items-center gap-5">
+            <FaArrowRight className="border border-sky-500 h-8 w-8 p-2 shadow-md duration-300 shadow-sky-500" />
+            Manual Invoice
           </button>
         </Link>
       </div>

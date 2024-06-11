@@ -49,8 +49,10 @@ const Page = ({ params }) => {
     const beds = selectedSeat.map((seat) => {
       return { bedNo: seat.bedNo, roomId: seat.singleRoom._id };
     });
-    const bookingData = { name, phoneNumber, email, beds };
+    const bookingTime = new Date().toISOString();
+    const bookingData = { name, phoneNumber, email, beds, bookingTime };
     try {
+      console.log("Calling API");
       const { data } = await axios.post("/api/booking", bookingData);
       if (data.success) {
         e.target.reset();
