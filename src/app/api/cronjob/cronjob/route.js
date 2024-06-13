@@ -71,10 +71,7 @@ export const GET = async (req) => {
     const aboutSecondLastDayOfCurrentMonth =
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
-    async function delay(s) {
-      await new Promise((resolve) => setTimeout(resolve, s * 1000));
-      console.log("Delayed function executed!!!!");
-    }
+
     //! Last day of any month------------------------------
     if (aboutLastDayOfCurrentMonth.isLastDay) {
       let currentDate = new Date().toLocaleString("en-US", {

@@ -1,6 +1,6 @@
 import axios from "axios";
-import moment from "moment";
 import Image from "next/image";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaTimes } from "react-icons/fa";
@@ -14,10 +14,12 @@ const ManagersOfOwner = ({
   givingAuthorization,
   setGivingAuthorization,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   return (
     user.role === "owner" && (
       <div className="col-span-1 md:col-span-2 h-[380px] overflow-y-scroll px-3 flex flex-col items-center gap-4 mt-10 relative">
         <button
+          disabled
           onClick={async () => {
             const { data } = await axios.get("/api/cronjob/cronjob", {
               headers: { Authorization: "Bearer 1234567890" },
@@ -32,6 +34,7 @@ const ManagersOfOwner = ({
           Cron Job
         </button>
         <button
+          disabled
           className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
           onClick={async () => {
             const { data } = await axios.post("/api/orders/testapi");
@@ -41,54 +44,20 @@ const ManagersOfOwner = ({
           User Data Delete
         </button>
         <button
-          className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
+          className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 flex items-center gap-3"
           onClick={async () => {
+            setIsLoading(true);
+            toast.success("Clicked");
             const { data } = await axios.get("/api/orders/testapi");
-            const all = data.allUsers;
-            const allF = all.filter((a) => {
-              if (a.blockDate) {
-                if (
-                  moment(a.blockDate).isSame(moment.now(), "month") &&
-                  moment(a.blockDate).isSame(moment.now(), "year")
-                ) {
-                  return false;
-                } else if (
-                  !moment(a.blockDate).isSame(moment.now(), "month") &&
-                  !moment(a.blockDate).isSame(moment.now(), "year")
-                ) {
-                  if (moment(a.blockDate).isBefore(moment.now())) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                } else if (
-                  moment(a.blockDate).isSame(moment.now(), "month") &&
-                  !moment(a.blockDate).isSame(moment.now(), "year")
-                ) {
-                  if (moment(a.blockDate).isBefore(moment.now(), "year")) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                } else if (
-                  moment(a.blockDate).isSame(moment.now(), "year") &&
-                  !moment(a.blockDate).isSame(moment.now(), "month")
-                ) {
-                  if (moment(a.blockDate).isBefore(moment.now(), "month")) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                }
-              } else {
-                return true;
-              }
-            });
-            if (data.success) toast.success("Completed");
-            console.log(allF);
+            if (data.success)
+              toast.success("Completed" + " -- " + data.allUsers.length);
+            else toast.error("Error");
+            console.log(data?.allUsers);
+            setIsLoading(false);
           }}
         >
           Test
+          {isLoading && <CgSpinner className="text-xl animate-spin" />}
         </button>
         <div className="sticky top-0">
           <input

@@ -33,14 +33,14 @@ export const PUT = async () => {
     );
   }
 };
+async function delay(s) {
+  await new Promise((resolve) => setTimeout(resolve, s * 1000));
+  console.log("Delayed function executed!!!!");
+}
 export const GET = async () => {
   try {
-    const allUsers = await User.find({
-      isClient: true,
-      isClientVerified: true,
-      isVerified: true,
-    });
-    console.log(allUsers);
+    await delay(60);
+    const allUsers = await User.find();
     return NextResponse.json({ allUsers, success: true });
   } catch (error) {
     console.log(error);
