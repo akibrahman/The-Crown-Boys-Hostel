@@ -46,14 +46,20 @@ const ManagersOfOwner = ({
         <button
           className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 flex items-center gap-3"
           onClick={async () => {
-            setIsLoading(true);
-            toast.success("Clicked");
-            const { data } = await axios.get("/api/orders/testapi");
-            if (data.success)
-              toast.success("Completed" + " -- " + data.allUsers.length);
-            else toast.error("Error");
-            console.log(data?.allUsers);
-            setIsLoading(false);
+            try {
+              setIsLoading(true);
+              toast.success("Clicked");
+              const { data } = await axios.get("/api/orders/testapi");
+              if (data.success)
+                toast.success("Completed" + " -- " + data.allUsers.length);
+              else toast.error("Error");
+              console.log(data?.allUsers);
+              setIsLoading(false);
+            } catch (error) {
+              console.log("++++++++++++++", error);
+              toast.error(error.response.data.msg);
+              setIsLoading(false);
+            }
           }}
         >
           Test
