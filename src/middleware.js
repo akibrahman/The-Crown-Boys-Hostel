@@ -1,8 +1,21 @@
 import { NextResponse } from "next/server";
 
-export function middleware(req) {
+export async function middleware(req) {
   const path = req.nextUrl.pathname;
   const token = req.cookies.get("token")?.value || "";
+  //! Manage Dashboard SSR --Start--
+  if (path === "/dashboard" && !token) {
+    const url = new URL("/signin", req.nextUrl);
+    console.log("=================================");
+    console.log(url);
+    console.log(req.nextUrl);
+    console.log(req.nextUrl.href);
+    url.searchParams.set("callbackUrl", req.nextUrl.href);
+    console.log(url);
+    console.log("=================================");
+    return NextResponse.redirect(url);
+  }
+  //! Manage Dashboard SSR --End--
   if ((path === "/profile" || path === "/order") && !token) {
     // return NextResponse.redirect("/");
     const url = new URL("/signin", req.nextUrl);
@@ -22,6 +35,7 @@ export function middleware(req) {
 export const config = {
   matcher: [
     "/",
+    "/dashboard",
     "/profile",
     "/login",
     "/signup",

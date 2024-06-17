@@ -1,9 +1,11 @@
 "use client";
 import Receipt from "@/Components/Receipt/Receipt";
+import useUnloadWarning from "@/hooks/useUnloadWarning";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 
 const ManualInvoice = () => {
+  useUnloadWarning("Are");
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,

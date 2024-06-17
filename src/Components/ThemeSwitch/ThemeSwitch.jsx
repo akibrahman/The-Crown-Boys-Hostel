@@ -19,7 +19,10 @@ const ThemeSwitch = () => {
     }
   }, [darkMode]);
   return (
-    <div onClick={() => setdarkMode(!darkMode)} className="cursor-pointer">
+    <div
+      onClick={() => setdarkMode(!darkMode)}
+      className="cursor-pointer hidden"
+    >
       {darkMode ? (
         <FaSun className="text-xl duration-300 transition-all" />
       ) : (
