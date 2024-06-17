@@ -83,11 +83,22 @@ const NavMenus = ({ items }) => {
         <div className="flex text-base items-center justify-center gap-8">
           {items.map((item, i) =>
             item.title == "Dashboard" ? (
-              <StarButton isLink={true} link={item.url} lable={"Dashboard"} />
+              <StarButton
+                key={i}
+                isLink={true}
+                link={item.url}
+                lable={"Dashboard"}
+              />
             ) : item.title == "Log In" ? (
-              <LeafButton isLink={true} link={item.url} lable={"Log In"} />
+              <LeafButton
+                key={i}
+                isLink={true}
+                link={item.url}
+                lable={"Log In"}
+              />
             ) : item.title == "Registration" ? (
               <LeafButton
+                key={i}
                 isLink={true}
                 link={item.url}
                 lable={"Registration"}
@@ -121,6 +132,7 @@ const NavMenus = ({ items }) => {
           {items.map((item, i) =>
             item.title == "Dashboard" ? (
               <StarButton
+                key={i}
                 onClick={() => {
                   burgerMenuButtonClicked();
                   route.push(item.url);
@@ -131,6 +143,7 @@ const NavMenus = ({ items }) => {
               />
             ) : item.title == "Log In" ? (
               <LeafButton
+                key={i}
                 isLink={false}
                 onClick={() => {
                   burgerMenuButtonClicked();
@@ -140,6 +153,7 @@ const NavMenus = ({ items }) => {
               />
             ) : item.title == "Registration" ? (
               <LeafButton
+                key={i}
                 onClick={() => {
                   burgerMenuButtonClicked();
                   route.push(item.url);
@@ -190,11 +204,17 @@ const NavMenus = ({ items }) => {
         <div className="hidden text-base items-center justify-center gap-8">
           {items.map((item, i) =>
             item.title == "Dashboard" ? (
-              <StarButton isLink={true} link={item.url} lable={"Dashboard"} />
+              <StarButton
+                key={i}
+                isLink={true}
+                link={item.url}
+                lable={"Dashboard"}
+              />
             ) : item.title == "Log In" ? (
               <LeafButton isLink={true} link={item.url} lable={"Log In"} />
             ) : item.title == "Registration" ? (
               <LeafButton
+                key={i}
                 isLink={true}
                 link={item.url}
                 lable={"Registration"}
