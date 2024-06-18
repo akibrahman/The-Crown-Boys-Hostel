@@ -24,6 +24,7 @@ const NavBar = () => {
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
     { title: "Contact Us", url: "/contact-us" },
+    { title: "Order", url: "/order" },
     { title: "Dashboard", url: "/profile" },
   ];
 
