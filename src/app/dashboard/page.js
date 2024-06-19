@@ -1,7 +1,9 @@
+"use server";
 import User from "@/models/userModel";
 import { decode, verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Dashboard from "../../Components/Dashboard/Dashboard.jsx";
 
 const page = async () => {
   const token = cookies().get("token");
@@ -21,14 +23,7 @@ const page = async () => {
   const user = await User.findById(id);
   console.log(user);
 
-  return (
-    <div>
-      <p>Name: {user.username}</p>
-      <p>E-mail: {user.email}</p>
-      <p>Number: {user.contactNumber}</p>
-      <p>Role: {user.role}</p>
-    </div>
-  );
+  return <Dashboard user={user.toJSON()}/>;
 };
 
 export default page;

@@ -40,7 +40,6 @@ const NavBar = () => {
     } else if (
       user &&
       user.success &&
-      user.isVerified &&
       !loading
     )
       return <NavMenus items={withToken} />;
