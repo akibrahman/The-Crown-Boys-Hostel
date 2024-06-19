@@ -16,6 +16,8 @@ import MyBillsComponent from "./MyBillsComponent";
 import ManagerDetailsComponent from "./ManagerDetailsComponent";
 import FileUpload from "@/app/fileManager/page";
 import UserNotVerifiedPage from "./UserNotVerifiedPage";
+import { GiHotMeal } from "react-icons/gi";
+import MealHistoryComponent from "./MealHistoryComponent";
 
 const Dashboard = ({ user }) => {
   const route = useRouter();
@@ -47,7 +49,7 @@ const Dashboard = ({ user }) => {
   return (
     <div className="relative">
       <nav className="w-full border-b bg-gray-800 border-gray-700">
-        <div className="px-3 py-3 lg:px-5 lg:pl-3">
+        <div className="px-3 py-1 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
               <button
@@ -72,7 +74,7 @@ const Dashboard = ({ user }) => {
                   ></path>
                 </svg>
               </button>
-              <Link href="https://flowbite.com" className="flex ms-2 md:me-24">
+              <Link href="/" className="flex ms-2 md:me-24">
                 <Image
                   height={70}
                   width={70}
@@ -157,96 +159,118 @@ const Dashboard = ({ user }) => {
         >
           <div className="h-full px-3 pb-4 overflow-y-auto bg-gray-800">
             <ul className="font-medium flex flex-col gap-2">
-              <Link href="/dashboard?displayData=profile">
-                <div
-                  className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                    displayData == "profile"
-                      ? "bg-gray-700"
-                      : "hover:bg-gray-700"
-                  }`}
-                >
-                  <CgProfile
-                    className={`text-gray-400 text-xl ${
-                      displayData == "profile"
-                        ? "text-white"
-                        : "group-hover:text-white"
-                    }`}
-                  />
-                  <span className="ms-3">Profile</span>
-                </div>
-              </Link>
-              <Link href="/dashboard?displayData=currentMonth">
-                <div
-                  className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                    displayData == "currentMonth"
-                      ? "bg-gray-700"
-                      : "hover:bg-gray-700"
-                  }`}
-                >
-                  <CgCalendarDates
-                    className={`text-gray-400 text-xl ${
-                      displayData == "currentMonth"
-                        ? "text-white"
-                        : "group-hover:text-white"
-                    }`}
-                  />
-                  <span className="ms-3">Current Month</span>
-                </div>
-              </Link>
-              <Link href="/dashboard?displayData=myBills">
-                <div
-                  className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                    displayData == "myBills"
-                      ? "bg-gray-700"
-                      : "hover:bg-gray-700"
-                  }`}
-                >
-                  <TbCoinTaka
-                    className={`text-gray-400 text-xl ${
-                      displayData == "myBills"
-                        ? "text-white"
-                        : "group-hover:text-white"
-                    }`}
-                  />
-                  <span className="ms-3">My Bills</span>
-                </div>
-              </Link>
-              <Link href="/dashboard?displayData=managerDetails">
-                <div
-                  className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                    displayData == "managerDetails"
-                      ? "bg-gray-700"
-                      : "hover:bg-gray-700"
-                  }`}
-                >
-                  <GrUserManager
-                    className={`text-gray-400 text-xl ${
-                      displayData == "managerDetails"
-                        ? "text-white"
-                        : "group-hover:text-white"
-                    }`}
-                  />
-                  <span className="ms-3">Manager Details</span>
-                </div>
-              </Link>
-              <Link href="/dashboard?displayData=fileManager">
-                <div
-                  className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                    displayData == "fileManager"
-                      ? "bg-gray-700"
-                      : "hover:bg-gray-700"
-                  }`}
-                >
-                  <FaFile
-                    className={`text-gray-400 text-xl ${
-                      displayData == "fileManager"
-                        ? "text-white"
-                        : "group-hover:text-white"
-                    }`}
-                  />
-                  <span className="ms-3">File Manager</span>
-                </div>
-              </Link>
+              {user && user.isClient && user.isClientVerified && (
+                <>
+                  <Link href="/dashboard?displayData=profile">
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "profile"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <CgProfile
+                        className={`text-gray-400 text-xl ${
+                          displayData == "profile"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3">Profile</span>
+                    </div>
+                  </Link>
+                  <Link href="/dashboard?displayData=currentMonth">
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "currentMonth"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <CgCalendarDates
+                        className={`text-gray-400 text-xl ${
+                          displayData == "currentMonth"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3">Current Month</span>
+                    </div>
+                  </Link>
+                  <Link href="/dashboard?displayData=myBills">
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "myBills"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <TbCoinTaka
+                        className={`text-gray-400 text-xl ${
+                          displayData == "myBills"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3">My Bills</span>
+                    </div>
+                  </Link>
+                  <Link href="/dashboard?displayData=managerDetails">
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerDetails"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <GrUserManager
+                        className={`text-gray-400 text-xl ${
+                          displayData == "managerDetails"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3">Manager Details</span>
+                    </div>
+                  </Link>
+                  <Link href="/dashboard?displayData=mealHistory">
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "mealHistory"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <GiHotMeal
+                        className={`text-gray-400 text-xl ${
+                          displayData == "mealHistory"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3">Meal History</span>
+                    </div>
+                  </Link>
+                  <Link href="/dashboard?displayData=fileManager">
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "fileManager"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <FaFile
+                        className={`text-gray-400 text-xl ${
+                          displayData == "fileManager"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3">File Manager</span>
+                    </div>
+                  </Link>
+                </>
+              )}
             </ul>
           </div>
         </aside>
@@ -256,6 +280,8 @@ const Dashboard = ({ user }) => {
             <UserNotVerifiedPage user={user} />
           ) : displayData == "myBills" ? (
             <MyBillsComponent user={user} />
+          ) : displayData == "mealHistory" ? (
+            <MealHistoryComponent user={user} />
           ) : displayData == "currentMonth" ? (
             <CurrentMonthComponent user={user} />
           ) : displayData == "managerDetails" ? (
