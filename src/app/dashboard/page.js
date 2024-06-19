@@ -1,56 +1,28 @@
-"use server";
-import User from "@/models/userModel";
-import { decode, verify } from "jsonwebtoken";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+"use client";
 import Dashboard from "../../Components/Dashboard/Dashboard.jsx";
+import { useContext } from "react";
+import { AuthContext } from "@/providers/ContextProvider.jsx";
 
-const page = async () => {
-  const token = cookies().get("token");
+const Page = () => {
+  // const token = cookies().get("token");
 
-  try {
-    verify(token.value, process.env.TOKEN_SECRET);
-  } catch (err) {
-    console.log(err);
-    const baseUrl = process.env.BASE_URL;
-    const url = new URL("/signin", baseUrl);
-    url.searchParams.set("callbackUrl", baseUrl + "/dashboard");
-    return redirect(url);
-  }
+  // try {
+  //   verify(token.value, process.env.TOKEN_SECRET);
+  // } catch (err) {
+  //   console.log(err);
+  //   const baseUrl = process.env.BASE_URL;
+  //   const url = new URL("/signin", baseUrl);
+  //   url.searchParams.set("callbackUrl", baseUrl + "/dashboard");
+  //   return redirect(url);
+  // }
 
-  const { id } = decode(token.value);
+  // const { id } = decode(token.value);
 
-  const user = await User.findById(id);
-  console.log(user);
-  const plainUser={
-    _id:user._id,
-    username:user.username,
-    email:user.email,
-    contactNumber:user.contactNumber,
-    fathersNumber:user.fathersNumber,
-    mothersNumber:user.mothersNumber,
-    profilePicture:user.profilePicture,
-    role:user.role,
-    password:user.password,
-    isVerified:user.isVerified,
-    isManager:user.isManager,
-    isClient:user.isClient,
-    isManagerVerified:user.isManagerVerified,
-    isClientVerified:user.isClientVerified,
-    floor:user.floor,
-    roomNumber:user.roomNumber,
-    studentId:user.studentId,
-    bloodGroup:user.bloodGroup,
-    institute:user.institute,
-    messAddress:user.messAddress,
-    manager:user.manager,
-    nidFrontPicture:user.nidFrontPicture,
-    nidBackPicture:user.nidBackPicture,
-    charges:user.charges,
-    blockDate:user.blockDate,
-  }
-
-  return <Dashboard user={plainUser}/>;
+  // const user = await User.findById(id);
+  // console.log(user);
+  const { user } = useContext(AuthContext);
+  if (!user) return;
+  return <Dashboard user={user} />;
 };
 
-export default page;
+export default Page;
