@@ -3,13 +3,14 @@ import { TiTick } from "react-icons/ti";
 import BubbleFloating from "../BubbleFloating/BubbleFloating";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Tag from "../Tag/Tag";
 
 const UserNotVerifiedPage = ({ user }) => {
   const [canVerify, setCanVerify] = useState(true);
   return (
-    <div className="h-full relative">
+    <div className="relative min-h-full bg-dashboard -z-10 text-slate-100 font-medium">
       <BubbleFloating />
-      <div className="flex flex-col items-center justify-center gap-1 h-full">
+      <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col items-center">
         <p className="text-blue-500 font-semibold text-lg">Please verify your E-mail</p>
         {canVerify ? (
           <button
@@ -35,6 +36,9 @@ const UserNotVerifiedPage = ({ user }) => {
             Verification E-mail sent
           </p>
         )}
+      </div>
+      <div className="absolute bottom-5 left-[98%] -translate-x-full flex flex-col items-center">
+        <Tag />
       </div>
     </div>
   );

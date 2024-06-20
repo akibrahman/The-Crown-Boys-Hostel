@@ -70,7 +70,7 @@ const ManagerMealQueryComponent = () => {
       </p>
       <form
         onSubmit={searchUserQuery}
-        className="flex flex-col md:flex-row items-center justify-center gap-1 my-14"
+        className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-1 my-14"
       >
         <div className="flex items-center gap-4">
           <p className="text-sky-500 font-semibold">Select User : </p>
