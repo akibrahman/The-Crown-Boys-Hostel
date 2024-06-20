@@ -25,7 +25,7 @@ const NavBar = () => {
     { title: "About Us", url: "/about-us" },
     { title: "Contact Us", url: "/contact-us" },
     { title: "Order", url: "/order" },
-    { title: "Dashboard", url: "/profile" },
+    { title: "Dashboard", url: "/dashboard" },
   ];
 
   const whenLoading = [

@@ -39,7 +39,7 @@ const Signin = () => {
       console.log(res);
       if (res.data.success && res.data.code === 2121) {
         await userRefetch();
-        route.push(callbackUrl || "/profile");
+        route.push(callbackUrl || "/dashboard");
         toast.success(res.data.msg);
       }
     } catch (error) {

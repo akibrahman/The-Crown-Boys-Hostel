@@ -71,7 +71,7 @@ const VerifyEmail = () => {
             <p className="flex items-center gap-2 text-green-500">
               Token Verified <TiTick />
             </p>
-            <Link href={"/profile"}>
+            <Link href={"/dashboard"}>
               <button className="px-8 text-white py-1 rounded-full my-2 duration-300 active:scale-90 bg-green-500">
                 Profile
               </button>
@@ -98,7 +98,7 @@ const VerifyEmail = () => {
         {error && (
           <div>
             <p>Verification Error, try again!</p>
-            <Link href={"/profile"}>Go Profile</Link>
+            <Link href={"/dashboard"}>Go Profile</Link>
           </div>
         )} */}
       </div>
