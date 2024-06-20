@@ -70,7 +70,7 @@ const ManagerProfileComponent = ({ user }) => {
     </div>
   ) : (
     user.role === "manager" && user.isVerified && user.isManagerVerified && (
-      <div className="flex flex-col md:flex-row gap-4 items-center h-full px-20 md:px-32 py-5 bg-dashboard text-slate-100">
+      <div className="flex flex-col md:flex-row gap-4 items-center min-h-full px-20 md:px-32 py-5 bg-dashboard text-slate-100">
         <div
           className={`w-full md:w-1/2 mt-10 py-8 flex flex-col items-center`}
         >
