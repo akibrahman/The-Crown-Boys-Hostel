@@ -26,6 +26,7 @@ import { FaBagShopping, FaMoneyBillTrendUp } from "react-icons/fa6";
 import ManagerOrderStatusComponent from "./Manager/ManagerOrderStatusComponent";
 import ManagerSendSMSComponent from "./Manager/ManagerSendSMSComponent";
 import ManagerBillQueryComponent from "./Manager/ManagerBillQueryComponent";
+import ManagerMealQueryComponent from "./Manager/ManagerMealQueryComponent";
 
 const Dashboard = ({ user }) => {
   const route = useRouter();
@@ -444,6 +445,29 @@ const Dashboard = ({ user }) => {
                       </span>
                     </div>
                   </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerMealQuery"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerMealQuery"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <GiHotMeal
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerMealQuery"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Meal Query
+                      </span>
+                    </div>
+                  </Link>
                 </>
               )}
             </ul>
@@ -475,6 +499,8 @@ const Dashboard = ({ user }) => {
             <ManagerSendSMSComponent user={user} />
           ) : displayData == "managerBillQuery" ? (
             <ManagerBillQueryComponent user={user} />
+          ) : displayData == "managerMealQuery" ? (
+            <ManagerMealQueryComponent user={user} />
           ) : user.role == "manager" ? (
             <ManagerProfileComponent user={user} />
           ) : (
