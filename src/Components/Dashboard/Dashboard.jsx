@@ -7,9 +7,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
-import { TbBrandShopee } from "react-icons/tb";
+import { TbBrandBooking, TbBrandShopee } from "react-icons/tb";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
-import { FaAddressCard, FaFile, FaSms, FaUsers } from "react-icons/fa";
+import { FaAddressCard, FaFile, FaFileInvoiceDollar, FaSms, FaUsers } from "react-icons/fa";
 import { TbCoinTaka } from "react-icons/tb";
 import { GrUserManager } from "react-icons/gr";
 import ProfileComponent from "./Client/ProfileComponent";
@@ -32,6 +32,8 @@ import ManagerMarketQueryComponent from "./Manager/ManagerMarketQueryComponent";
 import ManagerMealUpdatorComponent from "./Manager/ManagerMealUpdatorComponent";
 import { MdOutlineUpdate } from "react-icons/md";
 import ManagerRFIDIssueComponent from "./Manager/ManagerRFIDIssueComponent";
+import ManagerManualInvoiceComponent from "./Manager/ManagerManualInvoiceComponent";
+import ManagerAllBookingsComponent from "./Manager/ManagerAllBookingsComponent";
 
 const Dashboard = ({ user }) => {
   const route = useRouter();
@@ -542,6 +544,52 @@ const Dashboard = ({ user }) => {
                       </span>
                     </div>
                   </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerAllBookings"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerAllBookings"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <TbBrandBooking
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerAllBookings"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Bookings
+                      </span>
+                    </div>
+                  </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerManualInvouce"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerManualInvouce"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <FaFileInvoiceDollar
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerManualInvouce"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Manual Invoice
+                      </span>
+                    </div>
+                  </Link>
                 </>
               )}
             </ul>
@@ -581,6 +629,10 @@ const Dashboard = ({ user }) => {
             <ManagerMealUpdatorComponent user={user} />
           ) : displayData == "managerRFIDIssue" ? (
             <ManagerRFIDIssueComponent user={user} />
+          ) : displayData == "managerAllBookings" ? (
+            <ManagerAllBookingsComponent user={user} />
+          ) : displayData == "managerManualInvouce" ? (
+            <ManagerManualInvoiceComponent user={user} />
           ) : // Common -----------------------------------
           user.role == "manager" ? (
             <ManagerProfileComponent user={user} />

@@ -110,15 +110,15 @@ const ManagerRFIDIssueComponent = () => {
       >
         create Card
       </button>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/*//! All Cards  */}
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           {loading ? (
             <div className="flex flex-col items-center justify-center mt-20">
               <CgSpinner className="text-4xl animate-spin text-blue-500" />
             </div>
           ) : rfids && rfids.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4 px-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-10">
               {rfids.map((rfid) => (
                 <div
                   className="border border-blue-500 px-6 py-4"
