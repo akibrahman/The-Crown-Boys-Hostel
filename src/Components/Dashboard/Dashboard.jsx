@@ -9,7 +9,13 @@ import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { TbBrandBooking, TbBrandShopee } from "react-icons/tb";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
-import { FaAddressCard, FaFile, FaFileInvoiceDollar, FaSms, FaUsers } from "react-icons/fa";
+import {
+  FaAddressCard,
+  FaFile,
+  FaFileInvoiceDollar,
+  FaSms,
+  FaUsers,
+} from "react-icons/fa";
 import { TbCoinTaka } from "react-icons/tb";
 import { GrUserManager } from "react-icons/gr";
 import ProfileComponent from "./Client/ProfileComponent";
@@ -34,11 +40,47 @@ import { MdOutlineUpdate } from "react-icons/md";
 import ManagerRFIDIssueComponent from "./Manager/ManagerRFIDIssueComponent";
 import ManagerManualInvoiceComponent from "./Manager/ManagerManualInvoiceComponent";
 import ManagerAllBookingsComponent from "./Manager/ManagerAllBookingsComponent";
+import useUnloadWarning from "@/hooks/useUnloadWarning";
+import AuthorizationNeede from "./AuthorizationNeede";
 
 const Dashboard = ({ user }) => {
+  useUnloadWarning("Are");
   const route = useRouter();
   const searchParams = useSearchParams();
-  let displayData = searchParams.get("displayData") || "";
+  let displayData = searchParams.get("displayData");
+
+  if (!displayData) {
+    user.role == "manager"
+      ? (displayData = "managerProfile")
+      : (displayData = "profile");
+  }
+  if (displayData) {
+    if (
+      (displayData == "profile" ||
+        displayData == "myBills" ||
+        displayData == "mealHistory" ||
+        displayData == "currentMonth" ||
+        displayData == "managerDetails") &&
+      user.role == "manager"
+    ) {
+      displayData = "managerProfile";
+    } else if (
+      (displayData == "managerAllUsers" ||
+        displayData == "managerMarketDetails" ||
+        displayData == "managerOrderStatus" ||
+        displayData == "managerSendSMS" ||
+        displayData == "managerBillQuery" ||
+        displayData == "managerMealQuery" ||
+        displayData == "managerMarketQuery" ||
+        displayData == "managerMealUpdator" ||
+        displayData == "managerRFIDIssue" ||
+        displayData == "managerAllBookings" ||
+        displayData == "managerManualInvouce") &&
+      user.role == "client"
+    ) {
+      displayData = "profile";
+    }
+  }
 
   const { userRefetch } = useContext(AuthContext);
   const [profileBarShown, setProfileBarShown] = useState(false);
@@ -599,8 +641,13 @@ const Dashboard = ({ user }) => {
         <div className="w-full overflow-y-scroll">
           {!user.isVerified ? (
             <UserNotVerifiedPage user={user} />
+          ) : (user.role == "client" && !user.isClientVerified) ||
+            (user.role == "manager" && !user.isManagerVerified) ? (
+            <AuthorizationNeede user={user} />
           ) : // For User -----------------------------------
-          displayData == "myBills" ? (
+          displayData == "profile" ? (
+            <ProfileComponent user={user} />
+          ) : displayData == "myBills" ? (
             <MyBillsComponent user={user} />
           ) : displayData == "mealHistory" ? (
             <MealHistoryComponent user={user} />
@@ -611,7 +658,9 @@ const Dashboard = ({ user }) => {
           ) : displayData == "fileManager" ? (
             <FileUpload />
           ) : // For Manager -----------------------------------
-          displayData == "managerAllUsers" ? (
+          displayData == "managerProfile" ? (
+            <ManagerProfileComponent user={user} />
+          ) : displayData == "managerAllUsers" ? (
             <ManagerAllUsers user={user} />
           ) : displayData == "managerMarketDetails" ? (
             <ManagerMarketDetailsComponent user={user} />
@@ -633,7 +682,7 @@ const Dashboard = ({ user }) => {
             <ManagerAllBookingsComponent user={user} />
           ) : displayData == "managerManualInvouce" ? (
             <ManagerManualInvoiceComponent user={user} />
-          ) : // Common -----------------------------------
+          ) : // For /dashboard route --------------------------
           user.role == "manager" ? (
             <ManagerProfileComponent user={user} />
           ) : (
