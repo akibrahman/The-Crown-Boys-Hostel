@@ -9,7 +9,7 @@ import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { TbBrandShopee } from "react-icons/tb";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
-import { FaFile, FaSms, FaUsers } from "react-icons/fa";
+import { FaAddressCard, FaFile, FaSms, FaUsers } from "react-icons/fa";
 import { TbCoinTaka } from "react-icons/tb";
 import { GrUserManager } from "react-icons/gr";
 import ProfileComponent from "./Client/ProfileComponent";
@@ -29,6 +29,9 @@ import ManagerSendSMSComponent from "./Manager/ManagerSendSMSComponent";
 import ManagerBillQueryComponent from "./Manager/ManagerBillQueryComponent";
 import ManagerMealQueryComponent from "./Manager/ManagerMealQueryComponent";
 import ManagerMarketQueryComponent from "./Manager/ManagerMarketQueryComponent";
+import ManagerMealUpdatorComponent from "./Manager/ManagerMealUpdatorComponent";
+import { MdOutlineUpdate } from "react-icons/md";
+import ManagerRFIDIssueComponent from "./Manager/ManagerRFIDIssueComponent";
 
 const Dashboard = ({ user }) => {
   const route = useRouter();
@@ -157,7 +160,7 @@ const Dashboard = ({ user }) => {
         <aside
           id="logo-sidebar"
           // absolute top-0 left-0 z-40
-          className={`absolute md:relative z-50 h-[calc(100vh-130px)] pt-10 transition-transform border-r border-gray-700 ${
+          className={`absolute md:relative z-50 h-[calc(100vh-130px)] py-10 transition-transform border-r border-gray-700 ${
             sideBarShown
               ? "w-72 md:w-72 bg-opacity-95 md:bg-opacity-100 bg-gray-800"
               : "w-0 md:w-72 md:bg-gray-800"
@@ -493,6 +496,52 @@ const Dashboard = ({ user }) => {
                       </span>
                     </div>
                   </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerMealUpdator"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerMealUpdator"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <MdOutlineUpdate
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerMealUpdator"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Meal Updator
+                      </span>
+                    </div>
+                  </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerRFIDIssue"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerRFIDIssue"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <FaAddressCard
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerRFIDIssue"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        RFID Issue
+                      </span>
+                    </div>
+                  </Link>
                 </>
               )}
             </ul>
@@ -528,6 +577,10 @@ const Dashboard = ({ user }) => {
             <ManagerMealQueryComponent user={user} />
           ) : displayData == "managerMarketQuery" ? (
             <ManagerMarketQueryComponent user={user} />
+          ) : displayData == "managerMealUpdator" ? (
+            <ManagerMealUpdatorComponent user={user} />
+          ) : displayData == "managerRFIDIssue" ? (
+            <ManagerRFIDIssueComponent user={user} />
           ) : // Common -----------------------------------
           user.role == "manager" ? (
             <ManagerProfileComponent user={user} />
