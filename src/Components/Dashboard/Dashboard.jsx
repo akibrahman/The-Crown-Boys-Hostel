@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
+import { TbBrandShopee } from "react-icons/tb";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
 import { FaFile, FaSms, FaUsers } from "react-icons/fa";
 import { TbCoinTaka } from "react-icons/tb";
@@ -27,6 +28,7 @@ import ManagerOrderStatusComponent from "./Manager/ManagerOrderStatusComponent";
 import ManagerSendSMSComponent from "./Manager/ManagerSendSMSComponent";
 import ManagerBillQueryComponent from "./Manager/ManagerBillQueryComponent";
 import ManagerMealQueryComponent from "./Manager/ManagerMealQueryComponent";
+import ManagerMarketQueryComponent from "./Manager/ManagerMarketQueryComponent";
 
 const Dashboard = ({ user }) => {
   const route = useRouter();
@@ -468,6 +470,29 @@ const Dashboard = ({ user }) => {
                       </span>
                     </div>
                   </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerMarketQuery"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerMarketQuery"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <TbBrandShopee
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerMarketQuery"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Market Query
+                      </span>
+                    </div>
+                  </Link>
                 </>
               )}
             </ul>
@@ -501,7 +526,10 @@ const Dashboard = ({ user }) => {
             <ManagerBillQueryComponent user={user} />
           ) : displayData == "managerMealQuery" ? (
             <ManagerMealQueryComponent user={user} />
-          ) : user.role == "manager" ? (
+          ) : displayData == "managerMarketQuery" ? (
+            <ManagerMarketQueryComponent user={user} />
+          ) : // Common -----------------------------------
+          user.role == "manager" ? (
             <ManagerProfileComponent user={user} />
           ) : (
             <ProfileComponent user={user} />
