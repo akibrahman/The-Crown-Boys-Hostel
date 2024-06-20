@@ -2,6 +2,7 @@
 import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
 import Image from "next/image";
+import { VscGraphLine } from "react-icons/vsc";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useState } from "react";
@@ -22,6 +23,7 @@ import ManagerProfileComponent from "./Manager/ManagerProfileComponent";
 import ManagerAllUsers from "./Manager/ManagerAllUsers";
 import ManagerMarketDetailsComponent from "./Manager/ManagerMarketDetailsComponent";
 import { FaBagShopping } from "react-icons/fa6";
+import ManagerOrderStatusComponent from "./Manager/ManagerOrderStatusComponent";
 
 const Dashboard = ({ user }) => {
   const route = useRouter();
@@ -371,6 +373,29 @@ const Dashboard = ({ user }) => {
                       </span>
                     </div>
                   </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerOrderStatus"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerOrderStatus"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <VscGraphLine
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerOrderStatus"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Order Status
+                      </span>
+                    </div>
+                  </Link>
                 </>
               )}
             </ul>
@@ -396,6 +421,8 @@ const Dashboard = ({ user }) => {
             <ManagerAllUsers user={user} />
           ) : displayData == "managerMarketDetails" ? (
             <ManagerMarketDetailsComponent user={user} />
+          ) : displayData == "managerOrderStatus" ? (
+            <ManagerOrderStatusComponent user={user} />
           ) : user.role == "manager" ? (
             <ManagerProfileComponent user={user} />
           ) : (
