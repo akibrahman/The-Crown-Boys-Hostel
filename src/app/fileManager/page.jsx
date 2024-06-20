@@ -129,7 +129,7 @@ const FileUpload = () => {
     return;
   }
   return (
-    <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-stone-300">
+    <div className="min-h-screen pb-20 bg-dashboard text-slate-100">
       <p className="text-center py-8 text-2xl">File Manager</p>
       <input
         type="file"

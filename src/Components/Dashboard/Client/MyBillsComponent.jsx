@@ -43,8 +43,8 @@ const MyBillsComponent = ({ user }) => {
         .reduce((a, c) => a + (c.totalBillInBDT - c.paidBillInBDT), 0)
     : 0;
   return (
-    <div className="px-10">
-      <p className="text-center font-medium text-xl text-white">My Bills</p>
+    <div className="px-10 min-h-full bg-dashboard text-slate-100">
+      <p className="text-center font-medium text-xl text-white py-4">My Bills</p>
       {totalDue > 0 ? (
         <div className="">
           <p className="text-center dark:text-red-500">
@@ -61,7 +61,7 @@ const MyBillsComponent = ({ user }) => {
           </p>
         </div>
       )}
-      <div className="my-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="py-8 grid grid-cols-1 md:grid-cols-2 gap-4">
         {bills
           ?.sort(
             (a, b) => monthOrder.indexOf(b.month) - monthOrder.indexOf(a.month)

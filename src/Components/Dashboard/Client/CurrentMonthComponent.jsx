@@ -93,7 +93,7 @@ const CurrentMonthComponent = ({ user }) => {
     enabled: user?._id && user?.role == "client" ? true : false,
   });
   return (
-    <>
+    <div className="min-h-full bg-dashboard text-slate-100">
       <div className="p-6 px-10 flex flex-col-reverse gap-3 items-center md:flex-row-reverse md:gap-0 justify-between">
         {user.role === "client" && user.isVerified && user.isClientVerified && (
           <>
@@ -165,7 +165,7 @@ const CurrentMonthComponent = ({ user }) => {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

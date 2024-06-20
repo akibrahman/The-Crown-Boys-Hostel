@@ -1,13 +1,11 @@
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import Image from "next/image";
-import { useState } from "react";
-import toast from "react-hot-toast";
 import { FaTimes } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 
 const ProfileComponent = ({ user }) => {
   return (
-    <div className="flex flex-col md:flex-row gap-4 items-center h-full px-20 md:px-32 py-5">
+    <div className="flex flex-col md:flex-row gap-4 items-center min-h-full px-20 md:px-32 py-5 bg-dashboard text-slate-100">
       <div className={`w-full md:w-1/2 flex flex-col items-center relative`}>
         <Image
           alt={`Profile picture of ${user.username}`}

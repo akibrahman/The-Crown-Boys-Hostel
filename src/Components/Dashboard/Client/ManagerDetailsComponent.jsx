@@ -38,7 +38,7 @@ const ManagerDetailsComponent = ({ user }) => {
     user.role === "client" &&
     user.isVerified &&
     user.isClientVerified && (
-      <div className={`mt-10 py-8 flex flex-col items-center`}>
+      <div className={`pt-10 py-8 flex flex-col items-center min-h-full bg-dashboard text-slate-100`}>
         <Image
           alt={`Profile picture of ${manager.username}`}
           src={manager.profilePicture}
