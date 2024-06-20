@@ -14,7 +14,7 @@ const ManagerManualInvoiceComponent = () => {
     onAfterPrint: () => console.log("after printing..."),
   });
   return (
-    <div className="min-h-screen p-10 pt-5 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
+    <div className="min-h-full p-10 pt-5 bg-dashboard text-slate-100">
       <p className="text-center font-semibold text-xl dark:text-white relative">
         Create manual Invoice
       </p>

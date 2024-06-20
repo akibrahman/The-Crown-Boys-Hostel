@@ -90,7 +90,7 @@ const ManagerBillQueryComponent = () => {
           )}
         </div>
       </div>
-      <div className="min-h-screen p-10 px-5 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
+      <div className="min-h-full p-10 px-5 bg-dashboard text-slate-100">
         <p className="text-center font-semibold text-2xl dark:text-white">
           Bill Query
         </p>

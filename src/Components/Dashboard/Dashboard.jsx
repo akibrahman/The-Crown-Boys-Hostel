@@ -162,7 +162,7 @@ const Dashboard = ({ user }) => {
         <aside
           id="logo-sidebar"
           // absolute top-0 left-0 z-40
-          className={`absolute md:relative z-50 h-[calc(100vh-130px)] py-10 transition-transform border-r border-gray-700 ${
+          className={`absolute md:relative z-40 h-[calc(100vh-130px)] py-10 transition-transform border-r border-gray-700 ${
             sideBarShown
               ? "w-72 md:w-72 bg-opacity-95 md:bg-opacity-100 bg-gray-800"
               : "w-0 md:w-72 md:bg-gray-800"

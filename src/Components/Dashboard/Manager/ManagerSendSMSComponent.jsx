@@ -88,7 +88,7 @@ const ManagerSendSMSComponent = () => {
   }
   if (user?.success == false) return route.push("/signin");
   return (
-    <div className="min-h-screen p-6 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
+    <div className="min-h-full p-6 bg-dashboard text-slate-100">
       <p className="text-center font-semibold text-2xl dark:text-white relative">
         Send SMS
         <span className="absolute top-1/2 -translate-y-1/2 right-0 md:right-10 text-base font-normal">

@@ -18,11 +18,9 @@ const MealOffByManager = ({
   const customStylesForModal = {
     content: {
       top: "50%",
-      left: "50%",
-      right: "auto",
+      left: "20%",
       bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
+      transform: "translateY(-50%)",
       padding: "15px",
       backgroundColor: "#1C1917",
       color: "#fff",
@@ -103,9 +101,8 @@ const MealOffByManager = ({
       isOpen={mealOffPopUp}
       onRequestClose={closeModal}
       style={customStylesForModal}
-      // className={"w-[90%]"}
     >
-      <div className="">
+      <div className="z-50">
         <FaTimes
           className="absolute top-3 right-3 text-2xl cursor-pointer"
           onClick={() => {

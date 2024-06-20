@@ -87,7 +87,7 @@ const ManagerRFIDIssueComponent = () => {
   if (!user) return <PreLoader />;
   if (user?.success == false || user?.role != "manager") return route.push("/");
   return (
-    <div className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300">
+    <div className="bg-dashboard text-slate-100 min-h-full">
       <p className="text-center py-5 text-xl">RFID Issue</p>
       <button
         onClick={async () => {

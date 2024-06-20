@@ -23,7 +23,7 @@ const ManagerAllBookingsComponent = ({user}) => {
   if (user?.success == false) return route.push("/signin");
   if (user.role != "manager") return route.push("/");
   return (
-    <div className="h-full p-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
+    <div className="min-h-full p-10 bg-dashboard text-slate-100">
       <p className="text-center font-semibold text-2xl dark:text-white">
         Bookings
       </p>

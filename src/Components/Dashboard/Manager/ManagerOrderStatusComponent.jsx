@@ -413,7 +413,7 @@ const ManagerOrderStatusComponent = () => {
           </div>
         </div>
       </Modal>
-      <div className="min-h-screen dark:bg-gradient-to-r dark:from-primary dark:to-secondary px-10 pb-20">
+      <div className="min-h-full bg-dashboard text-slate-100 px-10 pb-20">
         <p className="text-center font-semibold text-2xl pt-6 dark:text-white">
           Order Status
         </p>

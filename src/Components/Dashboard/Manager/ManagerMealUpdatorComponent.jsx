@@ -123,7 +123,7 @@ const ManagerMealUpdatorComponent = () => {
   if (!clients || !user) return <PreLoader />;
   if (user?.success == false || user.role != "manager") route.push("/");
   return (
-    <div className="relative dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white h-full">
+    <div className="relative bg-dashboard text-slate-100 min-h-full">
       <MealOffByManager
         mealOffPopUp={mealOffPopUp}
         setMealOffPopUp={setMealOffPopUp}

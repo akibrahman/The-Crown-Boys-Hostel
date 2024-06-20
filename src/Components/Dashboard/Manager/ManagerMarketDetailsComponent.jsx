@@ -39,13 +39,13 @@ const ManagerMarketDetailsComponent = ({ user }) => {
     });
 
   return (
-    <div className="col-span-1 md:col-span-2 lg:col-span-3 md:pl-6 pb-8 mt-10">
+    <div className="bg-dashboard text-slate-100 py-10 min-h-full">
       <p className="font-semibold border border-sky-500 rounded-sm px-4 py-2 relative flex items-center justify-around md:justify-around">
         <input
           placeholder="Enter Amount"
           onChange={(e) => setManagerAmount(parseInt(e.target.value))}
           value={managerAmount || managerAmount == 0 ? managerAmount : ""}
-          className="w-[200px] px-5 py-1 outline-none rounded-full bg-dashboard text-white placeholder:text-white"
+          className="w-[200px] px-5 py-1 rounded-full bg-dashboard text-white placeholder:text-white outline-double"
           type="number"
         />
         <span className="md:w-[300px]">{currentMonth}</span>

@@ -272,14 +272,14 @@ const ManagerAllUsers = ({ user }) => {
           </div>
         )}
       </Modal>
-      <div className="px-3 flex flex-col items-center gap-4 mt-10 relative">
+      <div className="px-3 flex flex-col items-center gap-4 py-5 relative bg-dashboard text-slate-100 min-h-full">
         <div className="pb-2 bg-transparent flex justify-center sticky top-0">
           <div className="relative">
             <input
               onChange={(e) => setClientName(e.target.value)}
               placeholder="Search by name"
               type="text"
-              className="w-80 px-4 pl-12 py-3 rounded-full text-white font-semibold bg-dashboard focus:outline-none placeholder:text-white"
+              className="w-80 px-4 pl-12 py-3 rounded-full text-white font-semibold bg-dashboard placeholder:text-white outline-double focus-within:border-none"
             />
             <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg text-white" />
           </div>

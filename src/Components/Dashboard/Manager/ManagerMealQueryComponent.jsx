@@ -64,9 +64,9 @@ const ManagerMealQueryComponent = () => {
     return route.push("/");
   }
   return (
-    <div className="min-h-screen p-10 px-2 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
+    <div className="min-h-full p-10 px-2 bg-dashboard text-slate-100">
       <p className="text-center font-semibold text-2xl dark:text-white">
-        User Query
+        Meal Query
       </p>
       <form
         onSubmit={searchUserQuery}
