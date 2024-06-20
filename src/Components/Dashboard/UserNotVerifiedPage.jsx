@@ -8,7 +8,7 @@ import Tag from "../Tag/Tag";
 const UserNotVerifiedPage = ({ user }) => {
   const [canVerify, setCanVerify] = useState(true);
   return (
-    <div className="relative min-h-full bg-dashboard -z-10 text-slate-100 font-medium">
+    <div className="relative min-h-full bg-dashboard z-20 text-slate-100 font-medium">
       <BubbleFloating />
       <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col items-center">
         <p className="text-blue-500 font-semibold text-lg">Please verify your E-mail</p>

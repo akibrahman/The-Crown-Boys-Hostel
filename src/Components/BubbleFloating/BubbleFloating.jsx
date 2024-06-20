@@ -3,9 +3,9 @@ import "../Dashboard/dashboard.css";
 
 const BubbleFloating = () => {
   return (
-    <div>
+    <div className="z-10">
       <div className="user-not-verified-page">
-        <div class="container absolute top-0 -z-10">
+        <div class="container absolute top-0">
           <div class="bubble">
             <span></span>
             <span></span>
