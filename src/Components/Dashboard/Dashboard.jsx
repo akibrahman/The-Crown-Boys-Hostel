@@ -20,11 +20,13 @@ import { GiHotMeal } from "react-icons/gi";
 import MealHistoryComponent from "./Client/MealHistoryComponent";
 import ManagerProfileComponent from "./Manager/ManagerProfileComponent";
 import ManagerAllUsers from "./Manager/ManagerAllUsers";
+import ManagerMarketDetailsComponent from "./Manager/ManagerMarketDetailsComponent";
+import { FaBagShopping } from "react-icons/fa6";
 
 const Dashboard = ({ user }) => {
   const route = useRouter();
   const searchParams = useSearchParams();
-  let displayData = searchParams.get("displayData") || "profile";
+  let displayData = searchParams.get("displayData") || "";
 
   const { userRefetch } = useContext(AuthContext);
   const [profileBarShown, setProfileBarShown] = useState(false);
@@ -76,14 +78,7 @@ const Dashboard = ({ user }) => {
                 </svg>
               </button>
               <Link href="/" className="flex ms-2 md:me-24">
-                <Image
-                  height={70}
-                  width={70}
-                  src="/images/logo.png"
-                  className=""
-                  alt="FlowBite Logo"
-                />
-                <span className="self-center text-xl font-semib old sm:text-2xl whitespace-nowrap text-white">
+                <span className="self-center text-xl font-semibold whitespace-nowrap text-white">
                   Dashboard
                 </span>
               </Link>
@@ -353,6 +348,29 @@ const Dashboard = ({ user }) => {
                       </span>
                     </div>
                   </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerMarketDetails"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerMarketDetails"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <FaBagShopping
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerMarketDetails"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Market Details
+                      </span>
+                    </div>
+                  </Link>
                 </>
               )}
             </ul>
@@ -375,7 +393,9 @@ const Dashboard = ({ user }) => {
             <FileUpload />
           ) : // For Manager -----------------------------------
           displayData == "managerAllUsers" ? (
-            <ManagerAllUsers user={user}/>
+            <ManagerAllUsers user={user} />
+          ) : displayData == "managerMarketDetails" ? (
+            <ManagerMarketDetailsComponent user={user} />
           ) : user.role == "manager" ? (
             <ManagerProfileComponent user={user} />
           ) : (
