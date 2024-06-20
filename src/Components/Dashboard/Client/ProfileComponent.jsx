@@ -6,10 +6,9 @@ import { FaTimes } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 
 const ProfileComponent = ({ user }) => {
-  const [canVerify, setCanVerify] = useState(true);
   return (
-    <div className="flex gap-4 items-center h-full px-32">
-      <div className={`w-1/2 flex flex-col items-center relative`}>
+    <div className="flex flex-col md:flex-row gap-4 items-center h-full px-20 md:px-32 py-5">
+      <div className={`w-full md:w-1/2 flex flex-col items-center relative`}>
         <Image
           alt={`Profile picture of ${user.username}`}
           src={user.profilePicture}
@@ -17,7 +16,7 @@ const ProfileComponent = ({ user }) => {
           height={200}
           className="mb-5 rounded-full aspect-square"
         />
-        <p className="mb-1 text-blue-500 font-medium text-xl">
+        <p className="mb-1 text-blue-500 font-medium text-xl text-center w-max">
           {user.username}
         </p>
         <p>{user.email}</p>
@@ -44,7 +43,7 @@ const ProfileComponent = ({ user }) => {
           </p>
         )}
       </div>
-      <div className="w-1/2">
+      <div className="w-full md:w-1/2">
         <div className="flex items-center justify-center gap-4">
           <p class="text-center tracking-wide text-white font-bold">Charges</p>
         </div>

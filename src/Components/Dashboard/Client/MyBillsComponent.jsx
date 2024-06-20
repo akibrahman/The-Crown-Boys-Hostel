@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import Receipt from "../Receipt/Receipt";
+import Receipt from "../../Receipt/Receipt";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 

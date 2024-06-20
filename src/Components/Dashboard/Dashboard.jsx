@@ -7,17 +7,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
-import { FaFile } from "react-icons/fa";
+import { FaFile, FaUsers } from "react-icons/fa";
 import { TbCoinTaka } from "react-icons/tb";
 import { GrUserManager } from "react-icons/gr";
-import ProfileComponent from "./ProfileComponent";
-import CurrentMonthComponent from "./CurrentMonthComponent";
-import MyBillsComponent from "./MyBillsComponent";
-import ManagerDetailsComponent from "./ManagerDetailsComponent";
+import ProfileComponent from "./Client/ProfileComponent";
+import CurrentMonthComponent from "./Client/CurrentMonthComponent";
+import MyBillsComponent from "./Client/MyBillsComponent";
+import ManagerDetailsComponent from "./Client/ManagerDetailsComponent";
 import FileUpload from "@/app/fileManager/page";
 import UserNotVerifiedPage from "./UserNotVerifiedPage";
 import { GiHotMeal } from "react-icons/gi";
-import MealHistoryComponent from "./MealHistoryComponent";
+import MealHistoryComponent from "./Client/MealHistoryComponent";
+import ManagerProfileComponent from "./Manager/ManagerProfileComponent";
+import ManagerAllUsers from "./Manager/ManagerAllUsers";
 
 const Dashboard = ({ user }) => {
   const route = useRouter();
@@ -26,6 +28,7 @@ const Dashboard = ({ user }) => {
 
   const { userRefetch } = useContext(AuthContext);
   const [profileBarShown, setProfileBarShown] = useState(false);
+  const [sideBarShown, setSideBarShown] = useState(false);
   // const [displayData, setDisplayData] = useState("profile");
 
   const [loggingOut, setLoggingOut] = useState(false);
@@ -53,9 +56,7 @@ const Dashboard = ({ user }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
               <button
-                data-drawer-target="logo-sidebar"
-                data-drawer-toggle="logo-sidebar"
-                aria-controls="logo-sidebar"
+                onClick={() => setSideBarShown(!sideBarShown)}
                 type="button"
                 className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
               >
@@ -88,7 +89,7 @@ const Dashboard = ({ user }) => {
               </Link>
             </div>
             <div className="flex items-center">
-              <div className="relative flex items-center ms-3">
+              <div className="relative flex items-center ms-3 text-sm md:text-base">
                 <div>
                   {/* Profile Pic Button  */}
                   <button
@@ -154,14 +155,24 @@ const Dashboard = ({ user }) => {
         <aside
           id="logo-sidebar"
           // absolute top-0 left-0 z-40
-          className="w-72 h-[calc(100vh-130px)] pt-10 transition-transform -translate-x-full border-r sm:translate-x-0 bg-gray-800 border-gray-700"
-          aria-label="Sidebar"
+          className={`absolute md:relative z-50 h-[calc(100vh-130px)] pt-10 transition-transform border-r border-gray-700 ${
+            sideBarShown
+              ? "w-72 md:w-72 bg-opacity-95 md:bg-opacity-100 bg-gray-800"
+              : "w-0 md:w-72 md:bg-gray-800"
+          }`}
         >
-          <div className="h-full px-3 pb-4 overflow-y-auto bg-gray-800">
+          <div
+            className={`h-full pb-4 overflow-y-auto bg-gray800 ${
+              sideBarShown ? "px-3 md:px-3" : "px-0 md:px-3"
+            }`}
+          >
             <ul className="font-medium flex flex-col gap-2">
               {user && user.isClient && user.isClientVerified && (
                 <>
-                  <Link href="/dashboard?displayData=profile">
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=profile"
+                  >
                     <div
                       className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
                         displayData == "profile"
@@ -170,16 +181,19 @@ const Dashboard = ({ user }) => {
                       }`}
                     >
                       <CgProfile
-                        className={`text-gray-400 text-xl ${
+                        className={`text-gray-400 md:text-xl ${
                           displayData == "profile"
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
-                      <span className="ms-3">Profile</span>
+                      <span className="ms-3 text-sm md:text-base">Profile</span>
                     </div>
                   </Link>
-                  <Link href="/dashboard?displayData=currentMonth">
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=currentMonth"
+                  >
                     <div
                       className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
                         displayData == "currentMonth"
@@ -188,16 +202,21 @@ const Dashboard = ({ user }) => {
                       }`}
                     >
                       <CgCalendarDates
-                        className={`text-gray-400 text-xl ${
+                        className={`text-gray-400 md:text-xl ${
                           displayData == "currentMonth"
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
-                      <span className="ms-3">Current Month</span>
+                      <span className="ms-3 text-sm md:text-base">
+                        Current Month
+                      </span>
                     </div>
                   </Link>
-                  <Link href="/dashboard?displayData=myBills">
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=myBills"
+                  >
                     <div
                       className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
                         displayData == "myBills"
@@ -206,16 +225,21 @@ const Dashboard = ({ user }) => {
                       }`}
                     >
                       <TbCoinTaka
-                        className={`text-gray-400 text-xl ${
+                        className={`text-gray-400 md:text-xl ${
                           displayData == "myBills"
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
-                      <span className="ms-3">My Bills</span>
+                      <span className="ms-3 text-sm md:text-base">
+                        My Bills
+                      </span>
                     </div>
                   </Link>
-                  <Link href="/dashboard?displayData=managerDetails">
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerDetails"
+                  >
                     <div
                       className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
                         displayData == "managerDetails"
@@ -224,16 +248,21 @@ const Dashboard = ({ user }) => {
                       }`}
                     >
                       <GrUserManager
-                        className={`text-gray-400 text-xl ${
+                        className={`text-gray-400 md:text-xl ${
                           displayData == "managerDetails"
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
-                      <span className="ms-3">Manager Details</span>
+                      <span className="ms-3 text-sm md:text-base">
+                        Manager Details
+                      </span>
                     </div>
                   </Link>
-                  <Link href="/dashboard?displayData=mealHistory">
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=mealHistory"
+                  >
                     <div
                       className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
                         displayData == "mealHistory"
@@ -242,16 +271,21 @@ const Dashboard = ({ user }) => {
                       }`}
                     >
                       <GiHotMeal
-                        className={`text-gray-400 text-xl ${
+                        className={`text-gray-400 md:text-xl ${
                           displayData == "mealHistory"
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
-                      <span className="ms-3">Meal History</span>
+                      <span className="ms-3 text-sm md:text-base">
+                        Meal History
+                      </span>
                     </div>
                   </Link>
-                  <Link href="/dashboard?displayData=fileManager">
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=fileManager"
+                  >
                     <div
                       className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
                         displayData == "fileManager"
@@ -260,13 +294,63 @@ const Dashboard = ({ user }) => {
                       }`}
                     >
                       <FaFile
-                        className={`text-gray-400 text-xl ${
+                        className={`text-gray-400 md:text-xl ${
                           displayData == "fileManager"
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
-                      <span className="ms-3">File Manager</span>
+                      <span className="ms-3 text-sm md:text-base">
+                        File Manager
+                      </span>
+                    </div>
+                  </Link>
+                </>
+              )}
+              {user && user.isManager && user.isManagerVerified && (
+                <>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerProfile"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerProfile"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <CgProfile
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerProfile"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">Profile</span>
+                    </div>
+                  </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerAllUsers"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerAllUsers"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <FaUsers
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerAllUsers"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        All Users
+                      </span>
                     </div>
                   </Link>
                 </>
@@ -278,7 +362,8 @@ const Dashboard = ({ user }) => {
         <div className="w-full overflow-y-scroll">
           {!user.isVerified ? (
             <UserNotVerifiedPage user={user} />
-          ) : displayData == "myBills" ? (
+          ) : // For User -----------------------------------
+          displayData == "myBills" ? (
             <MyBillsComponent user={user} />
           ) : displayData == "mealHistory" ? (
             <MealHistoryComponent user={user} />
@@ -288,6 +373,11 @@ const Dashboard = ({ user }) => {
             <ManagerDetailsComponent user={user} />
           ) : displayData == "fileManager" ? (
             <FileUpload />
+          ) : // For Manager -----------------------------------
+          displayData == "managerAllUsers" ? (
+            <ManagerAllUsers user={user}/>
+          ) : user.role == "manager" ? (
+            <ManagerProfileComponent user={user} />
           ) : (
             <ProfileComponent user={user} />
           )}

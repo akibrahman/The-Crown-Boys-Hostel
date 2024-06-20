@@ -16,6 +16,7 @@ module.exports = {
         // secondary: "#F25864",
         primary: "#141515",
         secondary: "#141E30",
+        dashboard: "#1F2937",
       },
     },
   },
