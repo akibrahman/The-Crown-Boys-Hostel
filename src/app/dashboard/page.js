@@ -4,6 +4,9 @@ import { decode, verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Dashboard from "../../Components/Dashboard/Dashboard.jsx";
+import { dbConfig } from "@/dbConfig/dbConfig.js";
+
+await dbConfig();
 
 const page = async () => {
   const token = cookies().get("token");
