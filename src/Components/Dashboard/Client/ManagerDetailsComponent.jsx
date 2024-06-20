@@ -1,3 +1,4 @@
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
@@ -18,6 +19,8 @@ const ManagerDetailsComponent = ({ user }) => {
     },
     enabled: user?.manager ? true : false,
   });
+
+  if (!manager) return;
 
   return user.role === "client" && !user.isVerified ? (
     <div className="flex items-center justify-center pl-6 py-8 mt-10">
