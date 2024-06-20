@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
-const BillQuery = () => {
+const ManagerBillQueryComponent = () => {
   const { user } = useContext(AuthContext);
   const [result, setResult] = useState(null);
   const [searching, setSearching] = useState(false);
@@ -90,7 +90,7 @@ const BillQuery = () => {
           )}
         </div>
       </div>
-      <div className="min-h-screen p-10 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
+      <div className="min-h-screen p-10 px-5 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
         <p className="text-center font-semibold text-2xl dark:text-white">
           Bill Query
         </p>
@@ -98,7 +98,7 @@ const BillQuery = () => {
           onSubmit={searchBillQuery}
           className="flex flex-col md:flex-row items-center justify-center gap-4 my-6"
         >
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
             <p className="text-sky-500 font-semibold">Select User : </p>
             <select
               name="clients"
@@ -221,4 +221,4 @@ const BillQuery = () => {
   );
 };
 
-export default BillQuery;
+export default ManagerBillQueryComponent;

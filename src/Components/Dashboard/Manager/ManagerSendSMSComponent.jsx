@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import Select from "react-select";
 
-const SMS = () => {
+const ManagerSendSMSComponent = () => {
   const { user } = useContext(AuthContext);
   const [sendState, setSendState] = useState("");
   const [receiver, setReceiver] = useState([]);
@@ -206,4 +206,4 @@ const SMS = () => {
   );
 };
 
-export default SMS;
+export default ManagerSendSMSComponent;

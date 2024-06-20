@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
-import { FaFile, FaUsers } from "react-icons/fa";
+import { FaFile, FaSms, FaUsers } from "react-icons/fa";
 import { TbCoinTaka } from "react-icons/tb";
 import { GrUserManager } from "react-icons/gr";
 import ProfileComponent from "./Client/ProfileComponent";
@@ -22,8 +22,10 @@ import MealHistoryComponent from "./Client/MealHistoryComponent";
 import ManagerProfileComponent from "./Manager/ManagerProfileComponent";
 import ManagerAllUsers from "./Manager/ManagerAllUsers";
 import ManagerMarketDetailsComponent from "./Manager/ManagerMarketDetailsComponent";
-import { FaBagShopping } from "react-icons/fa6";
+import { FaBagShopping, FaMoneyBillTrendUp } from "react-icons/fa6";
 import ManagerOrderStatusComponent from "./Manager/ManagerOrderStatusComponent";
+import ManagerSendSMSComponent from "./Manager/ManagerSendSMSComponent";
+import ManagerBillQueryComponent from "./Manager/ManagerBillQueryComponent";
 
 const Dashboard = ({ user }) => {
   const route = useRouter();
@@ -396,6 +398,52 @@ const Dashboard = ({ user }) => {
                       </span>
                     </div>
                   </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerSendSMS"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerSendSMS"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <FaSms
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerSendSMS"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Send SMS
+                      </span>
+                    </div>
+                  </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerBillQuery"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerBillQuery"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <FaMoneyBillTrendUp
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerBillQuery"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Bill Query
+                      </span>
+                    </div>
+                  </Link>
                 </>
               )}
             </ul>
@@ -423,6 +471,10 @@ const Dashboard = ({ user }) => {
             <ManagerMarketDetailsComponent user={user} />
           ) : displayData == "managerOrderStatus" ? (
             <ManagerOrderStatusComponent user={user} />
+          ) : displayData == "managerSendSMS" ? (
+            <ManagerSendSMSComponent user={user} />
+          ) : displayData == "managerBillQuery" ? (
+            <ManagerBillQueryComponent user={user} />
           ) : user.role == "manager" ? (
             <ManagerProfileComponent user={user} />
           ) : (
