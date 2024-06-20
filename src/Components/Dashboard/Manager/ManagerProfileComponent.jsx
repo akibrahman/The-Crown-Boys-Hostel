@@ -4,6 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import { FaTimes } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
+import "../dashboard.css";
 
 const ManagerProfileComponent = ({ user }) => {
   const currentMonth = new Date().toLocaleDateString("en-BD", {
@@ -71,9 +72,7 @@ const ManagerProfileComponent = ({ user }) => {
   ) : (
     user.role === "manager" && user.isVerified && user.isManagerVerified && (
       <div className="flex flex-col md:flex-row gap-4 items-center min-h-full px-20 md:px-32 py-5 bg-dashboard text-slate-100">
-        <div
-          className={`w-full md:w-1/2 mt-10 py-8 flex flex-col items-center`}
-        >
+        <div className={`w-full md:w-1/2 py-8 flex flex-col items-center`}>
           <Image
             alt={`Profile picture of ${user.username}`}
             src={user.profilePicture}
@@ -109,13 +108,81 @@ const ManagerProfileComponent = ({ user }) => {
           <p>{user.email}</p>
           <p>{user.contactNumber}</p>
         </div>
-        <div className="w-full md:w-1/2">
-          <div className="py-5 md:py-0 md:p-10 md:mt-20 mx-auto">
-            <p className="flex items-center gap-2 mb-5">
-              Current Meal Rate:
-              <span className="text-blue-500 font-extralight text-4xl">
-                {(
-                  managerCalanderData?.data
+        {!managerCalanderData || !ordersForTheMonth ? (
+          <MealRateCalculatingEffect />
+        ) : (
+          <div className="w-full md:w-1/2">
+            <div className="py-5 md:py-0 md:p-10 md:mt-20 mx-auto">
+              <p className="flex items-center gap-2 mb-5">
+                Current Meal Rate:
+                <span className="text-blue-500 font-extralight text-4xl">
+                  {(
+                    managerCalanderData?.data
+                      .filter(
+                        (d) =>
+                          parseInt(d.date.split("/")[1]) <=
+                          parseInt(
+                            new Date().toLocaleDateString("en-BD", {
+                              day: "numeric",
+                              timeZone: "Asia/Dhaka",
+                            })
+                          )
+                      )
+                      .reduce(
+                        (accumulator, currentValue) =>
+                          accumulator + currentValue.amount,
+                        0
+                      ) /
+                    (ordersForTheMonth?.reduce(
+                      (accumulator, currentValue) =>
+                        accumulator + (currentValue.breakfast ? 0.5 : 0),
+                      0
+                    ) +
+                      ordersForTheMonth?.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator +
+                          (currentValue.isGuestMeal &&
+                          currentValue.guestBreakfastCount > 0
+                            ? currentValue.guestBreakfastCount / 2
+                            : 0),
+                        0
+                      ) +
+                      ordersForTheMonth?.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator + (currentValue.lunch ? 1 : 0),
+                        0
+                      ) +
+                      ordersForTheMonth?.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator +
+                          (currentValue.isGuestMeal &&
+                          currentValue.guestLunchCount > 0
+                            ? currentValue.guestLunchCount
+                            : 0),
+                        0
+                      ) +
+                      ordersForTheMonth?.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator + (currentValue.dinner ? 1 : 0),
+                        0
+                      ) +
+                      ordersForTheMonth?.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator +
+                          (currentValue.isGuestMeal &&
+                          currentValue.guestDinnerCount > 0
+                            ? currentValue.guestDinnerCount
+                            : 0),
+                        0
+                      ))
+                  ).toFixed(2)}
+                </span>
+                BDT
+              </p>
+              <p>
+                Total Market:
+                <span className="text-blue-500 font-bold text-2xl">
+                  {managerCalanderData?.data
                     .filter(
                       (d) =>
                         parseInt(d.date.split("/")[1]) <=
@@ -130,8 +197,14 @@ const ManagerProfileComponent = ({ user }) => {
                       (accumulator, currentValue) =>
                         accumulator + currentValue.amount,
                       0
-                    ) /
-                  (ordersForTheMonth?.reduce(
+                    )}
+                </span>
+                BDT
+              </p>
+              <p>
+                Total meal count:
+                <span className="text-blue-500 font-bold text-2xl">
+                  {ordersForTheMonth?.reduce(
                     (accumulator, currentValue) =>
                       accumulator + (currentValue.breakfast ? 0.5 : 0),
                     0
@@ -172,85 +245,25 @@ const ManagerProfileComponent = ({ user }) => {
                           ? currentValue.guestDinnerCount
                           : 0),
                       0
-                    ))
-                ).toFixed(2)}
-              </span>
-              BDT
-            </p>
-            <p>
-              Total Market:
-              <span className="text-blue-500 font-bold text-2xl">
-                {managerCalanderData?.data
-                  .filter(
-                    (d) =>
-                      parseInt(d.date.split("/")[1]) <=
-                      parseInt(
-                        new Date().toLocaleDateString("en-BD", {
-                          day: "numeric",
-                          timeZone: "Asia/Dhaka",
-                        })
-                      )
-                  )
-                  .reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + currentValue.amount,
-                    0
-                  )}
-              </span>
-              BDT
-            </p>
-            <p>
-              Total meal count:
-              <span className="text-blue-500 font-bold text-2xl">
-                {ordersForTheMonth?.reduce(
-                  (accumulator, currentValue) =>
-                    accumulator + (currentValue.breakfast ? 0.5 : 0),
-                  0
-                ) +
-                  ordersForTheMonth?.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator +
-                      (currentValue.isGuestMeal &&
-                      currentValue.guestBreakfastCount > 0
-                        ? currentValue.guestBreakfastCount / 2
-                        : 0),
-                    0
-                  ) +
-                  ordersForTheMonth?.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + (currentValue.lunch ? 1 : 0),
-                    0
-                  ) +
-                  ordersForTheMonth?.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator +
-                      (currentValue.isGuestMeal &&
-                      currentValue.guestLunchCount > 0
-                        ? currentValue.guestLunchCount
-                        : 0),
-                    0
-                  ) +
-                  ordersForTheMonth?.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + (currentValue.dinner ? 1 : 0),
-                    0
-                  ) +
-                  ordersForTheMonth?.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator +
-                      (currentValue.isGuestMeal &&
-                      currentValue.guestDinnerCount > 0
-                        ? currentValue.guestDinnerCount
-                        : 0),
-                    0
-                  )}
-              </span>
-            </p>
+                    )}
+                </span>
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     )
   );
 };
 
 export default ManagerProfileComponent;
+
+const MealRateCalculatingEffect = () => {
+  return (
+    <div class="meal-rate-calculating-loader">
+      <div class="scanner">
+        <span>Meal Rate Calculating...</span>
+      </div>
+    </div>
+  );
+};
