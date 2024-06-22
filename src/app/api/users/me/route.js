@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 const { dbConfig } = require("@/dbConfig/dbConfig");
 
-dbConfig();
+await dbConfig();
 
 export const GET = async (req) => {
   try {
