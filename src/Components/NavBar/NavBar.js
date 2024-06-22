@@ -62,7 +62,7 @@ const NavMenus = ({ items }) => {
     <div className="relative">
       {/* Desktop View */}
       <div
-        className={`hidden md:flex bg-gradient-to-r from-primary to-secondary text-stone-300 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10 py-3`}
+        className={`hidden md:flex bg-dashboard text-stone-300 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10 py-3 border-b border-[#364050]`}
       >
         <div className="flex items-center">
           <Image
@@ -117,7 +117,7 @@ const NavMenus = ({ items }) => {
       </div>
       {/* Mobile View  */}
       <div
-        className={`z-40 fixed top-0 right-0 h-screen w-[70vw] duration-300 bg-primary pt-32 ${
+        className={`z-40 fixed top-0 right-0 h-screen w-[70vw] duration-300 bg-dashboard pt-32 ${
           sideBarIsOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -174,8 +174,9 @@ const NavMenus = ({ items }) => {
           )}
         </div>
       </div>
+      {/* Mobile View  */}
       <div
-        className={`flex md:hidden bg-gradient-to-r from-primary to-secondary text-stone-300 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10 py-3`}
+        className={`flex md:hidden bg-dashboard text-stone-300 flex-col md:flex-row gap-5 md:gap-0 items-center justify-between px-10 py-3 border-b border-[#364050]`}
       >
         <div className="flex items-center justify-between w-full">
           <Image

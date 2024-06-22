@@ -15,7 +15,7 @@ const page = () => {
   ];
   //Page Token From Developers.facebook.com == EAAFMh9dNl8sBOwtGZAuZBuNxFt1giH9v3WKrrGkp1eReSsEANpJLKZBjVc8cKV5V380W1rGQXxxIFSf2x7107fN5ertl5LWtIfOUtFrHFzlbu09x3XkdLAyEK7MmajoaB9ZCs69Ej8o6fZAkTSaikpxAKlxwpPzbBM8yAXCW893PkemBGuzSP53GtmdkcXkSa
   return (
-    <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300">
+    <div className="min-h-screen pb-20 bg-dashboard text-stone-300">
       <div className="flex flex-col md:flex-row gap-3 items-center justify-center pt-4">
         <motion.div
           initial={false}

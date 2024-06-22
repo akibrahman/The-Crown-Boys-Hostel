@@ -45,9 +45,9 @@ const VerifyEmail = () => {
   }, [token]);
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center gap-5 min-h-screen py-2 dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white font-semibold">
+    <div className="flex flex-col md:flex-row items-center justify-center gap-5 min-h-screen py-2 bg-dashboard text-slate-100 font-semibold">
       <div className="text-right">
-        <p className="text-5xl font-bold mb-3">Manager Expo</p>
+        <p className="text-5xl font-bold mb-3">The Crown</p>
         <p className="text-[12px]">A Quality Meal Management System</p>
         <p className="text-[12px] text-sky-500 leading-none">
           Designed & Developed by{" "}

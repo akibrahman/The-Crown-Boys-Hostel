@@ -237,7 +237,7 @@ const Order = () => {
     return <BlockMsg />;
 
   return (
-    <div className="relative dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white min-h-screen">
+    <div className="relative bg-dashboard text-white min-h-screen">
       {/*//! Request Pop Up Starts */}
       <MealRequest
         requestPopUp={requestPopUp}

@@ -36,12 +36,13 @@ import ManagerBillQueryComponent from "./Manager/ManagerBillQueryComponent";
 import ManagerMealQueryComponent from "./Manager/ManagerMealQueryComponent";
 import ManagerMarketQueryComponent from "./Manager/ManagerMarketQueryComponent";
 import ManagerMealUpdatorComponent from "./Manager/ManagerMealUpdatorComponent";
-import { MdOutlineUpdate } from "react-icons/md";
+import { MdNoMeals, MdOutlineUpdate } from "react-icons/md";
 import ManagerRFIDIssueComponent from "./Manager/ManagerRFIDIssueComponent";
 import ManagerManualInvoiceComponent from "./Manager/ManagerManualInvoiceComponent";
 import ManagerAllBookingsComponent from "./Manager/ManagerAllBookingsComponent";
 import useUnloadWarning from "@/hooks/useUnloadWarning";
 import AuthorizationNeede from "./AuthorizationNeede";
+import ManagerMealChangeRequestsComponent from "./Manager/ManagerMealChangeRequestsComponent";
 
 const Dashboard = ({ user }) => {
   useUnloadWarning("Are");
@@ -75,7 +76,8 @@ const Dashboard = ({ user }) => {
         displayData == "managerMealUpdator" ||
         displayData == "managerRFIDIssue" ||
         displayData == "managerAllBookings" ||
-        displayData == "managerManualInvouce") &&
+        displayData == "managerManualInvouce" ||
+        displayData == "mealChangeRequests") &&
       user.role == "client"
     ) {
       displayData = "profile";
@@ -611,6 +613,29 @@ const Dashboard = ({ user }) => {
                   </Link>
                   <Link
                     onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=mealChangeRequests"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "mealChangeRequests"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <MdNoMeals
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "mealChangeRequests"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-xs">
+                      Meal Change Requests
+                      </span>
+                    </div>
+                  </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
                     href="/dashboard?displayData=managerManualInvouce"
                   >
                     <div
@@ -682,6 +707,8 @@ const Dashboard = ({ user }) => {
             <ManagerAllBookingsComponent user={user} />
           ) : displayData == "managerManualInvouce" ? (
             <ManagerManualInvoiceComponent user={user} />
+          ) : displayData == "mealChangeRequests" ? (
+            <ManagerMealChangeRequestsComponent user={user} />
           ) : // For /dashboard route --------------------------
           user.role == "manager" ? (
             <ManagerProfileComponent user={user} />
