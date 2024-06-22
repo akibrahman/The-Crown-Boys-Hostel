@@ -8,14 +8,16 @@ import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
 import moment from "moment";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaArrowRight } from "react-icons/fa";
 import { LuCalendarPlus } from "react-icons/lu";
+import { io } from "socket.io-client";
 import "../globals.css";
+
 const Order = () => {
   const route = useRouter();
   const { user } = useContext(AuthContext);
@@ -223,6 +225,12 @@ const Order = () => {
       toast.error("Can't go so far!");
     }
   };
+  // Socket Configuration
+  const socket = useRef();
+  useEffect(() => {
+    socket.current = io("wss://the-crown-socket-server.glitch.me");
+  }, []);
+
   if (!user) return <PreLoader />;
   if (user?.success == false) return route.push("/signin");
   if (user.blockDate && moment(user.blockDate).isBefore(moment.now()))
@@ -310,6 +318,10 @@ const Order = () => {
                           toast.error("Today's Brakefast cann't be edited");
                           return;
                         }
+                        // Socket Action
+                        socket.current.emit("meal-rate-refetch", {
+                          msg: "Meal Rate should be Refetched",
+                        });
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",
@@ -350,6 +362,10 @@ const Order = () => {
                           toast.error("Today's Lunch cann't be edited");
                           return;
                         }
+                        // Socket Action
+                        socket.current.emit("meal-rate-refetch", {
+                          msg: "Meal Rate should be Refetched",
+                        });
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",
@@ -382,6 +398,12 @@ const Order = () => {
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
+                        // Socket Action
+                        socket.current.emit("meal-rate-refetch", {
+                          email: user.email,
+                          meal: "Dinner",
+                          msg: "Meal Rate should be Refetched",
+                        });
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",
