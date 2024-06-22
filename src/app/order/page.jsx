@@ -254,6 +254,7 @@ const Order = () => {
         currentMonthNumber={currentMonthNumber}
         currentYear={currentYear}
         user={user}
+        socket={socket}
       />
       {/*//! Request Pop Up Ends */}
       {loading && (
@@ -318,10 +319,6 @@ const Order = () => {
                           toast.error("Today's Brakefast cann't be edited");
                           return;
                         }
-                        // Socket Action
-                        socket.current.emit("meal-rate-refetch", {
-                          msg: "Meal Rate should be Refetched",
-                        });
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",
@@ -336,6 +333,12 @@ const Order = () => {
                           console.log(!breakfast);
                           setBreakfast(!breakfast);
                           toast.success("Order placed");
+                          // Socket Action
+                          socket.current.emit("meal-rate-refetch", {
+                            email: user.email,
+                            meal: "Breakfast",
+                            msg: "Meal Rate should be Refetched",
+                          });
                         } else {
                           toast.error("Something went wrong!");
                         }
@@ -362,10 +365,6 @@ const Order = () => {
                           toast.error("Today's Lunch cann't be edited");
                           return;
                         }
-                        // Socket Action
-                        socket.current.emit("meal-rate-refetch", {
-                          msg: "Meal Rate should be Refetched",
-                        });
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",
@@ -376,6 +375,12 @@ const Order = () => {
                           console.log(!lunch);
                           setLunch(!lunch);
                           toast.success("Order placed");
+                          // Socket Action
+                          socket.current.emit("meal-rate-refetch", {
+                            email: user.email,
+                            meal: "Lunch",
+                            msg: "Meal Rate should be Refetched",
+                          });
                         } else {
                           toast.error("Something went wrong!");
                         }
@@ -398,12 +403,6 @@ const Order = () => {
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
-                        // Socket Action
-                        socket.current.emit("meal-rate-refetch", {
-                          email: user.email,
-                          meal: "Dinner",
-                          msg: "Meal Rate should be Refetched",
-                        });
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",
@@ -414,6 +413,12 @@ const Order = () => {
                           console.log(!dinner);
                           setDinner(!dinner);
                           toast.success("Order placed");
+                          // Socket Action
+                          socket.current.emit("meal-rate-refetch", {
+                            email: user.email,
+                            meal: "Dinner",
+                            msg: "Meal Rate should be Refetched",
+                          });
                         } else {
                           toast.error("Something went wrong!");
                         }

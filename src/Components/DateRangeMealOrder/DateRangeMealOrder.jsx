@@ -1,6 +1,6 @@
 import axios from "axios";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
 import toast from "react-hot-toast";
@@ -8,6 +8,7 @@ import { CgSpinner } from "react-icons/cg";
 import { FaTimes } from "react-icons/fa";
 import { LuCalendarPlus } from "react-icons/lu";
 import Modal from "react-modal";
+import { io } from "socket.io-client";
 
 const DateRangeMealOrder = ({
   requestPopUp,
@@ -24,6 +25,12 @@ const DateRangeMealOrder = ({
   const [breakfast, setBreakfast] = useState(0);
   const [lunch, setLunch] = useState(0);
   const [dinner, setDinner] = useState(0);
+
+  // Socket Configuration
+  const socket = useRef();
+  useEffect(() => {
+    socket.current = io("wss://the-crown-socket-server.glitch.me");
+  }, []);
 
   const dateSelected1 = async (selectedDate) => {
     if (
@@ -145,8 +152,6 @@ const DateRangeMealOrder = ({
           toDate,
           fromDay,
           toDay,
-          // date:
-          //   fromDate.split("/")[0] + "/" + i + "/" + fromDate.split("/")[2],
         }
       );
       if (resData.success) {
@@ -156,6 +161,11 @@ const DateRangeMealOrder = ({
         setLunch(0);
         setDinner(0);
         toast.success("Change successfull");
+        socket.current.emit("meal-rate-refetch", {
+          email: user.email,
+          meal: "Many",
+          msg: "Meal Rate should be Refetched",
+        });
       }
     } catch (error) {
       console.log(error);
