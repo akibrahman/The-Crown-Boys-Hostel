@@ -142,7 +142,7 @@ const NavMenus = ({ items }) => {
                 lable={"Dashboard"}
               />
             ) : item.title == "Log In" ? (
-              <LeafButton
+              <ColorButton
                 key={i}
                 isLink={false}
                 onClick={() => {
@@ -152,7 +152,7 @@ const NavMenus = ({ items }) => {
                 lable={"Log In"}
               />
             ) : item.title == "Registration" ? (
-              <LeafButton
+              <ColorButton
                 key={i}
                 onClick={() => {
                   burgerMenuButtonClicked();
