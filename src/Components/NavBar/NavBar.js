@@ -8,6 +8,7 @@ import StarButton from "../Buttons/StarButton";
 import LeafButton from "../Buttons/LeafButton";
 import "./styleForNavBar.css";
 import { useRouter } from "next/navigation";
+import ColorButton from "../Buttons/ColorButton";
 
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
@@ -89,14 +90,14 @@ const NavMenus = ({ items }) => {
                 lable={"Dashboard"}
               />
             ) : item.title == "Log In" ? (
-              <LeafButton
+              <ColorButton
                 key={i}
                 isLink={true}
                 link={item.url}
                 lable={"Log In"}
               />
             ) : item.title == "Registration" ? (
-              <LeafButton
+              <ColorButton
                 key={i}
                 isLink={true}
                 link={item.url}
