@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://thecrownboyshostel.com/RFIDIssue</loc><lastmod>2024-06-24T05:48:18.996Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/billQuery</loc><lastmod>2024-06-24T05:48:18.997Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/bookings</loc><lastmod>2024-06-24T05:48:18.997Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/about-us</loc><lastmod>2024-06-24T05:48:18.997Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/fileManager</loc><lastmod>2024-06-24T05:48:18.997Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/forgotPassword</loc><lastmod>2024-06-24T05:48:18.997Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/help</loc><lastmod>2024-06-24T05:48:18.997Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/login</loc><lastmod>2024-06-24T05:48:18.997Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/managerOrder</loc><lastmod>2024-06-24T05:48:18.997Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/manualInvoice</loc><lastmod>2024-06-24T05:48:18.997Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/marketQuery</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/mealChangeRequests</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/myBills</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/orderStatus</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/order</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/profile</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/rooms</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/signin</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/signup</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/sms</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/userQuery</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/verifyemail</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/api/managers/getmanagers</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/api/mealrequests/mealrequestscount</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/api/others/getimgbbapi</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://thecrownboyshostel.com/opengraph-image.png</loc><lastmod>2024-06-24T05:48:18.998Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+</urlset>

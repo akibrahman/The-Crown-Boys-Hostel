@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://thecrownboyshostel.com
+
+# Sitemaps
+Sitemap: https://thecrownboyshostel.com/sitemap.xml
