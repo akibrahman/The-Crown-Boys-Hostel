@@ -3,7 +3,7 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import Modal from "react-modal";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { FaArrowRight, FaTimes } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
@@ -16,8 +16,8 @@ const ManagerAllUsers = ({ user }) => {
   const [clientDetails, setClientDetails] = useState(null);
   const [clientDetailsModalIsOpen, setClientDetailsModalIsOpen] =
     useState(false);
-    const [givingAuthorization, setGivingAuthorization] = useState(false);
-    const [declining, setDeclining] = useState(false);
+  const [givingAuthorization, setGivingAuthorization] = useState(false);
+  const [declining, setDeclining] = useState(false);
 
   const { data: clients, refetch: clientRefetch } = useQuery({
     queryKey: ["clients", "manager", user?._id, clientName],
@@ -84,6 +84,30 @@ const ManagerAllUsers = ({ user }) => {
       setClientDetailsIsLoading(false);
     }
   };
+  const [currentDays, setCurrentDays] = useState(null);
+  //! Get current month
+  useEffect(() => {
+    if (
+      user?.role === "client" ||
+      user?.role === "manager" ||
+      user?.role === "owner"
+    ) {
+      const currentDate = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      const currentMonth = new Date(currentDate).getMonth() + 1;
+      const currentYear = new Date(currentDate).getFullYear();
+      const dayCountOfCurrentMonth = parseInt(
+        new Date(currentYear, currentMonth, 0).getDate()
+      );
+
+      let tempArray = [];
+      for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
+        tempArray.push(i);
+      }
+      setCurrentDays(tempArray);
+    }
+  }, [user?.role]);
 
   return (
     <>
