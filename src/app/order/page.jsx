@@ -437,8 +437,36 @@ const Order = () => {
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         onClick={async () => {
-                          if (moment(date).isSame(moment(new Date()), "day")) {
-                            toast.error("Today's Guest meal cann't be edited");
+                          if (
+                            (moment(date).isSame(
+                              moment(
+                                new Date(
+                                  currentYear,
+                                  currentMonthNumber,
+                                  currentDate
+                                )
+                              ),
+                              "day"
+                            ) &&
+                              new Date(
+                                new Date().toLocaleString("en-US", {
+                                  timeZone: "Asia/Dhaka",
+                                })
+                              ).getHours() >= 15) ||
+                            (new Date(date).toLocaleDateString("en-BD", {
+                              month: "long",
+                              timeZone: "Asia/Dhaka",
+                            }) === nextMonth &&
+                              currentDate == lastDateOfCurrentMonth &&
+                              new Date(
+                                new Date().toLocaleString("en-US", {
+                                  timeZone: "Asia/Dhaka",
+                                })
+                              ).getHours() >= 15)
+                          ) {
+                            toast.error(
+                              "Today's Guest meal cann't be edited now"
+                            );
                             return;
                           }
                           if (isGuestMeal) {
@@ -472,6 +500,7 @@ const Order = () => {
                       />
                       <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                     </label>
+                    {/* <p>Click here to turn off </p> */}
                   </div>
                   {isGuestMeal && (
                     <form
@@ -562,9 +591,22 @@ const Order = () => {
                           min={0}
                           className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md outline-none"
                           type="number"
-                          onChange={(e) =>
-                            setGuestMealDinnerCount(e.target.value)
-                          }
+                          onChange={(e) => {
+                            if (
+                              moment(date).isSame(moment(new Date()), "day") &&
+                              new Date(
+                                new Date().toLocaleString("en-US", {
+                                  timeZone: "Asia/Dhaka",
+                                })
+                              ).getHours() >= 15
+                            ) {
+                              toast.error(
+                                "Today's Guest-Dinner cann't be edited"
+                              );
+                              return;
+                            }
+                            setGuestMealDinnerCount(e.target.value);
+                          }}
                           value={guestMealDinnerCount}
                           name="guestMealDinnerCount"
                         />
