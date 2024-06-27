@@ -211,9 +211,31 @@ export const GET = async (req) => {
             year: nextYear,
             month: nextMonth,
           });
-          nextBill.paidBillInBDT += restDeposite;
-          await nextBill.save();
-
+          if (nextBill) {
+            nextBill.paidBillInBDT += restDeposite;
+            await nextBill.save();
+          } else {
+            //! SMS
+            const url = "http://bulksmsbd.net/api/smsapi";
+            const apiKey = process.env.SMS_API_KEY;
+            const senderId = "8809617618230";
+            const numbers = user.contactNumber;
+            const message = `Hi, Mr. ${user.username}\nAfter reviewing your account, we have determined that you are entitled to receive BDT ${restDeposite}/-. However, due to your account status being blocked in our system, you will need to collect this amount directly from our office.\n\nThe Crown Boys Hostel`;
+            const smsClientData = {
+              api_key: apiKey,
+              senderid: senderId,
+              number: numbers,
+              message: message,
+            };
+            await fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(smsClientData),
+            });
+            //! SMS
+          }
           emailHtml = render(
             MonthlyBillEmail({
               name: user.username,
