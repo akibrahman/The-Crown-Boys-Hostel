@@ -118,7 +118,7 @@ const NavMenus = ({ items }) => {
       </div>
       {/* Mobile View  */}
       <div
-        className={`z-40 fixed top-0 right-0 h-screen w-[70vw] duration-300 bg-dashboard pt-32 ${
+        className={`z-10 block md:hidden fixed top-0 right-0 h-screen w-[70vw] duration-300 bg-dashboard pt-32 ${
           sideBarIsOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -187,7 +187,7 @@ const NavMenus = ({ items }) => {
             alt="Logo"
             className="rounded-full"
           />
-          <div className="burger-menu-button z-50">
+          <div className="burger-menu-button z-40">
             <input
               onClick={burgerMenuButtonClicked}
               type="checkbox"

@@ -234,7 +234,11 @@ const Order = () => {
   if (!user) return <PreLoader />;
   if (user?.success == false) return route.push("/signin");
   if (user.blockDate && moment(user.blockDate).isBefore(moment.now()))
-    return <BlockMsg />;
+    return (
+      <div className="min-h-[90vh] bg-dashboard flex items-center justify-center">
+        <BlockMsg />
+      </div>
+    );
 
   return (
     <div className="relative bg-dashboard text-white min-h-screen">

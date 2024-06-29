@@ -43,6 +43,8 @@ import ManagerAllBookingsComponent from "./Manager/ManagerAllBookingsComponent";
 import useUnloadWarning from "@/hooks/useUnloadWarning";
 import AuthorizationNeede from "./AuthorizationNeede";
 import ManagerMealChangeRequestsComponent from "./Manager/ManagerMealChangeRequestsComponent";
+import moment from "moment";
+import BlockMsg from "../BlockMsg/BlockMsg";
 
 const Dashboard = ({ user }) => {
   useUnloadWarning("Are");
@@ -206,7 +208,7 @@ const Dashboard = ({ user }) => {
         <aside
           id="logo-sidebar"
           // absolute top-0 left-0 z-40
-          className={`absolute md:relative z-40 h-[calc(100vh-130px)] py-10 transition-transform border-r border-gray-700 ${
+          className={`absolute md:relative h-[calc(100vh-130px)] py-10 transition-transform border-r border-gray-700 ${
             sideBarShown
               ? "w-72 md:w-72 bg-opacity-95 md:bg-opacity-100 bg-gray-800"
               : "w-0 md:w-72 md:bg-gray-800"
@@ -629,9 +631,7 @@ const Dashboard = ({ user }) => {
                             : "group-hover:text-white"
                         }`}
                       />
-                      <span className="ms-3 text-xs">
-                      Meal Change Requests
-                      </span>
+                      <span className="ms-3 text-xs">Meal Change Requests</span>
                     </div>
                   </Link>
                   <Link
@@ -672,18 +672,25 @@ const Dashboard = ({ user }) => {
           ) : // For User -----------------------------------
           displayData == "profile" ? (
             <ProfileComponent user={user} />
+          ) : displayData == "currentMonth" ? (
+            user.blockDate && moment(user.blockDate).isBefore(moment.now()) ? (
+              <BlockMsg />
+            ) : (
+              <CurrentMonthComponent user={user} />
+            )
           ) : displayData == "myBills" ? (
             <MyBillsComponent user={user} />
-          ) : displayData == "mealHistory" ? (
-            <MealHistoryComponent user={user} />
-          ) : displayData == "currentMonth" ? (
-            <CurrentMonthComponent user={user} />
           ) : displayData == "managerDetails" ? (
             <ManagerDetailsComponent user={user} />
+          ) : displayData == "mealHistory" ? (
+            <MealHistoryComponent user={user} />
           ) : displayData == "fileManager" ? (
-            <FileUpload />
-          ) : // For Manager -----------------------------------
-          displayData == "managerProfile" ? (
+            user.blockDate && moment(user.blockDate).isBefore(moment.now()) ? (
+              <BlockMsg />
+            ) : (
+              <FileUpload />
+            ) // For Manager -----------------------------------
+          ) : displayData == "managerProfile" ? (
             <ManagerProfileComponent user={user} />
           ) : displayData == "managerAllUsers" ? (
             <ManagerAllUsers user={user} />
