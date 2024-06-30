@@ -252,7 +252,7 @@ const page = async ({ params }) => {
                 {client.blockDate ? (
                   <div className="flex items-center gap-3">
                     <p>
-                      {new Date(client.blockDate).toDateString("en-BD", {
+                      {new Date(client.blockDate).toString("en-BD", {
                         timeZone: "Asia/Dhaka",
                       })}
                     </p>
