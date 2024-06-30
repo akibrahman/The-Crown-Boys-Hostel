@@ -9,6 +9,7 @@ import { FaArrowRight, FaTimes } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import toast from "react-hot-toast";
+import moment from "moment";
 
 const ManagerAllUsers = ({ user }) => {
   const [clientName, setClientName] = useState("");
@@ -320,6 +321,12 @@ const ManagerAllUsers = ({ user }) => {
               key={client._id}
               className="border px-6 py-5 rounded-lg flex flex-col md:flex-row items-center w-[95%] justify-between gap-4"
             >
+              {client.blockDate &&
+              moment(client.blockDate).isBefore(moment.now(), "day") ? (
+                <p>Blocked</p>
+              ) : (
+                client.blockDate && <p>Block Schdeuled</p>
+              )}
               <p>{i + 1}</p>
               <Image
                 alt={`Profile picture of ${client.username} who is a manager`}

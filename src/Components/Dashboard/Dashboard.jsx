@@ -207,7 +207,6 @@ const Dashboard = ({ user }) => {
       <div className="flex h-[calc(100vh-130px)]">
         <aside
           id="logo-sidebar"
-          // absolute top-0 left-0 z-40
           className={`absolute md:relative h-[calc(100vh-130px)] py-10 transition-transform border-r border-gray-700 z-40 ${
             sideBarShown
               ? "w-72 md:w-72 bg-opacity-95 md:bg-opacity-100 bg-gray-800"

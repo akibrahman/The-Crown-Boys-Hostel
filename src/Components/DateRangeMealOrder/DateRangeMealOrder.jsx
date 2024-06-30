@@ -15,6 +15,7 @@ const DateRangeMealOrder = ({
   setRequestPopUp,
   currentDate,
   currentMonth,
+  nextMonth,
   currentMonthNumber,
   currentYear,
   user,
@@ -34,18 +35,22 @@ const DateRangeMealOrder = ({
 
   const dateSelected1 = async (selectedDate) => {
     if (
-      new Date(selectedDate).toLocaleDateString("en-BD", {
+      (new Date(selectedDate).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
       }) !== currentMonth ||
-      parseInt(
-        new Date(selectedDate).toLocaleDateString("en-BD", {
-          year: "numeric",
-          timeZone: "Asia/Dhaka",
-        })
-      ) !== currentYear
+        parseInt(
+          new Date(selectedDate).toLocaleDateString("en-BD", {
+            year: "numeric",
+            timeZone: "Asia/Dhaka",
+          })
+        ) !== currentYear) &&
+      new Date(selectedDate).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      }) != nextMonth
     ) {
-      toast.error("Only current month can be selected!");
+      toast.error("Invalid Date Selection!");
       setDate1(null);
       return;
     } else if (
@@ -61,24 +66,10 @@ const DateRangeMealOrder = ({
     setDate1(selectedDate);
     setDate2(null);
   };
+
   const dateSelected2 = async (selectedDate) => {
     if (!date1) {
       toast.error("Select 'From' date first!");
-      setDate2(null);
-      return;
-    } else if (
-      new Date(selectedDate).toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      }) !== currentMonth ||
-      parseInt(
-        new Date(selectedDate).toLocaleDateString("en-BD", {
-          year: "numeric",
-          timeZone: "Asia/Dhaka",
-        })
-      ) !== currentYear
-    ) {
-      toast.error("Only current month can be selected!");
       setDate2(null);
       return;
     } else if (
@@ -88,6 +79,25 @@ const DateRangeMealOrder = ({
       )
     ) {
       toast.error("'From' date should come first, then 'To' date");
+      setDate2(null);
+      return;
+    } else if (
+      (new Date(selectedDate).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      }) !== currentMonth ||
+        parseInt(
+          new Date(selectedDate).toLocaleDateString("en-BD", {
+            year: "numeric",
+            timeZone: "Asia/Dhaka",
+          })
+        ) !== currentYear) &&
+      new Date(selectedDate).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      }) != nextMonth
+    ) {
+      toast.error("Invalid Date Selection!");
       setDate2(null);
       return;
     }

@@ -233,7 +233,7 @@ const Order = () => {
 
   if (!user) return <PreLoader />;
   if (user?.success == false) return route.push("/signin");
-  if (user.blockDate && moment(user.blockDate).isBefore(moment.now(),"day"))
+  if (user.blockDate && moment(user.blockDate).isBefore(moment.now(), "day"))
     return (
       <div className="min-h-[90vh] bg-dashboard flex items-center justify-center">
         <BlockMsg />
@@ -255,6 +255,7 @@ const Order = () => {
         setRequestPopUp={setRequestPopUp2}
         currentDate={currentDate}
         currentMonth={currentMonth}
+        nextMonth={nextMonth}
         currentMonthNumber={currentMonthNumber}
         currentYear={currentYear}
         user={user}
