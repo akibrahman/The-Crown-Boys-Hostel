@@ -195,9 +195,9 @@ const NavMenus = ({ items }) => {
               ref={burgerMenuButtonRef}
             />
             <label for="checkbox" className="toggle">
-              <div className="bars" id="bar1"></div>
-              <div className="bars" id="bar2"></div>
-              <div className="bars" id="bar3"></div>
+              <span className="bars" id="bar1"></span>
+              <span className="bars" id="bar2"></span>
+              <span className="bars" id="bar3"></span>
             </label>
           </div>
         </div>

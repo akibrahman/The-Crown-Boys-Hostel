@@ -673,7 +673,7 @@ const Dashboard = ({ user }) => {
           displayData == "profile" ? (
             <ProfileComponent user={user} />
           ) : displayData == "currentMonth" ? (
-            user.blockDate && moment(user.blockDate).isBefore(moment.now()) ? (
+            user.blockDate && moment(user.blockDate).isBefore(moment.now(),"day") ? (
               <BlockMsg />
             ) : (
               <CurrentMonthComponent user={user} />
@@ -685,7 +685,7 @@ const Dashboard = ({ user }) => {
           ) : displayData == "mealHistory" ? (
             <MealHistoryComponent user={user} />
           ) : displayData == "fileManager" ? (
-            user.blockDate && moment(user.blockDate).isBefore(moment.now()) ? (
+            user.blockDate && moment(user.blockDate).isBefore(moment.now(),"day") ? (
               <BlockMsg />
             ) : (
               <FileUpload />
