@@ -18,6 +18,7 @@ const marketSchema = new mongoose.Schema({
       {
         date: String,
         amount: Number,
+        details: { type: [] },
       },
     ],
   },

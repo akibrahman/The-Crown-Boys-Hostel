@@ -1,4 +1,5 @@
 import Bill from "@/models/billModel";
+import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
@@ -20,35 +21,34 @@ export const POST = async () => {
   }
 };
 
-export const PUT = async () => {
+export const PUT = async (req) => {
   try {
-    const users = await User.find({});
-    console.log(users);
+    const monthMarkets = await Market.findById("668005dc59a983bc762f64b8");
+    const mainData = monthMarkets.data;
+    for (let i = 0; i < mainData.length; i++) {
+      // console.log(mainData[i]);
+
+      // First TODO
+      // mainData[i].details = [];
+      // Second TODO
+      // mainData[i].details = [
+      //   ...mainData[i].details,
+      //   { "All Market": parseInt(mainData[i].amount) },
+      // ];
+      // Third TODO
+      mainData[i].amount = 0;
+    }
+    await monthMarkets.save();
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { msg: "Backend Error", error, success: false },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error }, { status: 500 });
   }
 };
+
 async function delay(s) {
   await new Promise((resolve) => setTimeout(resolve, s * 1000));
   console.log("Delayed function executed!!!!");
 }
-export const GET = async () => {
-  try {
-    await delay(60);
-    const allUsers = await User.find();
-    return NextResponse.json({ allUsers, success: true });
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      { msg: "Backend Error", error, success: false },
-      { status: 500 }
-    );
-  }
-};
 
 // export const runtime = "edge";

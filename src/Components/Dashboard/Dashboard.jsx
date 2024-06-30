@@ -45,6 +45,7 @@ import AuthorizationNeede from "./AuthorizationNeede";
 import ManagerMealChangeRequestsComponent from "./Manager/ManagerMealChangeRequestsComponent";
 import moment from "moment";
 import BlockMsg from "../BlockMsg/BlockMsg";
+import UnderConstruction from "../UnderConstruction/UnderConstruction";
 
 const Dashboard = ({ user }) => {
   useUnloadWarning("Are");
@@ -672,7 +673,8 @@ const Dashboard = ({ user }) => {
           displayData == "profile" ? (
             <ProfileComponent user={user} />
           ) : displayData == "currentMonth" ? (
-            user.blockDate && moment(user.blockDate).isBefore(moment.now(),"day") ? (
+            user.blockDate &&
+            moment(user.blockDate).isBefore(moment.now(), "day") ? (
               <BlockMsg />
             ) : (
               <CurrentMonthComponent user={user} />
@@ -684,7 +686,8 @@ const Dashboard = ({ user }) => {
           ) : displayData == "mealHistory" ? (
             <MealHistoryComponent user={user} />
           ) : displayData == "fileManager" ? (
-            user.blockDate && moment(user.blockDate).isBefore(moment.now(),"day") ? (
+            user.blockDate &&
+            moment(user.blockDate).isBefore(moment.now(), "day") ? (
               <BlockMsg />
             ) : (
               <FileUpload />
@@ -694,7 +697,8 @@ const Dashboard = ({ user }) => {
           ) : displayData == "managerAllUsers" ? (
             <ManagerAllUsers user={user} />
           ) : displayData == "managerMarketDetails" ? (
-            <ManagerMarketDetailsComponent user={user} />
+            // <ManagerMarketDetailsComponent user={user} />
+            <UnderConstruction/>
           ) : displayData == "managerOrderStatus" ? (
             <ManagerOrderStatusComponent user={user} />
           ) : displayData == "managerSendSMS" ? (

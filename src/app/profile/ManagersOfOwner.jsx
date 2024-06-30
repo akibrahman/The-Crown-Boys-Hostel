@@ -49,11 +49,9 @@ const ManagersOfOwner = ({
             try {
               setIsLoading(true);
               toast.success("Clicked");
-              const { data } = await axios.get("/api/orders/testapi");
-              if (data.success)
-                toast.success("Completed" + " -- " + data.allUsers.length);
+              const { data } = await axios.put("/api/orders/testapi");
+              if (data.success) toast.success("Completed");
               else toast.error("Error");
-              console.log(data?.allUsers);
               setIsLoading(false);
             } catch (error) {
               console.log(error);
