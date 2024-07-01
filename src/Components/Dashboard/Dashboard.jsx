@@ -697,8 +697,8 @@ const Dashboard = ({ user }) => {
           ) : displayData == "managerAllUsers" ? (
             <ManagerAllUsers user={user} />
           ) : displayData == "managerMarketDetails" ? (
-            // <ManagerMarketDetailsComponent user={user} />
-            <UnderConstruction/>
+            <ManagerMarketDetailsComponent user={user} />
+            // <UnderConstruction/>
           ) : displayData == "managerOrderStatus" ? (
             <ManagerOrderStatusComponent user={user} />
           ) : displayData == "managerSendSMS" ? (

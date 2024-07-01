@@ -71,7 +71,6 @@ const ManagerProfileComponent = ({ user }) => {
   const [totalMealCountF, setTotalMealCountF] = useState(0);
   const [mealRateF, setMealRateF] = useState(0);
   useEffect(() => {
-    console.log("Calculating Meal rte Again");
     if (ordersForTheMonth && managerCalanderData) {
       const totalMarket = managerCalanderData.data
         .filter(
@@ -84,10 +83,15 @@ const ManagerProfileComponent = ({ user }) => {
               })
             )
         )
-        .reduce(
-          (accumulator, currentValue) => accumulator + currentValue.amount,
-          0
-        );
+        .reduce((a, c) => {
+          return (
+            a +
+            c.details.reduce((total, market) => {
+              let value = Object.values(market)[0];
+              return total + value;
+            }, 0)
+          );
+        }, 0);
       setTotalMarketF(totalMarket);
       const totalMealCount =
         ordersForTheMonth?.reduce(
