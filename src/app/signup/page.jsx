@@ -146,22 +146,7 @@ const Registration = () => {
       };
     }
     console.log(finalData);
-    // return;
     try {
-      // setIsValidEmailLoading(true);
-      // const { data } = await axios.post("/api/emailchecker", {
-      //   email: finalData.email,
-      // });
-      // console.log(data);
-      // if (data.success && data.valid) {
-      //   setIsValidEmail(true);
-      // } else {
-      //   setIsValidEmail(false);
-      //   setIsValidEmailLoading(false);
-      //   toast.error("Invalid E-mail address!");
-      //   return;
-      // }
-
       const res = await axios.post("/api/users/signup", finalData);
       console.log(res.data);
       if (res.data.success) {
@@ -516,8 +501,10 @@ const Registration = () => {
                   type="text"
                   id="messAddress"
                   name="messAddress"
-                  value={formData.messAddress}
-                  onChange={handleChange}
+                  // value={formData.messAddress}
+                  // onChange={handleChange}
+                  readOnly
+                  value={"Shaplar Mor, Kamarpara, Uttara 10"}
                   className="border border-gray-300 p-2 w-full rounded text-stone-900"
                   required
                 />
@@ -548,7 +535,7 @@ const Registration = () => {
                     Father&apos;s Number
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="fathersNumber"
                     name="fathersNumber"
                     value={formData.fathersNumber}
@@ -567,7 +554,7 @@ const Registration = () => {
                     Mother&apos;s Number
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="mothersNumber"
                     name="mothersNumber"
                     value={formData.mothersNumber}

@@ -2,6 +2,8 @@ import Bill from "@/models/billModel";
 import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
+import bcryptjs from "bcryptjs";
+import { decode } from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 export const POST = async () => {
@@ -23,22 +25,6 @@ export const POST = async () => {
 
 export const PUT = async (req) => {
   try {
-    const monthMarkets = await Market.findById("668005dc59a983bc762f64b8");
-    const mainData = monthMarkets.data;
-    for (let i = 0; i < mainData.length; i++) {
-      // console.log(mainData[i]);
-
-      // First TODO
-      // mainData[i].details = [];
-      // Second TODO
-      // mainData[i].details = [
-      //   ...mainData[i].details,
-      //   { "All Market": parseInt(mainData[i].amount) },
-      // ];
-      // Third TODO
-      mainData[i].amount = 0;
-    }
-    await monthMarkets.save();
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);

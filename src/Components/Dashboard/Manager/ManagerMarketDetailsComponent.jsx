@@ -7,6 +7,7 @@ import { FaPen, FaTimes } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { GiPayMoney } from "react-icons/gi";
 import { IoOpen } from "react-icons/io5";
+import { MdLocalGasStation } from "react-icons/md";
 import { TbMoneybag } from "react-icons/tb";
 
 const ManagerMarketDetailsComponent = ({ user }) => {
@@ -76,7 +77,7 @@ const ManagerMarketDetailsComponent = ({ user }) => {
                 openModal(mrkt);
               }}
               key={mrkt._id}
-              className="relative w-[150px] pr-4 h-20 rounded-md bg-sky-500 flex items-center justify-center flex-col cursor-pointer duration-300 active:scale-90 hover:scale-110"
+              className="relative w-[150px] h-20 rounded-md text-sky-500 flex items-center justify-center border-sky-500 border flex-col cursor-pointer duration-300 active:scale-90 hover:scale-110"
             >
               <div className="absolute top-1 right-1 flex flex-col items-center justify-center">
                 <TbMoneybag className="text-xl" />
@@ -84,8 +85,19 @@ const ManagerMarketDetailsComponent = ({ user }) => {
                   {mrkt.details.reduce((a, c) => {
                     let value = Object.keys(c)[0];
                     console.log(c);
-                    if (value == "Rice") return a + 1;
-                    else return 0;
+                    if (value.trim().toLowerCase() == "rice") return a + 1;
+                    else return a + 0;
+                  }, 0)}
+                </p>
+              </div>
+              <div className="absolute top-1 left-1 flex flex-col items-center justify-center">
+                <MdLocalGasStation className="text-xl" />
+                <p className="font-light">
+                  {mrkt.details.reduce((a, c) => {
+                    let value = Object.keys(c)[0];
+                    console.log(c);
+                    if (value.trim().toLowerCase() == "gas") return a + 1;
+                    else return a + 0;
                   }, 0)}
                 </p>
               </div>

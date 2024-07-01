@@ -41,7 +41,7 @@ export const POST = async (req) => {
     const smsOwnerData = {
       api_key: apiKey,
       senderid: senderId,
-      number: "01709605097",
+      number: "01709605097,01788422002",
       message: message2,
     };
     await fetch(url, {
