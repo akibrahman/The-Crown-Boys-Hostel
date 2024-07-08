@@ -304,7 +304,7 @@ export const allRooms = [
       },
       {
         user: "idOfUserOf-a12",
-        rent: { userRent: 4000, displayRent: 45000 },
+        rent: { userRent: 4000, displayRent: 4500 },
         bookingCharge: 1000,
         bedNo: "a12",
         isBooked: true,
