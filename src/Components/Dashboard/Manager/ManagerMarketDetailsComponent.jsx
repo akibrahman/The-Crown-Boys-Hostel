@@ -2,18 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { CgSpinner } from "react-icons/cg";
-import { FaPen, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
-import { GiPayMoney } from "react-icons/gi";
-import { IoOpen } from "react-icons/io5";
 import { MdLocalGasStation } from "react-icons/md";
 import { TbMoneybag } from "react-icons/tb";
 
 const ManagerMarketDetailsComponent = ({ user }) => {
-  const [managerAmount, setManagerAmount] = useState(null);
-  const [isMoneyAdding, setIsMoneyAdding] = useState(false);
-
   const currentMonth = new Date().toLocaleDateString("en-BD", {
     month: "long",
     timeZone: "Asia/Dhaka",
@@ -48,7 +42,6 @@ const ManagerMarketDetailsComponent = ({ user }) => {
   const openModal = (data) => {
     setIsModalOpen(true);
     setModalData(data);
-    console.log(data);
   };
   const closeModal = async () => {
     setIsModalOpen(false);
@@ -84,7 +77,6 @@ const ManagerMarketDetailsComponent = ({ user }) => {
                 <p className="font-light">
                   {mrkt.details.reduce((a, c) => {
                     let value = Object.keys(c)[0];
-                    console.log(c);
                     if (value.trim().toLowerCase() == "rice") return a + 1;
                     else return a + 0;
                   }, 0)}
@@ -95,7 +87,6 @@ const ManagerMarketDetailsComponent = ({ user }) => {
                 <p className="font-light">
                   {mrkt.details.reduce((a, c) => {
                     let value = Object.keys(c)[0];
-                    console.log(c);
                     if (value.trim().toLowerCase() == "gas") return a + 1;
                     else return a + 0;
                   }, 0)}
@@ -129,21 +120,27 @@ export default ManagerMarketDetailsComponent;
 
 const ModalComponent = ({ isModalOpen, closeModal, modalData, id1 }) => {
   const [tempMarkets, setTempMarkets] = useState(modalData.details);
+
+  // const changingValue = (key, value) => {
+  //   let market = tempMarkets.find((f) => Object.keys(f)[0] === key);
+  //   if (market) {
+  //     market[key] = parseInt(value);
+  //   } else {
+  //     setTempMarkets([...tempMarkets, { [key]: parseInt(value) }]);
+  //   }
+  // };
+
   const changingValue = (key, value) => {
-    let market = tempMarkets.find((f) => Object.keys(f)[0] === key);
-    if (market) {
-      market[key] = parseInt(value);
-    } else {
-      setTempMarkets([...tempMarkets, { [key]: parseInt(value) }]);
-    }
+    setTempMarkets((prevMarkets) =>
+      prevMarkets.map((market) =>
+        Object.keys(market)[0] === key ? { [key]: value } : market
+      )
+    );
   };
+
   const saveModal = async (e) => {
     e.preventDefault();
     const id2 = modalData._id;
-    // if (tempMarkets.length < 1) {
-    //   toast.error("Minimum 1 element shoud be there");
-    //   return;
-    // }
     try {
       const { data } = await axios.put("/api/markets/updatemarket", {
         id1,
@@ -161,6 +158,7 @@ const ModalComponent = ({ isModalOpen, closeModal, modalData, id1 }) => {
       toast.error(error.response.data.msg);
     }
   };
+
   const addNewField = (e) => {
     e.preventDefault();
     const newField = { [e.target.key.value]: parseInt(e.target.value.value) };
@@ -234,7 +232,7 @@ const ModalComponent = ({ isModalOpen, closeModal, modalData, id1 }) => {
               onChange={(e) =>
                 changingValue(Object.keys(d)[0], parseInt(e.target.value))
               }
-              defaultValue={d[Object.keys(d)[0]]}
+              value={d[Object.keys(d)[0]]}
             />
             <FaDeleteLeft
               onClick={() => removeField(i)}

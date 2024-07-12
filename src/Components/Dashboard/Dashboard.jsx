@@ -46,6 +46,7 @@ import ManagerMealChangeRequestsComponent from "./Manager/ManagerMealChangeReque
 import moment from "moment";
 import BlockMsg from "../BlockMsg/BlockMsg";
 import UnderConstruction from "../UnderConstruction/UnderConstruction";
+import OwnerControlPanel from "./Owner/OwnerControlPanel";
 
 const Dashboard = ({ user }) => {
   useUnloadWarning("Are");
@@ -64,7 +65,8 @@ const Dashboard = ({ user }) => {
         displayData == "myBills" ||
         displayData == "mealHistory" ||
         displayData == "currentMonth" ||
-        displayData == "managerDetails") &&
+        displayData == "managerDetails" ||
+        displayData == "ownerControlPanel") &&
       user.role == "manager"
     ) {
       displayData = "managerProfile";
@@ -80,7 +82,8 @@ const Dashboard = ({ user }) => {
         displayData == "managerRFIDIssue" ||
         displayData == "managerAllBookings" ||
         displayData == "managerManualInvouce" ||
-        displayData == "mealChangeRequests") &&
+        displayData == "mealChangeRequests" ||
+        displayData == "ownerControlPanel") &&
       user.role == "client"
     ) {
       displayData = "profile";
@@ -659,6 +662,55 @@ const Dashboard = ({ user }) => {
                   </Link>
                 </>
               )}
+              {user && user.role == "owner" && (
+                <>
+                  {" "}
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=profile"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "profile"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <CgProfile
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "profile"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">Profile</span>
+                    </div>
+                  </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=ownerControlPanel"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "ownerControlPanel"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <CgProfile
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "ownerControlPanel"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Owner Panel
+                      </span>
+                    </div>
+                  </Link>
+                </>
+              )}
             </ul>
           </div>
         </aside>
@@ -698,8 +750,8 @@ const Dashboard = ({ user }) => {
             <ManagerAllUsers user={user} />
           ) : displayData == "managerMarketDetails" ? (
             <ManagerMarketDetailsComponent user={user} />
-            // <UnderConstruction/>
-          ) : displayData == "managerOrderStatus" ? (
+          ) : // <UnderConstruction/>
+          displayData == "managerOrderStatus" ? (
             <ManagerOrderStatusComponent user={user} />
           ) : displayData == "managerSendSMS" ? (
             <ManagerSendSMSComponent user={user} />
@@ -719,6 +771,9 @@ const Dashboard = ({ user }) => {
             <ManagerManualInvoiceComponent user={user} />
           ) : displayData == "mealChangeRequests" ? (
             <ManagerMealChangeRequestsComponent user={user} />
+          ) : // For Owner --------------------------
+          displayData == "ownerControlPanel" ? (
+            <OwnerControlPanel user={user} />
           ) : // For /dashboard route --------------------------
           user.role == "manager" ? (
             <ManagerProfileComponent user={user} />

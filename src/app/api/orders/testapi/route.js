@@ -8,11 +8,19 @@ import { NextResponse } from "next/server";
 
 export const POST = async () => {
   try {
-    await Order.deleteMany({ userId: "" });
-    await Bill.deleteMany({ userId: "" });
-    await User.findByIdAndUpdate("", {
-      isClientVerified: false,
+    await Order.deleteMany({
+      userId: "663916d667e9d16d56add11d",
+      month: "July",
+      year: 2024,
     });
+    await Bill.deleteMany({
+      userId: "663916d667e9d16d56add11d",
+      month: "July",
+      year: 2024,
+    });
+    // await User.findByIdAndUpdate("", {
+    //   isClientVerified: false,
+    // });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);
