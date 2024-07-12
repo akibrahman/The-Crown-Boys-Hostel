@@ -121,15 +121,6 @@ export default ManagerMarketDetailsComponent;
 const ModalComponent = ({ isModalOpen, closeModal, modalData, id1 }) => {
   const [tempMarkets, setTempMarkets] = useState(modalData.details);
 
-  // const changingValue = (key, value) => {
-  //   let market = tempMarkets.find((f) => Object.keys(f)[0] === key);
-  //   if (market) {
-  //     market[key] = parseInt(value);
-  //   } else {
-  //     setTempMarkets([...tempMarkets, { [key]: parseInt(value) }]);
-  //   }
-  // };
-
   const changingValue = (key, value) => {
     setTempMarkets((prevMarkets) =>
       prevMarkets.map((market) =>
