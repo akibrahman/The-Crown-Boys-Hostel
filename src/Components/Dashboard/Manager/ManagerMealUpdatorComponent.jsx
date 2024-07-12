@@ -11,6 +11,7 @@ import "react-date-picker/dist/DatePicker.css";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaArrowRight } from "react-icons/fa";
+import Select from "react-select";
 import { LuCalendarPlus } from "react-icons/lu";
 import "../../../app/globals.css";
 
@@ -48,7 +49,14 @@ const ManagerMealUpdatorComponent = () => {
         `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=1&clientName=`
       );
       if (data.success) {
-        return data.clients;
+        const actualData = data.clients;
+        const requiredData = actualData.map((client) => {
+          return {
+            value: client._id,
+            label: client.username,
+          };
+        });
+        return requiredData;
       }
     },
     enabled: user?._id ? true : false,
@@ -146,22 +154,15 @@ const ManagerMealUpdatorComponent = () => {
             {/* Date Picker  */}
             <div className="flex items-center gap-4">
               <p className="text-sky-500 font-semibold">Select User : </p>
-              <select
+              <Select
                 onChange={(e) => {
                   setOrder(null);
                   setDate(null);
-                  setClientId(e.target.value);
+                  setClientId(e.value);
                 }}
-                name="clients"
-                className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300 outline-none"
-              >
-                <option value="">Select Client</option>
-                {clients.map((client) => (
-                  <option value={client._id} key={client._id}>
-                    {client.username}
-                  </option>
-                ))}
-              </select>
+                className="w-[200px] text-dashboard outline-none"
+                options={clients}
+              />
             </div>
             <div className="flex flex-col md:flex-row justify-center items-center gap-10">
               <p className="text-sky-500 font-semibold">Select Date:</p>

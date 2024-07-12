@@ -8,6 +8,7 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
+import Select from "react-select";
 
 const ManagerBillQueryComponent = () => {
   const { user } = useContext(AuthContext);
@@ -44,7 +45,14 @@ const ManagerBillQueryComponent = () => {
         `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=1&clientName=`
       );
       if (data.success) {
-        return data.clients;
+        const actualData = data.clients;
+        const requiredData = actualData.map((client) => {
+          return {
+            value: client._id,
+            label: client.username,
+          };
+        });
+        return requiredData;
       }
     },
     enabled: user?._id ? true : false,
@@ -100,17 +108,11 @@ const ManagerBillQueryComponent = () => {
         >
           <div className="flex items-center gap-1">
             <p className="text-sky-500 font-semibold">Select User : </p>
-            <select
+            <Select
               name="clients"
-              className="px-5 py-2 rounded-md dark:bg-stone-700 cursor-pointer dark:text-white bg-stone-300 outline-none"
-            >
-              <option value="">Select Client</option>
-              {myClients.map((client) => (
-                <option value={client._id} key={client._id}>
-                  {client.username}
-                </option>
-              ))}
-            </select>
+              className="w-[200px] text-dashboard outline-none"
+              options={myClients}
+            />
           </div>
           <div className="flex items-center gap-4">
             <p className="text-sky-500 font-semibold">Select Month : </p>
