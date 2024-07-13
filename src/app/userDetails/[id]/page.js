@@ -7,11 +7,11 @@ const page = async ({ params }) => {
   const client = await getClient(id);
   console.log(client);
   return (
-    <div className="min-h-screen dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white font-semibold">
-      <div class="bg-gray-100 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
+    <div className="min-h-screen bg-dashboard text-white font-semibold">
+      <div class="bg-dashboard text-white">
         <div class="container mx-auto px-4 pb-16 pt-16">
           <div class="flex flex-wrap -mx-3">
-            <div class="lg:w-1/3 md:w-1/2 px-3 mb-6 md:mb-0">
+            <div class="lg:w-1/3 md:w-1/2 w-full px-3 mb-6 md:mb-0">
               <div class="flex flex-col items-center text-center">
                 <Image
                   alt="User Profile"
@@ -43,8 +43,8 @@ const page = async ({ params }) => {
                 </Link>
               </div>
             </div>
-            <div class="lg:w-2/3 md:w-1/2 px-3">
-              <div class="flex flex-wrap">
+            <div class="lg:w-2/3 md:w-1/2 w-full px-3">
+              <div class="flex flex-col justify-center items-center">
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
@@ -247,7 +247,7 @@ const page = async ({ params }) => {
                   />
                 </div>
               )}
-              <div className="flex items-center gap-3 mt-8 ml-4">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-3 mt-8 w-full">
                 <p className="text-red-600 font-semibold">Block Date:</p>
                 {client.blockDate ? (
                   <div className="flex items-center gap-3">

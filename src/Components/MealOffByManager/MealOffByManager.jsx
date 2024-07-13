@@ -18,17 +18,20 @@ const MealOffByManager = ({
   const customStylesForModal = {
     content: {
       top: "50%",
-      left: "20%",
+      left: "50%",
+      right: "auto",
       bottom: "auto",
-      transform: "translateY(-50%)",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
       padding: "15px",
       backgroundColor: "#1C1917",
       color: "#fff",
-      width: "80%",
-      height: "80vh",
+      width: "90%",
+      height: "90vh",
       // border: "1px solid #EAB308",
     },
     overlay: {
+      zIndex: 500,
       backgroundColor: "rgba(0,0,0,0.5)",
     },
   };

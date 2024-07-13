@@ -144,6 +144,7 @@ const MealRequest = ({
       // border: "1px solid #EAB308",
     },
     overlay: {
+      zIndex: 500,
       backgroundColor: "rgba(0,0,0,0.5)",
     },
   };

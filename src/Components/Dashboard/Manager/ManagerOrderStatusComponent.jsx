@@ -203,6 +203,7 @@ const ManagerOrderStatusComponent = () => {
       // height: "90%",
     },
     overlay: {
+      zIndex: 500,
       backgroundColor: "rgba(0,0,0,0.5)",
     },
   };

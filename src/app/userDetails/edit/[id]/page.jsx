@@ -272,12 +272,12 @@ const Page = ({ params }) => {
   if (!client) return <PreLoader />;
 
   return (
-    <div className="min-h-screen dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white font-semibold">
-      <div class="bg-gray-100 dark:bg-gradient-to-r dark:from-primary dark:to-secondary">
+    <div className="min-h-screen bg-dashboard text-white font-semibold">
+      <div class="bg-dashboard text-white">
         <p className="text-center underline text-xl pt-6">Edit User</p>
         <div class="container mx-auto px-4 py-10">
           <form onSubmit={handleSave} class="flex flex-wrap -mx-3">
-            <div class="lg:w-1/3 md:w-1/2 px-3 mb-6 md:mb-0">
+            <div class="lg:w-1/3 md:w-1/2 w-full px-3 mb-6 md:mb-0">
               <div class="flex flex-col justify-center items-center">
                 <div className="w-48 h-48 rounded-full mb-3 relative group">
                   <Image
@@ -430,8 +430,8 @@ const Page = ({ params }) => {
                 </button>
               </div>
             </div>
-            <div class="lg:w-2/3 md:w-1/2 px-3">
-              <div class="flex flex-wrap">
+            <div class="lg:w-2/3 md:w-1/2 w-full px-3">
+              <div class="flex flex-col justify-center items-center">
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
@@ -653,7 +653,7 @@ const Page = ({ params }) => {
                 )}
               </div>
               {client.nidAuth ? (
-                <div className="flex flex-col md:flex-row justify-around items-start">
+                <div className="flex flex-col md:flex-row justify-around items-center md:items-start">
                   <div className="">
                     <p className="mb-2">NID Front</p>
                     <div className="rounded-md relative group">
@@ -805,10 +805,10 @@ const Page = ({ params }) => {
                   />
                 </div>
               )}
-              <div className="flex items-center gap-3 mt-8 ml-4">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-3 mt-8 w-full">
                 <p className="text-red-600 font-semibold">Block Date:</p>
                 {client.blockDate ? (
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col md:flex-row items-center gap-3">
                     <p>{new Date(client.blockDate).toDateString()}</p>
                     <button
                       onClick={() => {
@@ -851,7 +851,7 @@ const Page = ({ params }) => {
                     )}
                   </div>
                 ) : (
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col md:flex-row items-center gap-3">
                     <p>Not Scheduled</p>
                     <button
                       onClick={() => {

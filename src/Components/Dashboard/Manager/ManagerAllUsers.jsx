@@ -297,9 +297,9 @@ const ManagerAllUsers = ({ user }) => {
           </div>
         )}
       </Modal>
-      <div className="px-3 flex flex-col items-center gap-4 py-5 relative bg-dashboard text-slate-100 min-h-full">
+      <div className="px-3 flex flex-col items-center gap-4 py-5  bg-dashboard text-slate-100 min-h-full">
         <div className="pb-2 bg-transparent flex justify-center sticky top-0">
-          <div className="relative">
+          <div className="">
             <input
               onChange={(e) => setClientName(e.target.value)}
               placeholder="Search by name"
