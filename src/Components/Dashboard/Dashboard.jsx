@@ -47,6 +47,9 @@ import moment from "moment";
 import BlockMsg from "../BlockMsg/BlockMsg";
 import UnderConstruction from "../UnderConstruction/UnderConstruction";
 import OwnerControlPanel from "./Owner/OwnerControlPanel";
+import ManagerAddARoom from "./Manager/ManagerAddARoom";
+import { BsHouseAdd } from "react-icons/bs";
+import ManagerAllRoomsComponent from "./Manager/ManagerAllRoomsComponent";
 
 const Dashboard = ({ user }) => {
   useUnloadWarning("Are");
@@ -83,6 +86,7 @@ const Dashboard = ({ user }) => {
         displayData == "managerAllBookings" ||
         displayData == "managerManualInvouce" ||
         displayData == "mealChangeRequests" ||
+        displayData == "managerAddARoom" ||
         displayData == "ownerControlPanel") &&
       user.role == "client"
     ) {
@@ -595,6 +599,52 @@ const Dashboard = ({ user }) => {
                   </Link>
                   <Link
                     onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerAddARoom"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerAddARoom"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <BsHouseAdd
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerAddARoom"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Add Room
+                      </span>
+                    </div>
+                  </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=managerAllRooms"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "managerAllRooms"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <BsHouseAdd
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "managerAllRooms"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        Rooms
+                      </span>
+                    </div>
+                  </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
                     href="/dashboard?displayData=managerAllBookings"
                   >
                     <div
@@ -657,6 +707,29 @@ const Dashboard = ({ user }) => {
                       />
                       <span className="ms-3 text-sm md:text-base">
                         Manual Invoice
+                      </span>
+                    </div>
+                  </Link>
+                  <Link
+                    onClick={() => setSideBarShown(false)}
+                    href="/dashboard?displayData=fileManager"
+                  >
+                    <div
+                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
+                        displayData == "fileManager"
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700"
+                      }`}
+                    >
+                      <FaFile
+                        className={`text-gray-400 md:text-xl ${
+                          displayData == "fileManager"
+                            ? "text-white"
+                            : "group-hover:text-white"
+                        }`}
+                      />
+                      <span className="ms-3 text-sm md:text-base">
+                        File Manager
                       </span>
                     </div>
                   </Link>
@@ -769,6 +842,10 @@ const Dashboard = ({ user }) => {
             <ManagerAllBookingsComponent user={user} />
           ) : displayData == "managerManualInvouce" ? (
             <ManagerManualInvoiceComponent user={user} />
+          ) : displayData == "managerAddARoom" ? (
+            <ManagerAddARoom user={user} />
+          ) : displayData == "managerAllRooms" ? (
+            <ManagerAllRoomsComponent user={user} />
           ) : displayData == "mealChangeRequests" ? (
             <ManagerMealChangeRequestsComponent user={user} />
           ) : // For Owner --------------------------

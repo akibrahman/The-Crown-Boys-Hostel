@@ -16,6 +16,11 @@ module.exports = {
         hostname: "cdn.templates.unlayer.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        port: "",
+      },
     ],
   },
 };
