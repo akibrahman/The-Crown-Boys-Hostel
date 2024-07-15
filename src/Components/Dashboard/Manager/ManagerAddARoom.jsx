@@ -18,7 +18,7 @@ const ManagerAddARoom = () => {
     video: "",
     type: "",
     sketch: "",
-    floor: 0,
+    floor: "",
     image: "",
     toilet: { type: "", image: "" },
     balcony: { state: false, image: "" },
@@ -54,6 +54,7 @@ const ManagerAddARoom = () => {
   };
 
   const addBed = () => {
+    setError("");
     setRoomData((prevData) => ({
       ...prevData,
       beds: [
@@ -236,12 +237,40 @@ const ManagerAddARoom = () => {
     );
     // Handle form submission here
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!FormData.video) {
-      setError("Video is required, Add one");
+    if (!roomData.video) {
+      setError("Room Video is required, Add one");
       return;
     }
+    if (!roomData.sketch) {
+      setError("Room Sketch is required, Add one");
+      return;
+    }
+    if (!roomData.image) {
+      setError("Room Image is required, Add one");
+      return;
+    }
+    if (!roomData.toilet.image) {
+      setError("Toilet Image is required, Add one");
+      return;
+    }
+    if (roomData.beds.length == 0) {
+      setError("Atleast one bed should be added, Add one");
+      return;
+    }
+    if (roomData.balcony.state && !roomData.balcony.image) {
+      setError("Balcony Image is required, Add one");
+      return;
+    }
+    for (let bed of roomData.beds) {
+      if (!bed.image) {
+        setError(`Add Image to bed no: ${bed.bedNo}`);
+        return;
+      }
+    }
+
     setuploading([true, "firebase"]);
 
     const uploadFile = (file, path) => {
@@ -380,16 +409,13 @@ const ManagerAddARoom = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container min-h-full bg-dashboard text-white mx-auto p-6 duration-300">
       <h1 className="text-2xl font-bold mb-4 text-center">Add Room</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded-lg p-6"
-      >
+      <form onSubmit={handleSubmit} className="shadow-md rounded-lg p-6">
         {/* Room Information Fields */}
-        <div className="flex items-center justify-between bg-gray-100 p-4 rounded-md mb-4">
+        <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-0 bg-gray-600 p-4 rounded-md mb-4">
           <div className="flex flex-col gap-2">
-            <label className="block text-gray-500 font-semibold">
+            <label className="block text-slate-100 font-semibold">
               Room Name
             </label>
             <select
@@ -413,7 +439,7 @@ const ManagerAddARoom = () => {
             </select>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="block text-gray-500 font-semibold">Type</label>
+            <label className="block text-slate-100 font-semibold">Type</label>
             <select
               className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
               required
@@ -427,7 +453,7 @@ const ManagerAddARoom = () => {
             </select>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="block text-gray-500 font-semibold">Floor</label>
+            <label className="block text-slate-100 font-semibold">Floor</label>
             <select
               className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
               required
@@ -448,7 +474,7 @@ const ManagerAddARoom = () => {
             </select>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="block text-gray-500 font-semibold">
+            <label className="block text-slate-100 font-semibold">
               Toilet Type
             </label>
             <select
@@ -471,9 +497,9 @@ const ManagerAddARoom = () => {
           </div>
         </div>
 
-        <div className="mb-4 bg-gray-100 rounded-md flex items-center justify-between">
-          <div className="flex-1 flex flex-col items-center gap-2 p-4">
-            <label className="block text-gray-500 text-lg font-semibold">
+        <div className="mb-4 bg-gray-600 rounded-md flex flex-col md:flex-row items-center justify-center md:justify-around gap-4 md:gap-0 p-4">
+          <div className="flex flex-col items-center gap-2 p-4">
+            <label className="block text-slate-100 text-lg font-semibold">
               Video
             </label>
             {roomData.video && (
@@ -488,9 +514,9 @@ const ManagerAddARoom = () => {
             )}
             <label htmlFor="video">
               {roomData.video ? (
-                <FaPencil className="border-2 rounded-full p-1 text-3xl border-dashboard text-dashboard cursor-pointer" />
+                <FaPencil className="border-2 rounded-full p-1 text-3xl border-dashboard text-slate-100 cursor-pointer" />
               ) : (
-                <FaPlus className="border-2 rounded-full p-1 text-3xl border-dashboard text-dashboard cursor-pointer" />
+                <FaPlus className="border-2 rounded-full p-1 text-3xl border-dashboard text-slate-100 cursor-pointer" />
               )}
             </label>
             <input
@@ -509,54 +535,106 @@ const ManagerAddARoom = () => {
               className="mt-1 p-2 w-full border rounded-md"
             />
           </div>
-          <div className="flex-1">
-            <div className="mb-4">
-              <label className="block text-gray-500 font-semibold">
-                Balcony
+
+          <div className="flex items-center justify-center gap-3">
+            <label className="block text-slate-100 font-semibold">
+              Balcony
+            </label>
+            <span
+              onClick={() => {
+                setRoomData((prevData) => ({
+                  ...prevData,
+                  balcony: {
+                    ...prevData.balcony,
+                    state: !roomData.balcony.state,
+                  },
+                }));
+              }}
+              className="relative w-6 h-6 flex items-center justify-center bg-white border-2 border-gray-300 rounded-md transition-colors duration-200 ease-in-out cursor-pointer"
+            >
+              <svg
+                className={`w-4 h-4 text-green-500 transition-opacity duration-200 ease-in-out ${
+                  roomData.balcony.state ? "opacity-100" : "opacity-0"
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+            </span>
+          </div>
+
+          {roomData.balcony.state && (
+            <div className="flex flex-col items-center gap-2">
+              <label
+                htmlFor="balcony.image"
+                className="block text-slate-100 font-semibold"
+              >
+                Balcony Image
               </label>
+              {roomData.balcony.image ? (
+                <>
+                  <Image
+                    src={URL.createObjectURL(roomData.balcony.image)}
+                    alt={`Room ${roomData.name} Balcony`}
+                    width={100}
+                    height={130}
+                    className="w-[100px] h-[130px] rounded-md"
+                  />
+                  <FaTimes
+                    className="text-xl text-dashboard duration-300 cursor-pointer active:scale-90"
+                    onClick={() => {
+                      setRoomData((prevData) => ({
+                        ...prevData,
+                        balcony: {
+                          ...prevData.balcony,
+                          image: "",
+                        },
+                      }));
+                    }}
+                  />
+                </>
+              ) : (
+                <label
+                  htmlFor="balcony.image"
+                  className="w-[100px] h-[130px] border-2 border-slate-100 border-dashed rounded-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-90 duration-300"
+                >
+                  <FaPlus className="text-xl text-dashboard" />
+                </label>
+              )}
               <input
-                type="checkbox"
-                name="balcony.state"
-                checked={roomData.balcony.state}
+                hidden
+                type="file"
+                name="balcony.image"
+                id="balcony.image"
+                required={roomData.balcony.state ? true : false}
                 onChange={(e) =>
                   setRoomData((prevData) => ({
                     ...prevData,
-                    balcony: { ...prevData.balcony, state: e.target.checked },
+                    balcony: {
+                      ...prevData.balcony,
+                      image: e.target.files[0],
+                    },
                   }))
                 }
-                className="mt-1 p-2"
+                className="mt-1 p-2 w-full border rounded-md"
               />
             </div>
-            {roomData.balcony.state && (
-              <div className="mb-4">
-                <label className="block text-gray-500 font-semibold">
-                  Balcony Image
-                </label>
-                <input
-                  type="file"
-                  name="balcony.image"
-                  required={roomData.balcony.state ? true : false}
-                  onChange={(e) =>
-                    setRoomData((prevData) => ({
-                      ...prevData,
-                      balcony: {
-                        ...prevData.balcony,
-                        image: e.target.files[0],
-                      },
-                    }))
-                  }
-                  className="mt-1 p-2 w-full border rounded-md"
-                />
-              </div>
-            )}
-          </div>
+          )}
         </div>
 
-        <div className="flex items-center justify-around bg-gray-100 p-4 rounded-md mb-4">
+        <div className="flex flex-col md:flex-row items-center justify-center md:justify-around gap-4 md:gap-0 bg-gray-600 p-4 rounded-md mb-4">
           <div className="flex flex-col items-center gap-2">
             <label
               htmlFor="sketch"
-              className="block text-gray-500 font-semibold"
+              className="block text-slate-100 font-semibold"
             >
               Room Sketch
             </label>
@@ -582,7 +660,7 @@ const ManagerAddARoom = () => {
             ) : (
               <label
                 htmlFor="sketch"
-                className="w-[100px] h-[130px] border-2 border-dashboard border-dashed rounded-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-90 duration-300"
+                className="w-[100px] h-[130px] border-2 border-slate-100 border-dashed rounded-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-90 duration-300"
               >
                 <FaPlus className="text-xl text-dashboard" />
               </label>
@@ -595,6 +673,7 @@ const ManagerAddARoom = () => {
               id="sketch"
               accept="image/*"
               onChange={(e) => {
+                setError("");
                 setRoomData((prevData) => ({
                   ...prevData,
                   sketch: e.target.files[0],
@@ -605,7 +684,7 @@ const ManagerAddARoom = () => {
           </div>
 
           <div htmlFor="image" className="flex flex-col items-center gap-2">
-            <label className="block text-gray-500 font-semibold">
+            <label className="block text-slate-100 font-semibold">
               Room Image
             </label>
             {roomData.image ? (
@@ -630,7 +709,7 @@ const ManagerAddARoom = () => {
             ) : (
               <label
                 htmlFor="image"
-                className="w-[100px] h-[130px] border-2 border-dashboard border-dashed rounded-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-90 duration-300"
+                className="w-[100px] h-[130px] border-2 border-slate-100 border-dashed rounded-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-90 duration-300"
               >
                 <FaPlus className="text-xl text-dashboard" />
               </label>
@@ -642,6 +721,7 @@ const ManagerAddARoom = () => {
               id="image"
               accept="image/*"
               onChange={(e) => {
+                setError("");
                 setRoomData((prevData) => ({
                   ...prevData,
                   image: e.target.files[0],
@@ -654,7 +734,7 @@ const ManagerAddARoom = () => {
           <div className="flex flex-col items-center gap-2">
             <label
               htmlFor="toilet.image"
-              className="block text-gray-500 font-semibold"
+              className="block text-slate-100 font-semibold"
             >
               Toilet Image
             </label>
@@ -680,7 +760,7 @@ const ManagerAddARoom = () => {
             ) : (
               <label
                 htmlFor="toilet.image"
-                className="w-[100px] h-[130px] border-2 border-dashboard border-dashed rounded-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-90 duration-300"
+                className="w-[100px] h-[130px] border-2 border-slate-100 border-dashed rounded-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-90 duration-300"
               >
                 <FaPlus className="text-xl text-dashboard" />
               </label>
@@ -690,12 +770,14 @@ const ManagerAddARoom = () => {
               type="file"
               name="toilet.image"
               id="toilet.image"
-              onChange={(e) =>
+              onChange={(e) => {
+                setError("");
+
                 setRoomData((prevData) => ({
                   ...prevData,
                   toilet: { ...prevData.toilet, image: e.target.files[0] },
-                }))
-              }
+                }));
+              }}
               className="mt-1 p-2 w-full border rounded-md"
             />
           </div>
@@ -715,10 +797,10 @@ const ManagerAddARoom = () => {
           {roomData.beds.map((bed, index) => (
             <div
               key={index}
-              className="bg-gray-100 p-4 rounded-md shadow-sm mb-4 flex items-center justify-between gap-3"
+              className="bg-gray-600 p-4 rounded-md shadow-sm mb-4 flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-3"
             >
               <div className="flex flex-col gap-2">
-                <label className="block text-gray-500 font-semibold">
+                <label className="block text-slate-100 font-semibold">
                   Bed No
                 </label>
                 <input
@@ -732,7 +814,7 @@ const ManagerAddARoom = () => {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="block text-gray-500 font-semibold">
+                <label className="block text-slate-100 font-semibold">
                   User Rent
                 </label>
                 <input
@@ -746,7 +828,7 @@ const ManagerAddARoom = () => {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="block text-gray-500 font-semibold">
+                <label className="block text-slate-100 font-semibold">
                   Display Rent
                 </label>
                 <input
@@ -760,7 +842,7 @@ const ManagerAddARoom = () => {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="block text-gray-500 font-semibold">
+                <label className="block text-slate-100 font-semibold">
                   Booking Charge
                 </label>
                 <input
@@ -773,15 +855,48 @@ const ManagerAddARoom = () => {
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
-                <label className="block text-gray-500 font-semibold">
+              <div className="flex flex-col items-center gap-2">
+                <label className="block text-slate-100 font-semibold">
                   Bed Image
                 </label>
+
+                {bed.image ? (
+                  <>
+                    <Image
+                      src={URL.createObjectURL(bed.image)}
+                      alt={`Room ${roomData.name} Bed ${bed.bedNo}`}
+                      width={100}
+                      height={130}
+                      className="w-[100px] h-[130px] rounded-md"
+                    />
+                    <FaTimes
+                      className="text-xl text-dashboard duration-300 cursor-pointer active:scale-90"
+                      onClick={() => {
+                        const beds = [...roomData.beds];
+                        beds[index].image = "";
+                        setRoomData((prevData) => ({
+                          ...prevData,
+                          beds,
+                        }));
+                      }}
+                    />
+                  </>
+                ) : (
+                  <label
+                    htmlFor={`image-bed-${index}`}
+                    className="w-[100px] h-[130px] border-2 border-slate-100 border-dashed rounded-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-90 duration-300"
+                  >
+                    <FaPlus className="text-xl text-dashboard" />
+                  </label>
+                )}
+
                 <input
-                  required
+                  hidden
                   type="file"
                   name="image"
+                  id={`image-bed-${index}`}
                   onChange={(e) => {
+                    setError("");
                     const { name, files } = e.target;
                     const beds = [...roomData.beds];
                     beds[index][name] = files[0];

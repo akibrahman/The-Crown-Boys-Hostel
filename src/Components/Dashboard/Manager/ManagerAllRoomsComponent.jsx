@@ -170,7 +170,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                     height={60}
                   />
                   <Image
-                    src={room.balcony.image.src}
+                    src={room.balcony.image.src || "/images/no-balcony.png"}
                     alt={`Room ${room.name} Balcony`}
                     className="aspect-square rounded-full"
                     width={60}

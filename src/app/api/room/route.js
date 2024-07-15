@@ -47,8 +47,8 @@ export const POST = async (req) => {
       balcony: {
         balconyState: data.roomBalconyState,
         image: {
-          src: data.roomBalconyImageData.src,
-          path: data.roomBalconyImageData.path,
+          src: data.roomBalconyState ? data.roomBalconyImageData.src : "",
+          path: data.roomBalconyState ? data.roomBalconyImageData.path : "",
         },
       },
       image: { src: data.roomImageData.src, path: data.roomImageData.path },

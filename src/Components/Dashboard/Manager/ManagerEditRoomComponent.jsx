@@ -524,7 +524,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 {bed.image.src && (
                   <Image
                     src={bed.image.src}
-                    alt={`Room ${roomData.name} Bed ${bed.bodNo}`}
+                    alt={`Room ${roomData.name} Bed ${bed.bedNo}`}
                     className="aspect-square rounded-md"
                     width={100}
                     height={100}
