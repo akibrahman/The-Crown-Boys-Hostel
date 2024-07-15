@@ -77,6 +77,7 @@ export const PUT = async (req) => {
         "toilet.toiletType": data.roomToiletType,
         "balcony.balconyState": data.roomBalconyState,
         beds: data.roomBeds,
+        seats: data.roomBeds.length,
       },
     });
 
