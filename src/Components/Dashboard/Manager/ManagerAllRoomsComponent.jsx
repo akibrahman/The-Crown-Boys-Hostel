@@ -17,13 +17,20 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "../dashboard.css";
 import { storage } from "../../../../firebase.config";
+import { CgSpinner } from "react-icons/cg";
 
 const ManagerAllRoomsComponent = ({ user }) => {
   const route = useRouter();
+
+  const [nameRef, setNameRef] = useState("");
+  const [floorRef, setFloorRef] = useState("");
+
   const { data: rooms, refetch } = useQuery({
-    queryKey: ["All Rooms", "Manager Only", user?._id],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/room`);
+    queryKey: ["All Rooms", "Manager Only", user?._id, nameRef, floorRef],
+    queryFn: async ({ queryKey }) => {
+      const { data } = await axios.get(
+        `/api/room?name=${queryKey[3]}&floor=${queryKey[4]}`
+      );
       if (data.success) {
         return data.rooms;
       } else {
@@ -32,6 +39,8 @@ const ManagerAllRoomsComponent = ({ user }) => {
     },
     enabled: user?._id ? true : false,
   });
+
+  console.log(rooms);
 
   const [editRoomId, setEditRoomId] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -82,7 +91,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
     }
   };
 
-  if (!rooms) return <PreLoader />;
+  // if (!rooms) return <PreLoader />;
 
   return (
     <>
@@ -94,8 +103,52 @@ const ManagerAllRoomsComponent = ({ user }) => {
       />
       <div className="min-h-full mx-auto p-6 bg-dashboard text-slate-100">
         <h1 className="text-2xl font-bold mb-4 text-center">Rooms</h1>
+        <div className="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-10 mb-5">
+          <select
+            onChange={(e) => setNameRef(e.target.value)}
+            value={nameRef}
+            className="px-4 py-1.5 rounded-md font-medium text-gray-50 cursor-pointer active:scale-90 duration-300 outline-none bg-gray-500"
+          >
+            <option value="">Select Name</option>
+            <option value="a1">A1</option>
+            <option value="a2">A2</option>
+            <option value="a3">A3</option>
+            <option value="a4">A4</option>
+            <option value="a5">A5</option>
+            <option value="a6">A6</option>
+            <option value="b1">B1</option>
+            <option value="b2">B2</option>
+            <option value="b3">B3</option>
+            <option value="b4">B4</option>
+          </select>
+          <select
+            onChange={(e) => setFloorRef(e.target.value)}
+            value={floorRef}
+            className="px-4 py-1.5 rounded-md font-medium text-gray-50 cursor-pointer active:scale-90 duration-300 outline-none bg-gray-500"
+          >
+            <option value="">Select Floor</option>
+            <option value="0">Ground Floor</option>
+            <option value="1">First Floor</option>
+            <option value="2">Second Floor</option>
+            <option value="3">Third Floor</option>
+            <option value="4">Fourth Floor</option>
+            <option value="5">Fifth Floor</option>
+            <option value="6">Sixth Floor</option>
+            <option value="7">Seventh Floor</option>
+          </select>
+        </div>
         <div className="flex flex-col gap-6">
-          {rooms.map((room) => (
+          {rooms?.length == 0 && (
+            <p className="font-semibold py-20 text-center text-gray-500">
+              No Rooms Found
+            </p>
+          )}
+          {!rooms && (
+            <p className="font-semibold py-20 text-center text-gray-500 flex items-center justify-center gap-2">
+              Loading <CgSpinner className="text-xl animate-spin"/>
+            </p>
+          )}
+          {rooms?.map((room) => (
             <div
               key={room._id}
               className="shadow-md shadow-white rounded-lg p-6 flex flex-col md:flex-row items-center justify-center md:justify-between gap-3 md:gap-0"
@@ -226,10 +279,14 @@ const ManagerAllRoomsComponent = ({ user }) => {
               </div>
 
               <div className="flex flex-row md:flex-col items-center justify-center gap-5 md:gap-10 mt-5 md:mt-0">
-                <FaDeleteLeft
-                  onClick={() => deleteRoom(room._id, room.name)}
-                  className="font-semibold text-2xl text-red-500 cursor-pointer duration-300 active:scale-90"
-                />
+                {deleting ? (
+                  <CgSpinner className="font-semibold text-2xl text-red-500 animate-spin" />
+                ) : (
+                  <FaDeleteLeft
+                    onClick={() => deleteRoom(room._id, room.name)}
+                    className="font-semibold text-2xl text-red-500 cursor-pointer duration-300 active:scale-90"
+                  />
+                )}
                 <FaEdit
                   onClick={() => {
                     setEditRoomId(room._id);

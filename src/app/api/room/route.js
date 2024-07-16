@@ -9,8 +9,12 @@ export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
+    const name = searchParams.get("name");
+    const floor = searchParams.get("floor");
     let query = {};
     if (id) query = { ...query, _id: id };
+    if (name) query = { ...query, name };
+    if (floor) query = { ...query, floor: parseInt(floor) };
     const rooms = await Room.find(query);
     return NextResponse.json({
       success: true,
