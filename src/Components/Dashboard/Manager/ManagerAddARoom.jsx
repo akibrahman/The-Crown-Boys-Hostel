@@ -82,164 +82,6 @@ const ManagerAddARoom = () => {
     }));
   };
 
-  const handleSubmitt = async (e) => {
-    e.preventDefault();
-    console.log(roomData);
-    // Upload Room Video----------
-    const roomVideo = roomData.video;
-    const pathRoomVideo = `rooms/${roomData.floor}/${roomData.name}/video/${roomData.name}.mp4`;
-    const storageRefRoomVideo = ref(storage, pathRoomVideo);
-    const uploadRoomVideo = uploadBytesResumable(
-      storageRefRoomVideo,
-      roomVideo
-    );
-    uploadRoomVideo.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(progress);
-      },
-      (error) => {
-        console.log(error);
-        toast.error("Firebase error");
-      },
-      async () => {
-        const url = await getDownloadURL(uploadRoomVideo.snapshot.ref);
-        const data = { src: url, path: pathRoomVideo };
-      }
-    );
-    // Upload Room Image----------
-    const roomImage = roomData.image;
-    const pathRoomImage = `rooms/${roomData.floor}/${roomData.name}/image/${roomData.name}.jpg`;
-    const storageRefRoomImage = ref(storage, pathRoomImage);
-    const uploadRoomImage = uploadBytesResumable(
-      storageRefRoomImage,
-      roomImage
-    );
-    uploadRoomImage.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(progress);
-      },
-      (error) => {
-        console.log(error);
-        toast.error("Firebase error");
-      },
-      async () => {
-        const url = await getDownloadURL(uploadRoomImage.snapshot.ref);
-        const data = { src: url, path: pathRoomImage };
-      }
-    );
-    // Upload Room Sketch----------
-    const roomSketch = roomData.sketch;
-    const pathRoomSketch = `rooms/${roomData.floor}/${roomData.name}/sketch/${roomData.name}-sketch.jpg`;
-    const storageRefRoomSketch = ref(storage, pathRoomSketch);
-    const uploadRoomSketch = uploadBytesResumable(
-      storageRefRoomSketch,
-      roomSketch
-    );
-    uploadRoomSketch.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(progress);
-      },
-      (error) => {
-        console.log(error);
-        toast.error("Firebase error");
-      },
-      async () => {
-        const url = await getDownloadURL(uploadRoomSketch.snapshot.ref);
-        const data = { src: url, path: pathRoomSketch };
-      }
-    );
-    // Upload Room Toilet Image----------
-    const roomToiletImage = roomData.toilet.image;
-    const pathRoomToiletImage = `rooms/${roomData.floor}/${roomData.name}/image/${roomData.name}-toilet.jpg`;
-    const storageRefRoomToiletImage = ref(storage, pathRoomToiletImage);
-    const uploadRoomToiletImage = uploadBytesResumable(
-      storageRefRoomToiletImage,
-      roomToiletImage
-    );
-    uploadRoomToiletImage.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(progress);
-      },
-      (error) => {
-        console.log(error);
-        toast.error("Firebase error");
-      },
-      async () => {
-        const url = await getDownloadURL(uploadRoomToiletImage.snapshot.ref);
-        const data = { src: url, path: pathRoomToiletImage };
-      }
-    );
-    if (roomData.balcony.state) {
-      // Upload Room Balcony Image----------
-      const roomBalconyImage = roomData.balcony.image;
-      const pathRoomBalconyImage = `rooms/${roomData.floor}/${roomData.name}/image/${roomData.name}-balcony.jpg`;
-      const storageRefRoomBalconyImage = ref(storage, pathRoomBalconyImage);
-      const uploadRoomBalconyImage = uploadBytesResumable(
-        storageRefRoomBalconyImage,
-        roomBalconyImage
-      );
-      uploadRoomBalconyImage.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(progress);
-        },
-        (error) => {
-          console.log(error);
-          toast.error("Firebase error");
-        },
-        async () => {
-          const url = await getDownloadURL(uploadRoomBalconyImage.snapshot.ref);
-          const data = { src: url, path: pathRoomBalconyImage };
-        }
-      );
-    }
-    // Upload Room Beds Image----------
-    await Promise.all(
-      roomData.beds.map(async (bed, i) => {
-        //
-        const roomBedsImage = bed.image;
-        const pathRoomBedsImage = `rooms/${roomData.floor}/${roomData.name}/image/${roomData.name}-${bed.bedNo}.jpg`;
-        const storageRefRoomBedsImage = ref(storage, pathRoomBedsImage);
-        const uploadRoomBedsImage = uploadBytesResumable(
-          storageRefRoomBedsImage,
-          roomBedsImage
-        );
-        uploadRoomBedsImage.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(progress);
-          },
-          (error) => {
-            console.log(error);
-            toast.error("Firebase error");
-          },
-          async () => {
-            const url = await getDownloadURL(uploadRoomBedsImage.snapshot.ref);
-            const data = { src: url, path: pathRoomBedsImage };
-          }
-        );
-        //
-      })
-    );
-    // Handle form submission here
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -305,19 +147,19 @@ const ManagerAddARoom = () => {
 
     try {
       // Room Video
-      const roomVideoPath = `rooms/${roomData.floor}/${roomData.name}/video/${roomData.name}.mp4`;
+      const roomVideoPath = `rooms/${roomData.name}/video/${roomData.name}.mp4`;
       const roomVideoUpload = uploadFile(roomData.video, roomVideoPath);
 
       // Room Image
-      const roomImagePath = `rooms/${roomData.floor}/${roomData.name}/image/${roomData.name}.jpg`;
+      const roomImagePath = `rooms/${roomData.name}/image/${roomData.name}.jpg`;
       const roomImageUpload = uploadFile(roomData.image, roomImagePath);
 
       // Room Sketch
-      const roomSketchPath = `rooms/${roomData.floor}/${roomData.name}/sketch/${roomData.name}-sketch.jpg`;
+      const roomSketchPath = `rooms/${roomData.name}/sketch/${roomData.name}-sketch.jpg`;
       const roomSketchUpload = uploadFile(roomData.sketch, roomSketchPath);
 
       // Room Toilet Image
-      const roomToiletImagePath = `rooms/${roomData.floor}/${roomData.name}/image/${roomData.name}-toilet.jpg`;
+      const roomToiletImagePath = `rooms/${roomData.name}/image/${roomData.name}-toilet.jpg`;
       const roomToiletImageUpload = uploadFile(
         roomData.toilet.image,
         roomToiletImagePath
@@ -326,7 +168,7 @@ const ManagerAddARoom = () => {
       // Room Balcony Image
       let roomBalconyImageUpload = Promise.resolve(null);
       if (roomData.balcony.state) {
-        const roomBalconyImagePath = `rooms/${roomData.floor}/${roomData.name}/image/${roomData.name}-balcony.jpg`;
+        const roomBalconyImagePath = `rooms/${roomData.name}/image/${roomData.name}-balcony.jpg`;
         roomBalconyImageUpload = uploadFile(
           roomData.balcony.image,
           roomBalconyImagePath
@@ -335,7 +177,7 @@ const ManagerAddARoom = () => {
 
       // Room Beds Image
       const roomBedsImageUploads = roomData.beds.map((bed, i) => {
-        const roomBedsImagePath = `rooms/${roomData.floor}/${roomData.name}/image/${roomData.name}-${bed.bedNo}.jpg`;
+        const roomBedsImagePath = `rooms/${roomData.name}/image/${roomData.name}-${bed.bedNo}.jpg`;
         return uploadFile(bed.image, roomBedsImagePath);
       });
 
@@ -457,7 +299,7 @@ const ManagerAddARoom = () => {
         <div className="px-32 py-20">
           {uploading[0] && uploading[1] == "firebase" && (
             <div className="flex items-center gap-3">
-              <p className="text-dashboard font-semibold">Upliading Assets</p>
+              <p className="text-dashboard font-semibold">Uploading Assets</p>
               <CgSpinner className="text-xl text-dashboard animate-spin" />
             </div>
           )}
@@ -710,6 +552,7 @@ const ManagerAddARoom = () => {
                 )}
                 <input
                   hidden
+                  accept="image/*"
                   type="file"
                   name="balcony.image"
                   id="balcony.image"

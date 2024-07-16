@@ -53,15 +53,14 @@ const ManagerAllRoomsComponent = ({ user }) => {
     await Promise.all([...deletePromises, ...folderDeletePromises]);
   };
 
-  const deleteRoom = async (id, name, floor) => {
+  const deleteRoom = async (id, name) => {
     const confirmed = confirm("Are you sure to delete the room?");
     if (!confirmed) return;
-    console.log(id, name, floor);
     setDeleting(true);
     try {
       const { data } = await axios.delete(`/api/room?id=${id}`);
       if (data.success) {
-        const deleteRef = ref(storage, `rooms/${floor}/${name}`);
+        const deleteRef = ref(storage, `rooms/${name}`);
         await deleteFolderContents(deleteRef);
         await refetch();
         toast.success("Room deleted successfully");
@@ -149,6 +148,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                 <h3 className="text-lg font-medium">Pictures</h3>
                 <div className="flex items-center justify-center gap-3">
                   <Image
+                    unoptimized={true}
                     src={room.image.src}
                     alt={`Room ${room.name}`}
                     className="aspect-square rounded-full"
@@ -156,6 +156,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                     height={60}
                   />
                   <Image
+                    unoptimized={true}
                     src={room.sketch.src}
                     alt={`Room ${room.name} Sketch`}
                     className="aspect-square rounded-full"
@@ -163,6 +164,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                     height={60}
                   />
                   <Image
+                    unoptimized={true}
                     src={room.toilet.image.src}
                     alt={`Room ${room.name} Toilet`}
                     className="aspect-square rounded-full"
@@ -170,7 +172,12 @@ const ManagerAllRoomsComponent = ({ user }) => {
                     height={60}
                   />
                   <Image
-                    src={room.balcony.image.src || "/images/no-balcony.png"}
+                    unoptimized={true}
+                    src={
+                      room.balcony.balconyState
+                        ? room.balcony.image.src || "/images/no-balcony.png"
+                        : "/images/no-balcony.png"
+                    }
                     alt={`Room ${room.name} Balcony`}
                     className="aspect-square rounded-full"
                     width={60}
@@ -190,6 +197,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                       Bed No: {convertCamelCaseToCapitalized(bed.bedNo)}
                     </label>
                     <Image
+                      unoptimized={true}
                       src={bed.image.src}
                       alt={`Bed ${bed.bedNo}`}
                       className="aspect-square rounded-full"
@@ -202,7 +210,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
 
               <div className="flex flex-col items-center justify-center gap-10">
                 <FaDeleteLeft
-                  onClick={() => deleteRoom(room._id, room.name, room.floor)}
+                  onClick={() => deleteRoom(room._id, room.name)}
                   className="font-semibold text-2xl text-red-500 cursor-pointer duration-300 active:scale-90"
                 />
                 <FaEdit
