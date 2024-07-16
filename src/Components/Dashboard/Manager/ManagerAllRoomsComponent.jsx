@@ -11,6 +11,11 @@ import ManagerEditRoomComponent from "./ManagerEditRoomComponent";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { deleteObject, listAll, ref } from "firebase/storage";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "../dashboard.css";
 import { storage } from "../../../../firebase.config";
 
 const ManagerAllRoomsComponent = ({ user }) => {
@@ -93,7 +98,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
           {rooms.map((room) => (
             <div
               key={room._id}
-              className="shadow-md shadow-white rounded-lg p-6 flex items-center justify-between"
+              className="shadow-md shadow-white rounded-lg p-6 flex flex-col md:flex-row items-center justify-center md:justify-between gap-3 md:gap-0"
             >
               <div className="flex items-center justify-center gap-5">
                 <div className="flex flex-col items-start justify-center gap-1">
@@ -187,30 +192,40 @@ const ManagerAllRoomsComponent = ({ user }) => {
                   />
                 </div>
               </div>
-
-              <div className="flex flex-col items-center justify-center gap-3">
+              <div className="flex flex-col items-center justify-center gap-3 rounded-md">
                 <h3 className="text-lg font-medium">Beds</h3>
-                {room.beds.map((bed) => (
-                  <div
-                    key={bed._id}
-                    className="bg-gray-500 p-4 rounded-lg shadow-sm mb-4 flex items-center justify-center gap-2"
-                  >
-                    <label className="block text-slate-100 font-semibold">
-                      Bed No: {convertCamelCaseToCapitalized(bed.bedNo)}
-                    </label>
-                    <Image
-                      unoptimized={true}
-                      src={bed.image.src}
-                      alt={`Bed ${bed.bedNo}`}
-                      className="aspect-square rounded-full"
-                      width={60}
-                      height={60}
-                    />
-                  </div>
-                ))}
+                <Swiper
+                  modules={[Autoplay, Pagination]}
+                  autoplay={{
+                    delay: 1000,
+                    disableOnInteraction: false,
+                  }}
+                  pagination={{
+                    clickable: true,
+                  }}
+                  className="w-[200px] rounded-md p-0 m-0 pagination-little-lower"
+                >
+                  {room.beds.map((bed) => (
+                    <SwiperSlide className="rounded-md" key={bed._id}>
+                      <div className="bg-gray-500 p-4 shadow-sm mb-4 flex items-center justify-center gap-2 rounded-md">
+                        <label className="block text-slate-100 font-semibold">
+                          Bed No: {convertCamelCaseToCapitalized(bed.bedNo)}
+                        </label>
+                        <Image
+                          unoptimized={true}
+                          src={bed.image.src}
+                          alt={`Bed ${bed.bedNo}`}
+                          className="aspect-square rounded-full"
+                          width={60}
+                          height={60}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
 
-              <div className="flex flex-col items-center justify-center gap-10">
+              <div className="flex flex-row md:flex-col items-center justify-center gap-5 md:gap-10 mt-5 md:mt-0">
                 <FaDeleteLeft
                   onClick={() => deleteRoom(room._id, room.name)}
                   className="font-semibold text-2xl text-red-500 cursor-pointer duration-300 active:scale-90"

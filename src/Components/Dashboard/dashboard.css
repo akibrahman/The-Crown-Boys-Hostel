@@ -173,3 +173,8 @@
 }
 
 /* Manager Dashboard Meal Rate Calculating Loader ------End------ */
+
+.pagination-little-lower
+  .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
+  bottom: -5px !important; /* Adjust the value as needed */
+}

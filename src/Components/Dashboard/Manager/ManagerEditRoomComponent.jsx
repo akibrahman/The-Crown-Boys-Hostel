@@ -325,13 +325,13 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
         onRequestClose={closeModal}
         style={customStyles}
       >
-        <div className="mx-auto p-6 bg-dashboard text-slate-100">
+        <div className="mx-auto p-6 bg-dashboard text-white">
           <h1 className="text-2xl font-bold mb-4 text-center">Update Room</h1>
           <form onSubmit={handleSubmit} className="shadow-md rounded-lg p-6">
             {/* Room Information Fields */}
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-0 bg-gray-600 p-4 rounded-md mb-4">
               <div className="flex flex-col gap-2">
-                <label className="block text-slate-100 font-semibold">
+                <label className="block text-white font-semibold">
                   Room Name
                 </label>
                 <select
@@ -357,7 +357,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="block text-slate-100 font-semibold">
+                <label className="block text-white font-semibold">
                   Type
                 </label>
                 <select
@@ -373,7 +373,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="block text-slate-100 font-semibold">
+                <label className="block text-white font-semibold">
                   Floor
                 </label>
                 <select
@@ -397,7 +397,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="block text-slate-100 font-semibold">
+                <label className="block text-white font-semibold">
                   Toilet Type
                 </label>
                 <select
@@ -425,7 +425,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
 
             <div className="mb-4 bg-gray-600 rounded-md flex flex-col md:flex-row items-center justify-center md:justify-around gap-4 md:gap-0 p-4">
               <div className="flex flex-col items-center gap-2 p-4">
-                <label className="block text-slate-100 text-lg font-semibold">
+                <label className="block text-white text-lg font-semibold">
                   Video
                 </label>
                 <video
@@ -437,7 +437,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                   controls
                 ></video>
                 <label htmlFor="video">
-                  <FaPencil className="border-2 rounded-full p-1 text-3xl border-dashboard text-slate-100 cursor-pointer" />
+                  <FaPencil className="border-2 rounded-full p-1 text-3xl border-dashboard text-white cursor-pointer" />
                 </label>
                 <input
                   hidden
@@ -460,7 +460,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
               </div>
 
               <div className="flex items-center justify-center gap-3">
-                <label className="block text-slate-100 font-semibold">
+                <label className="block text-white font-semibold">
                   Balcony
                 </label>
                 <span
@@ -500,7 +500,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 <div className="flex flex-col items-center gap-2">
                   <label
                     htmlFor="balcony.image"
-                    className="block text-slate-100 font-semibold"
+                    className="block text-white font-semibold"
                   >
                     Balcony Image
                   </label>
@@ -567,7 +567,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
               <div className="flex flex-col items-center gap-2">
                 <label
                   htmlFor="sketch"
-                  className="block text-slate-100 font-semibold"
+                  className="block text-white font-semibold"
                 >
                   Room Sketch
                 </label>
@@ -625,7 +625,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
               </div>
 
               <div htmlFor="image" className="flex flex-col items-center gap-2">
-                <label className="block text-slate-100 font-semibold">
+                <label className="block text-white font-semibold">
                   Room Image
                 </label>
                 {roomData.image.src ? (
@@ -683,7 +683,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
               <div className="flex flex-col items-center gap-2">
                 <label
                   htmlFor="toilet.image"
-                  className="block text-slate-100 font-semibold"
+                  className="block text-white font-semibold"
                 >
                   Toilet Image
                 </label>
@@ -762,7 +762,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                   className="bg-gray-600 p-4 rounded-md shadow-sm mb-4 flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-3"
                 >
                   <div className="flex flex-col gap-2">
-                    <label className="block text-slate-100 font-semibold">
+                    <label className="block text-white font-semibold">
                       Bed No
                     </label>
                     <input
@@ -776,7 +776,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="block text-slate-100 font-semibold">
+                    <label className="block text-white font-semibold">
                       User Rent
                     </label>
                     <input
@@ -790,7 +790,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="block text-slate-100 font-semibold">
+                    <label className="block text-white font-semibold">
                       Display Rent
                     </label>
                     <input
@@ -804,7 +804,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="block text-slate-100 font-semibold">
+                    <label className="block text-white font-semibold">
                       Booking Charge
                     </label>
                     <input
@@ -818,7 +818,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                   </div>
 
                   <div className="flex flex-col items-center gap-2">
-                    <label className="block text-slate-100 font-semibold">
+                    <label className="block text-white font-semibold">
                       Bed Image
                     </label>
 
