@@ -58,10 +58,12 @@ const ManagerAllRoomsComponent = ({ user }) => {
     if (!confirmed) return;
     setDeleting(true);
     try {
-      const { data } = await axios.delete(`/api/room?id=${id}`);
+      const { data } = await axios.delete(`/api/room?id=${id}&name=${name}`);
       if (data.success) {
-        const deleteRef = ref(storage, `rooms/${name}`);
-        await deleteFolderContents(deleteRef);
+        if (data.count == 0) {
+          const deleteRef = ref(storage, `rooms/${name}`);
+          await deleteFolderContents(deleteRef);
+        }
         await refetch();
         toast.success("Room deleted successfully");
       } else {
@@ -85,26 +87,26 @@ const ManagerAllRoomsComponent = ({ user }) => {
         closeModal={closeModal}
         refetch={refetch}
       />
-      <div className="min-h-full mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-4">Rooms</h1>
+      <div className="min-h-full mx-auto p-6 bg-dashboard text-slate-100">
+        <h1 className="text-2xl font-bold mb-4 text-center">Rooms</h1>
         <div className="flex flex-col gap-6">
           {rooms.map((room) => (
             <div
               key={room._id}
-              className="bg-white shadow-md shadow-dashboard rounded-lg p-6 flex items-center justify-between"
+              className="shadow-md shadow-white rounded-lg p-6 flex items-center justify-between"
             >
               <div className="flex items-center justify-center gap-5">
                 <div className="flex flex-col items-start justify-center gap-1">
-                  <label className="block text-gray-700 font-semibold">
+                  <label className="block text-slate-100 font-semibold">
                     Name: {convertCamelCaseToCapitalized(room.name)}
                   </label>
-                  <label className="block text-gray-700 font-semibold">
+                  <label className="block text-slate-100 font-semibold">
                     Block: {convertCamelCaseToCapitalized(room.block)}
                   </label>
-                  <label className="block text-gray-700 font-semibold">
+                  <label className="block text-slate-100 font-semibold">
                     Type: {convertCamelCaseToCapitalized(room.type)}
                   </label>
-                  <label className="block text-gray-700 font-semibold">
+                  <label className="block text-slate-100 font-semibold">
                     Floor: {room.floor}
                     {room.floor == 1 ? (
                       <sup>st</sup>
@@ -119,14 +121,14 @@ const ManagerAllRoomsComponent = ({ user }) => {
                   </label>
                 </div>
                 <div className="flex flex-col items-start justify-center gap-1">
-                  <label className="block text-gray-700 font-semibold">
+                  <label className="block text-slate-100 font-semibold">
                     Seats: {room.seats}
                   </label>
-                  <label className="block text-gray-700 font-semibold">
+                  <label className="block text-slate-100 font-semibold">
                     Balcony:{" "}
                     {room.balcony.balconyState ? "Available" : "Not Available"}
                   </label>
-                  <label className="block text-gray-700 font-semibold">
+                  <label className="block text-slate-100 font-semibold">
                     Toilet:{" "}
                     {convertCamelCaseToCapitalized(room.toilet.toiletType)}
                   </label>
@@ -144,7 +146,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                 ></video>
               </div>
 
-              <div className="flex flex-col items-center gap-6">
+              <div className="flex flex-col items-center gap-6 bg-gray-500 p-5 rounded-md">
                 <h3 className="text-lg font-medium">Pictures</h3>
                 <div className="flex items-center justify-center gap-3">
                   <Image
@@ -191,9 +193,9 @@ const ManagerAllRoomsComponent = ({ user }) => {
                 {room.beds.map((bed) => (
                   <div
                     key={bed._id}
-                    className="bg-gray-100 p-4 rounded-lg shadow-sm mb-4 flex items-center justify-center gap-2"
+                    className="bg-gray-500 p-4 rounded-lg shadow-sm mb-4 flex items-center justify-center gap-2"
                   >
-                    <label className="block text-gray-700 font-semibold">
+                    <label className="block text-slate-100 font-semibold">
                       Bed No: {convertCamelCaseToCapitalized(bed.bedNo)}
                     </label>
                     <Image

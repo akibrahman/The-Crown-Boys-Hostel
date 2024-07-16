@@ -33,7 +33,7 @@ export const POST = async (req) => {
       name: data.roomName,
       floor: parseInt(data.roomFloor),
       video: { src: data.roomVideoData.src, path: data.roomVideoData.path },
-      block: data.roomName.split()[0] == "a" ? "a" : "b",
+      block: data.roomName.split("")[0] == "a" ? "a" : "b",
       type: data.roomType,
       sketch: { src: data.roomSketchData.src, path: data.roomSketchData.path },
       seats: data.roomBeds.length,
@@ -97,11 +97,14 @@ export const PUT = async (req) => {
 export const DELETE = async (req) => {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
+  const name = searchParams.get("name");
   try {
     await Room.findByIdAndDelete(id);
+    const existingRooms = await Room.find({ name });
     return NextResponse.json({
       success: true,
       msg: "Room deleted successfully",
+      count: existingRooms.length,
     });
   } catch (error) {
     console.log(error);
