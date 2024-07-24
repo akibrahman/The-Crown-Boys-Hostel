@@ -71,8 +71,6 @@ export const POST = async (req) => {
 export const PUT = async (req) => {
   try {
     const data = await req.json();
-    console.log(data.roomToiletType);
-    console.log(data.roomBalconyState);
     await Room.findByIdAndUpdate(data._id, {
       $set: {
         name: data.roomName,
@@ -83,6 +81,25 @@ export const PUT = async (req) => {
         beds: data.roomBeds,
         seats: data.roomBeds.length,
       },
+    });
+
+    return NextResponse.json({
+      success: true,
+      msg: "Room updated successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, msg: error.message },
+      { status: 500 }
+    );
+  }
+};
+export const PATCH = async (req) => {
+  try {
+    const data = await req.json();
+    await Room.findByIdAndUpdate(data._id, {
+      beds: data.beds,
     });
 
     return NextResponse.json({

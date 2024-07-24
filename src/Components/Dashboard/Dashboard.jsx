@@ -48,11 +48,11 @@ import BlockMsg from "../BlockMsg/BlockMsg";
 import UnderConstruction from "../UnderConstruction/UnderConstruction";
 import OwnerControlPanel from "./Owner/OwnerControlPanel";
 import ManagerAddARoom from "./Manager/ManagerAddARoom";
-import { BsHouseAdd } from "react-icons/bs";
+import { BsHouseAdd, BsHouses } from "react-icons/bs";
 import ManagerAllRoomsComponent from "./Manager/ManagerAllRoomsComponent";
 
 const Dashboard = ({ user }) => {
-  useUnloadWarning("Are");
+  // useUnloadWarning("Are");
   const route = useRouter();
   const searchParams = useSearchParams();
   let displayData = searchParams.get("displayData");
@@ -631,16 +631,14 @@ const Dashboard = ({ user }) => {
                           : "hover:bg-gray-700"
                       }`}
                     >
-                      <BsHouseAdd
+                      <BsHouses
                         className={`text-gray-400 md:text-xl ${
                           displayData == "managerAllRooms"
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
-                      <span className="ms-3 text-sm md:text-base">
-                        Rooms
-                      </span>
+                      <span className="ms-3 text-sm md:text-base">Rooms</span>
                     </div>
                   </Link>
                   <Link

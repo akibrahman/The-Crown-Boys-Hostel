@@ -1,5 +1,4 @@
 "use client";
-import PreLoader from "@/Components/PreLoader/PreLoader";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -18,6 +17,8 @@ import "swiper/css/pagination";
 import "../dashboard.css";
 import { storage } from "../../../../firebase.config";
 import { CgSpinner } from "react-icons/cg";
+import { roomStructure } from "@/utils/rooms";
+import ManagerManageRoom from "./ManagerManageRoom";
 
 const ManagerAllRoomsComponent = ({ user }) => {
   const route = useRouter();
@@ -40,7 +41,26 @@ const ManagerAllRoomsComponent = ({ user }) => {
     enabled: user?._id ? true : false,
   });
 
-  console.log(rooms);
+  const { data: users } = useQuery({
+    queryKey: ["users", "manager", "for-bed-assign", user?._id],
+    queryFn: async ({ queryKey }) => {
+      const { data } = await axios.get(
+        `/api/clients/getclients?id=${queryKey[3]}&onlyApproved=0&clientName=`
+      );
+      const array = data.clients;
+      array.sort((b, a) => {
+        if (a.isClientVerified === b.isClientVerified) {
+          return 0;
+        } else if (a.isClientVerified) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+      return array;
+    },
+    enabled: user && user?._id ? true : false,
+  });
 
   const [editRoomId, setEditRoomId] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -91,10 +111,72 @@ const ManagerAllRoomsComponent = ({ user }) => {
     }
   };
 
+  const roomManage = async (room) => {
+    const targetRoom = roomStructure.find((roomm) => roomm.name === room.name);
+    if (!targetRoom) {
+      console.log(`Room with name ${room.name} not found in roomStructure.`);
+      return;
+    }
+    const bedNumbers = room.beds.map((bed) => bed.bedNo);
+    const missingBeds = targetRoom.beds.filter(
+      (bed) => !bedNumbers.includes(bed)
+    );
+    const extraBeds = bedNumbers.filter(
+      (bed) => !targetRoom.beds.includes(bed)
+    );
+    if (missingBeds.length === 0 && extraBeds.length === 0) {
+      // Here the main function
+      setTargetManageRoom(room);
+      openManageRoomModal();
+    } else {
+      if (missingBeds.length > 0) {
+        console.log(
+          `The bed(s) missing: ${missingBeds
+            .map((bed) => convertCamelCaseToCapitalized(bed))
+            .join(", ")}`
+        );
+        toast.error(
+          `The bed(s) missing: ${missingBeds
+            .map((bed) => convertCamelCaseToCapitalized(bed))
+            .join(", ")}`
+        );
+      }
+      if (extraBeds.length > 0) {
+        console.log(
+          `Extra bed(s) which is/are not in the Room Structure: ${extraBeds
+            .map((bed) => convertCamelCaseToCapitalized(bed))
+            .join(", ")}`
+        );
+        toast.error(
+          `Extra bed(s) which is/are not in the Room Structure: ${extraBeds
+            .map((bed) => convertCamelCaseToCapitalized(bed))
+            .join(", ")}`
+        );
+      }
+    }
+  };
+
   // if (!rooms) return <PreLoader />;
+  const [manageRoomModalIsOpen, setManageRoomModalIsOpen] = useState(false);
+  const [targetManageRoom, setTargetManageRoom] = useState(null);
+
+  const openManageRoomModal = () => {
+    setManageRoomModalIsOpen(true);
+  };
+  const closeManageRoomModal = () => {
+    setManageRoomModalIsOpen(false);
+    setTargetManageRoom(null);
+  };
 
   return (
     <>
+      <ManagerManageRoom
+        isOpen={manageRoomModalIsOpen}
+        onRequestClose={closeManageRoomModal}
+        room={targetManageRoom}
+        refetch={refetch}
+        users={users}
+      />
       <ManagerEditRoomComponent
         id={editRoomId}
         modalIsOpen={modalIsOpen}
@@ -145,7 +227,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
           )}
           {!rooms && (
             <p className="font-semibold py-20 text-center text-gray-500 flex items-center justify-center gap-2">
-              Loading <CgSpinner className="text-xl animate-spin"/>
+              Loading <CgSpinner className="text-xl animate-spin" />
             </p>
           )}
           {rooms?.map((room) => (
@@ -197,7 +279,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                 <video
                   src={room.video.src}
                   title={`Room ${room.name} Video`}
-                  className="aspect-auto"
+                  className="aspect-auto rounded-md"
                   height={50}
                   width={100}
                   controls
@@ -278,7 +360,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                 </Swiper>
               </div>
 
-              <div className="flex flex-row md:flex-col items-center justify-center gap-5 md:gap-10 mt-5 md:mt-0">
+              <div className="flex flex-row md:flex-col items-center justify-center gap-5 mt-5 md:mt-0">
                 {deleting ? (
                   <CgSpinner className="font-semibold text-2xl text-red-500 animate-spin" />
                 ) : (
@@ -287,6 +369,13 @@ const ManagerAllRoomsComponent = ({ user }) => {
                     className="font-semibold text-2xl text-red-500 cursor-pointer duration-300 active:scale-90"
                   />
                 )}
+                <button
+                  type="button"
+                  onClick={() => roomManage(room)}
+                  className="duration-300 px-4 py-1 rounded-full text-dashboard bg-white font-bold active:scale-90"
+                >
+                  Manage
+                </button>
                 <FaEdit
                   onClick={() => {
                     setEditRoomId(room._id);
