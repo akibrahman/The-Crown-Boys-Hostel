@@ -28,6 +28,26 @@ const Receipt = ({
     state: false,
     method: "",
   });
+
+  const [isRPaid, setIsRPaid] = useState(isRentPaid);
+
+  const rentStatusChange = async () => {
+    setIsMoneyAdding({
+      id,
+      state: true,
+      method: "rent",
+    });
+    setIsRPaid(!isRPaid);
+    await axios.patch("/api/bills/getbills", {
+      billId: id,
+      rentStatus: !isRPaid,
+      method: "rent",
+    });
+    if (refetch) await refetch();
+    setIsMoneyAdding({ id: "", state: false, method: "" });
+    toast.success("Rent status updated");
+  };
+
   const set = async () => {
     if (managerAmount != null && managerAmount >= 0) {
       setIsMoneyAdding({
@@ -128,33 +148,37 @@ const Receipt = ({
           <p className="text-white text-lg">{userName}</p>
         </div>
         <div className="flex items-center justify-center gap-2">
-          <p>Rent paid</p>
+          <p className="w-max">Rent paid</p>
           {isManageable ? (
-            <span
-              onClick={() => {
-                alert();
-              }}
-              className="relative w-6 h-6 flex items-center justify-center bg-white border-2 border-gray-300 rounded-md transition-colors duration-200 ease-in-out cursor-pointer"
-            >
-              <svg
-                className={`w-4 h-4 text-green-500 transition-opacity duration-200 ease-in-out ${
-                  isRentPaid ? "opacity-100" : "opacity-0"
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+            isMoneyAdding.id == id &&
+            isMoneyAdding.method == "rent" &&
+            isMoneyAdding.state ? (
+              <CgSpinner className="text-xl animate-spin text-white" />
+            ) : (
+              <span
+                onClick={rentStatusChange}
+                className="relative w-6 h-6 flex items-center justify-center bg-white border-2 border-gray-300 rounded-md transition-colors duration-200 ease-in-out cursor-pointer"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
-            </span>
+                <svg
+                  className={`w-4 h-4 text-green-500 transition-opacity duration-200 ease-in-out ${
+                    isRPaid ? "opacity-100" : "opacity-0"
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
+                </svg>
+              </span>
+            )
           ) : isRentPaid ? (
-            <TiTick className="text-xl text-green-500" />
+            <TiTick className="text-2xl text-white" />
           ) : (
             <FaTimes className="text-xl text-red-500" />
           )}

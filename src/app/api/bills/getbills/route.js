@@ -29,7 +29,7 @@ export const GET = async (req) => {
 };
 export const PATCH = async (req) => {
   try {
-    const { billId, amount, method } = await req.json();
+    const { billId, amount, method, rentStatus } = await req.json();
     if (method == "set") {
       const bill = await Bill.findById(billId);
       bill.paidBillInBDT = amount;
@@ -44,6 +44,9 @@ export const PATCH = async (req) => {
       const bill = await Bill.findById(billId);
       bill.paidBillInBDT = bill.paidBillInBDT - amount;
       await bill.save();
+      return NextResponse.json({ success: true });
+    } else if (method == "rent") {
+      await Bill.findByIdAndUpdate(billId, { isRentPaid: rentStatus });
       return NextResponse.json({ success: true });
     } else {
       throw new Error();

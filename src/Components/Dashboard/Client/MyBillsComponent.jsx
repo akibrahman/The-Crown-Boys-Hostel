@@ -44,7 +44,9 @@ const MyBillsComponent = ({ user }) => {
     : 0;
   return (
     <div className="px-10 min-h-full bg-dashboard text-slate-100">
-      <p className="text-center font-medium text-xl text-white py-4">My Bills</p>
+      <p className="text-center font-medium text-xl text-white py-4">
+        My Bills
+      </p>
       {totalDue > 0 ? (
         <div className="">
           <p className="text-center dark:text-red-500">
@@ -81,6 +83,7 @@ const MyBillsComponent = ({ user }) => {
               status={bill.status}
               charges={bill?.charges}
               isManageable={false}
+              isRentPaid={bill.isRentPaid}
             />
           ))}
       </div>
