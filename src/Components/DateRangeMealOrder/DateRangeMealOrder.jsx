@@ -33,25 +33,50 @@ const DateRangeMealOrder = ({
     socket.current = io("wss://the-crown-socket-server.glitch.me");
   }, []);
 
+  const isLastDayOfCurrentMonthInBangladeshFn = () => {
+    const today = new Date();
+    today.setUTCHours(today.getUTCHours() + 6);
+    const currentMonth = today.getUTCMonth();
+    const currentYear = today.getUTCFullYear();
+    const lastDayOfMonth = new Date(Date.UTC(currentYear, currentMonth + 1, 0));
+    return {
+      isLastDay:
+        today.getUTCDate() === lastDayOfMonth.getUTCDate() &&
+        today.getUTCMonth() === lastDayOfMonth.getUTCMonth() &&
+        today.getUTCFullYear() === lastDayOfMonth.getUTCFullYear(),
+    };
+  };
+  const isLastDayOfCurrentMonthInBangladesh =
+    isLastDayOfCurrentMonthInBangladeshFn();
+
   const dateSelected1 = async (selectedDate) => {
     if (
-      new Date(selectedDate).toLocaleDateString("en-BD", {
+      (new Date(selectedDate).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
       }) != currentMonth ||
-      parseInt(
-        new Date(selectedDate).toLocaleDateString("en-BD", {
-          year: "numeric",
-          timeZone: "Asia/Dhaka",
-        })
-      ) != currentYear
-      //    &&
-      // new Date(selectedDate).toLocaleDateString("en-BD", {
-      //   month: "long",
-      //   timeZone: "Asia/Dhaka",
-      // }) != nextMonth
+        parseInt(
+          new Date(selectedDate).toLocaleDateString("en-BD", {
+            year: "numeric",
+            timeZone: "Asia/Dhaka",
+          })
+        ) != currentYear) &&
+      new Date(selectedDate).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      }) != nextMonth
     ) {
       toast.error("Invalid Date Selection!");
+      setDate1(null);
+      return;
+    } else if (
+      !isLastDayOfCurrentMonthInBangladesh.isLastDay &&
+      new Date(selectedDate).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      }) == nextMonth
+    ) {
+      toast.error("Next month cann't be selected now!");
       setDate1(null);
       return;
     } else if (
@@ -83,23 +108,32 @@ const DateRangeMealOrder = ({
       setDate2(null);
       return;
     } else if (
-      new Date(selectedDate).toLocaleDateString("en-BD", {
+      (new Date(selectedDate).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
       }) !== currentMonth ||
-      parseInt(
-        new Date(selectedDate).toLocaleDateString("en-BD", {
-          year: "numeric",
-          timeZone: "Asia/Dhaka",
-        })
-      ) !== currentYear
-      //   &&
-      // new Date(selectedDate).toLocaleDateString("en-BD", {
-      //   month: "long",
-      //   timeZone: "Asia/Dhaka",
-      // }) != nextMonth
+        parseInt(
+          new Date(selectedDate).toLocaleDateString("en-BD", {
+            year: "numeric",
+            timeZone: "Asia/Dhaka",
+          })
+        ) !== currentYear) &&
+      new Date(selectedDate).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      }) != nextMonth
     ) {
       toast.error("Invalid Date Selection!");
+      setDate2(null);
+      return;
+    } else if (
+      !isLastDayOfCurrentMonthInBangladesh.isLastDay &&
+      new Date(selectedDate).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      }) == nextMonth
+    ) {
+      toast.error("Next month cann't be selected now!");
       setDate2(null);
       return;
     }
