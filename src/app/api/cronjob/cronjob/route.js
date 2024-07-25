@@ -527,6 +527,7 @@ export const GET = async (req) => {
               }
             ),
             amount: 0,
+            details: [],
           });
         }
         const newMarket = new Market({

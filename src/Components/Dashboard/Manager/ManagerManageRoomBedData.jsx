@@ -1,12 +1,15 @@
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import axios from "axios";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import Swal from "sweetalert2";
 
 const ManagerManageRoomBedData = ({ selectedBed, room, refetch, users }) => {
+  const route = useRouter();
+
   const [isBooked, setIsBooked] = useState(selectedBed[1].isBooked);
   const [userRent, setUserRent] = useState(selectedBed[1].userRent);
   const [user, setUser] = useState(selectedBed[1].user);
@@ -56,9 +59,21 @@ const ManagerManageRoomBedData = ({ selectedBed, room, refetch, users }) => {
           roomNumber: room.name,
         });
         if (!data2.success) {
-          toast.error(
-            "Room data is not matching with user's data, First edit user's data"
-          );
+          const result = await Swal.fire({
+            title: "Do you want to edit user?",
+            text: "Room data is not matching with user's data, First edit user's data",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1493EA",
+            cancelButtonColor: "#EF4444",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            background: "#141E30",
+            color: "#fff",
+          });
+          if (result.isConfirmed) {
+            route.push(`/userDetails/edit/${user}`);
+          }
           setLoading(false);
           return;
         }
