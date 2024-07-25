@@ -35,20 +35,21 @@ const DateRangeMealOrder = ({
 
   const dateSelected1 = async (selectedDate) => {
     if (
-      (new Date(selectedDate).toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      }) !== currentMonth ||
-        parseInt(
-          new Date(selectedDate).toLocaleDateString("en-BD", {
-            year: "numeric",
-            timeZone: "Asia/Dhaka",
-          })
-        ) !== currentYear) &&
       new Date(selectedDate).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
-      }) != nextMonth
+      }) != currentMonth ||
+      parseInt(
+        new Date(selectedDate).toLocaleDateString("en-BD", {
+          year: "numeric",
+          timeZone: "Asia/Dhaka",
+        })
+      ) != currentYear
+      //    &&
+      // new Date(selectedDate).toLocaleDateString("en-BD", {
+      //   month: "long",
+      //   timeZone: "Asia/Dhaka",
+      // }) != nextMonth
     ) {
       toast.error("Invalid Date Selection!");
       setDate1(null);
@@ -82,20 +83,21 @@ const DateRangeMealOrder = ({
       setDate2(null);
       return;
     } else if (
-      (new Date(selectedDate).toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      }) !== currentMonth ||
-        parseInt(
-          new Date(selectedDate).toLocaleDateString("en-BD", {
-            year: "numeric",
-            timeZone: "Asia/Dhaka",
-          })
-        ) !== currentYear) &&
       new Date(selectedDate).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
-      }) != nextMonth
+      }) !== currentMonth ||
+      parseInt(
+        new Date(selectedDate).toLocaleDateString("en-BD", {
+          year: "numeric",
+          timeZone: "Asia/Dhaka",
+        })
+      ) !== currentYear
+      //   &&
+      // new Date(selectedDate).toLocaleDateString("en-BD", {
+      //   month: "long",
+      //   timeZone: "Asia/Dhaka",
+      // }) != nextMonth
     ) {
       toast.error("Invalid Date Selection!");
       setDate2(null);
