@@ -32,8 +32,48 @@ export const GET = async (req) => {
         pass: process.env.GMAIL_APP_PASS,
       },
     });
-    // MIM SMS
-    // Alpha Net BD
+    // Test --------------------------------------------
+    if (true) {
+      console.log("Test Run Started");
+      let currentDate = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      let currentYear = new Date(currentDate).getFullYear();
+      let currentMonthNumber = new Date(currentDate).getMonth();
+      let currentMonth = new Date(
+        currentYear,
+        currentMonthNumber,
+        1
+      ).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+      let nextMonth;
+      let nextYear;
+      if (currentMonthNumber < 11) {
+        nextMonth = new Date(
+          currentYear,
+          currentMonthNumber + 1,
+          1
+        ).toLocaleDateString("en-BD", {
+          month: "long",
+          timeZone: "Asia/Dhaka",
+        });
+        nextYear = currentYear;
+      } else {
+        nextMonth = new Date(currentYear + 1, 0, 1).toLocaleDateString(
+          "en-BD",
+          {
+            month: "long",
+            timeZone: "Asia/Dhaka",
+          }
+        );
+        nextYear = currentYear + 1;
+      }
+      //============================== Test Run Goes Here=========
+      console.log("Test Run Finished");
+    }
+
     //!!!!!!!!!!!!!!!!!!!!
     const isLastDayOfCurrentMonthInBangladesh = () => {
       const today = new Date();
@@ -75,6 +115,7 @@ export const GET = async (req) => {
 
     //! Last day of any month------------------------------
     if (aboutLastDayOfCurrentMonth.isLastDay) {
+      console.log("Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -175,7 +216,6 @@ export const GET = async (req) => {
           bill.totalLunch = totalLunch;
           bill.totalDinner = totalDinner;
           bill.totalBillInBDT = totalBillInBDT;
-          // totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
           bill.status = "calculated";
           await bill.save();
           emailHtml = render(
@@ -204,7 +244,6 @@ export const GET = async (req) => {
           bill.totalDinner = totalDinner;
           bill.totalBillInBDT = totalBillInBDT;
           bill.paidBillInBDT = totalBillInBDT;
-          // totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
           bill.status = "calculated";
           await bill.save();
           const nextBill = await Bill.findOne({
@@ -348,10 +387,15 @@ export const GET = async (req) => {
           marketId: market._id,
           month: currentMonth,
           year: currentYear,
-          totalMarketAmountInBDT: market.data.reduce(
-            (accumulator, currentValue) => accumulator + currentValue.amount,
-            0
-          ),
+          totalMarketAmountInBDT: market.data.reduce((a, c) => {
+            return (
+              a +
+              c.details.reduce((total, market) => {
+                let value = Object.values(market)[0];
+                return total + value;
+              }, 0)
+            );
+          }, 0),
           totalMeal,
           mealRate: (
             market.data.reduce(
@@ -394,9 +438,11 @@ export const GET = async (req) => {
           </div>`,
       };
       await transport.sendMail(mailOptions2);
+      console.log("Last Day Run Finished");
     }
     //! Second Last day of any month-----------------------
     if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
+      console.log("Second Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -559,7 +605,9 @@ export const GET = async (req) => {
           </div>`,
       };
       await transport.sendMail(mailOptions);
+      console.log("Second Last Day Run Finished");
     }
+
     console.log("Runned successfully");
     return NextResponse.json({ success: true, msg: "Runned successfully" });
   } catch (error) {
