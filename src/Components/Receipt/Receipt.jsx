@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { FaTimes } from "react-icons/fa";
+import { TiTick } from "react-icons/ti";
 
 const Receipt = ({
   id,
@@ -18,6 +20,8 @@ const Receipt = ({
   setManagerAmount,
   userName,
   isManageable = false,
+  refetch,
+  isRentPaid,
 }) => {
   const [isMoneyAdding, setIsMoneyAdding] = useState({
     id: "",
@@ -38,6 +42,7 @@ const Receipt = ({
       });
       setManagerAmount(null);
       setIsMoneyAdding({ id: "", state: false, method: "" });
+      if (refetch) await refetch();
       toast.success("Amount updated");
     } else {
       toast.error("Please enter amount");
@@ -58,6 +63,7 @@ const Receipt = ({
       });
       setManagerAmount(null);
       setIsMoneyAdding({ id: "", state: false, method: "" });
+      if (refetch) await refetch();
       toast.success("Amount updated");
     } else {
       toast.error("Please enter amount");
@@ -77,6 +83,7 @@ const Receipt = ({
       });
       setManagerAmount(null);
       setIsMoneyAdding({ id: "", state: false, method: "" });
+      if (refetch) await refetch();
       toast.success("Amount updated");
     } else {
       toast.error("Please enter amount");
@@ -95,6 +102,7 @@ const Receipt = ({
       method: "set",
     });
     setIsMoneyAdding({ id: "", state: false, method: "" });
+    if (refetch) await refetch();
     toast.success("Made paid");
   };
 
@@ -114,9 +122,43 @@ const Receipt = ({
       >
         <p className="text-white text-lg text-right">The Crown Inc.</p>
       </div>
-      <div className="bg-blue-500 px-12 py-3">
-        <p className="text-white">Bill For</p>
-        <p className="text-white text-lg">{userName}</p>
+      <div className="bg-blue-500 px-12 py-3 flex items-center justify-between">
+        <div className="">
+          <p className="text-white">Bill For</p>
+          <p className="text-white text-lg">{userName}</p>
+        </div>
+        <div className="flex items-center justify-center gap-2">
+          <p>Rent paid</p>
+          {isManageable ? (
+            <span
+              onClick={() => {
+                alert();
+              }}
+              className="relative w-6 h-6 flex items-center justify-center bg-white border-2 border-gray-300 rounded-md transition-colors duration-200 ease-in-out cursor-pointer"
+            >
+              <svg
+                className={`w-4 h-4 text-green-500 transition-opacity duration-200 ease-in-out ${
+                  isRentPaid ? "opacity-100" : "opacity-0"
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+            </span>
+          ) : isRentPaid ? (
+            <TiTick className="text-xl text-green-500" />
+          ) : (
+            <FaTimes className="text-xl text-red-500" />
+          )}
+        </div>
       </div>
 
       <div className="bg-white px-12 py-4 flex items-center justify-center gap-6 md:gap-0 md:justify-evenly flex-wrap md:flex-nowrap text-center">

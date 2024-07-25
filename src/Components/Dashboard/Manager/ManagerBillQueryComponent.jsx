@@ -273,6 +273,7 @@ const UserWise = ({ monthOrder, currentYearBangladesh, myClients }) => {
                   setManagerAmount={setManagerAmount}
                   charges={bill?.charges}
                   isManageable={true}
+                  isRentPaid={bill.isRentPaid}
                 />
               ))}
         </div>
@@ -294,7 +295,7 @@ const MonthWise = ({
   // const [result, setResult] = useState(null);
   const [managerAmount, setManagerAmount] = useState(null);
 
-  const { data: result } = useQuery({
+  const { data: result, refetch } = useQuery({
     queryKey: ["month-wise-bill", "Mmanager-only", month, year, name],
     queryFn: async ({ queryKey }) => {
       try {
@@ -412,6 +413,8 @@ const MonthWise = ({
                 setManagerAmount={setManagerAmount}
                 charges={bill?.charges}
                 isManageable={true}
+                isRentPaid={bill.isRentPaid}
+                refetch={refetch}
               />
             ))}
         </div>

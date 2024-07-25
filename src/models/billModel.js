@@ -37,6 +37,10 @@ const billSchema = new mongoose.Schema({
     type: String,
     default: "initiated",
   },
+  isRentPaid: {
+    type: Boolean,
+    default: false,
+  },
   charges: {
     type: [{}],
     default: [],

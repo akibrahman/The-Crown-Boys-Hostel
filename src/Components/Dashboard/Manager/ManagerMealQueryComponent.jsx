@@ -224,6 +224,7 @@ const ManagerMealQueryComponent = () => {
               setManagerAmount={setManagerAmount}
               charges={result.bill?.charges}
               isManageable={true}
+              isRentPaid={result.bill.isRentPaid}
             />
           </div>
         </div>
