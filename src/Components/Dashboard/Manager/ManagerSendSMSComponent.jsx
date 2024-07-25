@@ -1,6 +1,7 @@
 "use client";
 import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
+import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -150,6 +151,7 @@ const ManagerSendSMSComponent = () => {
                 className="w-[400px]"
                 onChange={(e) => setReceiver([e])}
                 options={clients}
+                styles={customStylesForReactSelect}
               />
             )}
             {sendState == "multiple" && (
@@ -158,6 +160,7 @@ const ManagerSendSMSComponent = () => {
                 isMulti={true}
                 onChange={(e) => setReceiver(e)}
                 options={clients}
+                styles={customStylesForReactSelect}
               />
             )}
           </div>

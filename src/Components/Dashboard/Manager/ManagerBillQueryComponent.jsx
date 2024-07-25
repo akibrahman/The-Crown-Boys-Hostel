@@ -2,6 +2,7 @@
 import PreLoader from "@/Components/PreLoader/PreLoader";
 import Receipt from "@/Components/Receipt/Receipt";
 import { AuthContext } from "@/providers/ContextProvider";
+import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext, useState } from "react";
@@ -77,7 +78,21 @@ const ManagerBillQueryComponent = () => {
     else setResult(null);
     setSearching(false);
   };
+
+  // Tam Menu
+  const [activeTab, setActiveTab] = useState({
+    tab: "Month Wise",
+    left: "31%",
+    width: "120px",
+  });
+  const tabs = [
+    { tab: "User Wise", left: "4%", width: "100px" },
+    { tab: "Month Wise", left: "31%", width: "120px" },
+    { tab: "Special Query", left: "62%", width: "135px" },
+  ];
+
   if (!myClients) return <PreLoader />;
+
   return (
     <>
       <div
@@ -98,10 +113,27 @@ const ManagerBillQueryComponent = () => {
           )}
         </div>
       </div>
-      <div className="min-h-full p-10 px-5 bg-dashboard text-slate-100">
-        <p className="text-center font-semibold text-2xl dark:text-white">
+      <div className="min-h-full p-5 bg-dashboard text-slate-100">
+        <p className="text-center font-semibold text-xl dark:text-white">
           Bill Query
         </p>
+        <div
+          className={`relative flex justify-center items-center gap-8 bg-[#44403C] w-max mx-auto px-7 py-2 rounded-full mt-4 z-10`}
+        >
+          <div
+            style={{ left: activeTab.left, width: activeTab.width }}
+            className={`absolute top-0 transition-all duration-300 h-full bg-dashboard rounded border border-[#44403C] z-20`}
+          ></div>
+          {tabs.map((tab, index) => (
+            <div
+              onClick={() => setActiveTab(tab)}
+              key={index}
+              className="z-30 cursor-pointer"
+            >
+              {tab.tab}
+            </div>
+          ))}
+        </div>
         <form
           onSubmit={searchBillQuery}
           className="flex flex-col md:flex-row items-center justify-center gap-4 my-6"
@@ -110,8 +142,9 @@ const ManagerBillQueryComponent = () => {
             <p className="text-sky-500 font-semibold">Select User : </p>
             <Select
               name="clients"
-              className="w-[200px] text-dashboard outline-none"
+              className="w-[200px]"
               options={myClients}
+              styles={customStylesForReactSelect}
             />
           </div>
           <div className="flex items-center gap-4">

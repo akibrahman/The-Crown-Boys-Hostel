@@ -14,6 +14,7 @@ import { FaArrowRight } from "react-icons/fa";
 import Select from "react-select";
 import { LuCalendarPlus } from "react-icons/lu";
 import "../../../app/globals.css";
+import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 
 const ManagerMealUpdatorComponent = () => {
   const { user } = useContext(AuthContext);
@@ -162,6 +163,7 @@ const ManagerMealUpdatorComponent = () => {
                 }}
                 className="w-[200px] text-dashboard outline-none"
                 options={clients}
+                styles={customStylesForReactSelect}
               />
             </div>
             <div className="flex flex-col md:flex-row justify-center items-center gap-10">

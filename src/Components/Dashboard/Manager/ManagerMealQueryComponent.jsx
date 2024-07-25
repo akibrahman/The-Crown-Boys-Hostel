@@ -3,6 +3,7 @@
 import PreLoader from "@/Components/PreLoader/PreLoader";
 import Receipt from "@/Components/Receipt/Receipt";
 import { AuthContext } from "@/providers/ContextProvider";
+import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext, useState } from "react";
@@ -86,6 +87,7 @@ const ManagerMealQueryComponent = () => {
             name="clients"
             className="w-[200px] text-dashboard outline-none"
             options={myClients}
+            styles={customStylesForReactSelect}
           />
         </div>
         <div className="flex items-center gap-4">
