@@ -275,7 +275,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                 </div>
               </div>
 
-              <div className="">
+              {/* <div className="">
                 <video
                   src={room.video.src}
                   title={`Room ${room.name} Video`}
@@ -284,7 +284,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
                   width={100}
                   controls
                 ></video>
-              </div>
+              </div> */}
 
               <div className="flex flex-col items-center gap-6 bg-gray-500 p-5 rounded-md">
                 <h3 className="text-lg font-medium">Pictures</h3>
