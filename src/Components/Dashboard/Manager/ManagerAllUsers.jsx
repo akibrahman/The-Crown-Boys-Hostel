@@ -334,8 +334,8 @@ const ManagerAllUsers = ({ user }) => {
                 width={60}
                 className="rounded-full aspect-square"
               />
-              <p>{client.floor}</p>
-              <p>{client.roomNumber}</p>
+              {/* <p>{client.floor}</p>
+              <p>{client.roomNumber}</p> */}
               <div className="md:w-[900px] md:overflow-x-hidden text-center md:text-left">
                 <p>{client.username}</p>
                 <p className="text-sm">{client.email}</p>

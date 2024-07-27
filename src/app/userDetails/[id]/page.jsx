@@ -1,14 +1,103 @@
-import { getClient } from "@/lib/blogs";
+"use client";
+import PreLoader from "@/Components/PreLoader/PreLoader";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { useReactToPrint } from "react-to-print";
 
-const page = async ({ params }) => {
+const Page = ({ params }) => {
   const { id } = params;
-  const client = await getClient(id);
-  console.log(client);
+  const componentRef = useRef();
+  const route = useRouter();
+
+  const { data: client, refetch: clientRefetch } = useQuery({
+    queryKey: ["userDetails", id],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/clients/getclient?id=${id}`);
+      return data.client;
+    },
+  });
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Details about ${client?.username} || The Crown Boys hostel`,
+    onBeforePrint: () => console.log("before printing..."),
+    onAfterPrint: () => console.log("after printing..."),
+  });
+
+  const [userfetching, setUserfetching] = useState([false, ""]);
+
+  const fetchNextUser = async () => {
+    setUserfetching([true, "next"]);
+    try {
+      const { data } = await axios.post("/api/clients/nextclient", { id });
+      if (data.success && data.nextId) {
+        route.push(data.nextId);
+        toast.success("Next user fetched");
+      } else if (data.success && !data.nextId) {
+        toast.error("No next user");
+      } else {
+        toast.error("Server error, try again");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Server error, try again");
+    } finally {
+      setUserfetching([false, ""]);
+    }
+  };
+
+  const fetchPrevUser = async () => {
+    setUserfetching([true, "prev"]);
+    try {
+      const { data } = await axios.post("/api/clients/prevclient", { id });
+      if (data.success && data.prevId) {
+        route.push(data.prevId);
+        toast.success("Previous user fetched");
+      } else if (data.success && !data.prevId) {
+        toast.error("No previous user");
+      } else {
+        toast.error("Server error, try again");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Server error, try again");
+    } finally {
+      setUserfetching([false, ""]);
+    }
+  };
+
+  if (!client) return <PreLoader />;
+
   return (
-    <div className="min-h-screen bg-dashboard text-white font-semibold">
-      <div class="bg-dashboard text-white">
+    <div className="min-h-screen bg-dashboard text-white font-semibold relative">
+      <div
+        onClick={fetchPrevUser}
+        className="h-8 w-8 flex items-center justify-center rounded-full bg-blue-500 text-white absolute top-5 left-5 duration-300 active:scale-90 cursor-pointer aspect-square"
+      >
+        {userfetching[0] && userfetching[1] == "prev" ? (
+          <CgSpinner className="text-lg animate-spin" />
+        ) : (
+          <FaArrowLeft className="text-lg" />
+        )}
+      </div>
+      <div
+        onClick={fetchNextUser}
+        className="h-8 w-8 flex items-center justify-center rounded-full bg-blue-500 text-white absolute top-5 right-5 duration-300 active:scale-90 cursor-pointer aspect-square"
+      >
+        {userfetching[0] && userfetching[1] == "next" ? (
+          <CgSpinner className="text-lg animate-spin" />
+        ) : (
+          <FaArrowRight className="text-lg" />
+        )}
+      </div>
+      <div ref={componentRef} class="bg-dashboard text-white">
         <div class="container mx-auto px-4 pb-16 pt-16">
           <div class="flex flex-wrap -mx-3">
             <div class="lg:w-1/3 md:w-1/2 w-full px-3 mb-6 md:mb-0">
@@ -41,6 +130,12 @@ const page = async ({ params }) => {
                     Edit
                   </button>
                 </Link>
+                <button
+                  onClick={handlePrint}
+                  className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-blue-500 active:scale-90 mt-3"
+                >
+                  Download PDF
+                </button>
               </div>
             </div>
             <div class="lg:w-2/3 md:w-1/2 w-full px-3">
@@ -272,4 +367,4 @@ const page = async ({ params }) => {
   );
 };
 
-export default page;
+export default Page;

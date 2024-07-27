@@ -50,3 +50,41 @@ export const POST = async (req) => {
     );
   }
 };
+
+export const GET = async (req) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "User ID is required" },
+        { status: 400 }
+      );
+    }
+
+    let pipeline = [
+      {
+        $unwind: "$beds",
+      },
+      {
+        $match: { "beds.user": userId },
+      },
+      {
+        $group: {
+          _id: null,
+          totalUserRent: { $sum: "$beds.userRent" },
+        },
+      },
+    ];
+
+    const result = await Room.aggregate(pipeline);
+
+    const totalRent = result.length > 0 ? result[0].totalUserRent : 0;
+
+    return NextResponse.json({ totalRent, success: true });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ success: false, error }, { status: 500 });
+  }
+};

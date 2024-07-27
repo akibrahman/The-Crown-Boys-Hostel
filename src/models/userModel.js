@@ -76,7 +76,7 @@ const userSchema = new mongoose.Schema({
   studentId: String,
   bloodGroup: String,
   institution: String,
-  messAddress: String,
+  messAddress: { type: String, default: "Shaplar Mor, Kamarpara, Uttara 10" },
   bkashNumber: String,
   manager: String,
   forgotPasswordToken: String,

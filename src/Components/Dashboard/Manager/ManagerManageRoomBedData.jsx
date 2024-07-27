@@ -30,8 +30,8 @@ const ManagerManageRoomBedData = ({ selectedBed, room, refetch, users }) => {
         });
         if (data.isExists) {
           const result = await Swal.fire({
-            title: "User already esists is another room",
-            text: `Room: ${convertCamelCaseToCapitalized(
+            title: "Do you want to add user here again?",
+            text: `User is already in: Room: ${convertCamelCaseToCapitalized(
               data.roomName
             )} -- bed No: ${convertCamelCaseToCapitalized(
               data.bedNo
