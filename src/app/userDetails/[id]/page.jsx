@@ -40,7 +40,7 @@ const Page = ({ params }) => {
     try {
       const { data } = await axios.post("/api/clients/nextclient", { id });
       if (data.success && data.nextId) {
-        route.push(data.nextId);
+        route.push(`/userDetails/${data.nextId}`);
         toast.success("Next user fetched");
       } else if (data.success && !data.nextId) {
         toast.error("No next user");
@@ -60,7 +60,7 @@ const Page = ({ params }) => {
     try {
       const { data } = await axios.post("/api/clients/prevclient", { id });
       if (data.success && data.prevId) {
-        route.push(data.prevId);
+        route.push(`/userDetails/${data.prevId}`);
         toast.success("Previous user fetched");
       } else if (data.success && !data.prevId) {
         toast.error("No previous user");

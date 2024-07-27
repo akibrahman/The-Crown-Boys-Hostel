@@ -821,12 +821,12 @@ const Dashboard = ({ user }) => {
             <ManagerAllUsers user={user} />
           ) : displayData == "managerMarketDetails" ? (
             <ManagerMarketDetailsComponent user={user} />
-          ) : // <UnderConstruction/>
-          displayData == "managerOrderStatus" ? (
+          ) : displayData == "managerOrderStatus" ? (
             <ManagerOrderStatusComponent user={user} />
           ) : displayData == "managerSendSMS" ? (
-            <ManagerSendSMSComponent user={user} />
-          ) : displayData == "managerBillQuery" ? (
+            <UnderConstruction />
+          ) : // <ManagerSendSMSComponent user={user} />
+          displayData == "managerBillQuery" ? (
             <ManagerBillQueryComponent user={user} />
           ) : displayData == "managerMealQuery" ? (
             <ManagerMealQueryComponent user={user} />

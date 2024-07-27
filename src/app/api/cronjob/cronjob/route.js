@@ -6,6 +6,7 @@ import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import { render } from "@react-email/render";
+import axios from "axios";
 import moment from "moment";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
@@ -255,26 +256,18 @@ export const GET = async (req) => {
             nextBill.paidBillInBDT += restDeposite;
             await nextBill.save();
           } else {
-            //! SMS
-            const url = "http://bulksmsbd.net/api/smsapi";
-            const apiKey = process.env.SMS_API_KEY;
-            const senderId = "8809617618230";
-            const numbers = user.contactNumber;
-            const message = `Hi, Mr. ${user.username}\nAfter reviewing your account, we have determined that you are entitled to receive BDT ${restDeposite}/-. However, due to your account status being blocked in our system, you will need to collect this amount directly from our office.\n\nThe Crown Boys Hostel`;
-            const smsClientData = {
-              api_key: apiKey,
-              senderid: senderId,
-              number: numbers,
-              message: message,
-            };
-            await fetch(url, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(smsClientData),
-            });
-            //! SMS
+            try {
+              const sms = new URLSearchParams();
+              sms.append("token", process.env.SMS_TOKEN);
+              sms.append("to", user.contactNumber);
+              sms.append(
+                "message",
+                `আপনার অ্যাকাউন্ট পর্যালোচনা করার পর, আমরা নির্ধারণ করেছি যে আপনি BDT ${restDeposite}/- পাওয়ার অধিকারী। আমাদের সিস্টেমে আপনি ব্লক হওয়ার কারণে, আপনাকে সরাসরি আমাদের অফিস থেকে উক্ত টাকা সংগ্রহ করতে হবে।\n\nThe Crown Boys Hostel`
+              );
+              await axios.post("https://api.bdbulksms.net/api.php", sms);
+            } catch (error) {
+              console.log(error);
+            }
           }
           emailHtml = render(
             MonthlyBillEmail({
@@ -296,26 +289,18 @@ export const GET = async (req) => {
             })
           );
         }
-        //! SMS
-        const url = "http://bulksmsbd.net/api/smsapi";
-        const apiKey = process.env.SMS_API_KEY;
-        const senderId = "8809617618230";
-        const numbers = user.contactNumber;
-        const message = `Hi, Mr. ${user.username}\nYour monthly bill has been created\nPlease check your E-mail properly with spam box to get details.\n\nThe Crown Boys Hostel`;
-        const smsClientData = {
-          api_key: apiKey,
-          senderid: senderId,
-          number: numbers,
-          message: message,
-        };
-        await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(smsClientData),
-        });
-        //! SMS
+        try {
+          const sms = new URLSearchParams();
+          sms.append("token", process.env.SMS_TOKEN);
+          sms.append("to", user.contactNumber);
+          sms.append(
+            "message",
+            `আপনার মাসিক বিল তৈরি হয়েছে\nবিবরণ পেতে দয়া করে স্প্যাম বক্স সহ আপনার ই-মেইলটি সঠিকভাবে চেক করুন।\n\nThe Crown Boys Hostel`
+          );
+          await axios.post("https://api.bdbulksms.net/api.php", sms);
+        } catch (error) {
+          console.log(error);
+        }
         const mailOptions = {
           from: "checker@hostelplates.com",
           to: user.email,
@@ -405,26 +390,18 @@ export const GET = async (req) => {
           ).toFixed(2),
         });
         await managerBill.save();
-        //! SMS
-        const url = "http://bulksmsbd.net/api/smsapi";
-        const apiKey = process.env.SMS_API_KEY;
-        const senderId = "8809617618230";
-        const numbers = allManagers[n].contactNumber;
-        const message = `Hi, Mr. ${allManagers[n].username}\nYour monthly market bill with meal count and meal rate has been created. Check it from your profile.\n\nThe Crown Boys Hostel Inc.`;
-        const smsManagerData = {
-          api_key: apiKey,
-          senderid: senderId,
-          number: numbers,
-          message: message,
-        };
-        await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(smsManagerData),
-        });
-        //! SMS
+        try {
+          const sms = new URLSearchParams();
+          sms.append("token", process.env.SMS_TOKEN);
+          sms.append("to", allManagers[n].contactNumber);
+          sms.append(
+            "message",
+            `আপনার মাসিক বাজার বিল (খাবারের সংখ্যা এবং খাবারের রেট) তৈরি করা হয়েছে। আপনার প্রোফাইল থেকে এটি চেক করুন\n\nThe Crown Boys Hostel`
+          );
+          await axios.post("https://api.bdbulksms.net/api.php", sms);
+        } catch (error) {
+          console.log(error);
+        }
       }
       //! <---------->Manager Bill Creation End <---------->
       const mailOptions2 = {
