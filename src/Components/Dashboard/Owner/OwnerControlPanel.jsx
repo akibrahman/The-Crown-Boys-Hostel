@@ -8,7 +8,7 @@ const OwnerControlPanel = ({ user }) => {
   return (
     <div className="bg-dashboard w-full min-h-full p-10 flex items-center justify-center gap-4 flex-wrap">
       <button
-        // disabled
+        disabled
         onClick={async () => {
           const { data } = await axios.get("/api/cronjob/cronjob", {
             headers: { Authorization: "Bearer 1234567890" },
@@ -36,7 +36,7 @@ const OwnerControlPanel = ({ user }) => {
         {isLoading && <CgSpinner className="text-xl animate-spin" />}
       </button>
       <button
-        // disabled
+        disabled
         className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 flex items-center gap-3"
         onClick={async () => {
           try {
