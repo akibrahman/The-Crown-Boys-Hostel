@@ -24,11 +24,13 @@ const Page = ({ params }) => {
     },
   });
 
+  const [pdfLoading, setPdfLoading] = useState(false);
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: `Details about ${client?.username} || The Crown Boys hostel`,
-    onBeforePrint: () => console.log("before printing..."),
-    onAfterPrint: () => console.log("after printing..."),
+    onBeforePrint: () => setPdfLoading(true),
+    onAfterPrint: () => setPdfLoading(false),
   });
 
   const [userfetching, setUserfetching] = useState([false, ""]);
@@ -139,10 +141,14 @@ const Page = ({ params }) => {
                   </button>
                 </Link>
                 <button
-                  onClick={handlePrint}
-                  className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-blue-500 active:scale-90 mt-3"
+                  onClick={() => {
+                    setPdfLoading(true);
+                    handlePrint();
+                  }}
+                  className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-blue-500 active:scale-90 mt-3 flex items-center justify-center gap-2"
                 >
                   Download PDF
+                  {pdfLoading && <CgSpinner className="animate-spin text-xl" />}
                 </button>
               </div>
             </div>
