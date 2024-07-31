@@ -8,7 +8,7 @@ const OwnerControlPanel = ({ user }) => {
   return (
     <div className="bg-dashboard w-full min-h-full p-10 flex items-center justify-center gap-4 flex-wrap">
       <button
-        disabled
+        // disabled
         onClick={async () => {
           const { data } = await axios.get("/api/cronjob/cronjob", {
             headers: { Authorization: "Bearer 1234567890" },
@@ -18,7 +18,7 @@ const OwnerControlPanel = ({ user }) => {
             toast.success("Job Done");
           } else toast.error("Job Error");
         }}
-        className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
+        className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
       >
         Cron Job
       </button>

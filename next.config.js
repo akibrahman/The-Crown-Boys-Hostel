@@ -21,6 +21,11 @@ module.exports = {
         hostname: "firebasestorage.googleapis.com",
         port: "",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8888",
+      },
     ],
   },
 };

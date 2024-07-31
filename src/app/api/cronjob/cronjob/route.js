@@ -33,6 +33,7 @@ export const GET = async (req) => {
         pass: process.env.GMAIL_APP_PASS,
       },
     });
+    console.log("Full Cronjob started");
     // Test --------------------------------------------
     if (true) {
       console.log("Test Run Started");
@@ -102,7 +103,6 @@ export const GET = async (req) => {
       );
       const secondLastDayOfMonth = new Date(lastDayOfMonth);
       secondLastDayOfMonth.setUTCDate(lastDayOfMonth.getUTCDate() - 1);
-      console.log(secondLastDayOfMonth);
       return {
         isSecondLastDay:
           today.getUTCDate() === secondLastDayOfMonth.getUTCDate() &&
@@ -153,6 +153,7 @@ export const GET = async (req) => {
         nextYear = currentYear + 1;
       }
       //! <---------->User Bill Creation Start <---------->
+      console.log("User bill creation started");
       const bills = await Bill.find({
         year: currentYear,
         month: currentMonth,
@@ -217,8 +218,6 @@ export const GET = async (req) => {
           bill.totalLunch = totalLunch;
           bill.totalDinner = totalDinner;
           bill.totalBillInBDT = totalBillInBDT;
-          bill.status = "calculated";
-          await bill.save();
           emailHtml = render(
             MonthlyBillEmail({
               name: user.username,
@@ -308,9 +307,15 @@ export const GET = async (req) => {
           html: emailHtml,
         };
         await transport.sendMail(mailOptions);
+        bill.status = "calculated";
+        await bill.save();
+        console.log(`User bill created of ${user?.username}`);
+        // return;
       }
+      console.log("User bill creation finished");
       //! <---------->User Bill Creation End <---------->
       //! <---------->Manager Bill Creation Start <---------->
+      console.log("Manager bill creation started");
       const allManagers = await User.find({
         isManager: true,
         isManagerVerified: true,
@@ -403,6 +408,7 @@ export const GET = async (req) => {
           console.log(error);
         }
       }
+      console.log("manager bill creation finished");
       //! <---------->Manager Bill Creation End <---------->
       const mailOptions2 = {
         from: "cron-job@hostelplates.com",
@@ -461,6 +467,7 @@ export const GET = async (req) => {
         );
       }
       //! <---------->Order creation for all verified users Start <---------->
+      console.log("User next month meal creation started");
       const allUsersF = await User.find({
         isClient: true,
         isClientVerified: true,
@@ -531,9 +538,11 @@ export const GET = async (req) => {
         });
         await newBill.save();
       }
+      console.log("User next month meal creation finished");
       //! <---------->Order creation for all verified users End <---------->
 
       //! <---------->Market Data creation for all verified managers Start <---------->
+      console.log("Mnger next month market creation started");
       const allManagers = await User.find({
         isManager: true,
         isManagerVerified: true,
@@ -562,6 +571,7 @@ export const GET = async (req) => {
         await newMarket.save();
         dataOfMarket = [];
       }
+      console.log("Mnger next month market creation finished");
       //! <---------->Market Data creation for all verified managers End <---------->
 
       const mailOptions = {
@@ -585,7 +595,7 @@ export const GET = async (req) => {
       console.log("Second Last Day Run Finished");
     }
 
-    console.log("Runned successfully");
+    console.log("Full cronjob finished successfully");
     return NextResponse.json({ success: true, msg: "Runned successfully" });
   } catch (error) {
     console.log(error);
