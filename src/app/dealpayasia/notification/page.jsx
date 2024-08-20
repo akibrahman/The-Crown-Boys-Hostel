@@ -1,6 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { requestFMCToken } from "../../../../DealPayAsia/firebase.js";
+import {
+  onMessageListener,
+  requestFMCToken,
+} from "../../../../DealPayAsia/firebase.js";
 
 const Notification = () => {
   const [fcmToken, setFcmToken] = useState(null);
@@ -16,6 +19,13 @@ const Notification = () => {
     };
     fetchFCMToken();
   });
+
+  onMessageListener()
+    .then((payload) => {
+      console.log("Received Foreground Message", payload);
+    })
+    .catch((error) => console.error(error));
+
   return (
     <div className="min-h-screen">
       <p>Akib</p>

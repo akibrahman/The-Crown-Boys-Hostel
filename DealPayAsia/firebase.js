@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const vapidKey =
   "BCDTLAY1yjughhgWLBYviuZKvnHWkX_W38oIAHOIFe4ouY6UkWr3PTK3Qrq_trvG5zYlJwSSx6VCO4xnSqqUOso";
@@ -34,4 +34,12 @@ export const requestFMCToken = async () => {
       console.error(error);
       throw error;
     });
+};
+
+export const onMessageListener = () => {
+  return new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      resolve(payload);
+    });
+  });
 };
