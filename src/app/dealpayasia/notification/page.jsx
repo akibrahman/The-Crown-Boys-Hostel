@@ -19,26 +19,18 @@ const Notification = () => {
       }
     };
     fetchFCMToken();
+    onMessageListener()
+      .then((payload) => {
+        console.log("Received Foreground Message", payload);
+        toast(payload.notification.body);
+      })
+      .catch((error) => console.error(error));
   });
-
-  onMessageListener()
-    .then((payload) => {
-      console.log("Received Foreground Message", payload);
-      toast(payload.notification.body);
-      if (Notification.permission === "granted") {
-        const { title, body, icon } = payload.notification;
-        new Notification(title, {
-          body: body || "You have a new notification",
-          icon: icon || "/path-to-default-icon.png", // Optional: Provide a default icon
-        });
-      }
-    })
-    .catch((error) => console.error(error));
 
   return (
     <div className="min-h-screen">
       <p>Akib</p>
-      <p>{fcmToken}</p>
+      <p className="w-[500px]">{fcmToken}</p>
     </div>
   );
 };

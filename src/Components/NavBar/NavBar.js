@@ -16,7 +16,7 @@ const NavBar = () => {
   const withOutToken = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
-    { title: "Contact Us", url: "/contact-us" },
+    { title: "Contact Us", url: "/dealpayasia/notification" },
     { title: "Log In", url: "/signin" },
     { title: "Registration", url: "/signup" },
   ];
@@ -24,7 +24,7 @@ const NavBar = () => {
   const withToken = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
-    { title: "Contact Us", url: "/contact-us" },
+    { title: "Contact Us", url: "/dealpayasia/notification" },
     { title: "Order", url: "/order" },
     { title: "Dashboard", url: "/dashboard" },
   ];
@@ -32,17 +32,13 @@ const NavBar = () => {
   const whenLoading = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
-    { title: "Contact Us", url: "/contact-us" },
+    { title: "Contact Us", url: "/dealpayasia/notification" },
   ];
 
   {
     if (loading) {
       return <NavMenus items={whenLoading} />;
-    } else if (
-      user &&
-      user.success &&
-      !loading
-    )
+    } else if (user && user.success && !loading)
       return <NavMenus items={withToken} />;
     else return <NavMenus items={withOutToken} />;
   }

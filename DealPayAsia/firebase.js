@@ -37,6 +37,7 @@ export const requestFMCToken = async () => {
 };
 
 export const onMessageListener = () => {
+  //   if (!messaging) return;
   return new Promise((resolve) => {
     onMessage(messaging, (payload) => {
       resolve(payload);
