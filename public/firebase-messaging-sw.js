@@ -16,4 +16,15 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
   console.table("=>", payload);
+  // Customize notification here
+  const notificationTitle = payload.notification.title || "New Notification";
+  const notificationOptions = {
+    body: payload.notification.body || "You have a new message",
+    // icon: "/firebase-logo.png", // Path to an icon if you want to show one
+    click_action:
+      payload.notification.click_action ||
+      "http://localhost:3000/dealpayasia/notification", // URL to open when the notification is clicked
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
