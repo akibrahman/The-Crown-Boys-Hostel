@@ -16,7 +16,7 @@ const firebaseConfigMessaging = {
 let messaging = null;
 
 if (typeof window !== "undefined") {
-  const app = initializeApp(firebaseConfig);
+  const app = initializeApp(firebaseConfigMessaging);
   messaging = getMessaging(app);
 }
 
