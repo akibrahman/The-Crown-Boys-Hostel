@@ -17,3 +17,4 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage(function (payload) {
   console.log("=>", payload);
 });
+messaging.on;

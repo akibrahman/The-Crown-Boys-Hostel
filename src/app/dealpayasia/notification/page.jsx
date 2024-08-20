@@ -4,6 +4,7 @@ import {
   onMessageListener,
   requestFMCToken,
 } from "../../../../DealPayAsia/firebase.js";
+import toast from "react-hot-toast";
 
 const Notification = () => {
   const [fcmToken, setFcmToken] = useState(null);
@@ -23,6 +24,7 @@ const Notification = () => {
   onMessageListener()
     .then((payload) => {
       console.log("Received Foreground Message", payload);
+      toast(payload.notification.body);
     })
     .catch((error) => console.error(error));
 
