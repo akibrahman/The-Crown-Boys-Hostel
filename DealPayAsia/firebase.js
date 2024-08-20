@@ -1,15 +1,27 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
-import { firebaseConfig } from "./firebaseConfig.js";
 
 const vapidKey =
   "BCDTLAY1yjughhgWLBYviuZKvnHWkX_W38oIAHOIFe4ouY6UkWr3PTK3Qrq_trvG5zYlJwSSx6VCO4xnSqqUOso";
 
-const app = initializeApp(firebaseConfig);
+const firebaseConfigMessaging = {
+  apiKey: "AIzaSyAGUMz8AKBfIZOMqvJ17wsqMqegYz41j4M",
+  authDomain: "dealpay-asia.firebaseapp.com",
+  projectId: "dealpay-asia",
+  storageBucket: "dealpay-asia.appspot.com",
+  messagingSenderId: "514391861585",
+  appId: "1:514391861585:web:88690c64348b88fad7cb70",
+};
 
-const messaging = getMessaging(app);
+let messaging = null;
+
+if (typeof window !== "undefined") {
+  const app = initializeApp(firebaseConfig);
+  messaging = getMessaging(app);
+}
 
 export const requestFMCToken = async () => {
+  if (!messaging) return;
   return Notification.requestPermission()
     .then((permission) => {
       if (permission == "granted") {
