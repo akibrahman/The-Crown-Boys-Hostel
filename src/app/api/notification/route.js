@@ -27,13 +27,14 @@ if (!admin.apps.length) {
 }
 
 export async function POST(request) {
-  const { token, title, message, link } = await request.json();
+  const { token, title, message, image, link } = await request.json();
 
   const payload = {
     token,
     notification: {
       title: title,
       body: message,
+      image: image || "",
     },
     webpush: link && {
       fcmOptions: {
