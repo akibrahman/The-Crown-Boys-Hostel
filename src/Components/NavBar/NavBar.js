@@ -24,7 +24,7 @@ const NavBar = () => {
   const withToken = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
-    { title: "Contact Us", url: "/dealpayasia/notification" },
+    { title: "Contact Us", url: "/notification" },
     { title: "Order", url: "/order" },
     { title: "Dashboard", url: "/dashboard" },
   ];
@@ -32,7 +32,7 @@ const NavBar = () => {
   const whenLoading = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
-    { title: "Contact Us", url: "/dealpayasia/notification" },
+    { title: "Contact Us", url: "/notification" },
   ];
 
   {
