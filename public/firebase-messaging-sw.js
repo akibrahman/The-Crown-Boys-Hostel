@@ -30,7 +30,7 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.data.title;
   const notificationOptions = {
     body: payload.data.body,
-    icon: payload?.data?.image || "./logo.png",
+    icon: payload?.data?.image || "https://i.ibb.co/tHxNWHg/logo.png",
     data: { url: link },
   };
   self.registration.showNotification(notificationTitle, notificationOptions);

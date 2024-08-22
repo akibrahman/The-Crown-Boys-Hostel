@@ -35,6 +35,7 @@ export async function POST(request) {
       title: title,
       body: message,
       image: image || "",
+      link: link || "",
     },
     webpush: link && {
       fcmOptions: {
@@ -42,6 +43,7 @@ export async function POST(request) {
       },
     },
   };
+  console.log(payload);
 
   try {
     await admin.messaging().send(payload);
