@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -20,6 +20,7 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.4",
     "firebase": "^10.13.0",
+    "firebase-admin": "^12.3.1",
     "framer-motion": "^11.2.6",
     "interval-hooks": "^0.2.0",
     "jsonwebtoken": "^9.0.2",
@@ -44,6 +45,7 @@
     "react-to-print": "^2.15.1",
     "react-tooltip": "^5.26.3",
     "socket.io-client": "^4.7.5",
+    "sonner": "^1.5.0",
     "sweetalert2": "^11.10.8",
     "swiper": "^11.1.5",
     "tesseract.js": "^5.0.5"
