@@ -43,6 +43,9 @@ export default function Home() {
       >
         Send Test Notification
       </button>
+      <p className="mt-10 p-8 bg-green-200 border border-green-500 rounded-md text-wrap text-xs">
+        {token}
+      </p>
     </main>
   );
 }
