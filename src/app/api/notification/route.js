@@ -31,7 +31,7 @@ export async function POST(request) {
 
   const payload = {
     token,
-    notification: {
+    data: {
       title: title,
       body: message,
       image: image || "",
