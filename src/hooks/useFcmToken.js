@@ -109,35 +109,27 @@ const useFcmToken = () => {
           "https://google.com";
 
         if (link) {
-          toast.success(
-            `${payload.notification?.title}: ${payload.notification?.body}`,
-            {
-              action: {
-                label: "Visit",
-                onClick: () => {
-                  const link = payload.fcmOptions?.link || payload.data?.link;
-                  if (link) {
-                    router.push(link);
-                  }
-                },
+          toast.success(`${payload.data?.title}: ${payload.data?.body}`, {
+            action: {
+              label: "Visit",
+              onClick: () => {
+                const link = payload.fcmOptions?.link || payload.data?.link;
+                if (link) {
+                  router.push(link);
+                }
               },
-            }
-          );
+            },
+          });
         } else {
-          toast.success(
-            `${payload.notification?.title}: ${payload.notification?.body}`
-          );
+          toast.success(`${payload.data?.title}: ${payload.data?.body}`);
         }
 
         // --------------------------------------------
         // Disable this if you only want toast notifications.
-        const n = new Notification(
-          payload.notification?.title || "New message",
-          {
-            body: payload.notification?.body || "This is a new message",
-            data: link ? { url: link } : undefined,
-          }
-        );
+        const n = new Notification(payload.data?.title || "New message", {
+          body: payload.data?.body || "This is a new message",
+          data: link ? { url: link } : undefined,
+        });
 
         // Step 10: Handle notification click event to navigate to a link if present.
         n.onclick = (event) => {
