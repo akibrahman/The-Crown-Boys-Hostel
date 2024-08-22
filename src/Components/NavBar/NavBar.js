@@ -16,7 +16,7 @@ const NavBar = () => {
   const withOutToken = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
-    { title: "Contact Us", url: "/dealpayasia/notification" },
+    { title: "Contact Us", url: "/notification" },
     { title: "Log In", url: "/signin" },
     { title: "Registration", url: "/signup" },
   ];
