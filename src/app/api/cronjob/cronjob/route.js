@@ -390,10 +390,15 @@ export const GET = async (req) => {
           }, 0),
           totalMeal,
           mealRate: (
-            market.data.reduce(
-              (accumulator, currentValue) => accumulator + currentValue.amount,
-              0
-            ) / totalMeal
+            market.data.reduce((a, c) => {
+              return (
+                a +
+                c.details.reduce((total, market) => {
+                  let value = Object.values(market)[0];
+                  return total + value;
+                }, 0)
+              );
+            }, 0) / totalMeal
           ).toFixed(2),
         });
         await managerBill.save();
