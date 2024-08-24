@@ -9,10 +9,11 @@ import LeafButton from "../Buttons/LeafButton";
 import "./styleForNavBar.css";
 import { useRouter } from "next/navigation";
 import ColorButton from "../Buttons/ColorButton";
+import { FaSpinner } from "react-icons/fa";
+import { CgSpinner } from "react-icons/cg";
 
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
-
   const withOutToken = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
@@ -37,16 +38,16 @@ const NavBar = () => {
 
   {
     if (loading) {
-      return <NavMenus items={whenLoading} />;
+      return <NavMenus loading={loading} items={whenLoading} />;
     } else if (user && user.success && !loading)
-      return <NavMenus items={withToken} />;
-    else return <NavMenus items={withOutToken} />;
+      return <NavMenus loading={loading} items={withToken} />;
+    else return <NavMenus loading={loading} items={withOutToken} />;
   }
 };
 
 export default NavBar;
 
-const NavMenus = ({ items }) => {
+const NavMenus = ({ items, loading }) => {
   const [sideBarIsOpen, setSideBarIsOpen] = useState(false);
   const burgerMenuButtonRef = useRef();
   const route = useRouter();
@@ -109,7 +110,9 @@ const NavMenus = ({ items }) => {
               </Link>
             )
           )}
+          {loading && <CgSpinner className="text-xl animate-spin text-white" />}
         </div>
+
         <ThemeSwitch />
       </div>
       {/* Mobile View  */}
@@ -169,6 +172,7 @@ const NavMenus = ({ items }) => {
               </Link>
             )
           )}
+          {loading && <CgSpinner className="text-xl animate-spin text-white" />}
         </div>
       </div>
       {/* Mobile View  */}
@@ -198,35 +202,6 @@ const NavMenus = ({ items }) => {
           </div>
         </div>
         {/*  */}
-        <div className="hidden text-base items-center justify-center gap-8">
-          {items.map((item, i) =>
-            item.title == "Dashboard" ? (
-              <StarButton
-                key={i}
-                isLink={true}
-                link={item.url}
-                lable={"Dashboard"}
-              />
-            ) : item.title == "Log In" ? (
-              <LeafButton isLink={true} link={item.url} lable={"Log In"} />
-            ) : item.title == "Registration" ? (
-              <LeafButton
-                key={i}
-                isLink={true}
-                link={item.url}
-                lable={"Registration"}
-              />
-            ) : (
-              <Link
-                className="relative before:duration-300 before:absolute before:bottom-0 before:left-1/2 before:-translate-x-1/2 before:w-0 before:h-[2px] before:bg-white hover:before:w-full"
-                key={i}
-                href={item.url}
-              >
-                {item.title}
-              </Link>
-            )
-          )}
-        </div>
         <ThemeSwitch />
       </div>
     </div>
