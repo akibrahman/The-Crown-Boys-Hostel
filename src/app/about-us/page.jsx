@@ -2,9 +2,11 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import Marquee from "react-fast-marquee";
+import { FaTimes } from "react-icons/fa";
 
-const page = () => {
+const Page = () => {
   const photos = [
     "/images/room/a1.jpeg",
     "/images/room/a2.jpeg",
@@ -13,30 +15,62 @@ const page = () => {
     "/images/room/b2.jpeg",
     "/images/room/b3.jpeg",
   ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedImage("");
+  };
+  // "dev": "next dev --experimental-https",
   //Page Token From Developers.facebook.com == EAAFMh9dNl8sBOwtGZAuZBuNxFt1giH9v3WKrrGkp1eReSsEANpJLKZBjVc8cKV5V380W1rGQXxxIFSf2x7107fN5ertl5LWtIfOUtFrHFzlbu09x3XkdLAyEK7MmajoaB9ZCs69Ej8o6fZAkTSaikpxAKlxwpPzbBM8yAXCW893PkemBGuzSP53GtmdkcXkSa
   return (
     <div className="min-h-screen pb-20 bg-dashboard text-stone-300">
-      <div className="flex items-center justify-between gap-2 pt-4">
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+          <div className="relative">
+            <Image
+              src={selectedImage}
+              alt="Selected document"
+              height={600}
+              width={400}
+              className="rounded-md"
+            />
+            <button
+              onClick={closeModal}
+              className="absolute top-2 right-2 text-white text-xl bg-red-600 px-2 py-1 rounded-full aspect-square"
+            >
+              <FaTimes />
+            </button>
+          </div>
+        </div>
+      )}
+      <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-2 pt-4 md:pr-14">
         <Image
           src="/images/aboutUsBanner.png"
           alt="About page banner picture"
           height={300}
           width={800}
-          className="mx-auto px-8 md:p-0 mb-5"
+          className=""
         />
         <Image
           src="/doc/trade.jpg"
           alt="Trade Licence of The Crown Boys Hostel"
           height={300}
           width={160}
-          className="mx-auto px-8 md:p-0 mb-5"
+          className="cursor-pointer rounded-md w-[120px] md:w-[160px]"
+          onClick={() => handleImageClick("/doc/trade.jpg")}
         />
         <Image
           src="/doc/tin.jpg"
           alt="TIN Certificate of The Crown Boys Hostel"
           height={300}
           width={160}
-          className="mx-auto px-8 md:p-0 mb-5"
+          className="cursor-pointer rounded-md w-[120px] md:w-[160px]"
+          onClick={() => handleImageClick("/doc/tin.jpg")}
         />
       </div>
       <div className="flex flex-col md:flex-row gap-3 items-center justify-center pt-4">
@@ -153,4 +187,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
