@@ -16,6 +16,29 @@ const page = () => {
   //Page Token From Developers.facebook.com == EAAFMh9dNl8sBOwtGZAuZBuNxFt1giH9v3WKrrGkp1eReSsEANpJLKZBjVc8cKV5V380W1rGQXxxIFSf2x7107fN5ertl5LWtIfOUtFrHFzlbu09x3XkdLAyEK7MmajoaB9ZCs69Ej8o6fZAkTSaikpxAKlxwpPzbBM8yAXCW893PkemBGuzSP53GtmdkcXkSa
   return (
     <div className="min-h-screen pb-20 bg-dashboard text-stone-300">
+      <div className="flex items-center justify-between gap-2 pt-4">
+        <Image
+          src="/images/aboutUsBanner.png"
+          alt="About page banner picture"
+          height={300}
+          width={800}
+          className="mx-auto px-8 md:p-0 mb-5"
+        />
+        <Image
+          src="/doc/trade.jpg"
+          alt="Trade Licence of The Crown Boys Hostel"
+          height={300}
+          width={160}
+          className="mx-auto px-8 md:p-0 mb-5"
+        />
+        <Image
+          src="/doc/tin.jpg"
+          alt="TIN Certificate of The Crown Boys Hostel"
+          height={300}
+          width={160}
+          className="mx-auto px-8 md:p-0 mb-5"
+        />
+      </div>
       <div className="flex flex-col md:flex-row gap-3 items-center justify-center pt-4">
         <motion.div
           initial={false}
@@ -46,13 +69,6 @@ const page = () => {
           </button>
         </Link>
       </div>
-      <Image
-        src="/images/aboutUsBanner.png"
-        alt="About page banner picture"
-        height={300}
-        width={800}
-        className="mx-auto px-8 md:p-0 mt-5"
-      />
       <div className="w-[95%] md:w-[80%] mx-auto flex flex-col md:flex-row gap-10 mt-10">
         <Image
           src="/images/aboutUsPoster.png"
@@ -89,7 +105,7 @@ const page = () => {
             className="w-[400px] h-[225px] md:w-[50%] md:h-[315px]"
             // width="400"
             // height="315"
-            src="https://www.youtube.com/embed/dbt8qhV2m40?si=Zzsq6oGLJI2hHJdR"
+            // src="https://www.youtube.com/embed/dbt8qhV2m40?si=Zzsq6oGLJI2hHJdR"
             title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
