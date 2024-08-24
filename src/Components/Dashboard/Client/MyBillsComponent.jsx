@@ -3,6 +3,7 @@ import React from "react";
 import Receipt from "../../Receipt/Receipt";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const MyBillsComponent = ({ user }) => {
   const route = useRouter();
@@ -68,23 +69,30 @@ const MyBillsComponent = ({ user }) => {
           ?.sort(
             (a, b) => monthOrder.indexOf(b.month) - monthOrder.indexOf(a.month)
           )
-          ?.map((bill) => (
-            <Receipt
+          ?.map((bill, i) => (
+            <motion.div
               key={bill._id}
-              id={bill._id}
-              userName={bill.userName}
-              month={bill.month}
-              year={bill.year}
-              totalBillInBDT={bill.totalBillInBDT}
-              paidBillInBDT={bill.paidBillInBDT}
-              totalBreakfast={bill.totalBreakfast}
-              totalLunch={bill.totalLunch}
-              totalDinner={bill.totalDinner}
-              status={bill.status}
-              charges={bill?.charges}
-              isManageable={false}
-              isRentPaid={bill.isRentPaid}
-            />
+              initial={{ x: i % 2 === 0 ? -100 : 100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 15 }}
+              className=""
+            >
+              <Receipt
+                id={bill._id}
+                userName={bill.userName}
+                month={bill.month}
+                year={bill.year}
+                totalBillInBDT={bill.totalBillInBDT}
+                paidBillInBDT={bill.paidBillInBDT}
+                totalBreakfast={bill.totalBreakfast}
+                totalLunch={bill.totalLunch}
+                totalDinner={bill.totalDinner}
+                status={bill.status}
+                charges={bill?.charges}
+                isManageable={false}
+                isRentPaid={bill.isRentPaid}
+              />
+            </motion.div>
           ))}
       </div>
     </div>

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
+import { motion } from "framer-motion";
 
 const CurrentMonthComponent = ({ user }) => {
   const [breakfastCount, setBreakfastCount] = useState(0);
@@ -93,24 +94,44 @@ const CurrentMonthComponent = ({ user }) => {
     enabled: user?._id && user?.role == "client" ? true : false,
   });
   return (
-    <div className="min-h-full bg-dashboard text-slate-100">
+    <div className="min-h-full bg-dashboard text-slate-100 overflow-x-hidden">
       <div className="p-6 px-10 flex flex-col-reverse gap-3 items-center md:flex-row-reverse md:gap-0 justify-between">
         {user.role === "client" && user.isVerified && user.isClientVerified && (
           <>
-            <p className="text-lg border rounded-xl border-sky-500 px-8 py-1.5">
+            <motion.p
+              initial={{ x: 100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 10 }}
+              className="text-lg border rounded-xl border-sky-500 px-8 py-1.5"
+            >
               Dinner: {dinnerCount}
-            </p>
-            <p className="text-lg border rounded-xl border-sky-500 px-8 py-1.5">
+            </motion.p>
+            <motion.p
+              initial={{ scale: 0.5, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 10 }}
+              className="text-lg border rounded-xl border-sky-500 px-8 py-1.5"
+            >
               Lunch: {lunchCount}
-            </p>
-            <p className="text-lg border rounded-xl border-sky-500 px-8 py-1.5">
+            </motion.p>
+            <motion.p
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 10 }}
+              className="text-lg border rounded-xl border-sky-500 px-8 py-1.5"
+            >
               Breakfast: {breakfastCount}
-            </p>
+            </motion.p>
           </>
         )}
       </div>
-      <div className="px-6 pb-8 mt-10">
-        <p className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative flex flex-col md:flex-row gap-3 md:gap-0+6 items-center justify-between">
+      <div className="px-6 pb-8">
+        <motion.div
+          initial={{ y: -30, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100, damping: 10 }}
+          className="text-center text-xl font-semibold border border-sky-500 rounded-xl px-4 py-2 relative flex flex-col md:flex-row gap-3 md:gap-0+6 items-center justify-between"
+        >
           <span className="text-sm text-sky-500">
             Deposite Amount - {depositeAmount} BDT
           </span>
@@ -119,11 +140,14 @@ const CurrentMonthComponent = ({ user }) => {
             Approx. Bill -{" "}
             {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500} BDT
           </span>
-        </p>
+        </motion.div>
         <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
           <Tooltip className="z-50" id="my-tooltip" />
           {calanderData?.map((order) => (
-            <div
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 10 }}
               data-tooltip-id="my-tooltip"
               data-tooltip-content={
                 order.isGuestMeal
@@ -161,7 +185,7 @@ const CurrentMonthComponent = ({ user }) => {
                   order.dinner ? "bg-white" : "bg-red-600"
                 }`}
               ></span>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

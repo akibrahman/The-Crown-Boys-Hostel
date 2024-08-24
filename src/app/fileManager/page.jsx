@@ -3,6 +3,8 @@
 import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
+
+import { motion } from "framer-motion";
 import {
   deleteObject,
   getDownloadURL,
@@ -129,18 +131,24 @@ const FileUpload = () => {
     return;
   }
   return (
-    <div className="min-h-screen pb-20 bg-dashboard text-slate-100">
-      <p className="text-center py-8 text-2xl">File Manager</p>
-      <input
-        type="file"
-        name="file"
-        id="file"
-        onChange={(e) => {
-          console.log(e.target.files?.[0]);
-          setFile(e.target.files?.[0]);
-        }}
-        className="hidden"
-      />
+    <div className="min-h-screen pb-20 bg-dashboard text-slate-100 overflow-x-hidden">
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 100, damping: 10 }}
+      >
+        <p className="text-center py-8 text-2xl">File Manager</p>
+        <input
+          type="file"
+          name="file"
+          id="file"
+          onChange={(e) => {
+            console.log(e.target.files?.[0]);
+            setFile(e.target.files?.[0]);
+          }}
+          className="hidden"
+        />
+      </motion.div>
       {file ? (
         <div className="flex items-center justify-center gap-3 py-10">
           <Image
@@ -171,7 +179,12 @@ const FileUpload = () => {
           />
         </div>
       ) : (
-        <div className="w-[300px] md:w-[500px] py-4 mx-auto rounded-xl border-2 border-dotted flex flex-col items-center justify-center gap-3">
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100, damping: 10 }}
+          className="w-[300px] md:w-[500px] py-4 mx-auto rounded-xl border-2 border-dotted flex flex-col items-center justify-center gap-3"
+        >
           <IoCloudUploadOutline className="font-semibold text-6xl" />
           <p>Drag and Drop Files Here</p>
           <p>or</p>
@@ -181,7 +194,7 @@ const FileUpload = () => {
           >
             Browse here
           </label>
-        </div>
+        </motion.div>
       )}
       {progress != 0 ? (
         <div className="flex items-center justify-center mt-5">
@@ -228,13 +241,16 @@ const FileUpload = () => {
           Upload
         </button>
       ) : null}
-      <p className="text-center py-8 mt-10 text-2xl">Your Files</p>
+      <p className="text-center py-8 text-2xl">Your Files</p>
       {!user?.files || user?.files.length == 0 ? (
         <p className="text-center">No uploaded files</p>
       ) : (
         <div className="space-y-5">
           {user?.files.map((file) => (
-            <div
+            <motion.div
+              initial={{ x: -50, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 10 }}
               key={file.link}
               className="flex items-center justify-center gap-3"
             >
@@ -278,7 +294,7 @@ const FileUpload = () => {
               >
                 Delete
               </button>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const ManagerDetails = ({ user, manager }) => {
   return user.role === "client" && !user.isVerified ? (
@@ -17,7 +18,12 @@ const ManagerDetails = ({ user, manager }) => {
     user.role === "client" &&
     user.isVerified &&
     user.isClientVerified && (
-      <div className={`mt-10 py-8 flex flex-col items-center`}>
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 100, damping: 10 }}
+        className={`mt-10 py-8 flex flex-col items-center`}
+      >
         <Image
           alt={`Profile picture of ${manager.username}`}
           src={manager.profilePicture}
@@ -30,7 +36,7 @@ const ManagerDetails = ({ user, manager }) => {
         </p>
         <p>{manager.email}</p>
         <p>{manager.contactNumber}</p>
-      </div>
+      </motion.div>
     )
   );
 };

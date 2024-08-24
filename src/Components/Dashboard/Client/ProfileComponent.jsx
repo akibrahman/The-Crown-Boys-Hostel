@@ -2,11 +2,17 @@ import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import Image from "next/image";
 import { FaTimes } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
+import { motion } from "framer-motion";
 
 const ProfileComponent = ({ user }) => {
   return (
-    <div className="flex flex-col md:flex-row gap-4 items-center min-h-full px-20 md:px-32 py-5 bg-dashboard text-slate-100">
-      <div className={`w-full md:w-1/2 flex flex-col items-center relative`}>
+    <div className="flex flex-col md:flex-row gap-4 items-center min-h-full px-20 md:px-32 py-5 bg-dashboard text-slate-100 overflow-x-hidden">
+      <motion.div
+        initial={{ x: -100, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 100, damping: 10 }}
+        className={`w-full md:w-1/2 flex flex-col items-center relative`}
+      >
         <Image
           alt={`Profile picture of ${user.username}`}
           src={user.profilePicture}
@@ -40,8 +46,13 @@ const ProfileComponent = ({ user }) => {
             Unverified
           </p>
         )}
-      </div>
-      <div className="w-full md:w-1/2">
+      </motion.div>
+      <motion.div
+        initial={{ x: 100, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 100, damping: 10 }}
+        className="w-full md:w-1/2"
+      >
         <div className="flex items-center justify-center gap-4">
           <p class="text-center tracking-wide text-white font-bold">Charges</p>
         </div>
@@ -82,7 +93,7 @@ const ProfileComponent = ({ user }) => {
             You are not scheduled to be Blocked
           </p>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

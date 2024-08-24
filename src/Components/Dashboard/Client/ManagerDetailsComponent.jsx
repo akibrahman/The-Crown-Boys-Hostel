@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import React from "react";
+import { motion } from "framer-motion";
 
 const ManagerDetailsComponent = ({ user }) => {
   const { data: manager } = useQuery({
@@ -38,19 +39,28 @@ const ManagerDetailsComponent = ({ user }) => {
     user.role === "client" &&
     user.isVerified &&
     user.isClientVerified && (
-      <div className={`pt-10 py-8 flex flex-col items-center min-h-full bg-dashboard text-slate-100`}>
-        <Image
-          alt={`Profile picture of ${manager.username}`}
-          src={manager.profilePicture}
-          width={200}
-          height={200}
-          className="mb-10 rounded-full aspect-square"
-        />
-        <p className="mb-1 text-blue-500 font-medium text-xl">
-          {manager.username}
-        </p>
-        <p>{manager.email}</p>
-        <p>{manager.contactNumber}</p>
+      <div
+        className={`pt-10 py-8 flex flex-col items-center min-h-full bg-dashboard text-slate-100`}
+      >
+        <motion.div
+          initial={{ scale: 0.7, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100, damping: 10 }}
+          className=""
+        >
+          <Image
+            alt={`Profile picture of ${manager.username}`}
+            src={manager.profilePicture}
+            width={200}
+            height={200}
+            className="mb-10 rounded-full aspect-square"
+          />
+          <p className="mb-1 text-blue-500 font-medium text-xl">
+            {manager.username}
+          </p>
+          <p>{manager.email}</p>
+          <p>{manager.contactNumber}</p>
+        </motion.div>
       </div>
     )
   );
