@@ -36,7 +36,7 @@ const RootLayout = ({ children }) => {
             <NavBar />
             {/* <hr className="border-sky-500" /> */}
             <div className="">{children}</div>
-            <hr className="border-sky-500" />
+
             <Footer />
           </ContextProvider>
         </TanstackProvider>

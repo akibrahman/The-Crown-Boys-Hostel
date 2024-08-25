@@ -31,6 +31,7 @@
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.9",
     "path": "^0.12.7",
+    "qrcode.react": "^3.1.0",
     "query-string": "^9.1.0",
     "quickemailverification": "^1.0.4",
     "react": "^18",
