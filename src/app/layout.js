@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import "react-tooltip/dist/react-tooltip.css";
 import "./globals.css";
 import NavBar from "@/Components/NavBar/NavBar";
+import FloodHelpComponent from "@/Components/FloodHelpComponent/FloodHelpComponent";
 
 // const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
@@ -27,16 +28,13 @@ export const metadata = {
 const RootLayout = ({ children }) => {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.className} duration-300 transition-all ease-in-out`}
-      >
+      <body className={`${poppins.className} relative`}>
         <TanstackProvider>
           <ContextProvider>
             <Toaster />
             <NavBar />
-            {/* <hr className="border-sky-500" /> */}
+            <FloodHelpComponent />
             <div className="">{children}</div>
-
             <Footer />
           </ContextProvider>
         </TanstackProvider>

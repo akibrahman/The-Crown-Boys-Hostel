@@ -1,4 +1,5 @@
 "use client";
+import crypto from "crypto";
 import Image from "next/image";
 import QRCode from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
@@ -28,7 +29,11 @@ const ManagerManualInvoiceComponent = () => {
       prevInvoiceData.filter((_, index) => index != indexToDelete)
     );
   };
-  const transactionId = "DH8J95GJH";
+  const [transactionId, setTransactionId] = useState("");
+  useEffect(() => {
+    const txId = crypto.randomBytes(4).toString("hex").toUpperCase();
+    setTransactionId(txId);
+  }, []);
   const [allowedDevice, setAllowedDevice] = useState(false);
   useEffect(() => {
     const detectDeviceType = () => {
@@ -331,7 +336,7 @@ const ManagerManualInvoiceComponent = () => {
     );
   else
     return (
-      <div className="min-h-full bg-dashboard flex items-center justify-center text-red-500 font-semibold">
+      <div className="min-h-full bg-dashboard flex items-center justify-center text-red-500 font-semibold text-center">
         <p>
           Any kind of Smart Phones or Handsets or Tablets are not permitted to
           generate Invoice
