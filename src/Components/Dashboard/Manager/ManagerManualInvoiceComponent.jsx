@@ -1,22 +1,32 @@
 "use client";
+import axios from "axios";
 import crypto from "crypto";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import QRCode from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { useReactToPrint } from "react-to-print";
+import { motion } from "framer-motion";
+import { CgSpinner } from "react-icons/cg";
 
 const ManagerManualInvoiceComponent = () => {
   const componentRef = useRef();
+  const searchParams = useSearchParams();
+  const billId = searchParams.get("billId");
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: "The Crwon Boys Hostel - Recipt",
-    onBeforePrint: () => console.log("before printing..."),
-    onAfterPrint: () => console.log("after printing..."),
+    // onBeforePrint: () => console.log("before printing..."),
+    // onAfterPrint: () => console.log("after printing..."),
   });
   const [invoiceData, setInvoiceData] = useState([]);
+  const [invoiceName, setInvoiceName] = useState([]);
+  const [invoiceNumber, setInvoiceNumber] = useState([]);
   const [formName, setFormName] = useState("");
   const [formValue, setFormValue] = useState("");
+  const [billLoading, setBillLoading] = useState(false);
+
   const addField = (e) => {
     e.preventDefault();
     if (!formName || !formValue || parseInt(formValue) <= 0) return;
@@ -33,9 +43,6 @@ const ManagerManualInvoiceComponent = () => {
   useEffect(() => {
     const txId = crypto.randomBytes(4).toString("hex").toUpperCase();
     setTransactionId(txId);
-  }, []);
-  const [allowedDevice, setAllowedDevice] = useState(false);
-  useEffect(() => {
     const detectDeviceType = () => {
       const userAgent = navigator.userAgent.toLowerCase();
       if (
@@ -50,13 +57,77 @@ const ManagerManualInvoiceComponent = () => {
       }
     };
     detectDeviceType();
-  }, []);
+    if (!billId) return;
+    setBillLoading(true);
+    axios
+      .get(`/api/bills/getbill/${billId}`)
+      .then((res) => {
+        console.log(res);
+        if (!res.data.success) return;
+        const billAmount = res?.data?.bill?.totalBillInBDT || 0;
+        const paidAmount = res?.data?.bill?.paidBillInBDT || 0;
+        console.log(billAmount, parseInt(paidAmount));
+        if (billAmount == paidAmount || res?.data?.bill?.status == "initiated")
+          return;
+        const name = res?.data?.user?.username || "";
+        const number = res?.data?.user?.contactNumber || "";
+        setInvoiceName(name);
+        setInvoiceNumber(number);
+        const rawCharges = res?.data?.bill?.charges || [];
+        const charges = rawCharges?.map((charge) => {
+          return {
+            name: charge?.note + " - " + res?.data?.bill?.month,
+            value: parseInt(charge?.amount),
+          };
+        });
+        setInvoiceData([
+          ...invoiceData,
+          ...charges,
+          {
+            name: `Meal Bill - ${res?.data?.bill?.month}`,
+            value: parseInt(billAmount) - parseInt(paidAmount),
+          },
+        ]);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setBillLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [billId]);
+  const [allowedDevice, setAllowedDevice] = useState(false);
   if (allowedDevice)
     return (
-      <div className="min-h-full p-10 pt-5 bg-dashboard text-slate-100 relative">
+      <div className="min-h-full p-10 px-14 pt-5 bg-dashboard text-slate-100 relative">
+        {/* Bill Loading Notify  */}
+        {billLoading && (
+          <motion.div
+            initial={{ x: 100, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, damping: 10 }}
+            className="absolute top-3 right-3 pr-10 pl-4 py-2 bg-white text-blue-500 font-medium flex items-center gap-2"
+          >
+            <CgSpinner className="animate-spin text-xl" />
+            <p>Generating Auto Bill Based Invoice</p>
+          </motion.div>
+        )}
         <p className="text-center font-semibold text-xl dark:text-white relative">
           Create Invoice
         </p>
+        <form className="flex items-center justify-center gap-10 text-black mt-5">
+          <input
+            placeholder="Receipent Name"
+            className="px-4 py-1 rounded-md outline-none"
+            type="text"
+            value={invoiceName}
+            onChange={(e) => setInvoiceName(e.target.value)}
+          />
+          <input
+            placeholder="Receipent Number"
+            className="px-4 py-1 rounded-md outline-none"
+            type="text"
+            value={invoiceNumber}
+            onChange={(e) => setInvoiceNumber(e.target.value)}
+          />
+        </form>
         <form
           onSubmit={addField}
           className="flex items-center justify-center gap-10 text-black mt-5"
@@ -134,18 +205,18 @@ const ManagerManualInvoiceComponent = () => {
                 <div className="">
                   <p className="w-max">
                     Customer Name:
-                    <span className="font-semibold ml-2">MD. Akib Rahman</span>
+                    <span className="font-semibold ml-2">{invoiceName}</span>
                   </p>
 
                   <p className="w-max">
                     Phone No:{" "}
-                    <span className="font-semibold ml-2">01709-605097</span>
+                    <span className="font-semibold ml-2">{invoiceNumber}</span>
                   </p>
 
                   <p className="w-max">
                     Date:{" "}
                     <span className="font-semibold ml-2">
-                      28th August 09:10:56 PM
+                      {new Date().toLocaleString()}
                     </span>
                   </p>
                 </div>
@@ -172,8 +243,10 @@ const ManagerManualInvoiceComponent = () => {
                   <p className="font-bold">
                     Tax 1%
                     <span className="ml-5">
-                      {invoiceData.reduce((a, c) => a + c.value, 0) * 0.01}/-
-                      BDT
+                      {parseFloat(
+                        invoiceData.reduce((a, c) => a + c.value, 0) * 0.01
+                      ).toFixed(2)}
+                      /- BDT
                     </span>
                   </p>
 
@@ -243,18 +316,18 @@ const ManagerManualInvoiceComponent = () => {
                 <div className="">
                   <p className="w-max">
                     Customer Name:
-                    <span className="font-semibold ml-2">MD. Akib Rahman</span>
+                    <span className="font-semibold ml-2">{invoiceName}</span>
                   </p>
 
                   <p className="w-max">
                     Phone No:{" "}
-                    <span className="font-semibold ml-2">01709-605097</span>
+                    <span className="font-semibold ml-2">{invoiceNumber}</span>
                   </p>
 
                   <p className="w-max">
                     Date:{" "}
                     <span className="font-semibold ml-2">
-                      28th August 09:10:56 PM
+                      {new Date().toLocaleString()}
                     </span>
                   </p>
                 </div>
@@ -281,8 +354,10 @@ const ManagerManualInvoiceComponent = () => {
                   <p className="font-bold">
                     Tax 1%
                     <span className="ml-5">
-                      {invoiceData.reduce((a, c) => a + c.value, 0) * 0.01}/-
-                      BDT
+                      {parseFloat(
+                        invoiceData.reduce((a, c) => a + c.value, 0) * 0.01
+                      ).toFixed(2)}
+                      /- BDT
                     </span>
                   </p>
 

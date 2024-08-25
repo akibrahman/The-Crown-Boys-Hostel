@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
@@ -28,6 +29,8 @@ const Receipt = ({
     state: false,
     method: "",
   });
+
+  const route = useRouter();
 
   const [isRPaid, setIsRPaid] = useState(isRentPaid);
 
@@ -366,10 +369,15 @@ const Receipt = ({
           <>
             {isManageable && (
               <button
-                onClick={makePaid}
+                onClick={() =>
+                  route.push(
+                    `/dashboard?displayData=managerManualInvouce&billId=${id}`
+                  )
+                }
+                // onClick={makePaid}
                 className="bg-green-500 text-white px-4 py-0.5 duration-300 rounded flex items-center gap-3 active:scale-90"
               >
-                Make Paid
+                Generate Invoice
                 {isMoneyAdding.state &&
                   isMoneyAdding.id == id &&
                   isMoneyAdding.method == "makePaid" && (
