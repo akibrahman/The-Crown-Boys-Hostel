@@ -8,7 +8,7 @@ const OwnerControlPanel = ({ user }) => {
   return (
     <div className="bg-dashboard w-full min-h-full p-10 flex items-center justify-center gap-4 flex-wrap">
       <button
-        disabled
+        // disabled
         onClick={async () => {
           const { data } = await axios.get("/api/cronjob/cronjob", {
             headers: { Authorization: "Bearer 1234567890" },

@@ -136,10 +136,15 @@ const ManagerMarketQueryComponent = () => {
                   </span>
 
                   <span className="select-none dark:text-white">
-                    {Object.values(mrkt.details[0]).reduce(
-                      (sum, value) => sum + value,
-                      0
-                    )}{" "}
+                    {mrkt.details.reduce((total, item) => {
+                      return (
+                        total +
+                        Object.values(item).reduce(
+                          (sum, value) => sum + value,
+                          0
+                        )
+                      );
+                    }, 0)}{" "}
                     /-
                   </span>
                 </div>
