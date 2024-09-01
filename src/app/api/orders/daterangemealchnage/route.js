@@ -12,6 +12,7 @@ export const PUT = async (req) => {
         userId,
         date: fromDate.split("/")[0] + "/" + i + "/" + fromDate.split("/")[2],
       });
+      if (!order) continue;
       if (Object.keys(data).includes("breakfast"))
         order.breakfast = data.breakfast;
       if (Object.keys(data).includes("lunch")) order.lunch = data.lunch;

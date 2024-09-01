@@ -59,7 +59,11 @@ const ManagerMealQueryComponent = () => {
         month,
         year,
       });
-      setResult({ orders: data.orders, bill: data.bill });
+      setResult({
+        orders: data.orders.sort((a, b) => a._id.localeCompare(b._id)),
+        bill: data.bill,
+      });
+      console.log("=>>>>>>>>>>>", data.orders);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong, Try again!");

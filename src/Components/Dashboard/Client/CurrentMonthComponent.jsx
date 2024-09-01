@@ -26,7 +26,7 @@ const CurrentMonthComponent = ({ user }) => {
           month: currentMonth,
           year: currentYear,
         });
-        return data.orders;
+        return data.orders.sort((a, b) => a._id.localeCompare(b._id));
       } catch (error) {
         console.log(error);
         return null;
@@ -97,12 +97,12 @@ const CurrentMonthComponent = ({ user }) => {
     <div className="min-h-full bg-dashboard text-slate-100 overflow-x-hidden">
       <div className="p-6 px-10 flex flex-col-reverse gap-3 items-center md:flex-row-reverse md:gap-0 justify-between">
         {user.role === "client" && user.isVerified && user.isClientVerified && (
-          <>
+          <div className="flex items-center justify-between md:gap-4">
             <motion.p
               initial={{ x: 100, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               transition={{ type: "spring", stiffness: 100, damping: 10 }}
-              className="text-lg border rounded-xl border-sky-500 px-8 py-1.5"
+              className="md:text-lg border md:rounded-xl border-sky-500 w-max px-4 md:px-8 py-1 md:py-1.5"
             >
               Dinner: {dinnerCount}
             </motion.p>
@@ -110,7 +110,7 @@ const CurrentMonthComponent = ({ user }) => {
               initial={{ scale: 0.5, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 100, damping: 10 }}
-              className="text-lg border rounded-xl border-sky-500 px-8 py-1.5"
+              className="md:text-lg border md:rounded-xl border-sky-500 w-max px-4 md:px-8 py-1 md:py-1.5"
             >
               Lunch: {lunchCount}
             </motion.p>
@@ -118,11 +118,11 @@ const CurrentMonthComponent = ({ user }) => {
               initial={{ x: -100, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               transition={{ type: "spring", stiffness: 100, damping: 10 }}
-              className="text-lg border rounded-xl border-sky-500 px-8 py-1.5"
+              className="md:text-lg border md:rounded-xl border-sky-500 w-max px-4 md:px-8 py-1 md:py-1.5"
             >
               Breakfast: {breakfastCount}
             </motion.p>
-          </>
+          </div>
         )}
       </div>
       <div className="px-6 pb-8">

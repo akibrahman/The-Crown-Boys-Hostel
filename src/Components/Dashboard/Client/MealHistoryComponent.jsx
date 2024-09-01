@@ -29,7 +29,9 @@ const MealHistoryComponent = ({ user }) => {
         month,
         year,
       });
-      setResult({ orders: data.orders });
+      setResult({
+        orders: data.orders.sort((a, b) => a._id.localeCompare(b._id)),
+      });
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong, Try again!");
@@ -117,7 +119,7 @@ const MealHistoryComponent = ({ user }) => {
             {result && result.orders.length > 0 && result.orders[0].month}
           </span>
         </p>
-        <div className="mt-6 flex items-center justify-center flex-wrap gap-4 px-20 pb-10">
+        <div className="mt-6 flex items-center justify-center flex-wrap gap-4 p-4 md:px-20 pb-10">
           <Tooltip className="z-50" id="userQuery-tooltip" />
           {result?.orders?.map((order) => (
             <motion.div
