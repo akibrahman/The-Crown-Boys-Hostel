@@ -4,6 +4,7 @@ import { AuthContext } from "@/providers/ContextProvider";
 import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
@@ -35,7 +36,46 @@ const ManagerSendSMSComponent = () => {
       );
       if (data.success) {
         const actualData = data.clients;
-        const requiredData = actualData.map((client) => {
+        const allUsers = actualData.filter((a) => {
+          if (a.blockDate) {
+            if (
+              moment(a.blockDate).isSame(moment.now(), "month") &&
+              moment(a.blockDate).isSame(moment.now(), "year")
+            ) {
+              return false;
+            } else if (
+              !moment(a.blockDate).isSame(moment.now(), "month") &&
+              !moment(a.blockDate).isSame(moment.now(), "year")
+            ) {
+              if (moment(a.blockDate).isBefore(moment.now())) {
+                return false;
+              } else {
+                return true;
+              }
+            } else if (
+              moment(a.blockDate).isSame(moment.now(), "month") &&
+              !moment(a.blockDate).isSame(moment.now(), "year")
+            ) {
+              if (moment(a.blockDate).isBefore(moment.now(), "year")) {
+                return false;
+              } else {
+                return true;
+              }
+            } else if (
+              moment(a.blockDate).isSame(moment.now(), "year") &&
+              !moment(a.blockDate).isSame(moment.now(), "month")
+            ) {
+              if (moment(a.blockDate).isBefore(moment.now(), "month")) {
+                return false;
+              } else {
+                return true;
+              }
+            }
+          } else {
+            return true;
+          }
+        });
+        const requiredData = allUsers.map((client) => {
           return {
             value: client._id,
             label: client.username + " - " + client.contactNumber,
@@ -47,6 +87,7 @@ const ManagerSendSMSComponent = () => {
     },
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
+  console.log("->>>>>>>", clients);
   const sendSms = async (e) => {
     e.preventDefault();
     if (!sendState) return toast.error("Select option!");
