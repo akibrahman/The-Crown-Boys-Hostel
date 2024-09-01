@@ -187,7 +187,6 @@ const DateRangeMealOrder = ({
     const fromDay = parseInt(fromDate.split("/")[1]);
     const toDay = parseInt(toDate.split("/")[1]);
 
-    // for (let i = fromDay; i <= toDay; i++) {
     try {
       const { data: resData } = await axios.put(
         "/api/orders/daterangemealchnage",

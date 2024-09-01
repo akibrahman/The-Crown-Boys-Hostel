@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import Modal from "react-modal";
+import { Tooltip } from "react-tooltip";
 
 const ManagerOrderStatusComponent = () => {
   const route = useRouter();
@@ -440,17 +441,29 @@ const ManagerOrderStatusComponent = () => {
           )}
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center max-h-60 overflow-y-scroll scrollbar-hide">
           {orderOfToday?.map((order) => (
             <div className="flex items-center gap-3 md:gap-8" key={order._id}>
+              <Tooltip className="z-50" id="orderstatustoday" />
               <p
+                data-tooltip-id="orderstatustoday"
+                data-tooltip-content={
+                  order.isGuestMeal
+                    ? "Breakfast : " +
+                      order.guestBreakfastCount +
+                      " Lunch : " +
+                      order.guestLunchCount +
+                      " Dinner : " +
+                      order.guestDinnerCount
+                    : null
+                }
                 className={`${
                   order.isGuestMeal ? "text-blue-500" : ""
-                } text-sm md:text-base w-max md:w-auto`}
+                } text-sm md:text-base w-max`}
               >
                 {order.user.username}
               </p>
-              <p className="text-sm md:text-base w-max md:w-auto">
+              <p className="text-sm md:text-base w-max">
                 {order.user.floor + 1} - ( {order.user.floor}
                 <sup>th</sup> Floor )
               </p>
@@ -497,17 +510,29 @@ const ManagerOrderStatusComponent = () => {
           )}
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center max-h-60 overflow-y-scroll scrollbar-hide">
           {orderOfTomorrow?.map((order) => (
             <div className="flex items-center gap-3 md:gap-8" key={order._id}>
+              <Tooltip className="z-50" id="orderstatustomorrow" />
               <p
+                data-tooltip-id="orderstatustomorrow"
+                data-tooltip-content={
+                  order.isGuestMeal
+                    ? "Breakfast : " +
+                      order.guestBreakfastCount +
+                      " Lunch : " +
+                      order.guestLunchCount +
+                      " Dinner : " +
+                      order.guestDinnerCount
+                    : null
+                }
                 className={`${
                   order.isGuestMeal ? "text-blue-500" : ""
-                } text-sm md:text-base w-max md:w-auto`}
+                } text-sm md:text-base w-max`}
               >
                 {order.user.username}
               </p>
-              <p className="text-sm md:text-base w-max md:w-auto">
+              <p className="text-sm md:text-base w-max">
                 {order.user.floor + 1} - ( {order.user.floor}
                 <sup>th</sup> Floor )
               </p>
@@ -555,17 +580,29 @@ const ManagerOrderStatusComponent = () => {
           )}
         </div>
         {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 mt-2 rounded-md grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center max-h-52 overflow-y-scroll scrollbar-hide">
+        <div className="text-sm bg-stone-700 px-5 text-white py-2 mt-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center max-h-60 overflow-y-scroll scrollbar-hide">
           {orderOfYesterday?.map((order) => (
             <div className="flex items-center gap-3 md:gap-8" key={order._id}>
+              <Tooltip className="z-50" id="orderstatusyesterday" />
               <p
+                data-tooltip-id="orderstatusyesterday"
+                data-tooltip-content={
+                  order.isGuestMeal
+                    ? "Breakfast : " +
+                      order.guestBreakfastCount +
+                      " Lunch : " +
+                      order.guestLunchCount +
+                      " Dinner : " +
+                      order.guestDinnerCount
+                    : null
+                }
                 className={`${
                   order.isGuestMeal ? "text-blue-500" : ""
-                } text-sm md:text-base w-max md:w-auto`}
+                } text-sm md:text-base w-max`}
               >
                 {order.user.username}
               </p>
-              <p className="text-sm md:text-base w-max md:w-auto">
+              <p className="text-sm md:text-base w-max">
                 {order.user.floor + 1} - ( {order.user.floor}
                 <sup>th</sup> Floor )
               </p>
