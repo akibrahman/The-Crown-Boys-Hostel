@@ -68,8 +68,8 @@ export const GET = async (req) => {
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     //! Second Last day of any month-----------------------
-    // if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
-    if (true) {
+    if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
+      // if (true) {
       console.log("Second Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -216,8 +216,8 @@ export const GET = async (req) => {
       // Market Data creation for all verified managers End
     }
     //! Last day of any month------------------------------
-    // if (aboutLastDayOfCurrentMonth.isLastDay) {
-    if (true) {
+    if (aboutLastDayOfCurrentMonth.isLastDay) {
+      // if (true) {
       console.log("Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -424,10 +424,10 @@ export const GET = async (req) => {
       // Manager Bill Creation End
       // SMS and E-mails sent Start
       const mailOptions = {
-        from: "thecrownboyshostel@gmail.com", // Sender address
+        from: "thecrownboyshostel@gmail.com",
         to: allEmails.join(","),
-        subject: "Test E-mail",
-        text: "Hello, this is a test email sent to multiple recipients.",
+        subject: "Monthly Bill - The Crown Boys hostel",
+        html: `<div><p>Hello, Your Montly Bill has been Created</p><p>Please visit: <a href="http://localhost:3000/dashboard?displayData=myBills">http://localhost:3000/dashboard?displayData=myBills</a></p></div>`,
       };
       transport.sendMail(mailOptions);
       // SMS and E-mails sent End

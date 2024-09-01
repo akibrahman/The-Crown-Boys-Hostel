@@ -824,8 +824,8 @@ const Dashboard = ({ user }) => {
           ) : displayData == "managerOrderStatus" ? (
             <ManagerOrderStatusComponent user={user} />
           ) : displayData == "managerSendSMS" ? (
-            <UnderConstruction />
-          ) : // <ManagerSendSMSComponent user={user} />
+            <ManagerSendSMSComponent user={user} />
+          ) : //  <UnderConstruction />
           displayData == "managerBillQuery" ? (
             <ManagerBillQueryComponent user={user} />
           ) : displayData == "managerMealQuery" ? (
