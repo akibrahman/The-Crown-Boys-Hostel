@@ -50,27 +50,34 @@ export const POST = async (req) => {
   }
 };
 
-export const GET = async () => {
+export const GET = async (req) => {
   try {
-    const rfids = [];
-    const allRfids = await RFID.find();
-    for (let i = 0; i < allRfids.length; i++) {
-      const singleRfid = await RFID.findById(allRfids[i]._id);
-      if (!singleRfid.userId) rfids.push(singleRfid);
-      else {
-        const userDetails = await User.findById(singleRfid.userId);
-        const rfidData = {
-          _id: singleRfid._id,
-          cardId: singleRfid.cardId,
-          userId: singleRfid.userId,
-          createdAt: singleRfid.createdAt,
-          isIssued: singleRfid.isIssued,
-          username: userDetails.username,
-          profilePicture: userDetails.profilePicture,
-        };
-        rfids.push(rfidData);
-      }
-    }
+    const { searchParams } = new URL(req.url);
+    const cardId = searchParams.get("cardId") || "";
+
+    // Find RFID records that match the cardId using regex
+    const allRfids = await RFID.find({
+      cardId: { $regex: cardId, $options: "i" }, // 'i' for case-insensitive matching
+    });
+    const rfids = await Promise.all(
+      allRfids.map(async (rfid) => {
+        if (!rfid.userId) {
+          return rfid;
+        } else {
+          const userDetails = await User.findById(rfid.userId);
+          return {
+            _id: rfid._id,
+            cardId: rfid.cardId,
+            userId: rfid.userId,
+            createdAt: rfid.createdAt,
+            isIssued: rfid.isIssued,
+            username: userDetails.username,
+            profilePicture: userDetails.profilePicture,
+          };
+        }
+      })
+    );
+
     return NextResponse.json({
       rfids,
       success: true,
