@@ -4,6 +4,7 @@ import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
@@ -23,7 +24,6 @@ const ManagerRFIDIssueComponent = () => {
         const { data } = await axios.get("/api/rfid");
         if (data.success) {
           setloading(false);
-          console.log(data.rfids);
           return data.rfids;
         } else {
           setloading(false);
@@ -44,7 +44,18 @@ const ManagerRFIDIssueComponent = () => {
         `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=1&clientName=${queryKey[3]}`
       );
       const array = data.clients;
-      return array;
+      const allUsers = array.filter((a) => {
+        if (a?.blockDate) {
+          if (moment(a.blockDate).isSameOrBefore(moment.now(), "day")) {
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      });
+      return allUsers;
     },
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
@@ -89,28 +100,7 @@ const ManagerRFIDIssueComponent = () => {
   return (
     <div className="bg-dashboard text-slate-100 min-h-full">
       <p className="text-center py-5 text-xl">RFID Issue</p>
-      <button
-        onClick={async () => {
-          try {
-            const { data } = await axios.post("/api/rfid", {
-              cardId: "EE FF GG HH",
-            });
-            if (data.success) {
-              await rfidsRefetch();
-              toast.success("Card created successfully");
-            } else {
-              toast.error(data.msg);
-            }
-          } catch (error) {
-            console.log(error);
-            toast.error(error.response.data.msg);
-          }
-        }}
-        className="block mx-auto my-4 px-4 py-1 duration-300 bg-green-500 text-white active:scale-90"
-      >
-        create Card
-      </button>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
         {/*//! All Cards  */}
         <div className="md:col-span-2">
           {loading ? (
@@ -119,6 +109,14 @@ const ManagerRFIDIssueComponent = () => {
             </div>
           ) : rfids && rfids.length > 0 ? (
             <div className="grid grid-cols-1 gap-4 px-10">
+              <div className="border border-blue-500 px-6 py-4 flex items-center justify-evenly">
+                <p>Total: {rfids?.length}</p>
+                <p>Registered: {rfids?.filter((r) => r.isIssued)?.length}</p>
+                <p>
+                  Un-Registered: {rfids?.filter((r) => !r.isIssued)?.length}
+                </p>
+              </div>
+
               {rfids.map((rfid) => (
                 <div
                   className="border border-blue-500 px-6 py-4"
@@ -201,8 +199,8 @@ const ManagerRFIDIssueComponent = () => {
           )}
         </div>
         {/*//! All Users !  */}
-        <div className="h-[380px] overflow-x-hidden overflow-y-scroll px-3 flex flex-col items-center gap-4 relative">
-          <div className=" pb-2 bg-transparent w-[110%] flex justify-center sticky top-0">
+        <div className="h-[380px] sticky top-0 overflow-x-hidden overflow-y-scroll px-3 flex flex-col items-center gap-2">
+          <div className="bg-transparent w-[110%] flex justify-center sticky top-0">
             <div className="relative">
               <input
                 onChange={(e) => setClientName(e.target.value)}
@@ -213,6 +211,7 @@ const ManagerRFIDIssueComponent = () => {
               <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
             </div>
           </div>
+          <p className="font-semibold">Total Users: {clients?.length}</p>
 
           {clientName && !clients ? (
             <p className="mt-4 flex items-center gap-1 font-semibold">

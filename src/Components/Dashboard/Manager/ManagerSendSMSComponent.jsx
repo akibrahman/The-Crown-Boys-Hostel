@@ -37,39 +37,11 @@ const ManagerSendSMSComponent = () => {
       if (data.success) {
         const actualData = data.clients;
         const allUsers = actualData.filter((a) => {
-          if (a.blockDate) {
-            if (
-              moment(a.blockDate).isSame(moment.now(), "month") &&
-              moment(a.blockDate).isSame(moment.now(), "year")
-            ) {
+          if (a?.blockDate) {
+            if (moment(a.blockDate).isSameOrBefore(moment.now(), "day")) {
               return false;
-            } else if (
-              !moment(a.blockDate).isSame(moment.now(), "month") &&
-              !moment(a.blockDate).isSame(moment.now(), "year")
-            ) {
-              if (moment(a.blockDate).isBefore(moment.now())) {
-                return false;
-              } else {
-                return true;
-              }
-            } else if (
-              moment(a.blockDate).isSame(moment.now(), "month") &&
-              !moment(a.blockDate).isSame(moment.now(), "year")
-            ) {
-              if (moment(a.blockDate).isBefore(moment.now(), "year")) {
-                return false;
-              } else {
-                return true;
-              }
-            } else if (
-              moment(a.blockDate).isSame(moment.now(), "year") &&
-              !moment(a.blockDate).isSame(moment.now(), "month")
-            ) {
-              if (moment(a.blockDate).isBefore(moment.now(), "month")) {
-                return false;
-              } else {
-                return true;
-              }
+            } else {
+              return true;
             }
           } else {
             return true;

@@ -33,7 +33,7 @@ const RootLayout = ({ children }) => {
           <ContextProvider>
             <Toaster />
             <NavBar />
-            <FloodHelpComponent />
+            {/* <FloodHelpComponent /> */}
             <div className="">{children}</div>
             <Footer />
           </ContextProvider>
