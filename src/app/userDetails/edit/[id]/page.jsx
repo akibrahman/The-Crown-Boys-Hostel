@@ -88,40 +88,44 @@ const Page = ({ params }) => {
       console.log(data);
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(
+        error?.response?.data?.msg || error?.message || "Server Error"
+      );
     }
   };
 
   const saveBlockDate = async () => {
     if (!date) return toast.error("Date is not selected!");
     try {
+      const fromDate =
+        new Date(date).toLocaleDateString("en-US", {
+          timeZone: "Asia/Dhaka",
+          month: "numeric",
+        }) +
+        "/" +
+        new Date(date).toLocaleDateString("en-US", {
+          timeZone: "Asia/Dhaka",
+          day: "numeric",
+        }) +
+        "/" +
+        new Date(date).toLocaleDateString("en-US", {
+          timeZone: "Asia/Dhaka",
+          year: "numeric",
+        });
+      const fromDay = parseInt(fromDate.split("/")[1]);
       const { data } = await axios.put("/api/clients/editclient", {
-        changedData: { blockDate: new Date(date).toISOString() },
+        blockDate: new Date(date).toISOString(),
         _id: client._id,
+        fromDate,
+        fromDay,
       });
       if (data.success) toast.success(data.msg);
-      console.log(data);
+      else toast.error(data.msg);
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
-    } finally {
-      await clientRefetch();
-      setCalenderShow(false);
-      setDate("");
-    }
-  };
-  const changeBlockDate = async () => {
-    if (!date) return toast.error("Date is not selected!");
-    try {
-      const { data } = await axios.put("/api/clients/editclient", {
-        changedData: { blockDate: new Date(date).toISOString() },
-        _id: client._id,
-      });
-      if (data.success) toast.success(data.msg);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(
+        error?.response?.data?.msg || error?.message || "Server Error"
+      );
     } finally {
       await clientRefetch();
       setCalenderShow(false);
@@ -131,14 +135,16 @@ const Page = ({ params }) => {
   const clearBlockDate = async () => {
     try {
       const { data } = await axios.put("/api/clients/editclient", {
-        changedData: { blockDate: "" },
+        blockDate: "",
         _id: client._id,
       });
       if (data.success) toast.success(data.msg);
-      console.log(data);
+      else toast.error(data.msg);
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(
+        error?.response?.data?.msg || error?.message || "Server Error"
+      );
     } finally {
       await clientRefetch();
       setCalenderShow(false);
@@ -210,7 +216,9 @@ const Page = ({ params }) => {
       console.log(data);
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(
+        error?.response?.data?.msg || error?.message || "Server Error"
+      );
     } finally {
       setNewProfilePictureUploading(false);
       setNewPhotos({
@@ -810,16 +818,7 @@ const Page = ({ params }) => {
                 {client.blockDate ? (
                   <div className="flex flex-col md:flex-row items-center gap-3">
                     <p>{new Date(client.blockDate).toDateString()}</p>
-                    <button
-                      onClick={() => {
-                        setCalenderShow(!calenderShow);
-                        setDate("");
-                      }}
-                      type="button"
-                      className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-blue-500 select-none cursor-pointer"
-                    >
-                      Change
-                    </button>
+
                     <button
                       onClick={clearBlockDate}
                       type="button"
@@ -840,43 +839,45 @@ const Page = ({ params }) => {
                         onChange={(e) => setDate(e)}
                       />
                     )}
-                    {date && (
-                      <button
-                        onClick={changeBlockDate}
-                        type="button"
-                        className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-green-500 select-none cursor-pointer"
-                      >
-                        Save
-                      </button>
-                    )}
                   </div>
                 ) : (
                   <div className="flex flex-col md:flex-row items-center gap-3">
                     <p>Not Scheduled</p>
-                    <button
-                      onClick={() => {
-                        setCalenderShow(!calenderShow);
-                        setDate("");
-                      }}
-                      type="button"
-                      className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-blue-500 select-none cursor-pointer"
-                    >
-                      Set
-                    </button>
-                    {calenderShow && (
-                      <DatePicker
-                        className={""}
-                        format="dd - MM - y"
-                        value={date}
-                        calendarIcon={<LuCalendarPlus className="text-2xl" />}
-                        clearIcon={null}
-                        dayPlaceholder="--"
-                        monthPlaceholder="--"
-                        yearPlaceholder="----"
-                        onChange={(e) => setDate(e)}
-                      />
+                    {calenderShow || (
+                      <button
+                        onClick={() => {
+                          setCalenderShow(!calenderShow);
+                          setDate("");
+                        }}
+                        type="button"
+                        className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-blue-500 select-none cursor-pointer"
+                      >
+                        Set
+                      </button>
                     )}
-                    {date && (
+                    {calenderShow && (
+                      <div className="flex items-center justify-center gap-2">
+                        <DatePicker
+                          className={""}
+                          format="dd - MM - y"
+                          value={date}
+                          calendarIcon={<LuCalendarPlus className="text-2xl" />}
+                          clearIcon={null}
+                          dayPlaceholder="--"
+                          monthPlaceholder="--"
+                          yearPlaceholder="----"
+                          onChange={(e) => setDate(e)}
+                        />
+                        <FaTimes
+                          className="text-xl cursor-pointer"
+                          onClick={() => {
+                            setCalenderShow(false);
+                            setDate("");
+                          }}
+                        />
+                      </div>
+                    )}
+                    {date && calenderShow && (
                       <button
                         onClick={saveBlockDate}
                         type="button"

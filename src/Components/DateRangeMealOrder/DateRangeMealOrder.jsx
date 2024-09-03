@@ -214,7 +214,14 @@ const DateRangeMealOrder = ({
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong! Try again");
+      toast.error(
+        error?.response?.data?.msg || error?.message || "Something went wrong"
+      );
+      setDate1(null);
+      setDate2(null);
+      setBreakfast(0);
+      setLunch(0);
+      setDinner(0);
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,8 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Order from "@/models/orderModel";
+import User from "@/models/userModel";
 import jwt from "jsonwebtoken";
+import moment from "moment";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -10,8 +12,7 @@ export const POST = async (req) => {
   try {
     const token = cookies()?.get("token")?.value;
     try {
-      var decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-      console.log("===============>", decoded);
+      jwt.verify(token, process.env.TOKEN_SECRET);
     } catch (error) {
       console.log("============>", error);
       if (error.message == "invalid token" || "jwt malformed") {
@@ -20,17 +21,21 @@ export const POST = async (req) => {
       return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
     }
     const { userId, date } = await req.json();
-    console.log({ msg: "Order Changed" });
+    const user = await User.findById(userId);
+    if (!User) throw new Error("User not found");
+    if (moment(user.blockDate).isBefore(moment(date)))
+      throw new Error(
+        `You are Blocked from ${new Date(user.blockDate).toDateString()}`
+      );
     const order = await Order.findOne({ userId, date });
     if (order) return NextResponse.json({ msg: "OK", success: true, order });
     else {
-      console.log("++=>", order, userId, date);
       throw new Error("Order not found");
     }
   } catch (error) {
-    console.log(error);
-    console.log(error.code);
-    console.log(error.message);
-    return NextResponse.json({ msg: "Backend Error", error }, { status: 400 });
+    return NextResponse.json(
+      { msg: error?.message || "Backend Error" },
+      { status: 400 }
+    );
   }
 };
