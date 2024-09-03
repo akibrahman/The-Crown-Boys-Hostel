@@ -120,33 +120,110 @@ export const GET = async (req) => {
       const allUsers = allUsersF.filter((a) => {
         if (a.blockDate) {
           if (
-            moment(a.blockDate).isSame(moment.now(), "month") &&
-            moment(a.blockDate).isSame(moment.now(), "year")
+            moment(a.blockDate).isSame(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "month"
+            ) &&
+            moment(a.blockDate).isSame(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "year"
+            )
           ) {
             return false;
           } else if (
-            !moment(a.blockDate).isSame(moment.now(), "month") &&
-            !moment(a.blockDate).isSame(moment.now(), "year")
+            !moment(a.blockDate).isSame(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "month"
+            ) &&
+            !moment(a.blockDate).isSame(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "year"
+            )
           ) {
-            if (moment(a.blockDate).isBefore(moment.now())) {
+            if (
+              moment(a.blockDate).isBefore(
+                moment(
+                  new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Dhaka",
+                  }),
+                  "M/D/YYYY, h:mm:ss A"
+                )
+              )
+            ) {
               return false;
             } else {
               return true;
             }
           } else if (
-            moment(a.blockDate).isSame(moment.now(), "month") &&
-            !moment(a.blockDate).isSame(moment.now(), "year")
+            moment(a.blockDate).isSame(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "month"
+            ) &&
+            !moment(a.blockDate).isSame(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "year"
+            )
           ) {
-            if (moment(a.blockDate).isBefore(moment.now(), "year")) {
+            if (
+              moment(a.blockDate).isBefore(
+                moment(
+                  new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Dhaka",
+                  }),
+                  "M/D/YYYY, h:mm:ss A"
+                ),
+                "year"
+              )
+            ) {
               return false;
             } else {
               return true;
             }
           } else if (
-            moment(a.blockDate).isSame(moment.now(), "year") &&
-            !moment(a.blockDate).isSame(moment.now(), "month")
+            moment(a.blockDate).isSame(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "year"
+            ) &&
+            !moment(a.blockDate).isSame(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "month"
+            )
           ) {
-            if (moment(a.blockDate).isBefore(moment.now(), "month")) {
+            if (
+              moment(a.blockDate).isBefore(
+                moment(
+                  new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Dhaka",
+                  }),
+                  "M/D/YYYY, h:mm:ss A"
+                ),
+                "month"
+              )
+            ) {
               return false;
             } else {
               return true;

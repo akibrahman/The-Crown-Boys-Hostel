@@ -49,7 +49,15 @@ const ManagerRFIDIssueComponent = () => {
       const array = data.clients;
       const allUsers = array.filter((a) => {
         if (a?.blockDate) {
-          if (moment(a.blockDate).isSameOrBefore(moment.now(), "day")) {
+          if (
+            moment(a.blockDate).isSameOrBefore(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "day"
+            )
+          ) {
             return false;
           } else {
             return true;

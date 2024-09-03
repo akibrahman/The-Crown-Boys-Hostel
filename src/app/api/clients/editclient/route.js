@@ -34,7 +34,15 @@ export const PUT = async (req) => {
     // console.log(fromDay, toDay, fromDate, blockDate);
     // return NextResponse.json({ success: true, msg: "User Updated" });
     if (blockDate) {
-      if (moment(blockDate).isBefore(moment.now(), "day"))
+      if (
+        moment(blockDate).isBefore(
+          moment(
+            new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+            "M/D/YYYY, h:mm:ss A"
+          ),
+          "day"
+        )
+      )
         return NextResponse.json({
           success: false,
           msg: "Past date can not be Block date",

@@ -797,7 +797,13 @@ const Dashboard = ({ user }) => {
             <ProfileComponent user={user} />
           ) : displayData == "currentMonth" ? (
             user.blockDate &&
-            moment(user.blockDate).isBefore(moment.now(), "day") ? (
+            moment(user.blockDate).isBefore(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "day"
+            ) ? (
               <BlockMsg />
             ) : (
               <CurrentMonthComponent user={user} />
@@ -810,7 +816,13 @@ const Dashboard = ({ user }) => {
             <MealHistoryComponent user={user} />
           ) : displayData == "fileManager" ? (
             user.blockDate &&
-            moment(user.blockDate).isBefore(moment.now(), "day") ? (
+            moment(user.blockDate).isBefore(
+              moment(
+                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "day"
+            ) ? (
               <BlockMsg />
             ) : (
               <FileUpload />

@@ -316,7 +316,15 @@ const Profile = () => {
   )
     return <PreLoader />;
   if (user?.success == false) return route.push("/signin");
-  if (user.blockDate && moment(user.blockDate).isBefore(moment.now()))
+  if (
+    user.blockDate &&
+    moment(user.blockDate).isBefore(
+      moment(
+        new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+        "M/D/YYYY, h:mm:ss A"
+      )
+    )
+  )
     return <BlockMsg />;
   return (
     <div className="select-none">
