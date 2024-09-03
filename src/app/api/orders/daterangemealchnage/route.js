@@ -24,14 +24,16 @@ export const PUT = async (req) => {
     }
     const user = await User.findById(userId);
     if (!User) throw new Error("User not found");
-    if (
-      moment(user.blockDate).isBetween(moment(fromDate), moment(toDate)) ||
-      moment(user.blockDate).isBefore(moment(fromDate)) ||
-      moment(user.blockDate).isBefore(moment(toDate))
-    ) {
-      throw new Error(
-        `You are Blocked from ${new Date(user.blockDate).toDateString()}`
-      );
+    if (user?.blockDate) {
+      if (
+        moment(user.blockDate).isBetween(moment(fromDate), moment(toDate)) ||
+        moment(user.blockDate).isBefore(moment(fromDate)) ||
+        moment(user.blockDate).isBefore(moment(toDate))
+      ) {
+        throw new Error(
+          `You are Blocked from ${new Date(user.blockDate).toDateString()}`
+        );
+      }
     }
     for (let i = fromDay; i <= toDay; i++) {
       const order = await Order.findOne({
