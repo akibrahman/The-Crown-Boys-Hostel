@@ -23,10 +23,12 @@ export const POST = async (req) => {
     const { userId, date } = await req.json();
     const user = await User.findById(userId);
     if (!User) throw new Error("User not found");
-    if (moment(user.blockDate).isBefore(moment(date)))
-      throw new Error(
-        `You are Blocked from ${new Date(user.blockDate).toDateString()}`
-      );
+    if (user?.blockDate) {
+      if (moment(user.blockDate).isBefore(moment(date)))
+        throw new Error(
+          `You are Blocked from ${new Date(user.blockDate).toDateString()}`
+        );
+    }
     const order = await Order.findOne({ userId, date });
     if (order) return NextResponse.json({ msg: "OK", success: true, order });
     else {
