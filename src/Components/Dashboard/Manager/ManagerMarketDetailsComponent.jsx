@@ -50,7 +50,7 @@ const ManagerMarketDetailsComponent = ({ user }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative bg-dashboard">
       {modalData && (
         <ModalComponent
           isModalOpen={isModalOpen}
@@ -59,7 +59,7 @@ const ManagerMarketDetailsComponent = ({ user }) => {
           id1={managerCalanderData._id}
         />
       )}
-      <div className="bg-dashboard text-slate-100 py-10 min-h-full">
+      <div className="bg-dashboard text-slate-100 py-10 min-h-screen">
         <p className="text-center">{currentMonth}</p>
 
         <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
