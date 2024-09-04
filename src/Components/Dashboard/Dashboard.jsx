@@ -62,7 +62,7 @@ const Dashboard = ({ user }) => {
   useEffect(() => {
     if (token) {
       axios
-        .put("/api/clients/editclient", { fcm: token })
+        .put("/api/clients/editclient", { fcm: token, _id: user._id })
         .then(() => {
           console.log("FCM Saved");
         })
