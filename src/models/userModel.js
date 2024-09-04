@@ -43,6 +43,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please Provide a role"],
   },
+  fcm: {
+    type: String,
+    default: "",
+  },
   isVerified: {
     type: Boolean,
     default: false,
@@ -57,10 +61,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  // balance: {
-  //   type: Number,
-  //   default: 0,
-  // },
   blockDate: String,
   charges: {
     type: [{}],

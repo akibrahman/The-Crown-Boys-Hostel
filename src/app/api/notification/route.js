@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 // Initialize Firebase Admin SDK
 if (!admin.apps.length) {
-  //   const serviceAccount = require("../../../../public/service_key_firebase_adminsdk_thecrownboyshostel.json");
   const data = {
     type: "service_account",
     project_id: "the-crown-boys-hostel",
@@ -47,8 +46,17 @@ export async function POST(request) {
   try {
     await admin.messaging().send(payload);
 
-    return NextResponse.json({ success: true, message: "Notification sent!" });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ success: false, error });
+    if (error.code === "messaging/registration-token-not-registered") {
+      console.error(
+        "The registration token is not registered anymore. Removing it from the database."
+      );
+      // Add your logic here to remove the token from your database
+      // await removeTokenFromDatabase(token);
+    } else {
+      console.error("Error sending message:", error);
+    }
+    return NextResponse.json({ success: false });
   }
 }

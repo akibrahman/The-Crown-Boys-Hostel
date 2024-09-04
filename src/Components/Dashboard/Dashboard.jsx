@@ -5,7 +5,7 @@ import Image from "next/image";
 import { VscGraphLine } from "react-icons/vsc";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { TbBrandBooking, TbBrandShopee } from "react-icons/tb";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
@@ -50,12 +50,31 @@ import OwnerControlPanel from "./Owner/OwnerControlPanel";
 import ManagerAddARoom from "./Manager/ManagerAddARoom";
 import { BsHouseAdd, BsHouses } from "react-icons/bs";
 import ManagerAllRoomsComponent from "./Manager/ManagerAllRoomsComponent";
+import useFcmToken from "@/hooks/useFcmToken";
 
 const Dashboard = ({ user }) => {
   // useUnloadWarning("Are");
   const route = useRouter();
   const searchParams = useSearchParams();
   let displayData = searchParams.get("displayData");
+
+  const { token } = useFcmToken();
+  useEffect(() => {
+    if (token) {
+      axios
+        .put("/api/clients/editclient", { fcm: token })
+        .then(() => {
+          console.log("FCM Saved");
+        })
+        .catch((error) =>
+          console.log(
+            error?.response?.data?.msg ||
+              error?.message ||
+              "Server Error, FCM not Saved"
+          )
+        );
+    }
+  }, [token]);
 
   if (!displayData) {
     user.role == "manager"

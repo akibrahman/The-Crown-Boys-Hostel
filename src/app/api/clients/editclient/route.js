@@ -9,81 +9,92 @@ await dbConfig();
 
 export const PUT = async (req) => {
   try {
-    const { blockDate, _id, fromDate, fromDay } = await req.json();
-    const currentDateInBD = new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Dhaka",
-    });
-    const dateInBD = new Date(currentDateInBD);
-    const year = dateInBD.getFullYear();
-    const month = dateInBD.getMonth();
-    const nextMonth = new Date(year, month + 1, 1);
-    const lastDayOfCurrentMonth = new Date(nextMonth - 1);
-    let toDay = lastDayOfCurrentMonth.getDate();
-
-    const currentMonth = new Date().toLocaleDateString("en-BD", {
-      month: "long",
-      timeZone: "Asia/Dhaka",
-    });
-
-    const currentYear = parseInt(
-      new Date().toLocaleDateString("en-BD", {
-        year: "numeric",
+    const { blockDate, _id, fromDate, fromDay, fcm } = await req.json();
+    if (!_id) return NextResponse.json({ success: false, msg: "Missing _id" });
+    // About Block date
+    if (blockDate && fromDate && fromDay) {
+      const currentDateInBD = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
-      })
-    );
-    // console.log(fromDay, toDay, fromDate, blockDate);
-    // return NextResponse.json({ success: true, msg: "User Updated" });
-    if (blockDate) {
-      if (
-        moment(blockDate).isBefore(
-          moment(
-            new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
-            "M/D/YYYY, h:mm:ss A"
-          ),
-          "day"
-        )
-      )
-        return NextResponse.json({
-          success: false,
-          msg: "Past date can not be Block date",
-        });
+      });
+      const dateInBD = new Date(currentDateInBD);
+      const year = dateInBD.getFullYear();
+      const month = dateInBD.getMonth();
+      const nextMonth = new Date(year, month + 1, 1);
+      const lastDayOfCurrentMonth = new Date(nextMonth - 1);
+      let toDay = lastDayOfCurrentMonth.getDate();
 
-      if (
-        new Date(blockDate).toLocaleDateString("en-BD", {
-          month: "long",
+      const currentMonth = new Date().toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+
+      const currentYear = parseInt(
+        new Date().toLocaleDateString("en-BD", {
+          year: "numeric",
           timeZone: "Asia/Dhaka",
-        }) !== currentMonth ||
-        parseInt(
+        })
+      );
+      if (blockDate) {
+        if (
+          moment(blockDate).isBefore(
+            moment(
+              new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+              "M/D/YYYY, h:mm:ss A"
+            ),
+            "day"
+          )
+        )
+          return NextResponse.json({
+            success: false,
+            msg: "Past date can not be Block date",
+          });
+
+        if (
           new Date(blockDate).toLocaleDateString("en-BD", {
-            year: "numeric",
+            month: "long",
             timeZone: "Asia/Dhaka",
-          })
-        ) !== currentYear
-      )
-        return NextResponse.json({
-          success: false,
-          msg: "Only current month can be selected",
-        });
+          }) !== currentMonth ||
+          parseInt(
+            new Date(blockDate).toLocaleDateString("en-BD", {
+              year: "numeric",
+              timeZone: "Asia/Dhaka",
+            })
+          ) !== currentYear
+        )
+          return NextResponse.json({
+            success: false,
+            msg: "Only current month can be selected",
+          });
 
-      for (let i = fromDay == toDay ? fromDay : fromDay + 1; i <= toDay; i++) {
-        const order = await Order.findOne({
-          userId: _id,
-          date: fromDate.split("/")[0] + "/" + i + "/" + fromDate.split("/")[2],
-        });
-        console.log(
-          "Order: ",
-          order,
-          fromDate.split("/")[0] + "/" + i + "/" + fromDate.split("/")[2]
-        );
-        if (!order) continue;
-        order.breakfast = false;
-        order.lunch = false;
-        order.dinner = false;
-        await order.save();
+        for (
+          let i = fromDay == toDay ? fromDay : fromDay + 1;
+          i <= toDay;
+          i++
+        ) {
+          const order = await Order.findOne({
+            userId: _id,
+            date:
+              fromDate.split("/")[0] + "/" + i + "/" + fromDate.split("/")[2],
+          });
+          console.log(
+            "Order: ",
+            order,
+            fromDate.split("/")[0] + "/" + i + "/" + fromDate.split("/")[2]
+          );
+          if (!order) continue;
+          order.breakfast = false;
+          order.lunch = false;
+          order.dinner = false;
+          await order.save();
+        }
       }
+      await User.findByIdAndUpdate(_id, { blockDate });
     }
-    await User.findByIdAndUpdate(_id, { blockDate });
-
+    // Abou FCM Token
+    if (fcm) {
+      await User.updateMany({ fcm }, { fcm: "" });
+      await User.findByIdAndUpdate(_id, { fcm });
+    }
     return NextResponse.json({ success: true, msg: "User Updated" });
   } catch (error) {
     console.log(error);
