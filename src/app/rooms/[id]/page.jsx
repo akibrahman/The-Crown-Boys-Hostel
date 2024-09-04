@@ -3,6 +3,7 @@
 import RoomSketch from "@/Components/RoomSketch/RoomSketch";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { allRooms } from "@/utils/rooms";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,8 +15,18 @@ import { FaArrowLeft, FaTimes } from "react-icons/fa";
 const Page = ({ params }) => {
   const { id } = params;
   const route = useRouter();
-  const room = allRooms.find((singleRoom) => singleRoom._id == id);
-  console.log(room);
+
+  const { data: room, refetch } = useQuery({
+    queryKey: ["Room", "All", id],
+    queryFn: async ({ queryKey }) => {
+      const { data } = await axios.get(`/api/room?id=${queryKey[2]}`);
+      if (data.success) {
+        return data.rooms[0];
+      } else {
+        return null;
+      }
+    },
+  });
 
   const [selectedSeat, setSelectedSeat] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -67,6 +78,14 @@ const Page = ({ params }) => {
       setIsBooking(false);
     }
   };
+
+  if (!room)
+    return (
+      <div className="min-h-screen pb-20 bg-dashboard text-stone-300 relative flex items-center justify-center gap-2">
+        <CgSpinner className="text-xl text-white animate-spin" />
+        <p>Loading Room...</p>
+      </div>
+    );
 
   return (
     <div className="min-h-screen pt-5 md:pt-10 pb-20 md:pb-32 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300 relative">
@@ -144,16 +163,12 @@ const Page = ({ params }) => {
         {/*//! Video Div  */}
         <div className="flex flex-col items-center gap-4">
           <p>Room Video</p>
-          <iframe
-            width="400"
-            height="550"
-            src={room.video}
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen={true}
-          ></iframe>
+          <video
+            width="350"
+            height="400"
+            src={room.video.src}
+            controls={true}
+          ></video>
         </div>
         {/*//! Sketch Div  */}
         <div className="flex flex-col items-center gap-4 relative">
@@ -163,7 +178,7 @@ const Page = ({ params }) => {
               height={100}
               width={450}
               alt="Sketch"
-              src={room.sketch}
+              src={room.sketch.src}
               className="w-full"
             />
             <RoomSketch
@@ -191,7 +206,7 @@ const Page = ({ params }) => {
             height={100}
             width={400}
             alt="Sketch"
-            src={room.image}
+            src={room.image.src}
             className="rounded-md"
           />
           <p>Beds Images</p>
@@ -202,12 +217,12 @@ const Page = ({ params }) => {
                   height={100}
                   width={200}
                   alt="Sketch"
-                  src={bed.image}
+                  src={bed.image.src}
                   className="w[65%] rounded-md"
                 />
                 <div className="">
                   <p>No.: {bed.bedNo.toUpperCase()}</p>
-                  <p>Rent: {bed.rent.displayRent} BDT</p>
+                  <p>Rent: {bed.displayRent} BDT</p>
                 </div>
               </div>
             ))}
@@ -267,7 +282,7 @@ const Page = ({ params }) => {
                 width={180}
                 height={100}
                 alt="Picture of Toilet"
-                src={room.toilet.image}
+                src={room.toilet.image.src}
                 className="rounded-md"
               />
               <p className="text-center mt-2">
@@ -279,17 +294,17 @@ const Page = ({ params }) => {
               <p className="text-lg font-bold text-center mb-5 underline">
                 Balcony
               </p>
-              {room.balcony.state && (
+              {room.balcony.balconyState && (
                 <Image
                   width={180}
                   height={100}
                   alt="Picture of Toilet"
-                  src={room.balcony.state ? room.balcony.image : ""}
+                  src={room.balcony.balconyState ? room.balcony.image.src : ""}
                   className="rounded-md"
                 />
               )}
               <p className="text-center mt-2">
-                {room.balcony.state ? "Available" : "Not Available"}
+                {room.balcony.balconyState ? "Available" : "Not Available"}
               </p>
             </div>
           </div>
@@ -325,7 +340,7 @@ const Page = ({ params }) => {
                       src={
                         seat.singleRoom.beds.find(
                           (bedd) => bedd.bedNo == seat.bedNo
-                        ).image
+                        ).image.src
                       }
                       className="rounded-md"
                     />
@@ -350,7 +365,7 @@ const Page = ({ params }) => {
                     {
                       seat.singleRoom.beds.find(
                         (bedd) => bedd.bedNo == seat.bedNo
-                      ).rent.displayRent
+                      ).displayRent
                     }{" "}
                     /-
                   </td>

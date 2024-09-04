@@ -1,4 +1,4 @@
-export const allRooms = [
+export const allRoomss = [
   //! 1st Floor
   // {
   //   _id: "ID001",

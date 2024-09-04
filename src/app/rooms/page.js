@@ -1,17 +1,37 @@
 "use client";
-
-import { allRooms } from "@/utils/rooms";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { FaArrowRight } from "react-icons/fa";
+import { CgSpinner } from "react-icons/cg";
+import { FaArrowRight, FaSpinner } from "react-icons/fa";
 
 const Rooms = () => {
   const searchParams = useSearchParams();
   const floor = searchParams.get("floor");
 
+  const { data: allRooms, refetch } = useQuery({
+    queryKey: ["All Rooms", "All"],
+    queryFn: async ({ queryKey }) => {
+      const { data } = await axios.get(`/api/room`);
+      if (data.success) {
+        return data.rooms;
+      } else {
+        return null;
+      }
+    },
+  });
+  if (!allRooms)
+    return (
+      <div className="min-h-screen pb-20 bg-dashboard text-stone-300 relative flex items-center justify-center gap-2">
+        <CgSpinner className="text-xl text-white animate-spin" />
+        <p>Loading Rooms...</p>
+      </div>
+    );
+
   return (
-    <div className="min-h-screen pb-20 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300 relative">
+    <div className="min-h-screen pb-20 bg-gradient-to-r from-primary to-secondary text-stone-300 relative">
       {floor &&
       (floor == "1" ||
         floor == "3" ||
@@ -21,29 +41,22 @@ const Rooms = () => {
         <div>
           <TargetedRooms
             rooms={allRooms.filter((room) => room.floor == floor)}
-            totalRooms={allRooms
+            totalSeats={allRooms
               .filter((room) => room.floor == floor)
               .reduce(
                 (accumulator, currentValue) => accumulator + currentValue.seats,
                 0
               )}
-            availableRooms={allRooms
+            availableSeats={allRooms
               .filter((room) => room.floor == floor)
-              .reduce(
-                (accumulator, currentValue) =>
-                  accumulator +
-                  currentValue.beds.reduce(
-                    (accumulator2, currentValue2) =>
-                      accumulator2 + currentValue2.isBooked == true ? 0 : 1,
-                    0
-                  ),
-                0
-              )}
+              .reduce((acc, room) => {
+                return acc + room.beds.filter((bed) => !bed.isBooked).length;
+              }, 0)}
             floor={floor}
           />
         </div>
       ) : (
-        <div>
+        <div className="">
           <Floors allRooms={allRooms} />
           <div className="lg:absolute mt-10 lg:mt-0 top-0 left-0 lg:w-[400px] h-[100%] flex items-center justify-center flex-col">
             <p className="w-[200px] flex items-center gap-2">
@@ -136,18 +149,18 @@ const Floors = ({ allRooms }) => {
   );
 };
 
-const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
+const TargetedRooms = ({ floor, totalSeats, availableSeats, rooms }) => {
   return (
     <div>
       <div className="flex items-center justify-center gap-4 py-3 md:py-6 px-8 md:px-20">
         <div className="flex flex-col md:flex-row items-center justify-center text-lg flex-grow text-center gap-1 md:gap-6 pb-6">
-          <span className="block">Total Seats: {totalRooms}</span>
+          <span className="block">Total Seats: {totalSeats}</span>
           <span className="underline font-semibold block">
             Rooms of {floor}
             <sup>{floor == 1 ? "st" : floor == 3 ? "rd" : "th"}</sup> Floor
           </span>
           <span className="text-green-500 block">
-            Available Seats: {availableRooms}
+            Available Seats: {availableSeats}
           </span>
         </div>
         <Link
@@ -191,7 +204,7 @@ const TargetedRooms = ({ floor, totalRooms, availableRooms, rooms }) => {
                 <Image
                   height={100}
                   width={180}
-                  src={room.image}
+                  src={room.image.src}
                   alt={`Image of  room number ${room.name} of 'The Crown Boys Hostel'`}
                   className="block ounded-e-full rounded-xl"
                 />
