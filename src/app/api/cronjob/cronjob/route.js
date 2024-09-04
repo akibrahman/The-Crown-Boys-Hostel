@@ -366,7 +366,7 @@ export const GET = async (req) => {
         const totalLunch = calculateMeals("lunch");
         const totalDinner = calculateMeals("dinner");
         const totalMealBillInBDT =
-          totalBreakfast * 30 + totalLunch * 60 + totalDinner * 60 + 500;
+          totalBreakfast * 32 + totalLunch * 64 + totalDinner * 64 + 500;
         const totalUserCharges =
           user.charges?.reduce((a, b) => a + parseInt(b.amount), 0) || 0;
         const totalBillInBDT = totalMealBillInBDT + totalUserCharges;

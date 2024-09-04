@@ -21,7 +21,7 @@ const CalenderClient = ({
           <span> {currentMonth}</span>
           <span className="text-sm text-sky-500">
             Approx. Bill -{" "}
-            {breakfastCount * 30 + lunchCount * 60 + dinnerCount * 60 + 500} BDT
+            {breakfastCount * 32 + lunchCount * 64 + dinnerCount * 64 + 500} BDT
           </span>
         </p>
         <div className="mt-6 flex items-center justify-center flex-wrap gap-4">

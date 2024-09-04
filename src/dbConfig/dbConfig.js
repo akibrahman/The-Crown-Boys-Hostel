@@ -20,7 +20,3 @@ export const dbConfig = async () => {
     console.log(err);
   }
 };
-
-// $2a$10$.I/PmO9dM3ALRHDPZqds9eZopW4dNmDus04iaq/NcFJO79KdBJg6K
-
-// $2a$10$wVB5rBYPdeofkFYARl7uUuhyh.cBdbl/gMv2/.ijRteYgDoBQ7awW
