@@ -59,15 +59,36 @@ const ManagerSendNotificationComponent = () => {
     },
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
+
   const sendNotification = async (e) => {
     e.preventDefault();
+
     if (!sendState) return toast.error("Select option!");
     if (receiver.length <= 0) return toast.error("No Receiver Selected!");
-    console.log(e.target.title.value);
-    console.log(e.target.body.value);
-    console.log(receiver.map((r) => (r.fcm ? r.label : "")));
-    // console.log(receiver);
+    setIsSending(true);
+    try {
+      const promises = receiver
+        .filter((r) => r?.fcm)
+        .map((r) =>
+          axios.post("/api/notification", {
+            token: r.fcm,
+            title: e.target.title.value,
+            message: e.target.body.value,
+            link: "https://thecrownboyshostel.com/dashboard",
+            image: "/images/logo.png",
+          })
+        );
+      await Promise.all(promises);
+
+      toast.success("Notification Sent");
+    } catch (error) {
+      toast.error("Failed to send notifications.");
+      console.error(error);
+    } finally {
+      setIsSending(false);
+    }
   };
+
   if (!user) return <PreLoader />;
   if (user.role != "manager") {
     route.push("/");
