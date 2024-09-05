@@ -3,9 +3,15 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import ManagerManageRoomUserIcon from "../Dashboard/Manager/ManagerManageRoomUserIcon";
 
-const ManagerManageRoomRoomSketch = ({ name, room, setSelectedBed }) => {
+const ManagerManageRoomRoomSketch = ({
+  name,
+  room,
+  setSelectedBed,
+  setSelectedBedFetching,
+}) => {
   const selectSeat = async (bedNo) => {
     setSelectedBed(null);
+    setSelectedBedFetching(true);
     try {
       const { data } = await axios.get(
         `/api/room?name=${bedNo.substring(0, 2)}&floor=${room.floor}`
@@ -23,6 +29,8 @@ const ManagerManageRoomRoomSketch = ({ name, room, setSelectedBed }) => {
       console.log(error);
       setSelectedBed(null);
       toast.error("Server error, Try again");
+    } finally {
+      setSelectedBedFetching(false);
     }
   };
 

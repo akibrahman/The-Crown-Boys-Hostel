@@ -2,12 +2,21 @@ import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { FaTimes } from "react-icons/fa";
 import Swal from "sweetalert2";
+import Select from "react-select";
+import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 
-const ManagerManageRoomBedData = ({ selectedBed, room, refetch, users }) => {
+const ManagerManageRoomBedData = ({
+  selectedBed,
+  room,
+  refetch,
+  users,
+  setSelectedBed,
+}) => {
   const route = useRouter();
 
   const [isBooked, setIsBooked] = useState(selectedBed[1].isBooked);
@@ -117,7 +126,11 @@ const ManagerManageRoomBedData = ({ selectedBed, room, refetch, users }) => {
   };
 
   return (
-    <div className="w-full md:w-[50%]">
+    <div className="w-full md:w-[50%] relative">
+      <FaTimes
+        onClick={() => setSelectedBed(null)}
+        className="absolute top-4 right-4 text-2xl cursor-pointer bg-white text-gray-600 rounded-full p-1 duration-300 active:scale-90"
+      />
       <div className="bg-gray-600 p-4 rounded-md shadow-sm mb-4 flex flex-col items-center justify-center  gap-4">
         <p className="font-semibold text-center text-white">
           {convertCamelCaseToCapitalized(selectedBed[1].bedNo)}
@@ -125,18 +138,25 @@ const ManagerManageRoomBedData = ({ selectedBed, room, refetch, users }) => {
         <div className="flex items-center justify-center gap-4">
           <div className="flex flex-col gap-2">
             <label className="block text-white font-semibold">User</label>
-            <select
-              className="px-4 py-1.5 w-full rounded-md outline-none font-medium text-gray-500 cursor-pointer"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-            >
-              <option value="">Select User</option>
-              {users.map((user) => (
-                <option key={user._id} value={user._id}>
-                  {user.username}
-                </option>
-              ))}
-            </select>
+            <Select
+              className="px-4 py-1.5 rounded-md outline-none font-medium text-gray-500 cursor-pointer w-[350px]"
+              onChange={(e) => setUser(e.value)}
+              value={
+                users
+                  .map((u) => ({
+                    value: u._id,
+                    label: u.username,
+                  }))
+                  .find((uu) => uu.value === user) || null
+              }
+              options={users.map((u) => {
+                return {
+                  value: u._id,
+                  label: u.username,
+                };
+              })}
+              styles={customStylesForReactSelect}
+            />
           </div>
           <div className="flex flex-col gap-2">
             <label className="block text-white font-semibold">Rent</label>

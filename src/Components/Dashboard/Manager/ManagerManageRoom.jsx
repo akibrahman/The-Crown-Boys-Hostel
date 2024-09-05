@@ -5,6 +5,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import Modal from "react-modal";
 import ManagerManageRoomBedData from "./ManagerManageRoomBedData";
+import { CgSpinner } from "react-icons/cg";
+import { FaTimes } from "react-icons/fa";
 
 const ManagerManageRoom = ({
   isOpen,
@@ -35,6 +37,7 @@ const ManagerManageRoom = ({
   };
 
   const [selectedBed, setSelectedBed] = useState(null);
+  const [selectedBedFetching, setSelectedBedFetching] = useState(false);
 
   return (
     <Modal
@@ -45,6 +48,13 @@ const ManagerManageRoom = ({
       }}
       style={customStyles}
     >
+      <FaTimes
+        onClick={() => {
+          setSelectedBed(null);
+          onRequestClose();
+        }}
+        className="absolute top-4 right-4 text-2xl cursor-pointer bg-white text-gray-600 rounded-full p-1 duration-300 active:scale-90"
+      />
       <p className="text-center font-semibold text-slate-100 underline py-3">
         Room Sketch - {convertCamelCaseToCapitalized(room?.name)}
       </p>
@@ -63,11 +73,20 @@ const ManagerManageRoom = ({
               room={room}
               selectedBed={selectedBed}
               setSelectedBed={setSelectedBed}
+              setSelectedBedFetching={setSelectedBedFetching}
             />
           </div>
-          {selectedBed ? (
+          {selectedBedFetching ? (
+            <div className="w-full md:w-[50%]">
+              <p className="font-semibold text-gray-500 text-center py-10 flex items-center justify-center gap-2">
+                <CgSpinner className="animate-spin text-xl" />
+                Loading Bed
+              </p>
+            </div>
+          ) : selectedBed ? (
             <ManagerManageRoomBedData
               selectedBed={selectedBed}
+              setSelectedBed={setSelectedBed}
               room={room}
               refetch={refetch}
               users={users}
