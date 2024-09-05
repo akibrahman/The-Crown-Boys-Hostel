@@ -51,6 +51,7 @@ import ManagerAddARoom from "./Manager/ManagerAddARoom";
 import { BsHouseAdd, BsHouses } from "react-icons/bs";
 import ManagerAllRoomsComponent from "./Manager/ManagerAllRoomsComponent";
 import useFcmToken from "@/hooks/useFcmToken";
+import ManagerSendNotificationComponent from "./Manager/ManagerSendNotificationComponent";
 
 const Dashboard = ({ user }) => {
   // useUnloadWarning("Are");
@@ -58,23 +59,27 @@ const Dashboard = ({ user }) => {
   const searchParams = useSearchParams();
   let displayData = searchParams.get("displayData");
 
+  // const [fcmState, setFcmState] = useState([false, ""]);
+
   const { token } = useFcmToken();
   useEffect(() => {
-    if (token) {
+    if (token && user?._id) {
+      toast.success("FCM Generating...");
       axios
         .put("/api/clients/editclient", { fcm: token, _id: user._id })
         .then(() => {
-          console.log("FCM Saved");
+          toast.success("FCM Generated");
         })
-        .catch((error) =>
+        .catch((error) => {
+          toast.error("FCM Generating Error");
           console.log(
             error?.response?.data?.msg ||
               error?.message ||
               "Server Error, FCM not Saved"
-          )
-        );
+          );
+        });
     }
-  }, [token]);
+  }, [token, user?._id]);
 
   if (!displayData) {
     user.role == "manager"
@@ -116,7 +121,6 @@ const Dashboard = ({ user }) => {
   const { userRefetch } = useContext(AuthContext);
   const [profileBarShown, setProfileBarShown] = useState(false);
   const [sideBarShown, setSideBarShown] = useState(false);
-  // const [displayData, setDisplayData] = useState("profile");
 
   const [loggingOut, setLoggingOut] = useState(false);
   const logout = async () => {
@@ -136,8 +140,175 @@ const Dashboard = ({ user }) => {
     }
   };
 
+  const sideBarDataClient = [
+    {
+      title: "Profile",
+      href: "/dashboard?displayData=profile",
+      icon: CgProfile,
+      displayData: "profile",
+    },
+    {
+      title: "Current Month",
+      href: "/dashboard?displayData=currentMonth",
+      icon: CgCalendarDates,
+      displayData: "currentMonth",
+    },
+    {
+      title: "My Bills",
+      href: "/dashboard?displayData=myBills",
+      icon: TbCoinTaka,
+      displayData: "myBills",
+    },
+    {
+      title: "Manager Details",
+      href: "/dashboard?displayData=managerDetails",
+      icon: GrUserManager,
+      displayData: "managerDetails",
+    },
+    {
+      title: "Meal History",
+      href: "/dashboard?displayData=mealHistory",
+      icon: GiHotMeal,
+      displayData: "mealHistory",
+    },
+    {
+      title: "File Manager",
+      href: "/dashboard?displayData=fileManager",
+      icon: FaFile,
+      displayData: "fileManager",
+    },
+  ];
+
+  const sideBarDataManager = [
+    {
+      title: "Profile",
+      href: "/dashboard?displayData=managerProfile",
+      icon: CgProfile,
+      displayData: "managerProfile",
+    },
+    {
+      title: "Clients",
+      href: "/dashboard?displayData=managerAllUsers",
+      icon: FaUsers,
+      displayData: "managerAllUsers",
+    },
+    {
+      title: "Market Details",
+      href: "/dashboard?displayData=managerMarketDetails",
+      icon: FaBagShopping,
+      displayData: "managerMarketDetails",
+    },
+    {
+      title: "Order Status",
+      href: "/dashboard?displayData=managerOrderStatus",
+      icon: VscGraphLine,
+      displayData: "managerOrderStatus",
+    },
+    {
+      title: "Send SMS",
+      href: "/dashboard?displayData=managerSendSMS",
+      icon: FaSms,
+      displayData: "managerSendSMS",
+    },
+    {
+      title: "Send Notification",
+      href: "/dashboard?displayData=managerSendNotification",
+      icon: FaSms,
+      displayData: "managerSendNotification",
+    },
+    {
+      title: "Bill Query",
+      href: "/dashboard?displayData=managerBillQuery",
+      icon: FaMoneyBillTrendUp,
+      displayData: "managerBillQuery",
+    },
+    {
+      title: "Meal Query",
+      href: "/dashboard?displayData=managerMealQuery",
+      icon: GiHotMeal,
+      displayData: "managerMealQuery",
+    },
+    {
+      title: "Market Query",
+      href: "/dashboard?displayData=managerMarketQuery",
+      icon: TbBrandShopee,
+      displayData: "managerMarketQuery",
+    },
+    {
+      title: "Meal Updator",
+      href: "/dashboard?displayData=managerMealUpdator",
+      icon: MdOutlineUpdate,
+      displayData: "managerMealUpdator",
+    },
+    {
+      title: "RFID Issue",
+      href: "/dashboard?displayData=managerRFIDIssue",
+      icon: FaAddressCard,
+      displayData: "managerRFIDIssue",
+    },
+    {
+      title: "Add Room",
+      href: "/dashboard?displayData=managerAddARoom",
+      icon: BsHouseAdd,
+      displayData: "managerAddARoom",
+    },
+    {
+      title: "Rooms",
+      href: "/dashboard?displayData=managerAllRooms",
+      icon: BsHouses,
+      displayData: "managerAllRooms",
+    },
+    {
+      title: "Bookings",
+      href: "/dashboard?displayData=managerAllBookings",
+      icon: TbBrandBooking,
+      displayData: "managerAllBookings",
+    },
+    {
+      title: "Meal Requests",
+      href: "/dashboard?displayData=mealChangeRequests",
+      icon: MdNoMeals,
+      displayData: "mealChangeRequests",
+    },
+    {
+      title: "Invoice",
+      href: "/dashboard?displayData=managerManualInvouce",
+      icon: FaFileInvoiceDollar,
+      displayData: "managerManualInvouce",
+    },
+    {
+      title: "File Manager",
+      href: "/dashboard?displayData=fileManager",
+      icon: FaFile,
+      displayData: "fileManager",
+    },
+  ];
+
+  const sideBarDataOwner = [
+    {
+      title: "Profile",
+      href: "/dashboard?displayData=profile",
+      icon: CgProfile,
+      displayData: "profile",
+    },
+    {
+      title: "Control Panel",
+      href: "/dashboard?displayData=ownerControlPanel",
+      icon: CgProfile,
+      displayData: "ownerControlPanel",
+    },
+  ];
+
   return (
     <div className="relative">
+      {/* FCM Status  */}
+      {/* {fcmState[0] && (
+        <div className="absolute top-5 left-1/2 -translate-x-1/2 z-[500]">
+          <p className="px-6 py-2 rounded-md text-green-500 bg-white text-center">
+            {fcmState[1]}
+          </p>
+        </div>
+      )} */}
       <nav className="w-full border-b bg-gray-800 border-gray-700">
         <div className="px-3 py-1 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
@@ -246,561 +417,92 @@ const Dashboard = ({ user }) => {
             }`}
           >
             <ul className="font-medium flex flex-col gap-2">
-              {user && user.isClient && user.isClientVerified && (
-                <>
+              {user &&
+                user.isClient &&
+                user.isClientVerified &&
+                sideBarDataClient.map((__dc, __i) => (
                   <Link
+                    key={__i}
                     onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=profile"
+                    href={__dc.href}
                   >
                     <div
                       className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "profile"
+                        displayData == __dc.displayData
                           ? "bg-gray-700"
                           : "hover:bg-gray-700"
                       }`}
                     >
-                      <CgProfile
+                      <__dc.icon
                         className={`text-gray-400 md:text-xl ${
-                          displayData == "profile"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">Profile</span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=currentMonth"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "currentMonth"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <CgCalendarDates
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "currentMonth"
+                          displayData == __dc.displayData
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
                       <span className="ms-3 text-sm md:text-base">
-                        Current Month
+                        {__dc.title}
                       </span>
                     </div>
                   </Link>
+                ))}
+              {user &&
+                user.isManager &&
+                user.isManagerVerified &&
+                sideBarDataManager.map((__dm, __i) => (
                   <Link
+                    key={__i}
                     onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=myBills"
+                    href={__dm.href}
                   >
                     <div
                       className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "myBills"
+                        displayData == __dm.displayData
                           ? "bg-gray-700"
                           : "hover:bg-gray-700"
                       }`}
                     >
-                      <TbCoinTaka
+                      <__dm.icon
                         className={`text-gray-400 md:text-xl ${
-                          displayData == "myBills"
+                          displayData == __dm.displayData
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
                       <span className="ms-3 text-sm md:text-base">
-                        My Bills
+                        {__dm.title}
                       </span>
                     </div>
                   </Link>
+                ))}
+              {user &&
+                user.role == "owner" &&
+                sideBarDataOwner.map((__do, __i) => (
                   <Link
+                    key={__i}
                     onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerDetails"
+                    href={__do.href}
                   >
                     <div
                       className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerDetails"
+                        displayData == __do.displayData
                           ? "bg-gray-700"
                           : "hover:bg-gray-700"
                       }`}
                     >
-                      <GrUserManager
+                      <__do.icon
                         className={`text-gray-400 md:text-xl ${
-                          displayData == "managerDetails"
+                          displayData == __do.displayData
                             ? "text-white"
                             : "group-hover:text-white"
                         }`}
                       />
                       <span className="ms-3 text-sm md:text-base">
-                        Manager Details
+                        {__do.title}
                       </span>
                     </div>
                   </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=mealHistory"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "mealHistory"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <GiHotMeal
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "mealHistory"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Meal History
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=fileManager"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "fileManager"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <FaFile
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "fileManager"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        File Manager
-                      </span>
-                    </div>
-                  </Link>
-                </>
-              )}
-              {user && user.isManager && user.isManagerVerified && (
-                <>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerProfile"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerProfile"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <CgProfile
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerProfile"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">Profile</span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerAllUsers"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerAllUsers"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <FaUsers
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerAllUsers"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        All Users
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerMarketDetails"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerMarketDetails"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <FaBagShopping
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerMarketDetails"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Market Details
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerOrderStatus"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerOrderStatus"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <VscGraphLine
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerOrderStatus"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Order Status
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerSendSMS"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerSendSMS"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <FaSms
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerSendSMS"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Send SMS
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerBillQuery"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerBillQuery"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <FaMoneyBillTrendUp
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerBillQuery"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Bill Query
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerMealQuery"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerMealQuery"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <GiHotMeal
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerMealQuery"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Meal Query
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerMarketQuery"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerMarketQuery"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <TbBrandShopee
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerMarketQuery"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Market Query
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerMealUpdator"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerMealUpdator"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <MdOutlineUpdate
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerMealUpdator"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Meal Updator
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerRFIDIssue"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerRFIDIssue"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <FaAddressCard
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerRFIDIssue"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        RFID Issue
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerAddARoom"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerAddARoom"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <BsHouseAdd
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerAddARoom"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Add Room
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerAllRooms"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerAllRooms"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <BsHouses
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerAllRooms"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">Rooms</span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerAllBookings"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerAllBookings"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <TbBrandBooking
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerAllBookings"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Bookings
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=mealChangeRequests"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "mealChangeRequests"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <MdNoMeals
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "mealChangeRequests"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-xs">Meal Change Requests</span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=managerManualInvouce"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "managerManualInvouce"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <FaFileInvoiceDollar
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "managerManualInvouce"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Manual Invoice
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=fileManager"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "fileManager"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <FaFile
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "fileManager"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        File Manager
-                      </span>
-                    </div>
-                  </Link>
-                </>
-              )}
-              {user && user.role == "owner" && (
-                <>
-                  {" "}
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=profile"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "profile"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <CgProfile
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "profile"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">Profile</span>
-                    </div>
-                  </Link>
-                  <Link
-                    onClick={() => setSideBarShown(false)}
-                    href="/dashboard?displayData=ownerControlPanel"
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == "ownerControlPanel"
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
-                    >
-                      <CgProfile
-                        className={`text-gray-400 md:text-xl ${
-                          displayData == "ownerControlPanel"
-                            ? "text-white"
-                            : "group-hover:text-white"
-                        }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        Owner Panel
-                      </span>
-                    </div>
-                  </Link>
-                </>
-              )}
+                ))}
             </ul>
           </div>
         </aside>
@@ -815,8 +517,8 @@ const Dashboard = ({ user }) => {
           displayData == "profile" ? (
             <ProfileComponent user={user} />
           ) : displayData == "currentMonth" ? (
-            user.blockDate &&
-            moment(user.blockDate).isBefore(
+            user?.blockDate &&
+            moment(user?.blockDate).isBefore(
               moment(
                 new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
                 "M/D/YYYY, h:mm:ss A"
@@ -834,8 +536,8 @@ const Dashboard = ({ user }) => {
           ) : displayData == "mealHistory" ? (
             <MealHistoryComponent user={user} />
           ) : displayData == "fileManager" ? (
-            user.blockDate &&
-            moment(user.blockDate).isBefore(
+            user?.blockDate &&
+            moment(user?.blockDate).isBefore(
               moment(
                 new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
                 "M/D/YYYY, h:mm:ss A"
@@ -857,7 +559,9 @@ const Dashboard = ({ user }) => {
           ) : displayData == "managerSendSMS" ? (
             <ManagerSendSMSComponent user={user} />
           ) : //  <UnderConstruction />
-          displayData == "managerBillQuery" ? (
+          displayData == "managerSendNotification" ? (
+            <ManagerSendNotificationComponent user={user} />
+          ) : displayData == "managerBillQuery" ? (
             <ManagerBillQueryComponent user={user} />
           ) : displayData == "managerMealQuery" ? (
             <ManagerMealQueryComponent user={user} />

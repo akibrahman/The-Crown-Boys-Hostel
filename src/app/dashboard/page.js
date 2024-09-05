@@ -27,7 +27,6 @@ const page = async () => {
   const user = await User.findById(id);
   let temp = { ...user._doc, _id: user._id.toString() };
   delete temp.files;
-
   return <Dashboard user={temp} />;
 };
 
