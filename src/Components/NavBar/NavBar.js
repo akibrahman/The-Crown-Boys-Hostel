@@ -2,14 +2,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "@/providers/ContextProvider";
 import StarButton from "../Buttons/StarButton";
-import LeafButton from "../Buttons/LeafButton";
 import "./styleForNavBar.css";
 import { useRouter } from "next/navigation";
 import ColorButton from "../Buttons/ColorButton";
-import { FaSpinner } from "react-icons/fa";
 import { CgSpinner } from "react-icons/cg";
 
 const NavBar = () => {
@@ -36,13 +34,11 @@ const NavBar = () => {
     { title: "Contact Us", url: "/notification" },
   ];
 
-  {
-    if (loading) {
-      return <NavMenus loading={loading} items={whenLoading} />;
-    } else if (user && user.success && !loading)
-      return <NavMenus loading={loading} items={withToken} />;
-    else return <NavMenus loading={loading} items={withOutToken} />;
-  }
+  if (loading) {
+    return <NavMenus loading={loading} items={whenLoading} />;
+  } else if (user && user.success && !loading)
+    return <NavMenus loading={loading} items={withToken} />;
+  else return <NavMenus loading={loading} items={withOutToken} />;
 };
 
 export default NavBar;

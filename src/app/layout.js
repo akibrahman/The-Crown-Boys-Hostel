@@ -7,6 +7,7 @@ import "react-tooltip/dist/react-tooltip.css";
 import "./globals.css";
 import NavBar from "@/Components/NavBar/NavBar";
 import FloodHelpComponent from "@/Components/FloodHelpComponent/FloodHelpComponent";
+import NextTopLoader from "nextjs-toploader";
 
 // const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
@@ -29,6 +30,7 @@ const RootLayout = ({ children }) => {
   return (
     <html lang="en">
       <body className={`${poppins.className} relative`}>
+        <NextTopLoader />
         <TanstackProvider>
           <ContextProvider>
             <Toaster />
