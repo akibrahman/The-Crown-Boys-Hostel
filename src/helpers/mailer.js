@@ -32,6 +32,7 @@ export const sendEmail = async ({ email, emailType, userId, userName }) => {
         })
       );
       mailOptions = {
+        from: process.env.GMAIL_USER,
         to: email,
         subject: "E-mail Verification",
         html: emailHtml,
@@ -52,6 +53,7 @@ export const sendEmail = async ({ email, emailType, userId, userName }) => {
         })
       );
       mailOptions = {
+        from: process.env.GMAIL_USER,
         to: email,
         subject: "Password Reset",
         html: emailHtml,

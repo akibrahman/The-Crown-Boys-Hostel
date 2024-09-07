@@ -64,14 +64,17 @@ const Dashboard = ({ user }) => {
   const { token } = useFcmToken();
   useEffect(() => {
     if (token && user?._id) {
-      toast.success("FCM Generating...");
+      // toast.success("FCM Generating...");
+      console.log("FCM Generating...");
       axios
         .put("/api/clients/editclient", { fcm: token, _id: user._id })
         .then(() => {
-          toast.success("FCM Generated");
+          // toast.success("FCM Generated");
+          console.log("FCM Generated");
         })
         .catch((error) => {
-          toast.error("FCM Generating Error");
+          // toast.error("FCM Generating Error");
+          console.log("FCM Generating Error");
           console.log(
             error?.response?.data?.msg ||
               error?.message ||

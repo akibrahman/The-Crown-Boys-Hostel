@@ -8,18 +8,31 @@ await dbConfig();
 export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
+    const all = searchParams.get("all");
     const id = searchParams.get("id");
     const name = searchParams.get("name");
     const floor = searchParams.get("floor");
+    let page = parseInt(searchParams.get("page") || 0);
+    let skip = 0;
+    let limit = 5;
+    if (all && (all == "true" || all == true)) {
+      skip = 0;
+      limit = 9999;
+    } else {
+      skip = page * limit;
+    }
     let query = {};
     if (id) query = { ...query, _id: id };
     if (name) query = { ...query, name };
     if (floor) query = { ...query, floor: parseInt(floor) };
-    const rooms = await Room.find(query);
+    const rooms = await Room.find(query).skip(skip).limit(limit);
+    const totalRoomsCount = await Room.find(query);
+    console.log(totalRoomsCount);
     return NextResponse.json({
       success: true,
       msg: "Rooms fetched successfully",
       rooms,
+      count: totalRoomsCount.length,
     });
   } catch (error) {
     console.log(error);

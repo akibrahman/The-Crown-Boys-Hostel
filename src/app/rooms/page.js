@@ -11,10 +11,10 @@ const Rooms = () => {
   const searchParams = useSearchParams();
   const floor = searchParams.get("floor");
 
-  const { data: allRooms, refetch } = useQuery({
+  const { data: allRooms } = useQuery({
     queryKey: ["All Rooms", "All"],
-    queryFn: async ({ queryKey }) => {
-      const { data } = await axios.get(`/api/room`);
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/room?all=true`);
       if (data.success) {
         return data.rooms;
       } else {
@@ -36,6 +36,7 @@ const Rooms = () => {
       (floor == "1" ||
         floor == "3" ||
         floor == "4" ||
+        floor == "5" ||
         floor == "6" ||
         floor == "7") ? (
         <div>
@@ -102,7 +103,7 @@ const Rooms = () => {
 export default Rooms;
 
 const Floors = ({ allRooms }) => {
-  const floors = [3, 4, 6, 7]; // 2  4  5  7  8
+  const floors = [3, 4, 5, 6, 7]; // 2  4  5  7  8
   return (
     <div className="max-w-[420px] w-[90%] mx-auto text-center pt-20">
       <p className="text-lg">Select Floor</p>

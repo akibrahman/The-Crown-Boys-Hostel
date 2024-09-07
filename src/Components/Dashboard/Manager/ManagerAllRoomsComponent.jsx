@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { FaEdit } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import ManagerEditRoomComponent from "./ManagerEditRoomComponent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { deleteObject, listAll, ref } from "firebase/storage";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -19,20 +19,23 @@ import { storage } from "../../../../firebase.config";
 import { CgSpinner } from "react-icons/cg";
 import { roomStructure } from "@/utils/rooms";
 import ManagerManageRoom from "./ManagerManageRoom";
+import SystemPagination from "@/Components/Pagination/Pagination";
 
 const ManagerAllRoomsComponent = ({ user }) => {
-  const route = useRouter();
-
   const [nameRef, setNameRef] = useState("");
   const [floorRef, setFloorRef] = useState("");
+  const [page, setPage] = useState(0);
+
+  const [totalRooms, setTotalRooms] = useState(0);
 
   const { data: rooms, refetch } = useQuery({
-    queryKey: ["All Rooms", "Manager Only", user?._id, nameRef, floorRef],
+    queryKey: ["All Rooms", "Manager Only", user?._id, nameRef, floorRef, page],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
-        `/api/room?name=${queryKey[3]}&floor=${queryKey[4]}`
+        `/api/room?name=${queryKey[3]}&floor=${queryKey[4]}&page=${queryKey[5]}`
       );
       if (data.success) {
+        setTotalRooms(parseInt(data.count));
         return data.rooms;
       } else {
         return null;
@@ -40,6 +43,13 @@ const ManagerAllRoomsComponent = ({ user }) => {
     },
     enabled: user?._id ? true : false,
   });
+
+  useEffect(() => {
+    if (rooms?.length == 0) setPage(0);
+  }, [rooms]);
+
+  const totalPages = Math.ceil(totalRooms / 5);
+  const pages = [...new Array(totalPages ? totalPages : 0).fill(0)];
 
   const { data: users } = useQuery({
     queryKey: ["users", "manager", "for-bed-assign", user?._id],
@@ -183,7 +193,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
         closeModal={closeModal}
         refetch={refetch}
       />
-      <div className="min-h-full mx-auto p-6 bg-dashboard text-slate-100">
+      <div className="min-h-full mx-auto p-6 pt-2 bg-dashboard text-slate-100">
         <h1 className="text-2xl font-bold mb-4 text-center">Rooms</h1>
         <div className="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-10 mb-5">
           <select
@@ -387,6 +397,12 @@ const ManagerAllRoomsComponent = ({ user }) => {
             </div>
           ))}
         </div>
+        <SystemPagination
+          page={page}
+          setPage={setPage}
+          pages={pages}
+          totalPages={totalPages}
+        />
       </div>
     </>
   );
