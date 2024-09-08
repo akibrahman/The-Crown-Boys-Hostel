@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { TbBrandBooking, TbBrandShopee } from "react-icons/tb";
+import { IoIosNotifications } from "react-icons/io";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
 import {
   FaAddressCard,
@@ -216,7 +217,7 @@ const Dashboard = ({ user }) => {
     {
       title: "Send Notification",
       href: "/dashboard?displayData=managerSendNotification",
-      icon: FaSms,
+      icon: IoIosNotifications,
       displayData: "managerSendNotification",
     },
     {
