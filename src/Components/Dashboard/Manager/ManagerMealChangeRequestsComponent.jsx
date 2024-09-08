@@ -10,6 +10,7 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaArrowRight, FaTimes } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import { TiTick } from "react-icons/ti";
 import Swal from "sweetalert2";
 
@@ -27,6 +28,7 @@ const ManagerMealChangeRequestsComponent = () => {
 
   const [isDeclining, setIsDeclining] = useState([false, ""]);
   const [isAccepting, setIsAccepting] = useState([false, ""]);
+  const [isDeleting, setIsDeleting] = useState([false, ""]);
 
   const accept = async (orderId, reqId, breakfast, lunch, dinner) => {
     Swal.fire({
@@ -96,6 +98,37 @@ const ManagerMealChangeRequestsComponent = () => {
         } finally {
           await mealRequestsRefetch();
           setIsDeclining([false, ""]);
+        }
+      }
+    });
+  };
+  const deleteReq = async (reqId) => {
+    Swal.fire({
+      title: "Do you want to Delete this request?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#1493EA",
+      cancelButtonColor: "#EF4444",
+      confirmButtonText: "Delete",
+      cancelButtonText: "No",
+      background: "#141E30",
+      color: "#fff",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setIsDeleting([true, reqId]);
+        try {
+          const { data } = await axios.post("/api/mealrequests/delete", {
+            reqId,
+          });
+          if (data.success) {
+            toast.success(data.msg);
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error.response.data.msg);
+        } finally {
+          await mealRequestsRefetch();
+          setIsDeleting([false, ""]);
         }
       }
     });
@@ -236,6 +269,16 @@ const ManagerMealChangeRequestsComponent = () => {
                       <CgSpinner className="text-xl animate-spin" />
                     )}
                   </button>
+                  <div
+                    onClick={() => deleteReq(req._id)}
+                    className="aspect-square rounded-full h-8 w-8 flex items-center justify-center bg-red-300 duration-300 active:scale-90 cursor-pointer"
+                  >
+                    {isDeleting[0] && isDeleting[1] == req._id ? (
+                      <CgSpinner className="text-xl animate-spin text-red-600" />
+                    ) : (
+                      <MdDelete className="text-lg text-red-600" />
+                    )}
+                  </div>
                 </div>
               ) : req.isAccepted ? (
                 <p className="py-6 text-center font-semibold text-green-500">

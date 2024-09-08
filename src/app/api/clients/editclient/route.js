@@ -1,5 +1,6 @@
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
+import { sendSMS } from "@/utils/sendSMS";
 import moment from "moment";
 import { NextResponse } from "next/server";
 
@@ -9,7 +10,8 @@ await dbConfig();
 
 export const PUT = async (req) => {
   try {
-    const { blockDate, _id, fromDate, fromDay, fcm } = await req.json();
+    const { blockDate, clearBlockDate, _id, fromDate, fromDay, fcm } =
+      await req.json();
     if (!_id) return NextResponse.json({ success: false, msg: "Missing _id" });
     // About Block date
     if (blockDate && fromDate && fromDay) {
@@ -87,8 +89,26 @@ export const PUT = async (req) => {
           order.dinner = false;
           await order.save();
         }
+        const user = await User.findByIdAndUpdate(_id, {
+          blockDate,
+        });
+        await sendSMS(
+          user.contactNumber,
+          `Dear ${
+            user.username
+          },\nYour account has been blocked as of ${new Date(
+            blockDate
+          ).toDateString()}, and all meal orders beyond this date have been canceled. For any questions, please contact us.\n\nBest regards,\nThe Crown Boys Hostel Management Team`
+        );
       }
-      await User.findByIdAndUpdate(_id, { blockDate });
+    } else if (clearBlockDate && clearBlockDate === "YES") {
+      const user = await User.findByIdAndUpdate(_id, {
+        blockDate: "",
+      });
+      await sendSMS(
+        user.contactNumber,
+        `Dear ${user.username},\nYour account has been unblocked following a recent block. Please check your order status for the current month by visiting the following link: https://thecrownboyshostel.com/dashboard?displayData=currentMonth\nFor any questions, please contact us.\n\nBest regards,\nThe Crown Boys Hostel Management Team`
+      );
     }
     // Abou FCM Token
     if (fcm) {

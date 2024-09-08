@@ -1,6 +1,8 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
 import MealRequest from "@/models/mealRequestModel";
 import Order from "@/models/orderModel";
+import User from "@/models/userModel";
+import { sendSMS } from "@/utils/sendSMS";
 import { NextResponse } from "next/server";
 
 await dbConfig();
@@ -9,7 +11,6 @@ await dbConfig();
 export const POST = async (req) => {
   try {
     const { reqData, orderId, userId, reason } = await req.json();
-    console.log(orderId);
     const request = new MealRequest({
       orderId,
       userId,
@@ -22,7 +23,17 @@ export const POST = async (req) => {
     const order = await Order.findById(orderId);
     order.isRequested = true;
     await order.save();
-    return NextResponse.json({ msg: "OK", success: true });
+    const user = await User.findById(userId);
+    const manager = await User.findById(user.manager);
+    await sendSMS(
+      manager.contactNumber,
+      `Hi ${manager.username},\n${user.username} has made an meal change request, please check\nLink: https://thecrownboyshostel.com/dashboard?displayData=mealChangeRequests\n\nThe Crown Boys Hostel`
+    );
+    await sendSMS(
+      user.contactNumber,
+      `Hi ${user.username},\nYou have made a Meal Change Request and it's under review, you will be notified after decision\n\nThe Crown Boys Hostel Management Team`
+    );
+    return NextResponse.json({ msg: "Meal Request Created", success: true });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ msg: "Backend Error", error }, { status: 500 });

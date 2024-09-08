@@ -1,14 +1,17 @@
 import User from "@/models/userModel";
+import { sendSMS } from "@/utils/sendSMS";
 import { NextResponse } from "next/server";
 
 export const POST = async (req) => {
   try {
     const { id } = await req.json();
-    await User.findOneAndDelete({ _id: id });
-    return NextResponse.json(
-      { msg: "Deleted", success: true },
-      { status: 200 }
+    const user = await User.findById(id);
+    await sendSMS(
+      user.contactNumber,
+      `Hi ${user.username},\nYour registration has been declined from the Authority, Please contact with us for more Details\n\nThe Corwn Boys Hostel Authority Team`
     );
+    await User.findByIdAndDelete(id);
+    return NextResponse.json({ msg: "Deleted", success: true });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

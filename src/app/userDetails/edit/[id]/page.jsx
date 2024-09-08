@@ -135,7 +135,7 @@ const Page = ({ params }) => {
   const clearBlockDate = async () => {
     try {
       const { data } = await axios.put("/api/clients/editclient", {
-        blockDate: "",
+        clearBlockDate: "YES",
         _id: client._id,
       });
       if (data.success) toast.success(data.msg);
