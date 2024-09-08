@@ -10,8 +10,15 @@ await dbConfig();
 
 export const PUT = async (req) => {
   try {
-    const { blockDate, clearBlockDate, _id, fromDate, fromDay, fcm } =
-      await req.json();
+    const {
+      blockDate,
+      clearBlockDate,
+      _id,
+      fromDate,
+      fromDay,
+      fcm,
+      changedData,
+    } = await req.json();
     if (!_id) return NextResponse.json({ success: false, msg: "Missing _id" });
     // About Block date
     if (blockDate && fromDate && fromDay) {
@@ -114,6 +121,9 @@ export const PUT = async (req) => {
     if (fcm) {
       await User.updateMany({ fcm }, { fcm: "" });
       await User.findByIdAndUpdate(_id, { fcm });
+    }
+    if (changedData) {
+      await User.findByIdAndUpdate(_id, changedData);
     }
     return NextResponse.json({ success: true, msg: "User Updated" });
   } catch (error) {

@@ -375,26 +375,7 @@ export const GET = async (req) => {
         bill.totalLunch = totalLunch;
         bill.totalDinner = totalDinner;
         bill.totalBillInBDT = totalBillInBDT;
-        let emailHtml;
-        if (totalBillInBDT >= bill.paidBillInBDT) {
-          emailHtml = render(
-            MonthlyBillEmail({
-              name: user.username,
-              email: user.email,
-              month: bill.month,
-              date: currentDate,
-              billId: bill._id.toString(),
-              userId: user._id.toString(),
-              totalBreakfast,
-              totalLunch,
-              totalDinner,
-              totalDeposit: bill.paidBillInBDT,
-              totalBill: totalBillInBDT,
-              isRestDeposite: false,
-              charges: user.charges,
-            })
-          );
-        } else {
+        if (totalBillInBDT < bill.paidBillInBDT) {
           let restDeposite = bill.paidBillInBDT - totalBillInBDT;
           bill.paidBillInBDT = totalBillInBDT;
           bill.status = "calculated";
@@ -409,23 +390,6 @@ export const GET = async (req) => {
           } else {
             // Taka Return from Office, SMS
           }
-          emailHtml = render(
-            MonthlyBillEmail({
-              name: user.username,
-              email: user.email,
-              month: bill.month,
-              date: currentDate,
-              billId: bill._id.toString(),
-              userId: user._id.toString(),
-              totalBreakfast,
-              totalLunch,
-              totalDinner,
-              totalDeposit: totalBillInBDT,
-              totalBill: totalBillInBDT,
-              isRestDeposite: true,
-              charges: user.charges,
-            })
-          );
         }
         allNumbers.push(user.contactNumber);
         allEmails.push(user.email);
