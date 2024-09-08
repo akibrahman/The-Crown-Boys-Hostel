@@ -24,15 +24,24 @@ import SystemPagination from "@/Components/Pagination/Pagination";
 const ManagerAllRoomsComponent = ({ user }) => {
   const [nameRef, setNameRef] = useState("");
   const [floorRef, setFloorRef] = useState("");
+  const [filterRef, setFilterRef] = useState("");
   const [page, setPage] = useState(0);
 
   const [totalRooms, setTotalRooms] = useState(0);
 
   const { data: rooms, refetch } = useQuery({
-    queryKey: ["All Rooms", "Manager Only", user?._id, nameRef, floorRef, page],
+    queryKey: [
+      "All Rooms",
+      "Manager Only",
+      user?._id,
+      nameRef,
+      floorRef,
+      page,
+      filterRef,
+    ],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
-        `/api/room?name=${queryKey[3]}&floor=${queryKey[4]}&page=${queryKey[5]}`
+        `/api/room?name=${queryKey[3]}&floor=${queryKey[4]}&page=${queryKey[5]}&filter=${queryKey[6]}`
       );
       if (data.success) {
         setTotalRooms(parseInt(data.count));
@@ -194,12 +203,15 @@ const ManagerAllRoomsComponent = ({ user }) => {
         refetch={refetch}
       />
       <div className="min-h-full mx-auto p-6 pt-2 bg-dashboard text-slate-100">
-        <h1 className="text-2xl font-bold mb-4 text-center">Rooms</h1>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-10 mb-5">
+        <h1 className="text-2xl font-bold mb-4 text-center flex items-center justify-center gap-4">
+          Rooms <span className="text-sm">(Total Rooms - {totalRooms})</span>
+        </h1>
+
+        <div className="flex items-center justify-center gap-2 md:gap-10 mb-5">
           <select
             onChange={(e) => setNameRef(e.target.value)}
             value={nameRef}
-            className="px-4 py-1.5 rounded-md font-medium text-gray-50 cursor-pointer active:scale-90 duration-300 outline-none bg-gray-500"
+            className="px-1 md:px-4 text-xs md:text-base py-1.5 rounded-md font-medium text-gray-50 cursor-pointer active:scale-90 duration-300 outline-none bg-gray-500"
           >
             <option value="">Select Name</option>
             <option value="a1">A1</option>
@@ -216,7 +228,7 @@ const ManagerAllRoomsComponent = ({ user }) => {
           <select
             onChange={(e) => setFloorRef(e.target.value)}
             value={floorRef}
-            className="px-4 py-1.5 rounded-md font-medium text-gray-50 cursor-pointer active:scale-90 duration-300 outline-none bg-gray-500"
+            className="px-1 md:px-4 text-xs md:text-base py-1.5 rounded-md font-medium text-gray-50 cursor-pointer active:scale-90 duration-300 outline-none bg-gray-500"
           >
             <option value="">Select Floor</option>
             <option value="0">Ground Floor</option>
@@ -227,6 +239,16 @@ const ManagerAllRoomsComponent = ({ user }) => {
             <option value="5">Fifth Floor</option>
             <option value="6">Sixth Floor</option>
             <option value="7">Seventh Floor</option>
+          </select>
+          <select
+            onChange={(e) => setFilterRef(e.target.value)}
+            value={filterRef}
+            className="px-1 md:px-4 text-xs md:text-base py-1.5 rounded-md font-medium text-gray-50 cursor-pointer active:scale-90 duration-300 outline-none bg-gray-500"
+          >
+            <option value="">Select Filter</option>
+            <option value="as">Available Seats</option>
+            <option value="fr">Free Rooms</option>
+            <option value="br">Booked Rooms</option>
           </select>
         </div>
         <div className="flex flex-col gap-6">

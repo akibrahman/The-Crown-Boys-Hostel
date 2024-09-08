@@ -12,27 +12,49 @@ export const GET = async (req) => {
     const id = searchParams.get("id");
     const name = searchParams.get("name");
     const floor = searchParams.get("floor");
+    const filter = searchParams.get("filter");
     let page = parseInt(searchParams.get("page") || 0);
+
     let skip = 0;
     let limit = 5;
+
     if (all && (all == "true" || all == true)) {
       skip = 0;
       limit = 9999;
     } else {
       skip = page * limit;
     }
+
     let query = {};
     if (id) query = { ...query, _id: id };
     if (name) query = { ...query, name };
     if (floor) query = { ...query, floor: parseInt(floor) };
-    const rooms = await Room.find(query).skip(skip).limit(limit);
-    const totalRoomsCount = await Room.find(query);
-    console.log(totalRoomsCount);
+
+    let rooms = await Room.find(query);
+
+    if (filter) {
+      if (filter == "br") {
+        rooms = rooms.filter((room) =>
+          room.beds.every((bed) => bed.isBooked == true)
+        );
+      } else if (filter == "fr") {
+        rooms = rooms.filter((room) =>
+          room.beds.every((bed) => bed.isBooked == false)
+        );
+      } else if (filter == "as") {
+        rooms = rooms.filter((room) =>
+          room.beds.some((bed) => bed.isBooked == false)
+        );
+      }
+    }
+
+    const finalRooms = rooms.slice(skip, skip + limit);
+
     return NextResponse.json({
       success: true,
       msg: "Rooms fetched successfully",
-      rooms,
-      count: totalRoomsCount.length,
+      rooms: finalRooms,
+      count: rooms.length,
     });
   } catch (error) {
     console.log(error);

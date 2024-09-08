@@ -135,11 +135,11 @@ const ManagerManageRoomBedData = ({
         <p className="font-semibold text-center text-white">
           {convertCamelCaseToCapitalized(selectedBed[1].bedNo)}
         </p>
-        <div className="flex items-center justify-center gap-4">
-          <div className="flex flex-col gap-2">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-1">
             <label className="block text-white font-semibold">User</label>
             <Select
-              className="px-4 py-1.5 rounded-md outline-none font-medium text-gray-500 cursor-pointer w-[350px]"
+              className="px-4 py-1.5 rounded-md outline-none font-medium text-gray-500 cursor-pointer w-[250px] md:w-[350px]"
               onChange={(e) => setUser(e.value)}
               value={
                 users
@@ -158,14 +158,14 @@ const ManagerManageRoomBedData = ({
               styles={customStylesForReactSelect}
             />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col items-center justify-center gap-1">
             <label className="block text-white font-semibold">Rent</label>
             <input
               type="number"
               name="userRent"
               value={userRent}
               onChange={(e) => setUserRent(parseInt(e.target.value))}
-              className="px-4 py-1.5 w-full rounded-md outline-none font-medium text-gray-500"
+              className="px-4 py-1.5 rounded-md outline-none font-medium text-gray-500 w-[150px] md:w-full"
             />
           </div>
         </div>
