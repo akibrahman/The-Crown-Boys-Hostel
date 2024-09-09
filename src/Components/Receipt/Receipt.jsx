@@ -1,4 +1,5 @@
 import axios from "axios";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -131,18 +132,7 @@ const Receipt = ({
 
   return (
     <div className="font-medium rounded-xl">
-      <div
-        style={{
-          paddingRight: "40px",
-          borderBottomWidth: "1px",
-          paddingTop: "0.75rem",
-          paddingBottom: "0.75rem",
-          borderTopLeftRadius: "0.75rem",
-          borderTopRightRadius: "0.75rem",
-          backgroundColor: "#3B82F6",
-        }}
-        className="bg-blue-500 py-3 rounded-t-xl"
-      >
+      <div className="pr-10 border-b py-3 rounded-tl-lg rounded-tr-lg bg-blue-500">
         <p className="text-white text-lg text-right">The Crown Inc.</p>
       </div>
       <div className="bg-blue-500 px-12 py-3 flex items-center justify-between">
@@ -190,98 +180,35 @@ const Receipt = ({
 
       <div className="bg-white px-12 py-4 flex items-center justify-center gap-6 md:gap-0 md:justify-evenly flex-wrap md:flex-nowrap text-center">
         <div className="">
-          <p
-            style={{
-              fontSize: "0.875rem",
-              lineHeight: "1.25rem",
-              textTransform: "uppercase",
-              color: "#989898",
-            }}
-          >
-            Month
-          </p>
-          <p style={{ color: "#061D53" }}>{month}</p>
+          <p className="text-sm leading-5 uppercase text-gray-400">Month</p>
+          <p className="text-[#061D53]">{month}</p>
         </div>
         <div className="">
-          <p
-            style={{
-              fontSize: "0.875rem",
-              lineHeight: "1.25rem",
-              textTransform: "uppercase",
-              color: "#989898",
-            }}
-          >
-            Year
-          </p>
-          <p style={{ color: "#061D53" }}>{year}</p>
+          <p className="text-sm leading-5 uppercase text-gray-400">Year</p>
+          <p className="text-[#061D53]">{year}</p>
         </div>
         <div className="">
-          <p
-            style={{
-              fontSize: "0.875rem",
-              lineHeight: "1.25rem",
-              textTransform: "uppercase",
-              color: "#989898",
-            }}
-          >
-            Deposit
-          </p>
-          <p style={{ color: "#061D53" }}>{paidBillInBDT} BDT</p>
+          <p className="text-sm leading-5 uppercase text-gray-400">Deposit</p>
+          <p className="text-[#061D53]">{paidBillInBDT} BDT</p>
         </div>
         <div className="">
-          <p
-            style={{
-              fontSize: "0.875rem",
-              lineHeight: "1.25rem",
-              textTransform: "uppercase",
-              color: "#989898",
-            }}
-          >
-            Bill
-          </p>
-          <p style={{ color: "#061D53" }}>{totalBillInBDT} BDT</p>
+          <p className="text-sm leading-5 uppercase text-gray-400">Bill</p>
+          <p className="text-[#061D53]">{totalBillInBDT} BDT</p>
         </div>
       </div>
 
       <div className="bg-white px-12 pb-2 grid grid-cols-3 place-items-center gap-5 text-center">
         <div className="">
-          <p
-            style={{
-              fontSize: "0.875rem",
-              lineHeight: "1.25rem",
-              textTransform: "uppercase",
-              color: "#989898",
-            }}
-          >
-            Breakfast
-          </p>
-          <p style={{ color: "#061D53" }}>{totalBreakfast}</p>
+          <p className="text-sm leading-5 uppercase text-gray-400">Breakfast</p>
+          <p className="text-[#061D53]">{totalBreakfast}</p>
         </div>
         <div className="">
-          <p
-            style={{
-              fontSize: "0.875rem",
-              lineHeight: "1.25rem",
-              textTransform: "uppercase",
-              color: "#989898",
-            }}
-          >
-            Lunch
-          </p>
-          <p style={{ color: "#061D53" }}>{totalLunch}</p>
+          <p className="text-sm leading-5 uppercase text-gray-400">Lunch</p>
+          <p className="text-[#061D53]">{totalLunch}</p>
         </div>
         <div className="">
-          <p
-            style={{
-              fontSize: "0.875rem",
-              lineHeight: "1.25rem",
-              textTransform: "uppercase",
-              color: "#989898",
-            }}
-          >
-            Dinner
-          </p>
-          <p style={{ color: "#061D53" }}>{totalDinner}</p>
+          <p className="text-sm leading-5 uppercase text-gray-400">Dinner</p>
+          <p className="text-[#061D53]">{totalDinner}</p>
         </div>
       </div>
       {charges && charges.length > 0 && (
@@ -292,17 +219,10 @@ const Receipt = ({
           <div className="bg-white px-12 pb-4 grid grid-cols-3 place-items-center gap-5 text-center">
             {charges.map((crg, i) => (
               <div key={i} className="">
-                <p
-                  style={{
-                    fontSize: "0.875rem",
-                    lineHeight: "1.25rem",
-                    textTransform: "uppercase",
-                    color: "#989898",
-                  }}
-                >
+                <p className="text-sm leading-5 uppercase text-gray-400">
                   {crg.note}
                 </p>
-                <p style={{ color: "#061D53" }}>{crg.amount} BDT</p>
+                <p className="text-[#061D53]">{crg.amount} BDT</p>
               </div>
             ))}
           </div>
@@ -345,56 +265,52 @@ const Receipt = ({
           </button>
         </div>
       )}
-      <div
-        style={{
-          display: "flex",
-          paddingTop: "0.75rem",
-          paddingBottom: "0.75rem",
-          paddingRight: "1rem",
-          gap: "1rem",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          borderBottomRightRadius: "0.75rem",
-          borderBottomLeftRadius: "0.75rem",
-          borderWidth: "1px",
-          borderColor: "#2563EB",
-          "@media (min-width: 768px)": { paddingRight: "2.5rem" },
-        }}
-      >
+      <div className="flex py-3 gap-4 justify-around items-center rounded-br-lg rounded-bl-lg border border-blue-600">
+        {(paidBillInBDT == totalBillInBDT && status == "calculated") ||
+          isManageable || (
+            <Image
+              onClick={() => toast.success("Coming very soon...")}
+              src="/images/bkash.png"
+              className="bg-white px-3 py-0.5 rounded-md cursor-pointer active:scale-90 hover:scale-105 duration-300"
+              alt="bKash Pay button"
+              width={"90"}
+              height={"30"}
+            />
+          )}
+        {(paidBillInBDT == totalBillInBDT && status == "calculated") ||
+          !isManageable || (
+            <button
+              onClick={() =>
+                route.push(
+                  `/dashboard?displayData=managerManualInvouce&billId=${id}`
+                )
+              }
+              className="bg-green-500 text-white px-4 py-0.5 duration-300 rounded flex items-center gap-3 active:scale-90 w-max text-sm md:text-base"
+            >
+              Generate Invoice
+              {isMoneyAdding.state &&
+                isMoneyAdding.id == id &&
+                isMoneyAdding.method == "makePaid" && (
+                  <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
+                )}
+            </button>
+          )}
         {status == "initiated" ? (
           <p className=" text-blue-600 font-bold">Not Calculated</p>
         ) : paidBillInBDT == totalBillInBDT ? (
           <p className=" text-green-600 font-bold">Paid</p>
         ) : (
           <>
-            {isManageable && (
-              <button
-                onClick={() =>
-                  route.push(
-                    `/dashboard?displayData=managerManualInvouce&billId=${id}`
-                  )
-                }
-                // onClick={makePaid}
-                className="bg-green-500 text-white px-4 py-0.5 duration-300 rounded flex items-center gap-3 active:scale-90"
-              >
-                Generate Invoice
-                {isMoneyAdding.state &&
-                  isMoneyAdding.id == id &&
-                  isMoneyAdding.method == "makePaid" && (
-                    <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
-                  )}
-              </button>
-            )}
-            <p style={{ fontWeight: 700, color: "#DC2626" }}>Due</p>
+            <div className="flex items-center justify-center gap-2">
+              <p className="font-bold text-red-600">Due</p>
+              <p className="text-white">
+                Total:{" "}
+                <span className="text-blue-500 font-bold">
+                  {totalBillInBDT - paidBillInBDT} BDT
+                </span>
+              </p>
+            </div>
           </>
-        )}
-        {status == "calculated" && paidBillInBDT != totalBillInBDT && (
-          <p className="text-white">
-            Total:{" "}
-            <span className="text-blue-500 font-bold">
-              {totalBillInBDT - paidBillInBDT} BDT
-            </span>
-          </p>
         )}
       </div>
     </div>
