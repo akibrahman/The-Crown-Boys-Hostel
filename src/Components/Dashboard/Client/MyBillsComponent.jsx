@@ -83,7 +83,7 @@ const MyBillsComponent = ({ user }) => {
                 month={bill.month}
                 year={bill.year}
                 totalBillInBDT={bill.totalBillInBDT}
-                paidBillInBDT={bill.paidBillInBDT}
+                paidBillInBDT={bill?.paidBillInBDT}
                 totalBreakfast={bill.totalBreakfast}
                 totalLunch={bill.totalLunch}
                 totalDinner={bill.totalDinner}

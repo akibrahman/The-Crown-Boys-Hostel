@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -34,6 +35,23 @@ const Receipt = ({
   const route = useRouter();
 
   const [isRPaid, setIsRPaid] = useState(isRentPaid);
+
+  const {
+    data: transactions,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: ["User Transactions", "Receipt", id],
+    queryFn: async ({ queryKey }) => {
+      const { data } = await axios.get(`/api/transaction?id=${queryKey[2]}`);
+      if (data.success) {
+        return data.transactions;
+      } else {
+        return [];
+      }
+    },
+    enabled: id ? true : false,
+  });
 
   const rentStatusChange = async () => {
     setIsMoneyAdding({
@@ -189,7 +207,16 @@ const Receipt = ({
         </div>
         <div className="">
           <p className="text-sm leading-5 uppercase text-gray-400">Deposit</p>
-          <p className="text-[#061D53]">{paidBillInBDT} BDT</p>
+          <p className="text-[#061D53]">
+            {transactions?.reduce((total, transaction) => {
+              const transactionSum = transaction.payments.reduce(
+                (sum, payment) => sum + payment.value,
+                0
+              );
+              return total + transactionSum;
+            }, 0)}{" "}
+            BDT
+          </p>
         </div>
         <div className="">
           <p className="text-sm leading-5 uppercase text-gray-400">Bill</p>
@@ -266,7 +293,15 @@ const Receipt = ({
         </div>
       )}
       <div className="flex py-3 gap-4 justify-around items-center rounded-br-lg rounded-bl-lg border border-blue-600">
-        {(paidBillInBDT == totalBillInBDT && status == "calculated") ||
+        {(transactions?.reduce((total, transaction) => {
+          const transactionSum = transaction.payments.reduce(
+            (sum, payment) => sum + payment.value,
+            0
+          );
+
+          return total + transactionSum;
+        }, 0) == totalBillInBDT &&
+          status == "calculated") ||
           isManageable || (
             <Image
               onClick={() => toast.success("Coming very soon...")}
@@ -277,7 +312,15 @@ const Receipt = ({
               height={"30"}
             />
           )}
-        {(paidBillInBDT == totalBillInBDT && status == "calculated") ||
+        {(transactions?.reduce((total, transaction) => {
+          const transactionSum = transaction.payments.reduce(
+            (sum, payment) => sum + payment.value,
+            0
+          );
+
+          return total + transactionSum;
+        }, 0) == totalBillInBDT &&
+          status == "calculated") ||
           !isManageable || (
             <button
               onClick={() =>
@@ -297,7 +340,14 @@ const Receipt = ({
           )}
         {status == "initiated" ? (
           <p className=" text-blue-600 font-bold">Not Calculated</p>
-        ) : paidBillInBDT == totalBillInBDT ? (
+        ) : transactions?.reduce((total, transaction) => {
+            const transactionSum = transaction.payments.reduce(
+              (sum, payment) => sum + payment.value,
+              0
+            );
+
+            return total + transactionSum;
+          }, 0) == totalBillInBDT ? (
           <p className=" text-green-600 font-bold">Paid</p>
         ) : (
           <>

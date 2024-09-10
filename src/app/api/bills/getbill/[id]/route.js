@@ -14,6 +14,11 @@ export const GET = async (req) => {
       return NextResponse.json({ success: false, msg: "Invalid Bill ID" });
     const bill = await Bill.findById(billId);
     const user = await User.findById(bill.userId);
+    if (!bill || !user)
+      return NextResponse.json({
+        success: false,
+        msg: "Bill or User not Found",
+      });
     return NextResponse.json({ bill, user, success: true });
   } catch (error) {
     return NextResponse.json({ success: false, error });

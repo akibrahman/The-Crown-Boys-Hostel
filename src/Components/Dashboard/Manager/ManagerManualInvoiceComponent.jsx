@@ -2,23 +2,42 @@
 import axios from "axios";
 import crypto from "crypto";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import QRCode from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { useReactToPrint } from "react-to-print";
 import { motion } from "framer-motion";
 import { CgSpinner } from "react-icons/cg";
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const ManagerManualInvoiceComponent = () => {
   const componentRef = useRef();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const billId = searchParams.get("billId");
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: "The Crwon Boys Hostel - Recipt",
-    // onBeforePrint: () => console.log("before printing..."),
-    // onAfterPrint: () => console.log("after printing..."),
+    onBeforePrint: () => toast.success("Generating Invoice"),
+    onAfterPrint: async () => {
+      const swalRes = await Swal.fire({
+        title: "Did you received the cash?",
+        text: "Should I save the transaction to the DataBase and reset this page?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#1493EA",
+        cancelButtonColor: "#EF4444",
+        confirmButtonText: "Proceed",
+        cancelButtonText: "Cancel",
+        background: "#141E30",
+        color: "#fff",
+      });
+      if (swalRes.isConfirmed) {
+        await saveTransaction();
+      }
+    },
   });
   const [invoiceData, setInvoiceData] = useState([]);
   const [invoiceName, setInvoiceName] = useState([]);
@@ -26,6 +45,32 @@ const ManagerManualInvoiceComponent = () => {
   const [formName, setFormName] = useState("");
   const [formValue, setFormValue] = useState("");
   const [billLoading, setBillLoading] = useState(false);
+
+  const saveTransaction = async () => {
+    try {
+      const { data } = await axios.post("/api/transaction", {
+        billId: billId || "new",
+        payments: invoiceData,
+        note: "Cash Payment From Office",
+        reason: "payment",
+        transactionId,
+        method: "cash",
+      });
+      if (data.success) {
+        toast.success(data?.msg);
+        // setInvoiceData([]);
+      } else {
+        toast.error(data?.msg || "Transaction Error, Try Again");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error?.response?.data?.msg ||
+          error?.message ||
+          "Transaction Error, Try Again"
+      );
+    }
+  };
 
   const addField = (e) => {
     e.preventDefault();
@@ -66,9 +111,12 @@ const ManagerManualInvoiceComponent = () => {
         if (!res.data.success) return;
         const billAmount = res?.data?.bill?.totalBillInBDT || 0;
         const paidAmount = res?.data?.bill?.paidBillInBDT || 0;
-        console.log(billAmount, parseInt(paidAmount));
-        if (billAmount == paidAmount || res?.data?.bill?.status == "initiated")
-          return;
+        if (billAmount == paidAmount && billAmount != 0 && paidAmount != 0) {
+          const url = new URL(window.location.href);
+          const baseUrl =
+            url.origin + url.pathname + "?displayData=managerManualInvouce";
+          return router.replace(baseUrl);
+        }
         const name = res?.data?.user?.username || "";
         const number = res?.data?.user?.contactNumber || "";
         setInvoiceName(name);
@@ -80,19 +128,19 @@ const ManagerManualInvoiceComponent = () => {
             value: parseInt(charge?.amount),
           };
         });
-        setInvoiceData([
-          ...invoiceData,
-          ...charges,
-          {
+        let arrayOfInvoice = [...invoiceData, ...charges];
+        if (parseInt(billAmount) - parseInt(paidAmount) != 0) {
+          arrayOfInvoice.push({
             name: `Meal Bill - ${res?.data?.bill?.month}`,
             value: parseInt(billAmount) - parseInt(paidAmount),
-          },
-        ]);
+          });
+        }
+        setInvoiceData(arrayOfInvoice);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log("Bill Fetching Error:", err))
       .finally(() => setBillLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [billId]);
+  }, [billId, router]);
   const [allowedDevice, setAllowedDevice] = useState(false);
   if (allowedDevice)
     return (
