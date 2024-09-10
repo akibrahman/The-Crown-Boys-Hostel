@@ -225,7 +225,7 @@ const ManagerSendSMSComponent = () => {
               Charge:{" "}
               <span className="text-sky-500 font-medium">
                 {parseFloat(
-                  Math.ceil(character / 145) * 0.25 * receiver.length
+                  Math.ceil(character / 145) * 0.35 * receiver?.length
                 ).toFixed(2)}
               </span>
               BDT
