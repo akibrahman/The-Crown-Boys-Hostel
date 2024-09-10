@@ -70,84 +70,6 @@ const Receipt = ({
     toast.success("Rent status updated");
   };
 
-  const set = async () => {
-    if (managerAmount != null && managerAmount >= 0) {
-      setIsMoneyAdding({
-        id,
-        state: true,
-        method: "set",
-      });
-      await axios.patch("/api/bills/getbills", {
-        billId: id,
-        amount: parseInt(managerAmount),
-        method: "set",
-      });
-      setManagerAmount(null);
-      setIsMoneyAdding({ id: "", state: false, method: "" });
-      if (refetch) await refetch();
-      toast.success("Amount updated");
-    } else {
-      toast.error("Please enter amount");
-    }
-  };
-
-  const credite = async () => {
-    if (managerAmount != null && managerAmount >= 0) {
-      setIsMoneyAdding({
-        id,
-        state: true,
-        method: "credite",
-      });
-      await axios.patch("/api/bills/getbills", {
-        billId: id,
-        amount: parseInt(managerAmount),
-        method: "credite",
-      });
-      setManagerAmount(null);
-      setIsMoneyAdding({ id: "", state: false, method: "" });
-      if (refetch) await refetch();
-      toast.success("Amount updated");
-    } else {
-      toast.error("Please enter amount");
-    }
-  };
-  const debite = async () => {
-    if (managerAmount != null && managerAmount >= 0) {
-      setIsMoneyAdding({
-        id,
-        state: true,
-        method: "debite",
-      });
-      await axios.patch("/api/bills/getbills", {
-        billId: id,
-        amount: parseInt(managerAmount),
-        method: "debite",
-      });
-      setManagerAmount(null);
-      setIsMoneyAdding({ id: "", state: false, method: "" });
-      if (refetch) await refetch();
-      toast.success("Amount updated");
-    } else {
-      toast.error("Please enter amount");
-    }
-  };
-
-  const makePaid = async () => {
-    setIsMoneyAdding({
-      id,
-      state: true,
-      method: "makePaid",
-    });
-    await axios.patch("/api/bills/getbills", {
-      billId: id,
-      amount: parseInt(totalBillInBDT),
-      method: "set",
-    });
-    setIsMoneyAdding({ id: "", state: false, method: "" });
-    if (refetch) await refetch();
-    toast.success("Made paid");
-  };
-
   return (
     <div className="font-medium rounded-xl">
       <div className="pr-10 border-b py-3 rounded-tl-lg rounded-tr-lg bg-blue-500">
@@ -254,43 +176,6 @@ const Receipt = ({
             ))}
           </div>
         </>
-      )}
-      {isManageable && (
-        <div className="bg-white py-3 flex items-center justify-around">
-          <button
-            onClick={credite}
-            className="flex items-center gap-3 px-4 py-1 bg-green-500 text-white duration-300 rounded active:scale-90"
-          >
-            Credit
-            {isMoneyAdding.state &&
-              isMoneyAdding.id == id &&
-              isMoneyAdding.method == "credite" && (
-                <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
-              )}
-          </button>
-          <button
-            onClick={debite}
-            className="flex items-center gap-3 px-4 py-1 bg-red-500 text-white duration-300 rounded active:scale-90"
-          >
-            Debit
-            {isMoneyAdding.state &&
-              isMoneyAdding.id == id &&
-              isMoneyAdding.method == "debite" && (
-                <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
-              )}
-          </button>
-          <button
-            onClick={set}
-            className="flex items-center gap-3 px-4 py-1 bg-orange-500 text-white duration-300 rounded active:scale-90"
-          >
-            Set
-            {isMoneyAdding.state &&
-              isMoneyAdding.id == id &&
-              isMoneyAdding.method == "set" && (
-                <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
-              )}
-          </button>
-        </div>
       )}
       <div className="flex py-3 gap-4 justify-around items-center rounded-br-lg rounded-bl-lg border border-blue-600">
         {(transactions?.reduce((total, transaction) => {
