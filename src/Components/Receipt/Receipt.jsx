@@ -73,6 +73,9 @@ const Receipt = ({
 
   return (
     <>
+      {/* <div className="fixed z-50 top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
+        <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white h-[80%] w-[60%] rounded-xl"></div>
+      </div> */}
       {showTransactions && (
         <div className="font-medium rounded-lg h-[350px] w-full relative border border-blue-500 px-4 overflow-y-scroll pb-5">
           <FaTimes

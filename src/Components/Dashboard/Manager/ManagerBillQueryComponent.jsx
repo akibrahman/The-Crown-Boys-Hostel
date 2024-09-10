@@ -71,65 +71,45 @@ const ManagerBillQueryComponent = () => {
   if (!myClients) return <PreLoader />;
 
   return (
-    <>
-      {/* <div
-        className={`h-[100vh] w-[90%] md:w-[40%] top-1/2 -translate-y-1/2 right-0 z-40 bg-stone-800 fixed duration-300 ${
-          isSidebarOpen || "translate-x-full"
-        }`}
+    <div className="min-h-full p-5 bg-dashboard text-slate-100 relative">
+      <p className="text-center font-semibold text-xl dark:text-white">
+        Bill Query
+      </p>
+      {/* Tab  */}
+      <div
+        className={`relative flex justify-center items-center gap-8 bg-[#44403C] w-max mx-auto px-7 py-2 rounded-full mt-4 z-10 select-none`}
       >
         <div
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className={`${
-            isSidebarOpen ? "ide_bar_opener_close" : "ide_bar_opener_open"
-          } -translate-x-full rounded-s-xl cursor-pointer w-[40px] h-[190px] bg-stone-800 absolute top-1/2 -translate-y-1/2 left-0 flex items-center justify-center`}
-        >
-          {isSidebarOpen ? (
-            <MdArrowForwardIos className="text-stone-300 text-2xl ml-2" />
-          ) : (
-            <MdArrowBackIos className="text-stone-300 text-2xl ml-2" />
-          )}
-        </div>
-      </div> */}
-      <div className="min-h-full p-5 bg-dashboard text-slate-100">
-        <p className="text-center font-semibold text-xl dark:text-white">
-          Bill Query
-        </p>
-        {/* Tab  */}
-        <div
-          className={`relative flex justify-center items-center gap-8 bg-[#44403C] w-max mx-auto px-7 py-2 rounded-full mt-4 z-10 select-none`}
-        >
+          style={{ left: activeTab.left, width: activeTab.width }}
+          className={`absolute top-0 transition-all duration-300 h-full bg-dashboard rounded border border-[#44403C] z-20`}
+        ></div>
+        {tabs.map((tab, index) => (
           <div
-            style={{ left: activeTab.left, width: activeTab.width }}
-            className={`absolute top-0 transition-all duration-300 h-full bg-dashboard rounded border border-[#44403C] z-20`}
-          ></div>
-          {tabs.map((tab, index) => (
-            <div
-              onClick={() => setActiveTab(tab)}
-              key={index}
-              className="z-30 cursor-pointer text-sm"
-            >
-              {tab.tab}
-            </div>
-          ))}
-        </div>
-        {/* Tab  */}
-        {activeTab.tab == "User Wise" && (
-          <UserWise
-            monthOrder={monthOrder}
-            currentYearBangladesh={currentYearBangladesh}
-            myClients={myClients}
-          />
-        )}
-        {activeTab.tab == "Month Wise" && (
-          <MonthWise
-            monthOrder={monthOrder}
-            currentYearBangladesh={currentYearBangladesh}
-            currentMonthBangladesh={currentMonthBangladesh}
-            myClients={myClients}
-          />
-        )}
+            onClick={() => setActiveTab(tab)}
+            key={index}
+            className="z-30 cursor-pointer text-sm"
+          >
+            {tab.tab}
+          </div>
+        ))}
       </div>
-    </>
+      {/* Tab  */}
+      {activeTab.tab == "User Wise" && (
+        <UserWise
+          monthOrder={monthOrder}
+          currentYearBangladesh={currentYearBangladesh}
+          myClients={myClients}
+        />
+      )}
+      {activeTab.tab == "Month Wise" && (
+        <MonthWise
+          monthOrder={monthOrder}
+          currentYearBangladesh={currentYearBangladesh}
+          currentMonthBangladesh={currentMonthBangladesh}
+          myClients={myClients}
+        />
+      )}
+    </div>
   );
 };
 
@@ -162,7 +142,7 @@ const UserWise = ({ monthOrder, currentYearBangladesh, myClients }) => {
     <>
       <form
         onSubmit={searchBillQuery}
-        className="flex flex-col md:flex-row items-center justify-center gap-4 my-6"
+        className="flex flex-col md:flex-row items-center justify-center gap-4 my-6 relative"
       >
         <div className="flex items-center gap-1">
           <p className="text-sky-500 font-semibold">Select User : </p>
@@ -306,7 +286,7 @@ const MonthWise = ({
   });
 
   return (
-    <div className="">
+    <div className="relative">
       <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-5 mt-4">
         <div className="flex items-center gap-4">
           <p className="text-sky-500 font-semibold">Select Month : </p>

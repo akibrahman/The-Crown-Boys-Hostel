@@ -416,7 +416,7 @@ const Dashboard = ({ user }) => {
           }`}
         >
           <div
-            className={`h-full pb-4 overflow-y-auto bg-gray800 ${
+            className={`h-full pb-4 overflow-y-auto ${
               sideBarShown ? "px-3 md:px-3" : "px-0 md:px-3"
             }`}
           >
