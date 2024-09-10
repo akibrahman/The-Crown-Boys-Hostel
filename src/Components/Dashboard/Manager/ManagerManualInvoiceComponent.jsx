@@ -17,9 +17,17 @@ const ManagerManualInvoiceComponent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const billId = searchParams.get("billId");
+
+  const [invoiceData, setInvoiceData] = useState([]);
+  const [invoiceName, setInvoiceName] = useState([]);
+  const [invoiceNumber, setInvoiceNumber] = useState([]);
+  const [formName, setFormName] = useState("");
+  const [formValue, setFormValue] = useState("");
+  const [billLoading, setBillLoading] = useState(false);
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: "The Crwon Boys Hostel - Recipt",
+    documentTitle: `Receipt_${invoiceName}_${new Date().toLocaleString()}`,
     onBeforePrint: () => toast.success("Generating Invoice"),
     onAfterPrint: async () => {
       const swalRes = await Swal.fire({
@@ -35,19 +43,18 @@ const ManagerManualInvoiceComponent = () => {
         color: "#fff",
       });
       if (swalRes.isConfirmed) {
-        await saveTransaction();
+        if (!transactionId) {
+          toast.error(
+            "Something went wrong, Transactions didn't save, Try again"
+          );
+        } else await saveTransaction();
       }
     },
   });
-  const [invoiceData, setInvoiceData] = useState([]);
-  const [invoiceName, setInvoiceName] = useState([]);
-  const [invoiceNumber, setInvoiceNumber] = useState([]);
-  const [formName, setFormName] = useState("");
-  const [formValue, setFormValue] = useState("");
-  const [billLoading, setBillLoading] = useState(false);
 
   const saveTransaction = async () => {
     try {
+      toast.success("Saving Transaction, Don't turn off your system");
       const { data } = await axios.post("/api/transaction", {
         billId: billId || "new",
         payments: invoiceData,
@@ -55,10 +62,11 @@ const ManagerManualInvoiceComponent = () => {
         reason: "payment",
         transactionId,
         method: "cash",
+        transactionDate,
       });
       if (data.success) {
         toast.success(data?.msg);
-        // setInvoiceData([]);
+        setInvoiceData([]);
       } else {
         toast.error(data?.msg || "Transaction Error, Try Again");
       }
@@ -74,7 +82,7 @@ const ManagerManualInvoiceComponent = () => {
 
   const addField = (e) => {
     e.preventDefault();
-    if (!formName || !formValue || parseInt(formValue) <= 0) return;
+    if (!formName || !formValue || parseInt(formValue) == 0) return;
     setInvoiceData([...invoiceData, { name: formName, value: formValue }]);
     setFormName("");
     setFormValue("");
@@ -85,9 +93,17 @@ const ManagerManualInvoiceComponent = () => {
     );
   };
   const [transactionId, setTransactionId] = useState("");
+  const [transactionDate, setTransactionDate] = useState(
+    new Date().toLocaleString()
+  );
   useEffect(() => {
-    const txId = crypto.randomBytes(4).toString("hex").toUpperCase();
-    setTransactionId(txId);
+    axios
+      .put("/api/transaction")
+      .then((res) =>
+        setTransactionId(res?.data?.success ? res?.data?.transactionId : "")
+      )
+      .catch((err) => console.log(err));
+
     const detectDeviceType = () => {
       const userAgent = navigator.userAgent.toLowerCase();
       if (
@@ -264,7 +280,7 @@ const ManagerManualInvoiceComponent = () => {
                   <p className="w-max">
                     Date:{" "}
                     <span className="font-semibold ml-2">
-                      {new Date().toLocaleString()}
+                      {transactionDate}
                     </span>
                   </p>
                 </div>
@@ -297,14 +313,21 @@ const ManagerManualInvoiceComponent = () => {
                       /- BDT
                     </span>
                   </p>
+                  <p className="font-bold">
+                    Discount
+                    <span className="ml-5">
+                      -{" "}
+                      {parseFloat(
+                        invoiceData.reduce((a, c) => a + c.value, 0) * 0.01
+                      ).toFixed(2)}
+                      /- BDT
+                    </span>
+                  </p>
 
                   <p className="font-bold mt-">
                     Grand Total{" "}
                     <span className="ml-5 font-bold text-blue-500 text-lg">
-                      {Math.ceil(
-                        invoiceData.reduce((a, c) => a + c.value, 0) +
-                          invoiceData.reduce((a, c) => a + c.value, 0) * 0.01
-                      )}
+                      {Math.ceil(invoiceData.reduce((a, c) => a + c.value, 0))}
                       /- BDT
                     </span>
                   </p>
@@ -375,7 +398,7 @@ const ManagerManualInvoiceComponent = () => {
                   <p className="w-max">
                     Date:{" "}
                     <span className="font-semibold ml-2">
-                      {new Date().toLocaleString()}
+                      {transactionDate}
                     </span>
                   </p>
                 </div>
@@ -409,13 +432,21 @@ const ManagerManualInvoiceComponent = () => {
                     </span>
                   </p>
 
+                  <p className="font-bold">
+                    Discount
+                    <span className="ml-5">
+                      -{" "}
+                      {parseFloat(
+                        invoiceData.reduce((a, c) => a + c.value, 0) * 0.01
+                      ).toFixed(2)}
+                      /- BDT
+                    </span>
+                  </p>
+
                   <p className="font-bold mt-">
                     Grand Total{" "}
                     <span className="ml-5 font-bold text-blue-500 text-lg">
-                      {Math.ceil(
-                        invoiceData.reduce((a, c) => a + c.value, 0) +
-                          invoiceData.reduce((a, c) => a + c.value, 0) * 0.01
-                      )}
+                      {Math.ceil(invoiceData.reduce((a, c) => a + c.value, 0))}
                       /- BDT
                     </span>
                   </p>

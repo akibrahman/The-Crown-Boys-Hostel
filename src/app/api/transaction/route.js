@@ -26,7 +26,9 @@ export const GET = async (req) => {
     //
     const { searchParams } = new URL(req.url);
     const billId = searchParams.get("id");
-    const transactions = await Transaction.find({ billId });
+    let query = {};
+    if (billId) query = { ...query, billId };
+    const transactions = await Transaction.find(query);
     return NextResponse.json({
       success: true,
       transactions,
@@ -63,6 +65,7 @@ export const POST = async (req) => {
       reason,
       reference,
       transactionId,
+      transactionDate,
       method,
     } = await req.json();
     let user;
@@ -86,9 +89,7 @@ export const POST = async (req) => {
       coupon: coupon || "",
       reference: reference || "",
       transactionId,
-      transactionDate: new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Dhaka",
-      }),
+      transactionDate,
       method: method || "cash",
       tax: parseFloat(payments.reduce((a, c) => a + c.value, 0) * 0.01).toFixed(
         2
@@ -105,60 +106,30 @@ export const POST = async (req) => {
   }
 };
 
-// This API will update All Bills by new model
 export const PUT = async (req, res) => {
   try {
-    const result = await Bill.updateMany({ $unset: { paidBillInBDT: "" } });
-
-    if (result.modifiedCount > 0) {
-      return NextResponse.json({
-        success: true,
-        message:
-          "All bills with 'paidBillInBDT' field updated successfully, field removed.",
-        modifiedCount: result.modifiedCount,
+    const transactionIdGen = () => {
+      const randomChars = crypto.randomBytes(4).toString("hex");
+      return randomChars.toUpperCase().toString();
+    };
+    let unique = false;
+    let transactionId = "";
+    while (!unique) {
+      transactionId = transactionIdGen();
+      const existingTransaction = await Transaction.findOne({
+        transactionId,
       });
-    } else {
-      return NextResponse.json({
-        success: false,
-        message: "'paidBillInBDT' field did not exist in any documents.",
-      });
+      if (!existingTransaction) {
+        unique = true;
+      }
     }
+    return NextResponse.json({
+      success: true,
+      transactionId,
+    });
   } catch (error) {
     return NextResponse.json({
       error: "Failed to update bills",
-      details: error.message,
-    });
-  }
-};
-
-// This API will create a Transaction for All Bills
-export const PATCH = async (req, res) => {
-  try {
-    const bills = await Bill.find({ paidBillInBDT: { $gt: 0 } });
-    for (const bill of bills) {
-      const { _id, userId, paidBillInBDT } = bill;
-      console.log(paidBillInBDT);
-      const newTransaction = new Transaction({
-        userId: userId,
-        billId: _id,
-        note: "Transactions for Older Bills",
-        reason: "Bill Payment Old",
-        methode: "cash",
-        payments: [{ name: "all", value: parseInt(paidBillInBDT) }],
-        transactionDate: new Date().toLocaleString("en-US", {
-          timeZone: "Asia/Dhaka",
-        }),
-        transactionId: crypto.randomBytes(4).toString("hex").toUpperCase(),
-      });
-      await newTransaction.save();
-    }
-
-    return NextResponse.json({
-      message: "Transactions created successfully for all bills.",
-    });
-  } catch (error) {
-    return NextResponse.json({
-      error: "Failed to create transactions",
       details: error.message,
     });
   }
