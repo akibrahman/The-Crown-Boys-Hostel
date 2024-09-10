@@ -11,7 +11,6 @@ import { TiTick } from "react-icons/ti";
 const Receipt = ({
   id,
   totalBillInBDT = 20,
-  paidBillInBDT = 10,
   status = "calculated",
   year = 2024,
   month = "May",
@@ -230,7 +229,6 @@ const Receipt = ({
               (sum, payment) => sum + payment.value,
               0
             );
-
             return total + transactionSum;
           }, 0) == totalBillInBDT ? (
           <p className=" text-green-600 font-bold">Paid</p>
@@ -241,7 +239,15 @@ const Receipt = ({
               <p className="text-white">
                 Total:{" "}
                 <span className="text-blue-500 font-bold">
-                  {totalBillInBDT - paidBillInBDT} BDT
+                  {totalBillInBDT -
+                    transactions?.reduce((total, transaction) => {
+                      const transactionSum = transaction.payments.reduce(
+                        (sum, payment) => sum + payment.value,
+                        0
+                      );
+                      return total + transactionSum;
+                    }, 0)}{" "}
+                  BDT
                 </span>
               </p>
             </div>

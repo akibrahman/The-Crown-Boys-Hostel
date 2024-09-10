@@ -238,15 +238,6 @@ const UserWise = ({ monthOrder, currentYearBangladesh, myClients }) => {
       <div className="">
         <div className="border border-sky-500 px-4 py-2 relative dark:text-white mt-4 flex items-center justify-center gap-4">
           <p className="text-center text-xl font-semibold">Bill Details</p>
-          {result && result.length > 0 && (
-            <input
-              placeholder="Enter Amount"
-              onChange={(e) => setManagerAmount(parseInt(e.target.value))}
-              value={managerAmount || managerAmount == 0 ? managerAmount : ""}
-              className="text-sm w-[200px] px-5 py-2 outline-none rounded-full dark:bg-stone-800 bg-stone-300"
-              type="number"
-            />
-          )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 py-5">
           {result &&
@@ -375,15 +366,6 @@ const MonthWise = ({
           <p className="text-center text-xs md:text-xl font-semibold">
             Bill Details
           </p>
-          {result && result.length > 0 && (
-            <input
-              placeholder="Enter Amount"
-              onChange={(e) => setManagerAmount(parseInt(e.target.value))}
-              value={managerAmount || managerAmount == 0 ? managerAmount : ""}
-              className="text-sm w-[200px] px-5 py-2 outline-none rounded-full dark:bg-stone-800 bg-stone-300"
-              type="number"
-            />
-          )}
           <p className="text-center text-xs md:text-xl font-semibold flex items-center justify-center gap-3">
             Count:
             {result ? (
