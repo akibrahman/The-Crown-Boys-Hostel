@@ -44,7 +44,7 @@ const MyBillsComponent = ({ user }) => {
         .reduce((a, c) => a + (c.totalBillInBDT - c.paidBillInBDT), 0)
     : 0;
   return (
-    <div className="px-10 min-h-full bg-dashboard text-slate-100">
+    <div className="px-10 min-h-full bg-dashboard text-slate-100 overflow-x-hidden">
       <p className="text-center font-medium text-xl text-white py-4">
         My Bills
       </p>

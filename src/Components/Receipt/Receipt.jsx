@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
-import { FaTimes } from "react-icons/fa";
+import { FaEye, FaTimes } from "react-icons/fa";
+import { FaDeleteLeft } from "react-icons/fa6";
 import { TiTick } from "react-icons/ti";
+import { useBkash } from "react-bkash";
 
 const Receipt = ({
   id,
@@ -19,8 +21,6 @@ const Receipt = ({
   totalLunch = 97,
   totalDinner = 66,
   charges,
-  managerAmount,
-  setManagerAmount,
   userName,
   isManageable = false,
   refetch,
@@ -71,11 +71,357 @@ const Receipt = ({
     toast.success("Rent status updated");
   };
 
+  const [isPayModalOpen, setIsPayModalOpen] = useState(false);
+  const [payModalData, setPayModalData] = useState(null);
+  const [invoiceData, setInvoiceData] = useState([]);
+  const [formName, setFormName] = useState("");
+  const [formValue, setFormValue] = useState("");
+
+  const closePayModal = () => {
+    setIsPayModalOpen(false);
+    setInvoiceData([]);
+    setFormName("");
+    setFormValue("");
+    setPayModalData(null);
+  };
+
+  const openPayModal = async () => {
+    toast.success("Coming Very Soon...");
+    return;
+    setIsPayModalOpen(true);
+    try {
+      const { data } = await axios.put("/api/bkash/create", { id });
+      if (!data.success) throw new Error(data?.msg);
+      setPayModalData(data);
+    } catch (error) {
+      closePayModal();
+      toast.error(error?.message || "Server Error");
+    }
+  };
+
+  const addField = (e) => {
+    e.preventDefault();
+    if (!formName || !formValue || parseInt(formValue) <= 0) return;
+    setInvoiceData([...invoiceData, { name: formName, value: formValue }]);
+    setFormName("");
+    setFormValue("");
+  };
+
+  const deleteField = (indexToDelete) => {
+    setInvoiceData((prevInvoiceData) =>
+      prevInvoiceData.filter((_, index) => index != indexToDelete)
+    );
+  };
+
+  const bkashPay = async () => {
+    try {
+      const { data } = await axios.post("/api/bkash/create", {
+        billId: id,
+        invoiceData: invoiceData.reduce((acc, current) => {
+          const existing = acc.find((item) => item.name == current.name);
+          if (existing) {
+            existing.value += current.value;
+          } else {
+            acc.push(current);
+          }
+
+          return acc;
+        }, []),
+      });
+      console.log(data);
+      if (data.statusCode == "0000") route.push(data.bkashURL);
+      else {
+        closePayModal();
+        toast.error("Something went wrong, Try again");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error?.response?.data?.msg ||
+          error?.message ||
+          "Something went wrong, Try again"
+      );
+      closePayModal();
+    }
+  };
+
+  // const { error, loading, triggerBkash } = useBkash({
+  //   onSuccess: (data) => {
+  //     toast.success("BKash Payment Successful");
+  //     console.log(data); // this contains data from api response from onExecutePayment
+  //   },
+  //   onClose: () => {
+  //     console.log("Bkash iFrame closed");
+  //     toast.error("Bkash iFrame closed");
+  //   },
+  //   bkashScriptURL:
+  //     "https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js",
+  //   amount: 1000,
+  //   onCreatePayment: async (paymentRequest) => {
+  //     // call your API with the payment request here
+  //     return await fetch(`/api/bkash/create`, {
+  //       method: "POST",
+  //       body: JSON.stringify(paymentRequest),
+  //     }).then((res) => res.json());
+
+  //     // must return the following object:
+  //     // {
+  //     // 	paymentID: string;
+  //     // 	createTime: string;
+  //     // 	orgLogo: string;
+  //     // 	orgName: string;
+  //     // 	transactionStatus: string;
+  //     // 	amount: string;
+  //     // 	currency: string;
+  //     // 	intent: string;
+  //     // 	merchantInvoiceNumber: string;
+  //     // }
+  //   },
+  //   onExecutePayment: async (paymentID) => {
+  //     // call your executePayment API here
+  //     return await fetch(`/api/bkash/create`, {
+  //       method: "POST",
+  //       body: JSON.stringify({ paymentID }),
+  //     }).then((res) => res.json());
+
+  //     // it doesn't matter what you return here, any errors thrown here will be available on error return value of the useBkash hook
+  //   },
+  // });
+
   return (
     <>
-      {/* <div className="fixed z-50 top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
-        <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white h-[80%] w-[60%] rounded-xl"></div>
-      </div> */}
+      {isPayModalOpen && (
+        <div className="fixed z-50 top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
+          {payModalData ? (
+            <div className="absolute text-pink-600 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white h-[80%] w-[60%] rounded-xl">
+              <FaTimes
+                className="text-2xl absolute top-1 right-2 text-slate-200 cursor-pointer duration-300 active:scale-90 bg-pink-600 aspect-square rounded-full p-1"
+                onClick={closePayModal}
+              />
+              <p className="w-full text-center mx-auto bg-pink-600 text-white rounded-xl py-1">
+                ID: {`${"*".repeat(id.length - 5)}${id.slice(-5)}`}
+              </p>
+
+              <div className="flex items-center gap-2 font-semibold justify-center py-3">
+                <Image
+                  src="/images/bkash.png"
+                  className="bg-white px-3 py-0.5 rounded-md cursor-pointer active:scale-90 hover:scale-105 duration-300"
+                  alt="bKash Pay button"
+                  width={"120"}
+                  height={"40"}
+                />
+                <p>Pay with BKash hassle-free</p>
+              </div>
+              <div className="">
+                {status == "initiated" && (
+                  <>
+                    <div className="flex flex-wrap items-center justify-center gap-5">
+                      {/* Room Rent  */}
+                      <div
+                        onClick={() => {
+                          const newItem = {
+                            name: `Rent-${month}`,
+                            value: payModalData?.rent,
+                          };
+                          const exists = invoiceData.some(
+                            (item) =>
+                              item.name == newItem.name &&
+                              item.value == newItem.value
+                          );
+                          if (exists) {
+                            setInvoiceData(
+                              invoiceData.filter(
+                                (item) => item.name != newItem.name
+                              )
+                            );
+                          } else {
+                            setInvoiceData([...invoiceData, newItem]);
+                          }
+                        }}
+                        className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
+                          invoiceData.some(
+                            (item) =>
+                              item.name == `Rent-${month}` &&
+                              item.value == payModalData?.rent
+                          )
+                            ? "bg-pink-600 text-white"
+                            : "bg-white text-pink-600"
+                        }`}
+                      >
+                        <p>Seat Rent</p>
+                        <p>{payModalData?.rent}</p>
+                        <p>BDT</p>
+                      </div>
+                      {/* Advance Meal 1000 */}
+                      <div
+                        onClick={() => {
+                          const newItem = {
+                            name: `Advance Meal-${month}`,
+                            value: 1000,
+                          };
+                          const exists = invoiceData.some(
+                            (item) =>
+                              item.name == newItem.name &&
+                              item.value == newItem.value
+                          );
+                          if (exists) {
+                            setInvoiceData(
+                              invoiceData.filter(
+                                (item) =>
+                                  item.name != newItem.name ||
+                                  item.value != newItem.value
+                              )
+                            );
+                          } else {
+                            setInvoiceData([...invoiceData, newItem]);
+                          }
+                        }}
+                        className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
+                          invoiceData.some(
+                            (item) =>
+                              item.name == `Advance Meal-${month}` &&
+                              item.value == 1000
+                          )
+                            ? "bg-pink-600 text-white"
+                            : "bg-white text-pink-600"
+                        }`}
+                      >
+                        <p>Advance Meal 1000 BDT</p>
+                      </div>
+                      {/* Advance Meal 1500 */}
+                      <div
+                        onClick={() => {
+                          const newItem = {
+                            name: `Advance Meal-${month}`,
+                            value: 1500,
+                          };
+                          const exists = invoiceData.some(
+                            (item) =>
+                              item.name == newItem.name &&
+                              item.value == newItem.value
+                          );
+                          if (exists) {
+                            setInvoiceData(
+                              invoiceData.filter(
+                                (item) =>
+                                  item.name != newItem.name ||
+                                  item.value != newItem.value
+                              )
+                            );
+                          } else {
+                            setInvoiceData([...invoiceData, newItem]);
+                          }
+                        }}
+                        className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
+                          invoiceData.some(
+                            (item) =>
+                              item.name == `Advance Meal-${month}` &&
+                              item.value == 1500
+                          )
+                            ? "bg-pink-600 text-white"
+                            : "bg-white text-pink-600"
+                        }`}
+                      >
+                        <p>Advance Meal 1500 BDT</p>
+                      </div>
+                      {/* Advance Meal 2000 */}
+                      <div
+                        onClick={() => {
+                          const newItem = {
+                            name: `Advance Meal-${month}`,
+                            value: 2000,
+                          };
+                          const exists = invoiceData.some(
+                            (item) =>
+                              item.name == newItem.name &&
+                              item.value == newItem.value
+                          );
+                          if (exists) {
+                            setInvoiceData(
+                              invoiceData.filter(
+                                (item) =>
+                                  item.name != newItem.name ||
+                                  item.value != newItem.value
+                              )
+                            );
+                          } else {
+                            setInvoiceData([...invoiceData, newItem]);
+                          }
+                        }}
+                        className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
+                          invoiceData.some(
+                            (item) =>
+                              item.name == `Advance Meal-${month}` &&
+                              item.value == 2000
+                          )
+                            ? "bg-pink-600 text-white"
+                            : "bg-white text-pink-600"
+                        }`}
+                      >
+                        <p>Advance Meal 2000 BDT</p>
+                      </div>
+                      {/* Wifi 150 */}
+                      <div
+                        onClick={() => {
+                          const newItem = {
+                            name: `Wifi-${month}`,
+                            value: 150,
+                          };
+                          const exists = invoiceData.some(
+                            (item) =>
+                              item.name == newItem.name &&
+                              item.value == newItem.value
+                          );
+                          if (exists) {
+                            setInvoiceData(
+                              invoiceData.filter(
+                                (item) => item.name != newItem.name
+                              )
+                            );
+                          } else {
+                            setInvoiceData([...invoiceData, newItem]);
+                          }
+                        }}
+                        className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
+                          invoiceData.some(
+                            (item) =>
+                              item.name == `Wifi-${month}` && item.value == 150
+                          )
+                            ? "bg-pink-600 text-white"
+                            : "bg-white text-pink-600"
+                        }`}
+                      >
+                        <p>Wi-Fi 150 BDT</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-center mt-1">
+                      *Click above any to pay
+                    </p>
+                    <p className="mt-4 text-xl text-center font-bold">
+                      Total:{" "}
+                      {Math.ceil(invoiceData.reduce((a, c) => a + c.value, 0))}{" "}
+                      BDT
+                    </p>
+                  </>
+                )}
+              </div>
+
+              {invoiceData.length > 0 && (
+                <button
+                  onClick={bkashPay}
+                  className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-pink-600 text-white font-semibold mx-auto mt-5 block"
+                >
+                  Pay
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="absolute text-pink-600 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-transparent h-[80%] w-[60%] rounded-xl flex items-center justify-center">
+              <CgSpinner className="text-3xl animate-spin" />
+            </div>
+          )}
+        </div>
+      )}
       {showTransactions && (
         <div className="font-medium rounded-lg h-[350px] w-full relative border border-blue-500 px-4 overflow-y-scroll pb-5">
           <FaTimes
@@ -105,6 +451,10 @@ const Receipt = ({
                   .join(", ")}
               </p>
               <p>{t.payments.reduce((a, c) => a + c.value, 0)} BDT</p>
+              <FaEye
+                className="text-lg cursor-pointer active:scale-90 duration-300"
+                onClick={() => window.open(`/qr/${t.transactionId}`, "_blank")}
+              />
             </div>
           ))}
           <p className="text-center pt-3 font-bold text-blue-500 underline mt-auto">
@@ -251,7 +601,7 @@ const Receipt = ({
               status == "calculated") ||
               isManageable || (
                 <Image
-                  onClick={() => toast.success("Coming very soon...")}
+                  onClick={openPayModal}
                   src="/images/bkash.png"
                   className="bg-white px-3 py-0.5 rounded-md cursor-pointer active:scale-90 hover:scale-105 duration-300"
                   alt="bKash Pay button"

@@ -91,9 +91,7 @@ export const POST = async (req) => {
       transactionId,
       transactionDate,
       method: method || "cash",
-      tax: parseFloat(payments.reduce((a, c) => a + c.value, 0) * 0.01).toFixed(
-        2
-      ),
+      tax: 0,
       payments,
     }).save();
     return NextResponse.json({
