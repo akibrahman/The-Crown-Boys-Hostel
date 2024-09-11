@@ -71,7 +71,7 @@ const ManagerBillQueryComponent = () => {
   if (!myClients) return <PreLoader />;
 
   return (
-    <div className="min-h-full p-5 bg-dashboard text-slate-100 relative">
+    <div className="min-h-full p-2 md:p-5 bg-dashboard text-slate-100 relative">
       <p className="text-center font-semibold text-xl dark:text-white">
         Bill Query
       </p>

@@ -145,49 +145,6 @@ const Receipt = ({
     }
   };
 
-  // const { error, loading, triggerBkash } = useBkash({
-  //   onSuccess: (data) => {
-  //     toast.success("BKash Payment Successful");
-  //     console.log(data); // this contains data from api response from onExecutePayment
-  //   },
-  //   onClose: () => {
-  //     console.log("Bkash iFrame closed");
-  //     toast.error("Bkash iFrame closed");
-  //   },
-  //   bkashScriptURL:
-  //     "https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js",
-  //   amount: 1000,
-  //   onCreatePayment: async (paymentRequest) => {
-  //     // call your API with the payment request here
-  //     return await fetch(`/api/bkash/create`, {
-  //       method: "POST",
-  //       body: JSON.stringify(paymentRequest),
-  //     }).then((res) => res.json());
-
-  //     // must return the following object:
-  //     // {
-  //     // 	paymentID: string;
-  //     // 	createTime: string;
-  //     // 	orgLogo: string;
-  //     // 	orgName: string;
-  //     // 	transactionStatus: string;
-  //     // 	amount: string;
-  //     // 	currency: string;
-  //     // 	intent: string;
-  //     // 	merchantInvoiceNumber: string;
-  //     // }
-  //   },
-  //   onExecutePayment: async (paymentID) => {
-  //     // call your executePayment API here
-  //     return await fetch(`/api/bkash/create`, {
-  //       method: "POST",
-  //       body: JSON.stringify({ paymentID }),
-  //     }).then((res) => res.json());
-
-  //     // it doesn't matter what you return here, any errors thrown here will be available on error return value of the useBkash hook
-  //   },
-  // });
-
   return (
     <>
       {isPayModalOpen && (
@@ -423,7 +380,7 @@ const Receipt = ({
         </div>
       )}
       {showTransactions && (
-        <div className="font-medium rounded-lg h-[350px] w-full relative border border-blue-500 px-4 overflow-y-scroll pb-5">
+        <div className="font-medium rounded-lg h-[350px] w-full relative border border-blue-500 md:px-4 overflow-y-scroll pb-5">
           <FaTimes
             className="absolute top-2 right-2 cursor-pointer text-xl text-white"
             onClick={() => setShowTransactions(false)}
@@ -441,15 +398,11 @@ const Receipt = ({
           )}
           {transactions.map((t) => (
             <div
-              className="w-full mb-1 border border-blue-500 flex items-center justify-between px-5 py-2 border-r-0 border-l-0 shadow"
+              className="w-full mb-1 border border-blue-500 flex items-center justify-between px-5 py-2 border-r-0 border-l-0 shadow shadow-blue-500 text-sm md:text-base"
               key={t._id}
             >
               <p>{new Date(t.transactionDate).toDateString()}</p>
-              <p>
-                {t.payments
-                  .map((p) => convertCamelCaseToCapitalized(p.name))
-                  .join(", ")}
-              </p>
+              <p className="">{t.transactionId}</p>
               <p>{t.payments.reduce((a, c) => a + c.value, 0)} BDT</p>
               <FaEye
                 className="text-lg cursor-pointer active:scale-90 duration-300"
