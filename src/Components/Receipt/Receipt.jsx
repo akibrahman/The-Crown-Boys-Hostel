@@ -1,3 +1,4 @@
+"use client";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
