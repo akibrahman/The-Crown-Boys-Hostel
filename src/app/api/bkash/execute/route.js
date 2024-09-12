@@ -14,6 +14,20 @@ export const GET = async (req) => {
     searchParams.forEach((value, key) => {
       queries.push({ [key]: value });
     });
+    const status = queries?.find((obj) => obj?.status)?.status;
+    const paymentID = queries?.find((obj) => obj?.paymentID)?.paymentID;
+    if (status == "cancel") {
+      return NextResponse.redirect(
+        redirectUrl +
+          `&success=false&status=${status}&paymentID=${paymentID}&message=Payment_Cancelled`
+      );
+    }
+    if (status === "failure") {
+      return NextResponse.redirect(
+        redirectUrl +
+          `&success=false&status=${status}&paymentID=${paymentID}&message=Payment_Failed`
+      );
+    }
     const invoiceData = queries
       .filter((obj) => {
         const key = Object.keys(obj)[0];
@@ -58,13 +72,24 @@ export const GET = async (req) => {
         },
       }
     );
-    console.log(executeData);
     if (
       executeData?.transactionStatus != "Completed" ||
       executeData?.statusCode != "0000" ||
       executeData?.statusMessage != "Successful"
     ) {
-      throw new Error("Payment Execution Failed");
+      console.log(
+        "===================================>>>>",
+        executeData?.statusCode,
+        executeData?.statusMessage
+      );
+      const encodeded = `&statusMessage=${encodeURIComponent(
+        executeData?.statusMessage
+      )}`;
+      console.log(encodeded);
+      return NextResponse.redirect(
+        redirectUrl +
+          `&success=false&status=${executeData?.transactionStatus}&paymentID=${executeData.paymentID}`
+      );
     }
     const bill = await Bill.findById(queries.find((obj) => obj.billId).billId);
     await new Transaction({
@@ -84,7 +109,7 @@ export const GET = async (req) => {
     }).save();
     return NextResponse.redirect(
       redirectUrl +
-        `&success=true&transactiosId=${executeData.merchantInvoiceNumber}&trxId=${executeData.trxID}&amount=${executeData.amount}`
+        `&success=true&status=success&transactionId=${executeData.merchantInvoiceNumber}&trxId=${executeData.trxID}&amount=${executeData.amount}&paymentID=${executeData.paymentID}`
     );
   } catch (error) {
     console.log("===========================>", error.message);

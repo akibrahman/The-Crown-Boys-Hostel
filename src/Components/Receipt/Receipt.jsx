@@ -3,13 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaEye, FaTimes } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { TiTick } from "react-icons/ti";
 import { useBkash } from "react-bkash";
+import { AuthContext } from "@/providers/ContextProvider";
 
 const Receipt = ({
   id,
@@ -33,6 +34,7 @@ const Receipt = ({
   });
 
   const route = useRouter();
+  const { user } = useContext(AuthContext);
 
   const [isRPaid, setIsRPaid] = useState(isRentPaid);
   const [showTransactions, setShowTransactions] = useState(false);
@@ -74,20 +76,19 @@ const Receipt = ({
   const [isPayModalOpen, setIsPayModalOpen] = useState(false);
   const [payModalData, setPayModalData] = useState(null);
   const [invoiceData, setInvoiceData] = useState([]);
-  const [formName, setFormName] = useState("");
-  const [formValue, setFormValue] = useState("");
+  const [advanceMealAmount, setAdvanceMealAmount] = useState(1000);
 
   const closePayModal = () => {
     setIsPayModalOpen(false);
     setInvoiceData([]);
-    setFormName("");
-    setFormValue("");
     setPayModalData(null);
   };
 
   const openPayModal = async () => {
-    toast.success("Coming Very Soon...");
-    return;
+    if (user.email != "akibrahman5200@gmail.com") {
+      toast.success("Coming Very Soon...");
+      return;
+    }
     setIsPayModalOpen(true);
     try {
       const { data } = await axios.put("/api/bkash/create", { id });
@@ -97,20 +98,6 @@ const Receipt = ({
       closePayModal();
       toast.error(error?.message || "Server Error");
     }
-  };
-
-  const addField = (e) => {
-    e.preventDefault();
-    if (!formName || !formValue || parseInt(formValue) <= 0) return;
-    setInvoiceData([...invoiceData, { name: formName, value: formValue }]);
-    setFormName("");
-    setFormValue("");
-  };
-
-  const deleteField = (indexToDelete) => {
-    setInvoiceData((prevInvoiceData) =>
-      prevInvoiceData.filter((_, index) => index != indexToDelete)
-    );
   };
 
   const bkashPay = async () => {
@@ -148,9 +135,9 @@ const Receipt = ({
   return (
     <>
       {isPayModalOpen && (
-        <div className="fixed z-50 top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
+        <div className="fixed z-[50000] top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
           {payModalData ? (
-            <div className="absolute text-pink-600 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white h-[80%] w-[60%] rounded-xl">
+            <div className="absolute text-pink-600 top-[40%] md:top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white md:h-[80%] w-[95%] md:w-[60%] rounded-xl pb-5 md:pb-0">
               <FaTimes
                 className="text-2xl absolute top-1 right-2 text-slate-200 cursor-pointer duration-300 active:scale-90 bg-pink-600 aspect-square rounded-full p-1"
                 onClick={closePayModal}
@@ -159,7 +146,7 @@ const Receipt = ({
                 ID: {`${"*".repeat(id.length - 5)}${id.slice(-5)}`}
               </p>
 
-              <div className="flex items-center gap-2 font-semibold justify-center py-3">
+              <div className="flex items-center gap-0 md:gap-2 font-semibold justify-center py-3">
                 <Image
                   src="/images/bkash.png"
                   className="bg-white px-3 py-0.5 rounded-md cursor-pointer active:scale-90 hover:scale-105 duration-300"
@@ -167,12 +154,31 @@ const Receipt = ({
                   width={"120"}
                   height={"40"}
                 />
-                <p>Pay with BKash hassle-free</p>
+                <p className="text-sm md:text-base">
+                  Pay with BKash hassle-free
+                </p>
               </div>
               <div className="">
                 {status == "initiated" && (
                   <>
-                    <div className="flex flex-wrap items-center justify-center gap-5">
+                    <div className="flex items-center justify-center gap-2 mb-4 text-sm md:text-base">
+                      <p>Enter Advance Meal Amount:</p>
+                      <input
+                        type="number"
+                        placeholder="Meal Amount"
+                        value={advanceMealAmount}
+                        onChange={(e) => {
+                          setInvoiceData(
+                            invoiceData.filter(
+                              (item) => item.name != `Advance Meal-${month}`
+                            )
+                          );
+                          setAdvanceMealAmount(parseInt(e.target.value));
+                        }}
+                        className="px-4 md:px-10 py-1.5 w-[100px] md:w-[200px] placeholder:text-pink-600 bg-pink-200 outline-none rounded-full"
+                      />
+                    </div>
+                    <div className="flex flex-wrap items-center justify-center gap-2 md:gap-5 text-sm md:text-base">
                       {/* Room Rent  */}
                       <div
                         onClick={() => {
@@ -209,12 +215,14 @@ const Receipt = ({
                         <p>{payModalData?.rent}</p>
                         <p>BDT</p>
                       </div>
-                      {/* Advance Meal 1000 */}
+                      {/* Advance Meal*/}
                       <div
                         onClick={() => {
+                          if (!advanceMealAmount || advanceMealAmount <= 0)
+                            return toast.error("Advance Meal Amount is Empty");
                           const newItem = {
                             name: `Advance Meal-${month}`,
-                            value: 1000,
+                            value: advanceMealAmount,
                           };
                           const exists = invoiceData.some(
                             (item) =>
@@ -237,85 +245,13 @@ const Receipt = ({
                           invoiceData.some(
                             (item) =>
                               item.name == `Advance Meal-${month}` &&
-                              item.value == 1000
+                              item.value == advanceMealAmount
                           )
                             ? "bg-pink-600 text-white"
                             : "bg-white text-pink-600"
                         }`}
                       >
-                        <p>Advance Meal 1000 BDT</p>
-                      </div>
-                      {/* Advance Meal 1500 */}
-                      <div
-                        onClick={() => {
-                          const newItem = {
-                            name: `Advance Meal-${month}`,
-                            value: 1500,
-                          };
-                          const exists = invoiceData.some(
-                            (item) =>
-                              item.name == newItem.name &&
-                              item.value == newItem.value
-                          );
-                          if (exists) {
-                            setInvoiceData(
-                              invoiceData.filter(
-                                (item) =>
-                                  item.name != newItem.name ||
-                                  item.value != newItem.value
-                              )
-                            );
-                          } else {
-                            setInvoiceData([...invoiceData, newItem]);
-                          }
-                        }}
-                        className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
-                          invoiceData.some(
-                            (item) =>
-                              item.name == `Advance Meal-${month}` &&
-                              item.value == 1500
-                          )
-                            ? "bg-pink-600 text-white"
-                            : "bg-white text-pink-600"
-                        }`}
-                      >
-                        <p>Advance Meal 1500 BDT</p>
-                      </div>
-                      {/* Advance Meal 2000 */}
-                      <div
-                        onClick={() => {
-                          const newItem = {
-                            name: `Advance Meal-${month}`,
-                            value: 2000,
-                          };
-                          const exists = invoiceData.some(
-                            (item) =>
-                              item.name == newItem.name &&
-                              item.value == newItem.value
-                          );
-                          if (exists) {
-                            setInvoiceData(
-                              invoiceData.filter(
-                                (item) =>
-                                  item.name != newItem.name ||
-                                  item.value != newItem.value
-                              )
-                            );
-                          } else {
-                            setInvoiceData([...invoiceData, newItem]);
-                          }
-                        }}
-                        className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
-                          invoiceData.some(
-                            (item) =>
-                              item.name == `Advance Meal-${month}` &&
-                              item.value == 2000
-                          )
-                            ? "bg-pink-600 text-white"
-                            : "bg-white text-pink-600"
-                        }`}
-                      >
-                        <p>Advance Meal 2000 BDT</p>
+                        <p>Advance Meal {advanceMealAmount || 0} BDT</p>
                       </div>
                       {/* Wifi 150 */}
                       <div
@@ -349,6 +285,87 @@ const Receipt = ({
                         }`}
                       >
                         <p>Wi-Fi 150 BDT</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-center mt-2">
+                      *Click above any to pay
+                    </p>
+                    <p className="text-xs text-center mt-1">
+                      *You can customize your Meal amount
+                    </p>
+                    <p className="mt-4 text-xl text-center font-bold">
+                      Total:{" "}
+                      {Math.ceil(invoiceData.reduce((a, c) => a + c.value, 0))}{" "}
+                      BDT
+                    </p>
+                  </>
+                )}
+                {status == "calculated" && (
+                  <>
+                    <div className="flex flex-wrap items-center justify-center gap-5">
+                      {/* Due  */}
+                      <div
+                        onClick={() => {
+                          const newItem = {
+                            name: `Due-${month}`,
+                            value:
+                              totalBillInBDT -
+                              transactions?.reduce((total, transaction) => {
+                                const transactionSum =
+                                  transaction.payments.reduce(
+                                    (sum, payment) => sum + payment.value,
+                                    0
+                                  );
+                                return total + transactionSum;
+                              }, 0),
+                          };
+                          const exists = invoiceData.some(
+                            (item) =>
+                              item.name == newItem.name &&
+                              item.value == newItem.value
+                          );
+                          if (exists) {
+                            setInvoiceData(
+                              invoiceData.filter(
+                                (item) => item.name != newItem.name
+                              )
+                            );
+                          } else {
+                            setInvoiceData([...invoiceData, newItem]);
+                          }
+                        }}
+                        className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
+                          invoiceData.some(
+                            (item) =>
+                              item.name == `Due-${month}` &&
+                              item.value ==
+                                totalBillInBDT -
+                                  transactions?.reduce((total, transaction) => {
+                                    const transactionSum =
+                                      transaction.payments.reduce(
+                                        (sum, payment) => sum + payment.value,
+                                        0
+                                      );
+                                    return total + transactionSum;
+                                  }, 0)
+                          )
+                            ? "bg-pink-600 text-white"
+                            : "bg-white text-pink-600"
+                        }`}
+                      >
+                        <p>Due</p>
+                        <p>
+                          {totalBillInBDT -
+                            transactions?.reduce((total, transaction) => {
+                              const transactionSum =
+                                transaction.payments.reduce(
+                                  (sum, payment) => sum + payment.value,
+                                  0
+                                );
+                              return total + transactionSum;
+                            }, 0)}
+                        </p>
+                        <p>BDT</p>
                       </div>
                     </div>
                     <p className="text-xs text-center mt-1">
