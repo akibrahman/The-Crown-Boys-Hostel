@@ -15,6 +15,12 @@ const qr = async ({ params }) => {
       { bKashTransactionId: transactionId },
     ],
   });
+  if (!transaction)
+    return (
+      <div className="min-h-[90vh] bg-dashboard text-stone-300 flex items-center justify-center py-4">
+        <p>No Transaction Found</p>
+      </div>
+    );
   const user = await User.findById(transaction.userId);
   return (
     <div className="min-h-[90vh] bg-dashboard text-stone-300 flex items-center justify-center py-4">
