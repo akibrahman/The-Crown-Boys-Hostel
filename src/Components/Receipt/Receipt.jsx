@@ -86,10 +86,10 @@ const Receipt = ({
   };
 
   const openPayModal = async () => {
-    if (user.email != "akibrahman5200@gmail.com") {
-      toast.success("Coming Very Soon...");
-      return;
-    }
+    // if (user.email != "akibrahman5200@gmail.com") {
+    //   toast.success("Coming Very Soon...");
+    //   return;
+    // }
     setIsPayModalOpen(true);
     try {
       const { data } = await axios.put("/api/bkash/create", { id });
@@ -181,41 +181,43 @@ const Receipt = ({
                     </div>
                     <div className="flex flex-wrap items-center justify-center gap-2 md:gap-5 text-sm md:text-base">
                       {/* Room Rent  */}
-                      <div
-                        onClick={() => {
-                          const newItem = {
-                            name: `Rent-${month}`,
-                            value: payModalData?.rent,
-                          };
-                          const exists = invoiceData.some(
-                            (item) =>
-                              item.name == newItem.name &&
-                              item.value == newItem.value
-                          );
-                          if (exists) {
-                            setInvoiceData(
-                              invoiceData.filter(
-                                (item) => item.name != newItem.name
-                              )
+                      {payModalData?.shouldRentPay && (
+                        <div
+                          onClick={() => {
+                            const newItem = {
+                              name: `Rent-${month}`,
+                              value: payModalData?.rent,
+                            };
+                            const exists = invoiceData.some(
+                              (item) =>
+                                item.name == newItem.name &&
+                                item.value == newItem.value
                             );
-                          } else {
-                            setInvoiceData([...invoiceData, newItem]);
-                          }
-                        }}
-                        className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
-                          invoiceData.some(
-                            (item) =>
-                              item.name == `Rent-${month}` &&
-                              item.value == payModalData?.rent
-                          )
-                            ? "bg-pink-600 text-white"
-                            : "bg-white text-pink-600"
-                        }`}
-                      >
-                        <p>Seat Rent</p>
-                        <p>{payModalData?.rent}</p>
-                        <p>BDT</p>
-                      </div>
+                            if (exists) {
+                              setInvoiceData(
+                                invoiceData.filter(
+                                  (item) => item.name != newItem.name
+                                )
+                              );
+                            } else {
+                              setInvoiceData([...invoiceData, newItem]);
+                            }
+                          }}
+                          className={`duration-300 border border-pink-600 px-4 py-1 hover:scale-105 active:scale-90 flex items-center justify-center gap-2 font-semibold cursor-pointer select-none ${
+                            invoiceData.some(
+                              (item) =>
+                                item.name == `Rent-${month}` &&
+                                item.value == payModalData?.rent
+                            )
+                              ? "bg-pink-600 text-white"
+                              : "bg-white text-pink-600"
+                          }`}
+                        >
+                          <p>Seat Rent</p>
+                          <p>{payModalData?.rent}</p>
+                          <p>BDT</p>
+                        </div>
+                      )}
                       {/* Advance Meal*/}
                       <div
                         onClick={() => {
@@ -294,9 +296,19 @@ const Receipt = ({
                     <p className="text-xs text-center mt-1">
                       *You can customize your Meal amount
                     </p>
+                    <p className="mt-4 text-center font-bold">
+                      Charge (1%):{" "}
+                      {parseFloat(
+                        invoiceData.reduce((a, c) => a + parseInt(c.value), 0) *
+                          0.01
+                      ).toFixed(2)}{" "}
+                      BDT
+                    </p>
                     <p className="mt-4 text-xl text-center font-bold">
                       Total:{" "}
-                      {Math.ceil(invoiceData.reduce((a, c) => a + c.value, 0))}{" "}
+                      {invoiceData.reduce((a, c) => a + c.value, 0) +
+                        invoiceData.reduce((a, c) => a + c.value, 0) *
+                          0.01}{" "}
                       BDT
                     </p>
                   </>
@@ -372,9 +384,19 @@ const Receipt = ({
                     <p className="text-xs text-center mt-1">
                       *Click above any to pay
                     </p>
+                    <p className="mt-4 text-center font-bold">
+                      Charge (1%):{" "}
+                      {parseFloat(
+                        invoiceData.reduce((a, c) => a + parseInt(c.value), 0) *
+                          0.01
+                      ).toFixed(2)}{" "}
+                      BDT
+                    </p>
                     <p className="mt-4 text-xl text-center font-bold">
                       Total:{" "}
-                      {Math.ceil(invoiceData.reduce((a, c) => a + c.value, 0))}{" "}
+                      {invoiceData.reduce((a, c) => a + c.value, 0) +
+                        invoiceData.reduce((a, c) => a + c.value, 0) *
+                          0.01}{" "}
                       BDT
                     </p>
                   </>

@@ -30,7 +30,9 @@ export const POST = async (req) => {
       console.log("No Invoice Data");
       throw new Error("No Invoice Data");
     }
-    const amount = Math.ceil(invoiceData.reduce((a, c) => a + c.value, 0));
+    const amount =
+      invoiceData.reduce((a, c) => a + c.value, 0) +
+      invoiceData.reduce((a, c) => a + c.value, 0) * 0.01;
     const finalInvoiceDataa = {};
     invoiceData.forEach((idd) => {
       finalInvoiceDataa[idd.name + "_crowninvoice"] = idd.value;
@@ -70,7 +72,7 @@ export const POST = async (req) => {
     const requestBody = {
       mode: "0011",
       payerReference: "bkash-pay-from-user",
-      callbackURL: `${process.env.CLIENT_SIDE}/api/bkash/execute?amount=${amount}&billId=${billId}&${queryToBePassed}`,
+      callbackURL: `${process.env.CLIENT_SIDE}/api/bkash/execute?amount=${amount}&billId=${billId}&id_token=${id_token}&${queryToBePassed}`,
       amount: amount.toString(),
       currency: "BDT",
       intent: "sale",
@@ -133,7 +135,11 @@ export const PUT = async (req) => {
     });
     if (totalRent == 0) totalRent = 3500;
 
-    return NextResponse.json({ rent: totalRent, success: true });
+    return NextResponse.json({
+      rent: totalRent,
+      shouldRentPay: !bill.isRentPaid,
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

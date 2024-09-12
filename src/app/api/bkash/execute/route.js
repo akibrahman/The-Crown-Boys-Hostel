@@ -19,13 +19,17 @@ export const GET = async (req) => {
     if (status == "cancel") {
       return NextResponse.redirect(
         redirectUrl +
-          `&success=false&status=${status}&paymentID=${paymentID}&message=Payment_Cancelled`
+          `&success=false&status=${status}&paymentID=${paymentID}&message=${encodeURIComponent(
+            "Payment Cancelled"
+          )}`
       );
     }
     if (status === "failure") {
       return NextResponse.redirect(
         redirectUrl +
-          `&success=false&status=${status}&paymentID=${paymentID}&message=Payment_Failed`
+          `&success=false&status=${status}&paymentID=${paymentID}&message=${encodeURIComponent(
+            "Payment Failed"
+          )}`
       );
     }
     const invoiceData = queries
@@ -45,29 +49,14 @@ export const GET = async (req) => {
 
     if (!queries?.find((obj) => obj?.paymentID)?.paymentID)
       throw new Error("paymentID Missing");
-    const { data } = await axios.post(
-      process.env.BKASH_GRANT_TOKEN_URL,
-      {
-        app_key: process.env.BKASH_APP_KEY,
-        app_secret: process.env.BKASH_SECRET_KEY,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          username: process.env.BKASH_USERNAME,
-          password: process.env.BKASH_PASSWORD,
-        },
-      }
-    );
-    const { id_token } = data;
+
     const { data: executeData } = await axios.post(
       process.env.BKASH_EXECUTE_PAYMENT_URL,
       { paymentID: queries.find((obj) => obj.paymentID).paymentID },
       {
         headers: {
           Accept: "application/json",
-          Authorization: id_token,
+          Authorization: queries?.find((obj) => obj?.id_token)?.id_token,
           "X-App-Key": process.env.BKASH_APP_KEY,
         },
       }
@@ -77,18 +66,11 @@ export const GET = async (req) => {
       executeData?.statusCode != "0000" ||
       executeData?.statusMessage != "Successful"
     ) {
-      console.log(
-        "===================================>>>>",
-        executeData?.statusCode,
-        executeData?.statusMessage
-      );
-      const encodeded = `&statusMessage=${encodeURIComponent(
-        executeData?.statusMessage
-      )}`;
-      console.log(encodeded);
       return NextResponse.redirect(
         redirectUrl +
-          `&success=false&status=${executeData?.transactionStatus}&paymentID=${executeData.paymentID}`
+          `&success=false&status=${executeData?.transactionStatus}&paymentID=${
+            executeData.paymentID
+          }&message=${encodeURIComponent(executeData?.statusMessage)}`
       );
     }
     const bill = await Bill.findById(queries.find((obj) => obj.billId).billId);
@@ -107,9 +89,18 @@ export const GET = async (req) => {
       ).toFixed(2),
       payments: invoiceData,
     }).save();
+    if (invoiceData.some((obj) => obj.name.startsWith("Rent-"))) {
+      bill.isRentPaid = true;
+      await bill.save();
+    }
     return NextResponse.redirect(
       redirectUrl +
-        `&success=true&status=success&transactionId=${executeData.merchantInvoiceNumber}&trxId=${executeData.trxID}&amount=${executeData.amount}&paymentID=${executeData.paymentID}`
+        `&success=true&status=success&transactionId=${
+          executeData.merchantInvoiceNumber
+        }&trxId=${executeData.trxID}&amount=${invoiceData.reduce(
+          (a, c) => a + parseInt(c.value),
+          0
+        )}&paymentID=${executeData.paymentID}`
     );
   } catch (error) {
     console.log("===========================>", error.message);
