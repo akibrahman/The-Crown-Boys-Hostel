@@ -1,5 +1,4 @@
 "use client";
-import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
@@ -8,10 +7,7 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaEye, FaTimes } from "react-icons/fa";
-import { FaDeleteLeft } from "react-icons/fa6";
 import { TiTick } from "react-icons/ti";
-import { useBkash } from "react-bkash";
-import { AuthContext } from "@/providers/ContextProvider";
 
 const Receipt = ({
   id,
@@ -35,7 +31,6 @@ const Receipt = ({
   });
 
   const route = useRouter();
-  const { user } = useContext(AuthContext);
 
   const [isRPaid, setIsRPaid] = useState(isRentPaid);
   const [showTransactions, setShowTransactions] = useState(false);
