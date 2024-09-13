@@ -1,10 +1,7 @@
 "use client";
 
 import PreLoader from "@/Components/PreLoader/PreLoader";
-import UnderConstruction from "@/Components/UnderConstruction/UnderConstruction";
 import { base64 } from "@/utils/base64";
-import { imageUpload } from "@/utils/imageUpload";
-import { makeFile } from "@/utils/makeFile";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
@@ -15,12 +12,14 @@ import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaPlusCircle, FaTimes } from "react-icons/fa";
 import Select from "react-select";
+import { storage } from "../../../firebase.config";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 const Registration = () => {
   const router = useRouter();
-  const [preview, setPreview] = useState(null);
-  const [nidFront, setNidFront] = useState(null);
-  const [nidBack, setNidBack] = useState(null);
-  const [birthCertificate, setBrithCertificate] = useState(null);
+  const [preview, setPreview] = useState([null, null]);
+  const [nidFront, setNidFront] = useState([null, null]);
+  const [nidBack, setNidBack] = useState([null, null]);
+  const [birthCertificate, setBrithCertificate] = useState([null, null]);
   const [role, setRole] = useState("client");
   const [loading, setLoading] = useState(false);
   const [isNid, setIsNid] = useState(true);
@@ -86,6 +85,30 @@ const Registration = () => {
     });
   };
 
+  const uploadFile = (file, path) => {
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(storage, path);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(progress);
+        },
+        (error) => {
+          console.log(error);
+          toast.error("Firebase error");
+          reject(error);
+        },
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          resolve(url + "__urlpathdevider__" + path);
+        }
+      );
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let finalData = { ...formData, role };
@@ -99,30 +122,29 @@ const Registration = () => {
       return;
     }
     setLoading(true);
-    if (!preview) {
+    if (!preview[0]) {
       toast.error("No profile picture!");
       setLoading(false);
       return;
     }
-    if (isNid ? !nidFront || !nidBack : !birthCertificate) {
+    if (isNid ? !nidFront[0] || !nidBack[0] : !birthCertificate[0]) {
       toast.error("Set identity properly");
       setLoading(false);
       return;
     }
     try {
-      const profilePicture = await imageUpload(
-        await makeFile(
-          preview,
-          `Profile Picture of ${formData.username}`,
-          "png"
-        )
+      const profilePicture = await uploadFile(
+        preview[0],
+        `user_info/${formData.email + "_profile_picture.jpg"}`
       );
       if (isNid) {
-        const nidFrontPicture = await imageUpload(
-          await makeFile(nidFront, `NID Front of ${formData.username}`, "png")
+        const nidFrontPicture = await uploadFile(
+          nidFront[0],
+          `user_info/${formData.email + "_nid_front.jpg"}`
         );
-        const nidBackPicture = await imageUpload(
-          await makeFile(nidBack, `NID Back of ${formData.username}`, "png")
+        const nidBackPicture = await uploadFile(
+          nidBack[0],
+          `user_info/${formData.email + "_nid_back.jpg"}`
         );
         const birthCertificatePicture = null;
         finalData = {
@@ -135,12 +157,9 @@ const Registration = () => {
       } else {
         const nidFrontPicture = null;
         const nidBackPicture = null;
-        const birthCertificatePicture = await imageUpload(
-          await makeFile(
-            birthCertificate,
-            `Birth Certificate of ${formData.username}`,
-            "png"
-          )
+        const birthCertificatePicture = await uploadFile(
+          birthCertificate[0],
+          `user_info/${formData.email + "_birth_certificate.jpg"}`
         );
         finalData = {
           ...finalData,
@@ -172,8 +191,6 @@ const Registration = () => {
       setLoading(false);
     }
   };
-
-  return <UnderConstruction />;
 
   if (!verifiedManagers) return <PreLoader />;
 
@@ -344,9 +361,9 @@ const Registration = () => {
                     <input
                       onClick={() => {
                         setIsNid(!isNid);
-                        setNidFront(null);
-                        setNidBack(null);
-                        setBrithCertificate(null);
+                        setNidFront([null, null]);
+                        setNidBack([null, null]);
+                        setBrithCertificate([null, null]);
                       }}
                       type="checkbox"
                       value=""
@@ -374,17 +391,17 @@ const Registration = () => {
                     >
                       NID Front
                     </label>
-                    {nidFront ? (
+                    {nidFront[1] ? (
                       <div className="relative">
                         <Image
-                          src={nidFront}
+                          src={nidFront[1]}
                           width={"200"}
                           height={"100"}
                           alt="NID Front"
                           className="rounded-md"
                         />
                         <FaTimes
-                          onClick={() => setNidFront(null)}
+                          onClick={() => setNidFront([null, null])}
                           className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
                         />
                       </div>
@@ -396,11 +413,11 @@ const Registration = () => {
                     )}
                     <input
                       onChange={async (e) => {
-                        const base = await base64(e.target.files[0]);
-                        setNidFront(base);
-                        // await axios.post(`/api/orders/nidverify`, {
-                        //   imageData: base,
-                        // });
+                        const file = e.target.files[0];
+                        if (file) {
+                          const objectUrl = URL.createObjectURL(file);
+                          setNidFront([file, objectUrl]);
+                        }
                       }}
                       className="hidden"
                       type="file"
@@ -414,17 +431,17 @@ const Registration = () => {
                     >
                       NID Back
                     </label>
-                    {nidBack ? (
+                    {nidBack[1] ? (
                       <div className="relative">
                         <Image
-                          src={nidBack}
+                          src={nidBack[1]}
                           width={"200"}
                           height={"100"}
                           className="rounded-md"
                           alt="NID Back"
                         />
                         <FaTimes
-                          onClick={() => setNidBack(null)}
+                          onClick={() => setNidBack([null, null])}
                           className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
                         />
                       </div>
@@ -437,8 +454,11 @@ const Registration = () => {
 
                     <input
                       onChange={async (e) => {
-                        const base = await base64(e.target.files[0]);
-                        setNidBack(base);
+                        const file = e.target.files[0];
+                        if (file) {
+                          const objectUrl = URL.createObjectURL(file);
+                          setNidBack([file, objectUrl]);
+                        }
                       }}
                       className="hidden"
                       type="file"
@@ -456,17 +476,17 @@ const Registration = () => {
                   >
                     Birth Certificate
                   </label>
-                  {birthCertificate ? (
+                  {birthCertificate[1] ? (
                     <div className="relative">
                       <Image
-                        src={birthCertificate}
+                        src={birthCertificate[1]}
                         width={"300"}
                         height={"400"}
                         className="rounded-md mx-auto"
                         alt="Birth Certificate"
                       />
                       <FaTimes
-                        onClick={() => setBrithCertificate(null)}
+                        onClick={() => setBrithCertificate([null, null])}
                         className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
                       />
                     </div>
@@ -485,8 +505,11 @@ const Registration = () => {
                   )}
                   <input
                     onChange={async (e) => {
-                      const base = await base64(e.target.files[0]);
-                      setBrithCertificate(base);
+                      const file = e.target.files[0];
+                      if (file) {
+                        const objectUrl = URL.createObjectURL(file);
+                        setBrithCertificate([file, objectUrl]);
+                      }
                     }}
                     className="hidden"
                     type="file"
@@ -713,8 +736,11 @@ const Registration = () => {
                   </label>
                   <input
                     onChange={async (e) => {
-                      const base = await base64(e.target.files[0]);
-                      setPreview(base);
+                      const file = e.target.files[0];
+                      if (file) {
+                        const objectUrl = URL.createObjectURL(file);
+                        setPreview([file, objectUrl]);
+                      }
                     }}
                     type="file"
                     accept="image/*"
@@ -724,9 +750,9 @@ const Registration = () => {
                   />
                 </div>
 
-                {preview && (
+                {preview[1] && (
                   <Image
-                    src={preview}
+                    src={preview[1]}
                     className="aspect-square rounded-full mr-10"
                     alt="Preview of profile picture"
                     width={60}
