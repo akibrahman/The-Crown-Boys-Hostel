@@ -19,9 +19,10 @@ const ManagerAllUsers = ({ user }) => {
     useState(false);
   const [givingAuthorization, setGivingAuthorization] = useState(false);
   const [declining, setDeclining] = useState(false);
+  const [clientsFilter, setClientsFilter] = useState("active");
 
   const { data: clients, refetch: clientRefetch } = useQuery({
-    queryKey: ["clients", "manager", user?._id, clientName],
+    queryKey: ["clients", "manager", user?._id, clientName, clientsFilter],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
         `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=0&clientName=${clientName}`
@@ -36,6 +37,7 @@ const ManagerAllUsers = ({ user }) => {
           return 1;
         }
       });
+
       return array;
     },
     enabled: user?._id && user?.role == "manager" ? true : false,

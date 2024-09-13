@@ -1,6 +1,7 @@
 "use client";
 
 import PreLoader from "@/Components/PreLoader/PreLoader";
+import UnderConstruction from "@/Components/UnderConstruction/UnderConstruction";
 import { base64 } from "@/utils/base64";
 import { imageUpload } from "@/utils/imageUpload";
 import { makeFile } from "@/utils/makeFile";
@@ -108,45 +109,49 @@ const Registration = () => {
       setLoading(false);
       return;
     }
-
-    const profilePicture = await imageUpload(
-      await makeFile(preview, `Profile Picture of ${formData.username}`, "png")
-    );
-    if (isNid) {
-      const nidFrontPicture = await imageUpload(
-        await makeFile(nidFront, `NID Front of ${formData.username}`, "png")
-      );
-      const nidBackPicture = await imageUpload(
-        await makeFile(nidBack, `NID Back of ${formData.username}`, "png")
-      );
-      const birthCertificatePicture = null;
-      finalData = {
-        ...finalData,
-        profilePicture,
-        nidFrontPicture,
-        nidBackPicture,
-        birthCertificatePicture,
-      };
-    } else {
-      const nidFrontPicture = null;
-      const nidBackPicture = null;
-      const birthCertificatePicture = await imageUpload(
+    try {
+      const profilePicture = await imageUpload(
         await makeFile(
-          birthCertificate,
-          `Birth Certificate of ${formData.username}`,
+          preview,
+          `Profile Picture of ${formData.username}`,
           "png"
         )
       );
-      finalData = {
-        ...finalData,
-        profilePicture,
-        nidFrontPicture,
-        nidBackPicture,
-        birthCertificatePicture,
-      };
-    }
-    console.log(finalData);
-    try {
+      if (isNid) {
+        const nidFrontPicture = await imageUpload(
+          await makeFile(nidFront, `NID Front of ${formData.username}`, "png")
+        );
+        const nidBackPicture = await imageUpload(
+          await makeFile(nidBack, `NID Back of ${formData.username}`, "png")
+        );
+        const birthCertificatePicture = null;
+        finalData = {
+          ...finalData,
+          profilePicture,
+          nidFrontPicture,
+          nidBackPicture,
+          birthCertificatePicture,
+        };
+      } else {
+        const nidFrontPicture = null;
+        const nidBackPicture = null;
+        const birthCertificatePicture = await imageUpload(
+          await makeFile(
+            birthCertificate,
+            `Birth Certificate of ${formData.username}`,
+            "png"
+          )
+        );
+        finalData = {
+          ...finalData,
+          profilePicture,
+          nidFrontPicture,
+          nidBackPicture,
+          birthCertificatePicture,
+        };
+      }
+      console.log(finalData);
+
       const res = await axios.post("/api/users/signup", finalData);
       console.log(res.data);
       if (res.data.success) {
@@ -167,6 +172,8 @@ const Registration = () => {
       setLoading(false);
     }
   };
+
+  return <UnderConstruction />;
 
   if (!verifiedManagers) return <PreLoader />;
 

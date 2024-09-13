@@ -15,9 +15,10 @@ export const imageUpload = async (image, link) => {
       );
       return data.data.display_url;
     } catch (error) {
-      return "";
+      console.log("IMGBB Up;oad Error: ", error);
+      throw new Error(error);
     }
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 };

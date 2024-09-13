@@ -24,6 +24,7 @@ export const POST = async (req) => {
       },
       body: JSON.stringify(data),
     });
+    console.log("----------", res);
     if (!res.ok) throw new Error("SMS can't be sent!");
     const ress = await res.json();
     if (ress.response_code == 1007) {
