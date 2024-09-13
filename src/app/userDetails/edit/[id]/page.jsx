@@ -1,7 +1,6 @@
 "use client";
 
 import PreLoader from "@/Components/PreLoader/PreLoader";
-import UnderConstruction from "@/Components/UnderConstruction/UnderConstruction";
 import { base64 } from "@/utils/base64";
 import { imageUpload } from "@/utils/imageUpload";
 import { makeFile } from "@/utils/makeFile";
@@ -277,8 +276,6 @@ const Page = ({ params }) => {
       setIsChargeAdding(false);
     }
   };
-
-  return <UnderConstruction />;
 
   if (!client) return <PreLoader />;
 

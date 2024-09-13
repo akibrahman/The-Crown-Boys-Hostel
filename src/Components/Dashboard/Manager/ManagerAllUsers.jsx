@@ -27,11 +27,47 @@ const ManagerAllUsers = ({ user }) => {
       const { data } = await axios.get(
         `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=0&clientName=${clientName}`
       );
-      const array = data.clients;
-      array.sort((b, a) => {
+      if (!data.success || data?.clients?.length <= 0) return [];
+      let array = [];
+      if (queryKey[4] == "active") {
+        const temp = data.clients;
+        array = temp.filter((t) => !t?.blockDate);
+      } else if (queryKey[4] == "block_scheduled") {
+        const temp = data.clients;
+        array = temp.filter(
+          (t) =>
+            t.blockDate &&
+            !moment(t.blockDate).isBefore(
+              moment(
+                new Date().toLocaleString("en-US", {
+                  timeZone: "Asia/Dhaka",
+                }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "day"
+            )
+        );
+      } else if (queryKey[4] == "blocked") {
+        const temp = data.clients;
+        array = temp.filter(
+          (t) =>
+            t.blockDate &&
+            moment(t.blockDate).isBefore(
+              moment(
+                new Date().toLocaleString("en-US", {
+                  timeZone: "Asia/Dhaka",
+                }),
+                "M/D/YYYY, h:mm:ss A"
+              ),
+              "day"
+            )
+        );
+      }
+      array.sort((a, b) => a.floor - b.floor);
+      array.sort((a, b) => {
         if (a.isClientVerified === b.isClientVerified) {
           return 0;
-        } else if (a.isClientVerified) {
+        } else if (b.isClientVerified) {
           return -1;
         } else {
           return 1;
@@ -300,16 +336,33 @@ const ManagerAllUsers = ({ user }) => {
         )}
       </Modal>
       <div className="px-3 flex flex-col items-center gap-4 py-5  bg-dashboard text-slate-100 min-h-full">
-        <div className="pb-2 bg-transparent flex justify-center sticky top-0">
-          <div className="">
-            <input
-              onChange={(e) => setClientName(e.target.value)}
-              placeholder="Search by name"
-              type="text"
-              className="w-80 px-4 pl-12 py-3 rounded-full text-white font-semibold bg-dashboard placeholder:text-white outline-double focus-within:border-none"
-            />
-            <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg text-white" />
+        <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-5 md:pb-2">
+          <div className="bg-transparent flex justify-center sticky top-0">
+            <div className="">
+              <input
+                onChange={(e) => setClientName(e.target.value)}
+                placeholder="Search by name"
+                type="text"
+                className="w-80 px-4 pl-12 py-3 rounded-full text-white font-semibold bg-dashboard placeholder:text-white outline-double focus-within:border-none"
+              />
+              <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg text-white" />
+            </div>
           </div>
+          <select
+            className="text-dashboard font-semibold outline-none px-4 py-2 rounded-full cursor-pointer"
+            onChange={(e) => setClientsFilter(e.target.value)}
+          >
+            <option className="cursor-pointer" value="active">
+              Active
+            </option>
+            <option className="cursor-pointer" value="block_scheduled">
+              Block Scheduled
+            </option>
+            <option className="cursor-pointer" value="blocked">
+              Blocked
+            </option>
+          </select>
+          <p className="text-xs md:text-sm">{clients?.length}</p>
         </div>
 
         {clientName && !clients ? (
@@ -317,7 +370,7 @@ const ManagerAllUsers = ({ user }) => {
             <CgSpinner className="animate-spin text-lg" />
             Loading...
           </p>
-        ) : (
+        ) : clients?.length > 0 ? (
           clients?.map((client, i) => (
             <div
               key={client._id}
@@ -395,6 +448,10 @@ const ManagerAllUsers = ({ user }) => {
               )}
             </div>
           ))
+        ) : (
+          <p className="mt-5 text-center text-slate-200 font-semibold">
+            No User Found
+          </p>
         )}
       </div>
     </>
