@@ -73,9 +73,11 @@ const Receipt = ({
   const [payModalData, setPayModalData] = useState(null);
   const [invoiceData, setInvoiceData] = useState([]);
   const [advanceMealAmount, setAdvanceMealAmount] = useState(1000);
+  const [isBkashUrlFetching, setIsBkashUrlFetching] = useState(false);
 
   const closePayModal = () => {
     setIsPayModalOpen(false);
+    setIsBkashUrlFetching(false);
     setInvoiceData([]);
     setPayModalData(null);
   };
@@ -97,6 +99,7 @@ const Receipt = ({
   };
 
   const bkashPay = async () => {
+    setIsBkashUrlFetching(true);
     try {
       const { data } = await axios.post("/api/bkash/create", {
         billId: id,
@@ -401,9 +404,12 @@ const Receipt = ({
               {invoiceData.length > 0 && (
                 <button
                   onClick={bkashPay}
-                  className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-pink-600 text-white font-semibold mx-auto mt-5 block"
+                  className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-pink-600 text-white font-semibold mx-auto mt-5 flex items-center justify-center gap-2"
                 >
                   Pay
+                  {isBkashUrlFetching && (
+                    <CgSpinner className="animate-spin text-xl text-white" />
+                  )}
                 </button>
               )}
             </div>

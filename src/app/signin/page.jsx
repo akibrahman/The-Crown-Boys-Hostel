@@ -36,11 +36,10 @@ const Signin = () => {
     setLoading(true);
     try {
       const res = await axios.post("/api/users/login", formData);
-      console.log(res);
       if (res.data.success && res.data.code === 2121) {
         await userRefetch();
         route.push(callbackUrl || "/dashboard");
-        toast.success(res.data.msg);
+        toast.success(res.data.msg + ", You are being Redirected!");
       }
     } catch (error) {
       console.log(error);
