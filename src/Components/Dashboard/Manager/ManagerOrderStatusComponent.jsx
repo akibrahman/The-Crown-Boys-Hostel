@@ -53,13 +53,15 @@ const ManagerOrderStatusComponent = () => {
     enabled: user?._id ? true : false,
   });
   //todo: Order Calculation
-  const orderOfToday = orders?.filter((order) => order.date == todayDateString);
-  const orderOfTomorrow = orders?.filter(
-    (order) => order.date == tomorrowDateString
-  );
-  const orderOfYesterday = orders?.filter(
-    (order) => order.date == yesterdayDateString
-  );
+  const orderOfToday = orders
+    ?.filter((order) => order.date == todayDateString)
+    .sort((a, b) => a.user.floor - b.user.floor);
+  const orderOfTomorrow = orders
+    ?.filter((order) => order.date == tomorrowDateString)
+    .sort((a, b) => a.user.floor - b.user.floor);
+  const orderOfYesterday = orders
+    ?.filter((order) => order.date == yesterdayDateString)
+    .sort((a, b) => a.user.floor - b.user.floor);
   //todo: Order of Today Calculation
   const breakfastOfToday =
     parseInt(orderOfToday?.filter((order) => order.breakfast == true).length) +
