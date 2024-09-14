@@ -2,7 +2,8 @@ import { dbConfig } from "@/dbConfig/dbConfig";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import jwt from "jsonwebtoken";
-import moment from "moment";
+// import moment from "moment";
+import moment from "moment-timezone";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -23,11 +24,19 @@ export const POST = async (req) => {
     const { userId, date } = await req.json();
     const user = await User.findById(userId);
     if (!User) throw new Error("User not found");
+    console.log(user.blockDate);
+    console.log(date);
     if (user?.blockDate) {
-      if (moment(user.blockDate).isBefore(moment(date)))
+      const blockDateBD = moment
+        .tz(user.blockDate, "Asia/Dhaka")
+        .startOf("day");
+      const currentDateBD = moment.tz(date, "Asia/Dhaka").startOf("day");
+
+      if (blockDateBD.isBefore(currentDateBD)) {
         throw new Error(
           `You are Blocked from ${new Date(user.blockDate).toDateString()}`
         );
+      }
     }
     const order = await Order.findOne({ userId, date });
     if (order) return NextResponse.json({ msg: "OK", success: true, order });

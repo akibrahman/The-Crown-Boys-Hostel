@@ -122,7 +122,9 @@ const ManagerMealUpdatorComponent = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong!");
+      toast.error(
+        error?.response?.data?.msg || error?.message || "Something Went Wrong"
+      );
       setDate(null);
       setOrder(null);
     } finally {
