@@ -18,12 +18,15 @@ const ManagerRFIDIssueComponent = () => {
   const { user } = useContext(AuthContext);
   const [loading, setloading] = useState(true);
   const [cardId, setCardId] = useState("");
+  const [userName, setUserName] = useState("");
 
   const { data: rfids, refetch: rfidsRefetch } = useQuery({
-    queryKey: ["rfids", "manager", cardId],
+    queryKey: ["rfids", "manager", cardId, userName],
     queryFn: async ({ queryKey }) => {
       try {
-        const { data } = await axios.get(`/api/rfid?cardId=${queryKey[2]}`);
+        const { data } = await axios.get(
+          `/api/rfid?cardId=${queryKey[2]}&userName=${queryKey[3]}`
+        );
         if (data.success) {
           setloading(false);
           return data.rfids;
@@ -113,22 +116,35 @@ const ManagerRFIDIssueComponent = () => {
       <p className="text-center py-5 text-xl">RFID Issue</p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
         {/*//! All Cards  */}
-        <div className="order-2 md:order-1 md:col-span-2 flex flex-col justify-center">
-          <div className="relative mx-auto mb-2">
-            <input
-              onChange={(e) => setCardId(e.target.value)}
-              placeholder="Search by Card ID"
-              type="text"
-              className="w-80 px-4 pl-12 py-3 rounded-full dark:text-white font-semibold dark:bg-stone-800 bg-stone-300 focus:outline-none"
-            />
-            <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
+        <div className="order-2 md:order-1 md:col-span-2 flex flex-col">
+          <div className="flex items-center justify-center gap-4 mb-3">
+            <div className="relative">
+              <input
+                onChange={(e) => setCardId(e.target.value)}
+                placeholder="Search by Card ID"
+                type="text"
+                className="w-80 px-4 pl-12 py-3 rounded-full dark:text-white font-semibold dark:bg-stone-800 bg-stone-300 focus:outline-none"
+              />
+              <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
+            </div>
+            <div className="relative">
+              <input
+                onChange={(e) => setUserName(e.target.value)}
+                placeholder="Search by User Name"
+                type="text"
+                className="w-80 px-4 pl-12 py-3 rounded-full dark:text-white font-semibold dark:bg-stone-800 bg-stone-300 focus:outline-none"
+              />
+              <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-4 text-lg" />
+            </div>
           </div>
           {loading ? (
             <div className="flex flex-col items-center justify-center mt-20">
               <CgSpinner className="text-4xl animate-spin text-blue-500" />
             </div>
-          ) : cardId && !rfids ? (
-            <p>Loading</p>
+          ) : (cardId || userName) && !rfids ? (
+            <div className="flex items-center justify-center gap-2 mt-10 md:mt-20">
+              Loading <CgSpinner className="animate-spin text-lg" />
+            </div>
           ) : rfids && rfids.length > 0 ? (
             <div className="grid grid-cols-1 gap-4 px-2 md:px-10">
               <div className="border border-blue-500 px-6 py-4 flex items-center text-sm md:text-base justify-evenly">

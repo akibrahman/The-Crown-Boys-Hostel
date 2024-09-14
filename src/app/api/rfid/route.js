@@ -54,10 +54,9 @@ export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
     const cardId = searchParams.get("cardId") || "";
-
-    // Find RFID records that match the cardId using regex
+    const userName = searchParams.get("userName") || "";
     const allRfids = await RFID.find({
-      cardId: { $regex: cardId, $options: "i" }, // 'i' for case-insensitive matching
+      cardId: { $regex: cardId, $options: "i" },
     });
     const rfids = await Promise.all(
       allRfids.map(async (rfid) => {
@@ -78,8 +77,16 @@ export const GET = async (req) => {
       })
     );
 
+    const filteredRfids = userName
+      ? rfids.filter((rfid) => rfid.username?.match(new RegExp(userName, "i")))
+      : rfids;
+
+    filteredRfids.sort((a, b) => {
+      return a?.username?.localeCompare(b?.username);
+    });
+
     return NextResponse.json({
-      rfids,
+      rfids: filteredRfids.sort((a, b) => a?.username - b?.userName),
       success: true,
     });
   } catch (error) {
