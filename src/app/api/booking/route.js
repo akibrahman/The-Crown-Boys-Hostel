@@ -13,10 +13,10 @@ export const GET = async () => {
       bookings,
     });
   } catch (error) {
-    console.log(error);
+    console.log("=====================", error.message);
     return NextResponse.json(
       { success: false, msg: "Server error, Try again!", error },
-      { status: 500 }
+      { status: 501 }
     );
   }
 };

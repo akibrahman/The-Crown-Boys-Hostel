@@ -1,10 +1,13 @@
 import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail";
+import MonthlyBillEmail_simple from "@/Components/MonthlyBillEmail/MonthlyBillEmail_simple";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
 import ManagerBill from "@/models/managerBillModel";
 import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
+import Room from "@/models/roomModel";
 import User from "@/models/userModel";
+import { sendSMS } from "@/utils/sendSMS";
 import { render } from "@react-email/render";
 import moment from "moment";
 import { NextResponse } from "next/server";
@@ -68,8 +71,8 @@ export const GET = async (req) => {
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     //! Second Last day of any month-----------------------
-    if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
-      // if (true) {
+    // if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
+    if (true) {
       console.log("Second Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -293,8 +296,8 @@ export const GET = async (req) => {
       // Market Data creation for all verified managers End
     }
     //! Last day of any month------------------------------
-    if (aboutLastDayOfCurrentMonth.isLastDay) {
-      // if (true) {
+    // if (aboutLastDayOfCurrentMonth.isLastDay) {
+    if (true) {
       console.log("Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -369,8 +372,24 @@ export const GET = async (req) => {
           totalBreakfast * 32 + totalLunch * 64 + totalDinner * 64 + 500;
         const totalUserCharges =
           user.charges?.reduce((a, b) => a + parseInt(b.amount), 0) || 0;
-        const totalBillInBDT = totalMealBillInBDT + totalUserCharges;
-        bill.charges = user.charges;
+        //
+        const rooms = await Room.find({
+          "beds.user": bill.userId.toString(),
+        });
+        let totalRent = 0;
+        rooms.forEach((room) => {
+          room.beds.forEach((bed) => {
+            if (bed.user == bill.userId.toString()) {
+              totalRent += bed.userRent;
+            }
+          });
+        });
+        if (totalRent == 0) totalRent = 3500;
+        //
+        const totalBillInBDT =
+          totalMealBillInBDT + totalUserCharges + totalRent;
+        bill.charges = [...user.charges, { note: "Rent", amount: totalRent }];
+        totalRent = 0;
         bill.totalBreakfast = totalBreakfast;
         bill.totalLunch = totalLunch;
         bill.totalDinner = totalDinner;
@@ -378,7 +397,6 @@ export const GET = async (req) => {
         if (totalBillInBDT < bill.paidBillInBDT) {
           let restDeposite = bill.paidBillInBDT - totalBillInBDT;
           bill.paidBillInBDT = totalBillInBDT;
-          bill.status = "calculated";
           const nextBill = await Bill.findOne({
             userId: bill.userId,
             year: nextYear,
@@ -466,14 +484,20 @@ export const GET = async (req) => {
       // SMS and E-mails sent Start
       const mailOptions = {
         from: "thecrownboyshostel@gmail.com",
-        to: allEmails.join(","),
+        to: "akibrahman5200@gmail.com",
+        // to: allEmails.join(","),
         subject: "Monthly Bill - The Crown Boys hostel",
-        html: `<div><p>Hello, Your Montly Bill has been Created</p><p>Please visit: <a href="http://localhost:3000/dashboard?displayData=myBills">http://localhost:3000/dashboard?displayData=myBills</a></p></div>`,
+        html: render(
+          MonthlyBillEmail_simple({ month: currentMonth, year: currentYear })
+        ),
       };
       transport.sendMail(mailOptions);
+      // sendSMS(
+      //   allNumbers.join(","),
+      //   `Monthly Bill Has Been Calculated, Please Check Your Dashboard\nDashboard : https://thecrownboyshostel.com/dashboard\nMy Bills : https://thecrownboyshostel.com/dashboard?displayData=myBills\nMy Transactions : "https://thecrownboyshostel.com/dashboard?displayData=myTransactions"`
+      // );
       // SMS and E-mails sent End
     }
-
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);

@@ -3,8 +3,9 @@ import PreLoader from "@/Components/PreLoader/PreLoader";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-const ManagerAllBookingsComponent = ({user}) => {
+const ManagerAllBookingsComponent = ({ user }) => {
   const route = useRouter();
   const { data: allBookings } = useQuery({
     queryKey: ["All Bookings", "Manager Only", user?._id],
@@ -27,6 +28,21 @@ const ManagerAllBookingsComponent = ({user}) => {
       <p className="text-center font-semibold text-2xl dark:text-white">
         Bookings
       </p>
+      {/* <button
+        // disabled
+        onClick={async () => {
+          const { data } = await axios.get("/api/cronjob/cronjob", {
+            headers: { Authorization: "Bearer 1234567890" },
+          });
+          if (data.success) {
+            console.log(data.data);
+            toast.success("Job Done");
+          } else toast.error("Job Error");
+        }}
+        className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
+      >
+        Cron Job
+      </button> */}
     </div>
   );
 };

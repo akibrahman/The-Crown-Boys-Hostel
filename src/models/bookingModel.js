@@ -27,7 +27,7 @@ const bookingSchema = new mongoose.Schema({
   },
 });
 
-delete mongoose.model.bookings;
-const Booking = mongoose.model("bookings", bookingSchema);
+const Booking =
+  mongoose.models.bookings || mongoose.model("bookings", bookingSchema);
 
 export default Booking;

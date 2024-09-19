@@ -57,7 +57,9 @@ export const MonthlyBillEmail = ({
                   padding: "10px",
                   borderRadius: "100%",
                 }}
-                src={`https://i.ibb.co/vBb8Q8x/logo-black.png`}
+                src={
+                  "https://cdn.glitch.global/0386827c-7a3c-4a82-b3fe-20c67f6f9f66/logo.png?v=1726675080378"
+                }
                 width="85"
                 height="85"
                 alt="Apple Logo"
@@ -519,10 +521,10 @@ export const MonthlyBillEmail = ({
                   padding: "6px",
                   borderRadius: "100%",
                 }}
-                src={`https://i.ibb.co/vBb8Q8x/logo-black.png`}
+                src={`https://cdn.glitch.global/0386827c-7a3c-4a82-b3fe-20c67f6f9f66/logo.png?v=1726675080378`}
                 width="50"
                 height="50"
-                alt="Apple Card"
+                alt="The crown Boys Hostel"
               />
             </Column>
           </Row>

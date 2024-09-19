@@ -37,7 +37,7 @@ import ManagerBillQueryComponent from "./Manager/ManagerBillQueryComponent";
 import ManagerMealQueryComponent from "./Manager/ManagerMealQueryComponent";
 import ManagerMarketQueryComponent from "./Manager/ManagerMarketQueryComponent";
 import ManagerMealUpdatorComponent from "./Manager/ManagerMealUpdatorComponent";
-import { MdNoMeals, MdOutlineUpdate } from "react-icons/md";
+import { MdNoMeals, MdOutlineEmail, MdOutlineUpdate } from "react-icons/md";
 import ManagerRFIDIssueComponent from "./Manager/ManagerRFIDIssueComponent";
 import ManagerManualInvoiceComponent from "./Manager/ManagerManualInvoiceComponent";
 import ManagerAllBookingsComponent from "./Manager/ManagerAllBookingsComponent";
@@ -53,6 +53,7 @@ import { BsHouseAdd, BsHouses } from "react-icons/bs";
 import ManagerAllRoomsComponent from "./Manager/ManagerAllRoomsComponent";
 import useFcmToken from "@/hooks/useFcmToken";
 import ManagerSendNotificationComponent from "./Manager/ManagerSendNotificationComponent";
+import ManagerEmailsComponent from "./Manager/ManagerEmailsComponent";
 
 const Dashboard = ({ user }) => {
   // useUnloadWarning("Are");
@@ -279,6 +280,12 @@ const Dashboard = ({ user }) => {
       href: "/dashboard?displayData=managerManualInvouce",
       icon: FaFileInvoiceDollar,
       displayData: "managerManualInvouce",
+    },
+    {
+      title: "E-Mails",
+      href: "/dashboard?displayData=managerEmails",
+      icon: MdOutlineEmail,
+      displayData: "managerEmails",
     },
     {
       title: "File Manager",
@@ -579,6 +586,8 @@ const Dashboard = ({ user }) => {
             <ManagerAllBookingsComponent user={user} />
           ) : displayData == "managerManualInvouce" ? (
             <ManagerManualInvoiceComponent user={user} />
+          ) : displayData == "managerEmails" ? (
+            <ManagerEmailsComponent user={user} />
           ) : displayData == "managerAddARoom" ? (
             <ManagerAddARoom user={user} />
           ) : displayData == "managerAllRooms" ? (
