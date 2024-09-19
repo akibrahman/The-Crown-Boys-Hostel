@@ -89,6 +89,7 @@ const TempCom = ({ user }) => {
         nidFrontPicture: selectedOption == "NID" ? nidfUrl : "",
         nidBackPicture: selectedOption == "NID" ? nidbUrl : "",
         birthCertificatePicture: selectedOption == "NID" ? "" : bcUrl,
+        nidAuth: selectedOption == "NID" ? true : false,
       },
       _id: user._id,
     });
