@@ -57,7 +57,7 @@ const ManagerManualInvoiceComponent = () => {
     try {
       toast.success("Saving Transaction, Don't turn off your system");
       const { data } = await axios.post("/api/transaction", {
-        billId: billId || "new",
+        billId: billId || `${invoiceName}__${invoiceNumber}`,
         payments: invoiceData,
         note: "Cash Payment From Office",
         reason: "payment",

@@ -69,9 +69,9 @@ export const POST = async (req) => {
       method,
     } = await req.json();
     let user;
-    if (billId !== "new") {
-      if (!mongoose.Types.ObjectId.isValid(billId))
-        return NextResponse.json({ success: false, msg: "Invalid Bill ID" });
+    if (!billId)
+      return NextResponse.json({ success: false, msg: "Missing Bill ID" });
+    if (mongoose.Types.ObjectId.isValid(billId)) {
       if (payments.length <= 0)
         return NextResponse.json({ success: false, msg: "No Payments Added" });
       const bill = await Bill.findById(billId);
@@ -82,8 +82,12 @@ export const POST = async (req) => {
         return NextResponse.json({ success: false, msg: "Wrong Bill ID" });
     }
     await new Transaction({
-      userId: billId === "new" ? "" : user?._id,
-      billId: billId === "new" ? "" : billId,
+      userId: !mongoose.Types.ObjectId.isValid(billId)
+        ? billId.split("__")[0]
+        : user?._id,
+      billId: !mongoose.Types.ObjectId.isValid(billId)
+        ? billId.split("__")[1]
+        : billId,
       note: note || "",
       reason: reason || "",
       coupon: coupon || "",

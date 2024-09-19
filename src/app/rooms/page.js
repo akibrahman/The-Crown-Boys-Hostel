@@ -103,9 +103,9 @@ const Rooms = () => {
 export default Rooms;
 
 const Floors = ({ allRooms }) => {
-  const floors = [3, 4, 5, 6, 7]; // 2  4  5  7  8
+  const floors = [1, 3, 4, 5, 6, 7]; // 2  4  5  7  8
   return (
-    <div className="max-w-[420px] w-[90%] mx-auto text-center pt-20">
+    <div className="max-w-[420px] w-[90%] mx-auto text-center pt-10">
       <p className="text-lg">Select Floor</p>
       <div className="flex flex-col gap-5 mt-8">
         {floors.map((floor) => (

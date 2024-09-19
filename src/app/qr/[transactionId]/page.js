@@ -1,9 +1,11 @@
 "use server";
 import Invoice from "@/Components/Invoice/Invoice";
+import Invoice_Download from "@/Components/Invoice/Invoice_Download";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Transaction from "@/models/transactionModel";
 import User from "@/models/userModel";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
+import mongoose from "mongoose";
 import Image from "next/image";
 
 await dbConfig();
@@ -22,10 +24,18 @@ const qr = async ({ params }) => {
         <p>No Transaction Found</p>
       </div>
     );
-  const user = await User.findById(transaction.userId);
+  let user;
+  if (
+    transaction?.userId &&
+    mongoose.Types.ObjectId.isValid(transaction?.userId)
+  )
+    user = await User.findById(transaction?.userId);
   return (
     <div className="min-h-[90vh] text-sm md:text-base bg-dashboard text-stone-300 flex md:items-center items-start justify-center pt-8 md:pt-4 py-4">
-      <div className="bg-white w-[95%] md:w-[40%] shadow-md rounded-md md:p-4 p-2 text-gray-500">
+      <div
+        id="invoice__thecrownboyshostel"
+        className="bg-white w-[95%] md:w-[40%] shadow-md rounded-md md:p-4 p-2 text-gray-500"
+      >
         <div className="flex justify-center">
           <Image
             src="/images/logo.png"
@@ -46,12 +56,16 @@ const qr = async ({ params }) => {
           <div className="">
             <p className="w-max">
               Customer Name:
-              <span className="font-semibold ml-2">{user?.username}</span>
+              <span className="font-semibold ml-2">
+                {user?.username || transaction.userId}
+              </span>
             </p>
 
             <p className="w-max">
               Phone No:{" "}
-              <span className="font-semibold ml-2">{user?.contactNumber}</span>
+              <span className="font-semibold ml-2">
+                {user?.contactNumber || transaction.billId}
+              </span>
             </p>
 
             <p className="w-max">
@@ -149,6 +163,7 @@ const qr = async ({ params }) => {
           <p className="w-max">M/S MIJAN ENTERPRISE</p>
         </div>
       </div>
+      {/* <Invoice_Download /> */}
     </div>
   );
 };
