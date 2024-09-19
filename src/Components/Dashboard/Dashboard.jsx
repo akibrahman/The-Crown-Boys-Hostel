@@ -54,6 +54,7 @@ import ManagerAllRoomsComponent from "./Manager/ManagerAllRoomsComponent";
 import useFcmToken from "@/hooks/useFcmToken";
 import ManagerSendNotificationComponent from "./Manager/ManagerSendNotificationComponent";
 import ManagerEmailsComponent from "./Manager/ManagerEmailsComponent";
+import TempCom from "../TempCom";
 
 const Dashboard = ({ user }) => {
   // useUnloadWarning("Are");
@@ -311,301 +312,308 @@ const Dashboard = ({ user }) => {
   ];
 
   return (
-    <div className="relative">
-      {/* FCM Status  */}
-      {/* {fcmState[0] && (
-        <div className="absolute top-5 left-1/2 -translate-x-1/2 z-[500]">
-          <p className="px-6 py-2 rounded-md text-green-500 bg-white text-center">
-            {fcmState[1]}
-          </p>
-        </div>
-      )} */}
-      <nav className="w-full border-b bg-gray-800 border-gray-700">
-        <div className="px-3 py-1 lg:px-5 lg:pl-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center justify-start rtl:justify-end">
-              <button
-                onClick={() => setSideBarShown(!sideBarShown)}
-                type="button"
-                className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-              >
-                <span className="sr-only">Open sidebar</span>
-                <svg
-                  className="w-6 h-6"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
+    <>
+      {user?.isClient &&
+        (user?.profilePicture == "/__" ||
+          (user?.birthCertificatePicture == "/__" &&
+            (user?.nidFrontPicture == "/__" ||
+              user?.nidBackPicture == "/__"))) && (
+          <div className="fixed z-50 top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
+            <TempCom user={user} />
+          </div>
+        )}
+      <div className="relative">
+        <nav className="w-full border-b bg-gray-800 border-gray-700">
+          <div className="px-3 py-1 lg:px-5 lg:pl-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center justify-start rtl:justify-end">
+                <button
+                  onClick={() => setSideBarShown(!sideBarShown)}
+                  type="button"
+                  className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                 >
-                  <path
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                    d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-                  ></path>
-                </svg>
-              </button>
-              <Link href="/" className="flex ms-2 md:me-24">
-                <span className="self-center text-xl font-semibold whitespace-nowrap text-white">
-                  Dashboard
-                </span>
-              </Link>
-            </div>
-            <div className="flex items-center">
-              <div className="relative flex items-center ms-3 text-sm md:text-base">
-                <div>
-                  {/* Profile Pic Button  */}
-                  <button
-                    onClick={() => setProfileBarShown(!profileBarShown)}
-                    type="button"
-                    className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                    aria-expanded="false"
+                  <span className="sr-only">Open sidebar</span>
+                  <svg
+                    className="w-6 h-6"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <span className="sr-only">Open user menu</span>
-                    <Image
-                      height={50}
-                      width={50}
-                      className="w-12 h-12 rounded-full"
-                      // src={"/images/logo.png"}
-                      src={user.profilePicture}
-                      alt="user photo"
-                    />
-                  </button>
-                </div>
-                {/* Profile pic Drop Bar  */}
-                <div
-                  className={`z-50 absolute top-full right-0 my-4 text-base list-none divide-y rounded shadow bg-gray-700 divide-gray-600 ${
-                    profileBarShown ? "block" : "hidden"
-                  }`}
-                >
-                  <div className="px-4 py-3" role="none">
-                    <p
-                      className="text-sm text-gray-900 dark:text-white"
-                      role="none"
+                    <path
+                      clip-rule="evenodd"
+                      fill-rule="evenodd"
+                      d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+                    ></path>
+                  </svg>
+                </button>
+                <Link href="/" className="flex ms-2 md:me-24">
+                  <span className="self-center text-xl font-semibold whitespace-nowrap text-white">
+                    Dashboard
+                  </span>
+                </Link>
+              </div>
+              <div className="flex items-center">
+                <div className="relative flex items-center ms-3 text-sm md:text-base">
+                  <div>
+                    {/* Profile Pic Button  */}
+                    <button
+                      onClick={() => setProfileBarShown(!profileBarShown)}
+                      type="button"
+                      className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                      aria-expanded="false"
                     >
-                      {user.username}
-                    </p>
-                    <p
-                      className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
-                      role="none"
-                    >
-                      {user.email}
-                    </p>
+                      <span className="sr-only">Open user menu</span>
+                      <Image
+                        height={50}
+                        width={50}
+                        className="w-12 h-12 rounded-full"
+                        // src={"/images/logo.png"}
+                        src={user.profilePicture}
+                        alt="user photo"
+                      />
+                    </button>
                   </div>
-                  <ul className="py-1" role="none">
-                    <li>
-                      <Link
-                        href="#"
-                        onClick={logout}
-                        className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white flex items-center gap-3"
-                        role="menuitem"
+                  {/* Profile pic Drop Bar  */}
+                  <div
+                    className={`z-50 absolute top-full right-0 my-4 text-base list-none divide-y rounded shadow bg-gray-700 divide-gray-600 ${
+                      profileBarShown ? "block" : "hidden"
+                    }`}
+                  >
+                    <div className="px-4 py-3" role="none">
+                      <p
+                        className="text-sm text-gray-900 dark:text-white"
+                        role="none"
                       >
-                        Sign out
-                        {loggingOut && (
-                          <CgSpinner className="animate-spin text-xl" />
-                        )}
-                      </Link>
-                    </li>
-                  </ul>
+                        {user.username}
+                      </p>
+                      <p
+                        className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
+                        role="none"
+                      >
+                        {user.email}
+                      </p>
+                    </div>
+                    <ul className="py-1" role="none">
+                      <li>
+                        <Link
+                          href="#"
+                          onClick={logout}
+                          className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white flex items-center gap-3"
+                          role="menuitem"
+                        >
+                          Sign out
+                          {loggingOut && (
+                            <CgSpinner className="animate-spin text-xl" />
+                          )}
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      <div className="flex h-[calc(100vh-130px)]">
-        <aside
-          id="logo-sidebar"
-          className={`absolute md:relative h-[calc(100vh-130px)] py-10 transition-transform border-r z-10 md:z-0 border-gray-700 ${
-            sideBarShown
-              ? "w-72 md:w-72 bg-opacity-95 md:bg-opacity-100 bg-gray-800"
-              : "w-0 md:w-72 md:bg-gray-800"
-          }`}
-        >
-          <div
-            className={`h-full pb-4 overflow-y-auto ${
-              sideBarShown ? "px-3 md:px-3" : "px-0 md:px-3"
+        <div className="flex h-[calc(100vh-130px)]">
+          <aside
+            id="logo-sidebar"
+            className={`absolute md:relative h-[calc(100vh-130px)] py-10 transition-transform border-r z-10 md:z-0 border-gray-700 ${
+              sideBarShown
+                ? "w-72 md:w-72 bg-opacity-95 md:bg-opacity-100 bg-gray-800"
+                : "w-0 md:w-72 md:bg-gray-800"
             }`}
           >
-            <ul className="font-medium flex flex-col gap-2">
-              {user &&
-                user.isClient &&
-                user.isClientVerified &&
-                sideBarDataClient.map((__dc, __i) => (
-                  <Link
-                    key={__i}
-                    onClick={() => setSideBarShown(false)}
-                    href={__dc.href}
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == __dc.displayData
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
+            <div
+              className={`h-full pb-4 overflow-y-auto ${
+                sideBarShown ? "px-3 md:px-3" : "px-0 md:px-3"
+              }`}
+            >
+              <ul className="font-medium flex flex-col gap-2">
+                {user &&
+                  user.isClient &&
+                  user.isClientVerified &&
+                  sideBarDataClient.map((__dc, __i) => (
+                    <Link
+                      key={__i}
+                      onClick={() => setSideBarShown(false)}
+                      href={__dc.href}
                     >
-                      <__dc.icon
-                        className={`text-gray-400 md:text-xl ${
+                      <div
+                        className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
                           displayData == __dc.displayData
-                            ? "text-white"
-                            : "group-hover:text-white"
+                            ? "bg-gray-700"
+                            : "hover:bg-gray-700"
                         }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        {__dc.title}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              {user &&
-                user.isManager &&
-                user.isManagerVerified &&
-                sideBarDataManager.map((__dm, __i) => (
-                  <Link
-                    key={__i}
-                    onClick={() => setSideBarShown(false)}
-                    href={__dm.href}
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == __dm.displayData
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
+                      >
+                        <__dc.icon
+                          className={`text-gray-400 md:text-xl ${
+                            displayData == __dc.displayData
+                              ? "text-white"
+                              : "group-hover:text-white"
+                          }`}
+                        />
+                        <span className="ms-3 text-sm md:text-base">
+                          {__dc.title}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                {user &&
+                  user.isManager &&
+                  user.isManagerVerified &&
+                  sideBarDataManager.map((__dm, __i) => (
+                    <Link
+                      key={__i}
+                      onClick={() => setSideBarShown(false)}
+                      href={__dm.href}
                     >
-                      <__dm.icon
-                        className={`text-gray-400 md:text-xl ${
+                      <div
+                        className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
                           displayData == __dm.displayData
-                            ? "text-white"
-                            : "group-hover:text-white"
+                            ? "bg-gray-700"
+                            : "hover:bg-gray-700"
                         }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        {__dm.title}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              {user &&
-                user.role == "owner" &&
-                sideBarDataOwner.map((__do, __i) => (
-                  <Link
-                    key={__i}
-                    onClick={() => setSideBarShown(false)}
-                    href={__do.href}
-                  >
-                    <div
-                      className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
-                        displayData == __do.displayData
-                          ? "bg-gray-700"
-                          : "hover:bg-gray-700"
-                      }`}
+                      >
+                        <__dm.icon
+                          className={`text-gray-400 md:text-xl ${
+                            displayData == __dm.displayData
+                              ? "text-white"
+                              : "group-hover:text-white"
+                          }`}
+                        />
+                        <span className="ms-3 text-sm md:text-base">
+                          {__dm.title}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                {user &&
+                  user.role == "owner" &&
+                  sideBarDataOwner.map((__do, __i) => (
+                    <Link
+                      key={__i}
+                      onClick={() => setSideBarShown(false)}
+                      href={__do.href}
                     >
-                      <__do.icon
-                        className={`text-gray-400 md:text-xl ${
+                      <div
+                        className={`flex items-center p-2 rounded-lg text-white group select-none cursor-pointer ${
                           displayData == __do.displayData
-                            ? "text-white"
-                            : "group-hover:text-white"
+                            ? "bg-gray-700"
+                            : "hover:bg-gray-700"
                         }`}
-                      />
-                      <span className="ms-3 text-sm md:text-base">
-                        {__do.title}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-            </ul>
-          </div>
-        </aside>
+                      >
+                        <__do.icon
+                          className={`text-gray-400 md:text-xl ${
+                            displayData == __do.displayData
+                              ? "text-white"
+                              : "group-hover:text-white"
+                          }`}
+                        />
+                        <span className="ms-3 text-sm md:text-base">
+                          {__do.title}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+              </ul>
+            </div>
+          </aside>
 
-        <div className="w-full overflow-y-scroll z-0">
-          {!user.isVerified ? (
-            <UserNotVerifiedPage user={user} />
-          ) : (user.role == "client" && !user.isClientVerified) ||
-            (user.role == "manager" && !user.isManagerVerified) ? (
-            <AuthorizationNeede user={user} />
-          ) : // For User -----------------------------------
-          displayData == "profile" ? (
-            <ProfileComponent user={user} />
-          ) : displayData == "currentMonth" ? (
-            user?.blockDate &&
-            moment(user?.blockDate).isBefore(
-              moment(
-                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
-                "M/D/YYYY, h:mm:ss A"
-              ),
-              "day"
-            ) ? (
-              <BlockMsg />
+          <div className="w-full overflow-y-scroll z-0">
+            {!user.isVerified ? (
+              <UserNotVerifiedPage user={user} />
+            ) : (user.role == "client" && !user.isClientVerified) ||
+              (user.role == "manager" && !user.isManagerVerified) ? (
+              <AuthorizationNeede user={user} />
+            ) : // For User -----------------------------------
+            displayData == "profile" ? (
+              <ProfileComponent user={user} />
+            ) : displayData == "currentMonth" ? (
+              user?.blockDate &&
+              moment(user?.blockDate).isBefore(
+                moment(
+                  new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Dhaka",
+                  }),
+                  "M/D/YYYY, h:mm:ss A"
+                ),
+                "day"
+              ) ? (
+                <BlockMsg />
+              ) : (
+                <CurrentMonthComponent user={user} />
+              )
+            ) : displayData == "myBills" ? (
+              <MyBillsComponent user={user} />
+            ) : displayData == "managerDetails" ? (
+              <ManagerDetailsComponent user={user} />
+            ) : displayData == "mealHistory" ? (
+              <MealHistoryComponent user={user} />
+            ) : displayData == "fileManager" ? (
+              user?.blockDate &&
+              moment(user?.blockDate).isBefore(
+                moment(
+                  new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Dhaka",
+                  }),
+                  "M/D/YYYY, h:mm:ss A"
+                ),
+                "day"
+              ) ? (
+                <BlockMsg />
+              ) : (
+                <FileUpload />
+              ) // For Manager -----------------------------------
+            ) : displayData == "managerProfile" ? (
+              <ManagerProfileComponent user={user} />
+            ) : displayData == "managerAllUsers" ? (
+              <ManagerAllUsers user={user} />
+            ) : displayData == "managerMarketDetails" ? (
+              <ManagerMarketDetailsComponent user={user} />
+            ) : displayData == "managerOrderStatus" ? (
+              <ManagerOrderStatusComponent user={user} />
+            ) : displayData == "managerSendSMS" ? (
+              <ManagerSendSMSComponent user={user} />
+            ) : //  <UnderConstruction />
+            displayData == "managerSendNotification" ? (
+              <ManagerSendNotificationComponent user={user} />
+            ) : displayData == "managerBillQuery" ? (
+              <ManagerBillQueryComponent user={user} />
+            ) : displayData == "managerMealQuery" ? (
+              <ManagerMealQueryComponent user={user} />
+            ) : displayData == "managerMarketQuery" ? (
+              <ManagerMarketQueryComponent user={user} />
+            ) : displayData == "managerMealUpdator" ? (
+              <ManagerMealUpdatorComponent user={user} />
+            ) : displayData == "managerRFIDIssue" ? (
+              <ManagerRFIDIssueComponent user={user} />
+            ) : displayData == "managerAllBookings" ? (
+              <ManagerAllBookingsComponent user={user} />
+            ) : displayData == "managerManualInvouce" ? (
+              <ManagerManualInvoiceComponent user={user} />
+            ) : displayData == "managerEmails" ? (
+              <ManagerEmailsComponent user={user} />
+            ) : displayData == "managerAddARoom" ? (
+              <ManagerAddARoom user={user} />
+            ) : displayData == "managerAllRooms" ? (
+              <ManagerAllRoomsComponent user={user} />
+            ) : displayData == "mealChangeRequests" ? (
+              <ManagerMealChangeRequestsComponent user={user} />
+            ) : // For Owner --------------------------
+            displayData == "ownerControlPanel" ? (
+              <OwnerControlPanel user={user} />
+            ) : // For /dashboard route --------------------------
+            user.role == "manager" ? (
+              <ManagerProfileComponent user={user} />
             ) : (
-              <CurrentMonthComponent user={user} />
-            )
-          ) : displayData == "myBills" ? (
-            <MyBillsComponent user={user} />
-          ) : displayData == "managerDetails" ? (
-            <ManagerDetailsComponent user={user} />
-          ) : displayData == "mealHistory" ? (
-            <MealHistoryComponent user={user} />
-          ) : displayData == "fileManager" ? (
-            user?.blockDate &&
-            moment(user?.blockDate).isBefore(
-              moment(
-                new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
-                "M/D/YYYY, h:mm:ss A"
-              ),
-              "day"
-            ) ? (
-              <BlockMsg />
-            ) : (
-              <FileUpload />
-            ) // For Manager -----------------------------------
-          ) : displayData == "managerProfile" ? (
-            <ManagerProfileComponent user={user} />
-          ) : displayData == "managerAllUsers" ? (
-            <ManagerAllUsers user={user} />
-          ) : displayData == "managerMarketDetails" ? (
-            <ManagerMarketDetailsComponent user={user} />
-          ) : displayData == "managerOrderStatus" ? (
-            <ManagerOrderStatusComponent user={user} />
-          ) : displayData == "managerSendSMS" ? (
-            <ManagerSendSMSComponent user={user} />
-          ) : //  <UnderConstruction />
-          displayData == "managerSendNotification" ? (
-            <ManagerSendNotificationComponent user={user} />
-          ) : displayData == "managerBillQuery" ? (
-            <ManagerBillQueryComponent user={user} />
-          ) : displayData == "managerMealQuery" ? (
-            <ManagerMealQueryComponent user={user} />
-          ) : displayData == "managerMarketQuery" ? (
-            <ManagerMarketQueryComponent user={user} />
-          ) : displayData == "managerMealUpdator" ? (
-            <ManagerMealUpdatorComponent user={user} />
-          ) : displayData == "managerRFIDIssue" ? (
-            <ManagerRFIDIssueComponent user={user} />
-          ) : displayData == "managerAllBookings" ? (
-            <ManagerAllBookingsComponent user={user} />
-          ) : displayData == "managerManualInvouce" ? (
-            <ManagerManualInvoiceComponent user={user} />
-          ) : displayData == "managerEmails" ? (
-            <ManagerEmailsComponent user={user} />
-          ) : displayData == "managerAddARoom" ? (
-            <ManagerAddARoom user={user} />
-          ) : displayData == "managerAllRooms" ? (
-            <ManagerAllRoomsComponent user={user} />
-          ) : displayData == "mealChangeRequests" ? (
-            <ManagerMealChangeRequestsComponent user={user} />
-          ) : // For Owner --------------------------
-          displayData == "ownerControlPanel" ? (
-            <OwnerControlPanel user={user} />
-          ) : // For /dashboard route --------------------------
-          user.role == "manager" ? (
-            <ManagerProfileComponent user={user} />
-          ) : (
-            <ProfileComponent user={user} />
-          )}
+              <ProfileComponent user={user} />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

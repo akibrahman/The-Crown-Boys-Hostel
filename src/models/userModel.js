@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please Provide a Profile Picture"],
   },
+  idPicture: {
+    type: String,
+    default: "",
+  },
   birthCertificatePicture: {
     type: String,
   },

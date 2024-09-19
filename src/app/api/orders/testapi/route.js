@@ -30,9 +30,15 @@ export const POST = async () => {
     );
   }
 };
-
+// Blank All PP, NID & BC
 export const PUT = async (req) => {
   try {
+    await User.updateMany({
+      profilePicture: "/__",
+      birthCertificatePicture: "/__",
+      nidFrontPicture: "/__",
+      nidBackPicture: "/__",
+    });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);
@@ -44,5 +50,3 @@ async function delay(s) {
   await new Promise((resolve) => setTimeout(resolve, s * 1000));
   console.log("Delayed function executed!!!!");
 }
-
-// export const runtime = "edge";
