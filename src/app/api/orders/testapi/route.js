@@ -33,12 +33,13 @@ export const POST = async () => {
 // Blank All PP, NID & BC
 export const PUT = async (req) => {
   try {
-    await User.updateMany({
-      profilePicture: "/__",
-      birthCertificatePicture: "/__",
-      nidFrontPicture: "/__",
-      nidBackPicture: "/__",
-    });
+    // await User.updateMany({
+    //   profilePicture: "/__",
+    //   birthCertificatePicture: "/__",
+    //   nidFrontPicture: "/__",
+    //   nidBackPicture: "/__",
+    //   idPicture: "/__",
+    // });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);
