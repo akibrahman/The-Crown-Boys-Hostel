@@ -17,6 +17,10 @@ const bookingSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isPaid: {
+    type: Boolean,
+    default: false,
+  },
   bookingTime: {
     type: String,
     required: true,

@@ -10,7 +10,7 @@ const ManagerAllBookingsComponent = ({ user }) => {
   const { data: allBookings } = useQuery({
     queryKey: ["All Bookings", "Manager Only", user?._id],
     queryFn: async () => {
-      const { data } = await axios.get(`/api/booking`);
+      const { data } = await axios.patch(`/api/booking`);
       if (data.success) {
         return data.bookings;
       } else {
