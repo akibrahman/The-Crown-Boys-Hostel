@@ -15,7 +15,7 @@ const NavBar = () => {
   const withOutToken = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
-    { title: "Contact Us", url: "/notification" },
+    { title: "Contact Us", url: "/contact-us" },
     { title: "Log In", url: "/signin" },
     { title: "Registration", url: "/signup" },
   ];
@@ -23,7 +23,7 @@ const NavBar = () => {
   const withToken = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
-    { title: "Contact Us", url: "/notification" },
+    { title: "Contact Us", url: "/contact-us" },
     { title: "Order", url: "/order" },
     { title: "Dashboard", url: "/dashboard" },
   ];
@@ -31,7 +31,7 @@ const NavBar = () => {
   const whenLoading = [
     { title: "Home", url: "/" },
     { title: "About Us", url: "/about-us" },
-    { title: "Contact Us", url: "/notification" },
+    { title: "Contact Us", url: "/contact-us" },
   ];
 
   if (loading) {
