@@ -53,13 +53,13 @@ const page = () => {
 
             <div className="my-10">
               <div className="flex items-center gap-5">
-                <Link href="https://wa.me/01788422002" target="_blank">
+                <Link href="https://wa.me/+8801788422002" target="_blank">
                   <Image
                     width="36"
                     height="36"
-                    className="w-9 h-9 hover:scale-110 transition ease-in-out duration-300 cursor-pointer"
+                    className="w-11 h-11 hover:scale-110 transition ease-in-out duration-300 cursor-pointer"
                     src="/icons/whatsapp.png"
-                    alt="linkedin"
+                    alt="Whatsapp"
                   />
                 </Link>
                 <Link
@@ -71,10 +71,10 @@ const page = () => {
                     height="36"
                     className="w-11 h-9 hover:scale-110 transition ease-in-out duration-300 cursor-pointer"
                     src="/icons/youtube.png"
-                    alt="github"
+                    alt="Youtube"
                   />
                 </Link>
-                <Link href="info@thecrownboyshostel.com" target="_blank">
+                <Link href="mailto:info@thecrownboyshostel.com" target="_blank">
                   <Image
                     width="36"
                     height="36"
