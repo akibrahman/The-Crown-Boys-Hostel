@@ -165,6 +165,8 @@ const ManagerManualInvoiceComponent = () => {
                 name: `Due Bill - ${res?.data?.bill?.month}`,
                 value: parseInt(billAmount) - parseInt(paidAmount),
               });
+            } else if (res?.data?.bill?.status == "initiated") {
+              arrayOfInvoice = [];
             } else {
               arrayOfInvoice = [...invoiceData, ...charges];
               if (parseInt(billAmount) - parseInt(paidAmount) != 0) {

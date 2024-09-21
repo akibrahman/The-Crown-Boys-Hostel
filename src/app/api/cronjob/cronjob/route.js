@@ -6,6 +6,7 @@ import ManagerBill from "@/models/managerBillModel";
 import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
 import Room from "@/models/roomModel";
+import Transaction from "@/models/transactionModel";
 import User from "@/models/userModel";
 import { sendSMS } from "@/utils/sendSMS";
 import { render } from "@react-email/render";
@@ -349,6 +350,15 @@ export const GET = async (req) => {
           month: bill.month,
           year: bill.year,
         });
+        const transactions = await Transaction.find({ billId: bill._id });
+        const paidAmount =
+          transactions?.reduce((total, transaction) => {
+            const transactionSum = transaction.payments.reduce(
+              (sum, payment) => sum + payment.value,
+              0
+            );
+            return total + transactionSum;
+          }, 0) || 0;
         const calculateMeals = (type) =>
           orders.reduce(
             (accumulator, currentValue) =>
@@ -365,6 +375,11 @@ export const GET = async (req) => {
                 : 0),
             0
           );
+        const nextBill = await Bill.findOne({
+          userId: bill.userId,
+          year: nextYear,
+          month: nextMonth,
+        });
         const totalBreakfast = calculateMeals("breakfast");
         const totalLunch = calculateMeals("lunch");
         const totalDinner = calculateMeals("dinner");
@@ -372,7 +387,6 @@ export const GET = async (req) => {
           totalBreakfast * 32 + totalLunch * 64 + totalDinner * 64 + 500;
         const totalUserCharges =
           user.charges?.reduce((a, b) => a + parseInt(b.amount), 0) || 0;
-        //
         const rooms = await Room.find({
           "beds.user": bill.userId.toString(),
         });
@@ -385,7 +399,6 @@ export const GET = async (req) => {
           });
         });
         if (totalRent == 0) totalRent = 3500;
-        //
         const totalBillInBDT =
           totalMealBillInBDT + totalUserCharges + totalRent;
         bill.charges = [...user.charges, { note: "Rent", amount: totalRent }];
@@ -394,21 +407,6 @@ export const GET = async (req) => {
         bill.totalLunch = totalLunch;
         bill.totalDinner = totalDinner;
         bill.totalBillInBDT = totalBillInBDT;
-        if (totalBillInBDT < bill.paidBillInBDT) {
-          let restDeposite = bill.paidBillInBDT - totalBillInBDT;
-          bill.paidBillInBDT = totalBillInBDT;
-          const nextBill = await Bill.findOne({
-            userId: bill.userId,
-            year: nextYear,
-            month: nextMonth,
-          });
-          if (nextBill) {
-            nextBill.paidBillInBDT += restDeposite;
-            await nextBill.save();
-          } else {
-            // Taka Return from Office, SMS
-          }
-        }
         allNumbers.push(user.contactNumber);
         allEmails.push(user.email);
         bill.status = "calculated";
