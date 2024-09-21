@@ -4,7 +4,6 @@ import Receipt from "../../Receipt/Receipt";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { motion } from "framer-motion";
-import toast from "react-hot-toast";
 import Image from "next/image";
 
 const MyBillsComponent = ({ user }) => {
@@ -178,6 +177,7 @@ const MyBillsComponent = ({ user }) => {
                   charges={bill?.charges}
                   isManageable={false}
                   isRentPaid={bill.isRentPaid}
+                  refetch={() => window.location.reload()}
                 />
               </motion.div>
             ))}

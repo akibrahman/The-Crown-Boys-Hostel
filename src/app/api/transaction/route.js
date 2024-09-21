@@ -136,3 +136,131 @@ export const PUT = async (req, res) => {
     });
   }
 };
+
+export const PATCH = async (req) => {
+  try {
+    //
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      console.log(error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
+    }
+    //
+    const { billId, extraMoney } = await req.json();
+    if (!billId || !extraMoney)
+      return NextResponse.json({
+        success: false,
+        msg: "Missing Bill ID or extraMoney",
+      });
+    const bill = await Bill.findById(billId);
+    if (!bill)
+      return NextResponse.json({
+        success: false,
+        msg: "Wrong Bill ID",
+      });
+    if (jwtData.id != bill.userId)
+      return NextResponse.json({
+        success: false,
+        msg: "Unauthorized - Unknown User",
+      });
+    let currentDate = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Dhaka",
+    });
+    let currentMonthNumber = new Date(currentDate).getMonth();
+    let currentYear = new Date(currentDate).getFullYear();
+    let nextMonth;
+    let nextYear;
+    if (currentMonthNumber < 11) {
+      nextMonth = new Date(
+        currentYear,
+        currentMonthNumber + 1,
+        1
+      ).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+      nextYear = currentYear;
+    } else {
+      nextMonth = new Date(currentYear + 1, 0, 1).toLocaleDateString("en-BD", {
+        month: "long",
+        timeZone: "Asia/Dhaka",
+      });
+      nextYear = currentYear + 1;
+    }
+    const nextBill = await Bill.findOne({
+      userId: bill.userId,
+      year: nextYear,
+      month: nextMonth,
+    });
+    if (!nextBill)
+      return NextResponse.json({
+        success: false,
+        msg: "No Transferable Bill Created, Please Contact with Manager",
+      });
+    const transactionIdGen = () => {
+      const randomChars = crypto.randomBytes(4).toString("hex");
+      return randomChars.toUpperCase().toString();
+    };
+    let unique = false;
+    let transactionId = "";
+    while (!unique) {
+      transactionId = transactionIdGen();
+      const existingTransaction = await Transaction.findOne({
+        transactionId,
+      });
+      if (!existingTransaction) {
+        unique = true;
+      }
+    }
+    await new Transaction({
+      userId: bill.userId,
+      billId,
+      note: "Transfer to Next Month",
+      reason: "transfer",
+      transactionId,
+      transactionDate: new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      }),
+      method: "cash",
+      tax: 0,
+      payments: [{ name: `To - ${nextMonth}`, value: extraMoney * -1 }],
+    }).save();
+    unique = false;
+    transactionId = "";
+    while (!unique) {
+      transactionId = transactionIdGen();
+      const existingTransaction = await Transaction.findOne({
+        transactionId,
+      });
+      if (!existingTransaction) {
+        unique = true;
+      }
+    }
+    await new Transaction({
+      userId: bill.userId,
+      billId: nextBill._id,
+      note: "Received from Previous Month",
+      reason: "transfer",
+      transactionId,
+      transactionDate: new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      }),
+      method: "cash",
+      tax: 0,
+      payments: [{ name: `From - ${bill.month}`, value: extraMoney }],
+    }).save();
+    return NextResponse.json({
+      success: true,
+      msg: "Deposit Transferred Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ success: false, error }, { status: 500 });
+  }
+};

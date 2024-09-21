@@ -351,14 +351,14 @@ export const GET = async (req) => {
           year: bill.year,
         });
         const transactions = await Transaction.find({ billId: bill._id });
-        const paidAmount =
-          transactions?.reduce((total, transaction) => {
-            const transactionSum = transaction.payments.reduce(
-              (sum, payment) => sum + payment.value,
-              0
-            );
-            return total + transactionSum;
-          }, 0) || 0;
+        // const paidAmount =
+        //   transactions?.reduce((total, transaction) => {
+        //     const transactionSum = transaction.payments.reduce(
+        //       (sum, payment) => sum + payment.value,
+        //       0
+        //     );
+        //     return total + transactionSum;
+        //   }, 0) || 0;
         const calculateMeals = (type) =>
           orders.reduce(
             (accumulator, currentValue) =>
@@ -399,9 +399,12 @@ export const GET = async (req) => {
           });
         });
         if (totalRent == 0) totalRent = 3500;
+        if (!nextBill) totalRent = 0;
         const totalBillInBDT =
           totalMealBillInBDT + totalUserCharges + totalRent;
-        bill.charges = [...user.charges, { note: "Rent", amount: totalRent }];
+        if (nextBill)
+          bill.charges = [...user.charges, { note: "Rent", amount: totalRent }];
+        else bill.charges = [...user.charges];
         totalRent = 0;
         bill.totalBreakfast = totalBreakfast;
         bill.totalLunch = totalLunch;

@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
-import { FaEye, FaTimes } from "react-icons/fa";
+import { FaEye, FaFileInvoice, FaPlug, FaTimes } from "react-icons/fa";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { TiTick } from "react-icons/ti";
+import { Tooltip } from "react-tooltip";
 
 const Receipt = ({
   id,
@@ -83,10 +85,6 @@ const Receipt = ({
   };
 
   const openPayModal = async () => {
-    // if (user.email != "akibrahman5200@gmail.com") {
-    //   toast.success("Coming Very Soon...");
-    //   return;
-    // }
     setIsPayModalOpen(true);
     try {
       const { data } = await axios.put("/api/bkash/create", { id });
@@ -131,8 +129,42 @@ const Receipt = ({
     }
   };
 
+  const transferDeposit = async () => {
+    try {
+      const billId = id;
+      const extraMoney =
+        (totalBillInBDT -
+          transactions?.reduce((total, transaction) => {
+            const transactionSum = transaction.payments.reduce(
+              (sum, payment) => sum + payment.value,
+              0
+            );
+            return total + transactionSum;
+          }, 0)) *
+        -1;
+      if (extraMoney <= 0) return toast.error("Unauthorized Click");
+      const { data } = await axios.patch("/api/transaction", {
+        billId,
+        extraMoney,
+      });
+      if (!data.success) throw new Error(data.msg);
+      if (refetch) {
+        await refetch();
+      }
+      toast.success(data.msg);
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error?.message ||
+          error?.response?.data?.msg ||
+          "Something Went Wrong, Try Again"
+      );
+    }
+  };
+
   return (
     <>
+      <Tooltip className="z-50" id="gitt" />
       {isPayModalOpen && (
         <div className="fixed z-[50000] top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
           {payModalData ? (
@@ -428,8 +460,7 @@ const Receipt = ({
           />
           <p className="text-center pt-3 font-bold text-blue-500 underline">
             Transactions
-          </p>{" "}
-          {id}
+          </p>
           <div className="py-3 font-bold text-blue-500 underline flex items-center justify-center gap-3">
             <p className="">{userName}</p>
             <p className="">{month}</p>
@@ -594,7 +625,18 @@ const Receipt = ({
               return total + transactionSum;
             }, 0) == totalBillInBDT &&
               status == "calculated") ||
-              isManageable || (
+              isManageable ||
+              (transactions?.reduce((total, transaction) => {
+                const transactionSum = transaction.payments.reduce(
+                  (sum, payment) => sum + payment.value,
+                  0
+                );
+
+                return total + transactionSum;
+              }, 0) -
+                totalBillInBDT >
+                0 &&
+                status == "calculated") || (
                 <Image
                   onClick={openPayModal}
                   src="/images/bkash.png"
@@ -615,14 +657,16 @@ const Receipt = ({
               status == "calculated") ||
               !isManageable || (
                 <button
+                  data-tooltip-id="gitt"
+                  data-tooltip-content={"Generate Invoice"}
                   onClick={() =>
                     route.push(
                       `/dashboard?displayData=managerManualInvouce&billId=${id}`
                     )
                   }
-                  className="bg-green-500 text-white px-4 py-0.5 duration-300 rounded flex items-center gap-3 active:scale-90 w-max text-sm md:text-base"
+                  className="bg-green-500 text-white px-4 py-2 duration-300 rounded flex items-center gap-3 active:scale-90 w-max text-sm md:text-base"
                 >
-                  Generate Invoice
+                  <FaFileInvoice className="text-xl" />
                   {isMoneyAdding.state &&
                     isMoneyAdding.id == id &&
                     isMoneyAdding.method == "makePaid" && (
@@ -640,7 +684,15 @@ const Receipt = ({
                 return total + transactionSum;
               }, 0) == totalBillInBDT ? (
               <p className=" text-green-600 font-bold">Paid</p>
-            ) : (
+            ) : totalBillInBDT -
+                transactions?.reduce((total, transaction) => {
+                  const transactionSum = transaction.payments.reduce(
+                    (sum, payment) => sum + payment.value,
+                    0
+                  );
+                  return total + transactionSum;
+                }, 0) >
+              0 ? (
               <>
                 <div className="flex items-center justify-center gap-2">
                   <p className="font-bold text-red-600">Due</p>
@@ -658,6 +710,35 @@ const Receipt = ({
                       BDT
                     </span>
                   </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-center gap-2">
+                  <p className="font-bold text-green-600">Extra:</p>
+                  <p className="text-white">
+                    <span className="text-blue-500 font-bold">
+                      +{" "}
+                      {(totalBillInBDT -
+                        transactions?.reduce((total, transaction) => {
+                          const transactionSum = transaction.payments.reduce(
+                            (sum, payment) => sum + payment.value,
+                            0
+                          );
+                          return total + transactionSum;
+                        }, 0)) *
+                        -1}{" "}
+                      BDT
+                    </span>
+                  </p>
+                  {isManageable || (
+                    <div
+                      onClick={transferDeposit}
+                      className="bg-blue-500 px-4 py-2 rounded-md duration-300 active:scale-90 cursor-pointer"
+                    >
+                      <FaMoneyBillTransfer className="text-xl text-white" />
+                    </div>
+                  )}
                 </div>
               </>
             )}
