@@ -20,8 +20,8 @@ const ManagerManualInvoiceComponent = () => {
   const billId = searchParams.get("billId");
 
   const [invoiceData, setInvoiceData] = useState([]);
-  const [invoiceName, setInvoiceName] = useState([]);
-  const [invoiceNumber, setInvoiceNumber] = useState([]);
+  const [invoiceName, setInvoiceName] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState("");
   const [formName, setFormName] = useState("");
   const [formValue, setFormValue] = useState("");
   const [billLoading, setBillLoading] = useState(false);
@@ -97,6 +97,21 @@ const ManagerManualInvoiceComponent = () => {
   const [transactionDate, setTransactionDate] = useState(
     new Date().toLocaleString()
   );
+
+  const detectDeviceType = () => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (
+      userAgent.includes("mobile") ||
+      userAgent.includes("android") ||
+      userAgent.includes("iphone") ||
+      userAgent.includes("ipad")
+    ) {
+      setAllowedDevice(false);
+    } else {
+      setAllowedDevice(true);
+    }
+  };
+
   useEffect(() => {
     axios
       .put("/api/transaction")
@@ -104,55 +119,65 @@ const ManagerManualInvoiceComponent = () => {
         setTransactionId(res?.data?.success ? res?.data?.transactionId : "")
       )
       .catch((err) => console.log(err));
-
-    const detectDeviceType = () => {
-      const userAgent = navigator.userAgent.toLowerCase();
-      if (
-        userAgent.includes("mobile") ||
-        userAgent.includes("android") ||
-        userAgent.includes("iphone") ||
-        userAgent.includes("ipad")
-      ) {
-        setAllowedDevice(false);
-      } else {
-        setAllowedDevice(true);
-      }
-    };
     detectDeviceType();
     if (!billId) return;
     setBillLoading(true);
     axios
       .get(`/api/bills/getbill/${billId}`)
       .then((res) => {
-        console.log(res);
-        if (!res.data.success) return;
-        const billAmount = res?.data?.bill?.totalBillInBDT || 0;
-        const paidAmount = res?.data?.bill?.paidBillInBDT || 0;
-        if (billAmount == paidAmount && billAmount != 0 && paidAmount != 0) {
-          const url = new URL(window.location.href);
-          const baseUrl =
-            url.origin + url.pathname + "?displayData=managerManualInvouce";
-          return router.replace(baseUrl);
-        }
-        const name = res?.data?.user?.username || "";
-        const number = res?.data?.user?.contactNumber || "";
-        setInvoiceName(name);
-        setInvoiceNumber(number);
-        const rawCharges = res?.data?.bill?.charges || [];
-        const charges = rawCharges?.map((charge) => {
-          return {
-            name: charge?.note + " - " + res?.data?.bill?.month,
-            value: parseInt(charge?.amount),
-          };
-        });
-        let arrayOfInvoice = [...invoiceData, ...charges];
-        if (parseInt(billAmount) - parseInt(paidAmount) != 0) {
-          arrayOfInvoice.push({
-            name: `Meal Bill - ${res?.data?.bill?.month}`,
-            value: parseInt(billAmount) - parseInt(paidAmount),
-          });
-        }
-        setInvoiceData(arrayOfInvoice);
+        axios
+          .get(`/api/transaction?id=${billId}`)
+          .then((res2) => {
+            if (!res.data.success) return;
+            const billAmount = res?.data?.bill?.totalBillInBDT || 0;
+            const paidAmount =
+              res2?.data?.transactions?.reduce((total, transaction) => {
+                const transactionSum = transaction.payments.reduce(
+                  (sum, payment) => sum + payment.value,
+                  0
+                );
+                return total + transactionSum;
+              }, 0) || 0;
+            if (
+              billAmount == paidAmount &&
+              billAmount != 0 &&
+              paidAmount != 0
+            ) {
+              const url = new URL(window.location.href);
+              const baseUrl =
+                url.origin + url.pathname + "?displayData=managerManualInvouce";
+              return router.replace(baseUrl);
+            }
+            const name = res?.data?.user?.username || "";
+            const number = res?.data?.user?.contactNumber || "";
+            setInvoiceName(name);
+            setInvoiceNumber(number);
+            const rawCharges = res?.data?.bill?.charges || [];
+            const charges = rawCharges?.map((charge) => {
+              return {
+                name: charge?.note + " - " + res?.data?.bill?.month,
+                value: parseInt(charge?.amount),
+              };
+            });
+            let arrayOfInvoice = [];
+            if (res?.data?.bill?.status == "calculated") {
+              arrayOfInvoice.push({
+                name: `Due Bill - ${res?.data?.bill?.month}`,
+                value: parseInt(billAmount) - parseInt(paidAmount),
+              });
+            } else {
+              arrayOfInvoice = [...invoiceData, ...charges];
+              if (parseInt(billAmount) - parseInt(paidAmount) != 0) {
+                arrayOfInvoice.push({
+                  name: `Meal Bill - ${res?.data?.bill?.month}`,
+                  value: parseInt(billAmount) - parseInt(paidAmount),
+                });
+              }
+            }
+
+            setInvoiceData(arrayOfInvoice);
+          })
+          .catch((err2) => console.log("Transaction Fetching Error:", err2));
       })
       .catch((err) => console.log("Bill Fetching Error:", err))
       .finally(() => setBillLoading(false));
@@ -241,6 +266,7 @@ const ManagerManualInvoiceComponent = () => {
         {invoiceData.length > 0 && (
           <button
             onClick={handlePrint}
+            disabled={!invoiceName || !invoiceNumber}
             className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-blue-500 text-white font-semibold mx-auto mt-5 block"
           >
             Print Invoice

@@ -428,7 +428,8 @@ const Receipt = ({
           />
           <p className="text-center pt-3 font-bold text-blue-500 underline">
             Transactions
-          </p>
+          </p>{" "}
+          {id}
           <div className="py-3 font-bold text-blue-500 underline flex items-center justify-center gap-3">
             <p className="">{userName}</p>
             <p className="">{month}</p>
