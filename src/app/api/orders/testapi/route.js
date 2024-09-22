@@ -51,3 +51,16 @@ async function delay(s) {
   await new Promise((resolve) => setTimeout(resolve, s * 1000));
   console.log("Delayed function executed!!!!");
 }
+
+export const PATCH = async () => {
+  try {
+    await delay(10);
+    return NextResponse.json(
+      { success: true, msg: "Runned Successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ success: false, error }, { status: 500 });
+  }
+};
