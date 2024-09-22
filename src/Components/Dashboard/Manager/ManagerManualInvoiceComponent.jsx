@@ -161,10 +161,16 @@ const ManagerManualInvoiceComponent = () => {
             });
             let arrayOfInvoice = [];
             if (res?.data?.bill?.status == "calculated") {
-              arrayOfInvoice.push({
-                name: `Due Bill - ${res?.data?.bill?.month}`,
-                value: parseInt(billAmount) - parseInt(paidAmount),
-              });
+              if (parseInt(billAmount) - parseInt(paidAmount) >= 0)
+                arrayOfInvoice.push({
+                  name: `Due Bill - ${res?.data?.bill?.month}`,
+                  value: parseInt(billAmount) - parseInt(paidAmount),
+                });
+              else
+                arrayOfInvoice.push({
+                  name: `Refund - ${res?.data?.bill?.month}`,
+                  value: parseInt(billAmount) - parseInt(paidAmount),
+                });
             } else if (res?.data?.bill?.status == "initiated") {
               arrayOfInvoice = [];
             } else {
