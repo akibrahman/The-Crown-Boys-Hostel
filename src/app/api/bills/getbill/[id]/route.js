@@ -6,6 +6,18 @@ import { NextResponse } from "next/server";
 
 await dbConfig();
 
+export async function generateStaticParams() {
+  try {
+    const bills = await Bill.find();
+    return bills.map((bill) => ({
+      id: bill._id.toString(),
+    }));
+  } catch (error) {
+    console.error("Error fetching Bills data:", error);
+    return [];
+  }
+}
+
 export const GET = async (req) => {
   try {
     const { pathname } = new URL(req.url);

@@ -16,9 +16,7 @@ import { CiImageOn } from "react-icons/ci";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { LuCalendarPlus } from "react-icons/lu";
 
-const Page = ({ params }) => {
-  const { id } = params;
-
+const Component = ({ id }) => {
   const [newProfilePictureUploading, setNewProfilePictureUploading] =
     useState(false);
   const [date, setDate] = useState("");
@@ -524,35 +522,35 @@ const Page = ({ params }) => {
                   </select>
                 </div>
                 {/* <div class="lg:w-1/2 md:w-full px-3 mb-6">
-                  <label
-                    class="block tracking-wide text-white font-bold mb-2"
-                    for="utilityCharge"
-                  >
-                    Utility Charge
-                  </label>
-                  <input
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="utilityCharge"
-                    name="utilityCharge"
-                    type="text"
-                    defaultValue={client.utilityCharge}
-                  />
-                </div>
-                <div class="lg:w-1/2 md:w-full px-3 mb-6">
-                  <label
-                    class="block tracking-wide text-white font-bold mb-2"
-                    for="wifiCharge"
-                  >
-                    Wifi Charge
-                  </label>
-                  <input
-                    class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="wifiCharge"
-                    name="wifiCharge"
-                    type="text"
-                    defaultValue={client.wifiCharge}
-                  />
-                </div> */}
+                    <label
+                      class="block tracking-wide text-white font-bold mb-2"
+                      for="utilityCharge"
+                    >
+                      Utility Charge
+                    </label>
+                    <input
+                      class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      id="utilityCharge"
+                      name="utilityCharge"
+                      type="text"
+                      defaultValue={client.utilityCharge}
+                    />
+                  </div>
+                  <div class="lg:w-1/2 md:w-full px-3 mb-6">
+                    <label
+                      class="block tracking-wide text-white font-bold mb-2"
+                      for="wifiCharge"
+                    >
+                      Wifi Charge
+                    </label>
+                    <input
+                      class="select-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      id="wifiCharge"
+                      name="wifiCharge"
+                      type="text"
+                      defaultValue={client.wifiCharge}
+                    />
+                  </div> */}
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
@@ -897,4 +895,4 @@ const Page = ({ params }) => {
   );
 };
 
-export default Page;
+export default Component;

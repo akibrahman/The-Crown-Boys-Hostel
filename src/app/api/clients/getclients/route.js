@@ -11,6 +11,14 @@ export const GET = async (req) => {
     const onlyApproved = searchParams.get("onlyApproved");
     const clientName = searchParams.get("clientName");
     const regexPattern = new RegExp(clientName, "i");
+    if (!id) {
+      console.log("Yes, Traget");
+      const clients = await User.find({
+        isClient: true,
+        isClientVerified: true,
+      });
+      return NextResponse.json({ clients, success: true });
+    }
     //! For User's Query
     if (onlyApproved === "1") {
       const clients = await User.find({

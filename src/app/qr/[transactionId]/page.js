@@ -1,6 +1,4 @@
 "use server";
-import Invoice from "@/Components/Invoice/Invoice";
-import Invoice_Download from "@/Components/Invoice/Invoice_Download";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Transaction from "@/models/transactionModel";
 import User from "@/models/userModel";
@@ -9,6 +7,18 @@ import mongoose from "mongoose";
 import Image from "next/image";
 
 await dbConfig();
+
+export async function generateStaticParams() {
+  try {
+    const trs = await Transaction.find();
+    return trs.map((t) => ({
+      transactionId: t.transactionId.toString(),
+    }));
+  } catch (error) {
+    console.error("Error fetching Transactions data:", error);
+    return [];
+  }
+}
 
 const qr = async ({ params }) => {
   const { transactionId } = params;

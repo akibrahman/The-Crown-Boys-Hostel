@@ -1,4 +1,5 @@
 "use client";
+
 import { motion } from "framer-motion";
 import RoomSketch from "@/Components/RoomSketch/RoomSketch";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
@@ -11,8 +12,7 @@ import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaArrowLeft, FaTimes } from "react-icons/fa";
 
-const Page = ({ params }) => {
-  const { id } = params;
+const Component = ({ id }) => {
   const route = useRouter();
 
   const searchParams = useSearchParams();
@@ -520,4 +520,4 @@ const Page = ({ params }) => {
   );
 };
 
-export default Page;
+export default Component;
