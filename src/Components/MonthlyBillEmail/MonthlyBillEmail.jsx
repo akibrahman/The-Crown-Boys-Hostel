@@ -14,20 +14,19 @@ import {
 } from "@react-email/components";
 
 export const MonthlyBillEmail = ({
-  name,
-  email,
+  name = "Test Name",
+  email = "Test Email",
   month = "January",
   year = 2024,
-  date,
-  billId,
-  userId,
-  totalBreakfast,
-  totalLunch,
-  totalDinner,
-  totalDeposit,
-  totalBill,
-  isRestDeposite,
-  charges = [],
+  date = new Date().toLocaleString(),
+  billId = "test_bill_id",
+  userId = "test_user_id",
+  totalBreakfast = 10,
+  totalLunch = 10,
+  totalDinner = 10,
+  totalDeposit = 5500,
+  totalBill = 5000,
+  charges = [{ note: "Rent", amount: 3000 }],
 }) => (
   <Html>
     <Head />
@@ -55,7 +54,6 @@ export const MonthlyBillEmail = ({
                 style={{
                   backgroundColor: "#fff",
                   padding: "10px",
-                  borderRadius: "100%",
                 }}
                 src={
                   "https://cdn.glitch.global/0386827c-7a3c-4a82-b3fe-20c67f6f9f66/logo.png?v=1726675080378"
@@ -91,7 +89,7 @@ export const MonthlyBillEmail = ({
           >
             Your Monthly Bill of &quot;The Crown Boys Hostel&quot;
           </Text>
-          {isRestDeposite && (
+          {totalDeposit > totalBill && (
             <Text
               style={{
                 textAlign: "center",
@@ -101,7 +99,8 @@ export const MonthlyBillEmail = ({
                 color: "#111111",
               }}
             >
-              N.B. : Rest Deposite of this month added to the next month
+              N.B. : You have an extra deposit for this month. You may either
+              withdraw it from the manager or apply it to next month
             </Text>
           )}
         </Section>
@@ -216,6 +215,7 @@ export const MonthlyBillEmail = ({
                       BILL ID
                     </Text>
                     <Link
+                      href="https://thecrownboyshostel.com/dashboard?displayData=myBills"
                       style={{
                         fontSize: "12px",
                         margin: "0",
@@ -251,16 +251,19 @@ export const MonthlyBillEmail = ({
                     >
                       USER ID
                     </Text>
-                    <Text
+                    <Link
+                      href="https://thecrownboyshostel.com/dashboard"
                       style={{
                         fontSize: "12px",
                         margin: "0",
                         padding: "0",
                         lineHeight: 1.4,
+                        color: "#15c",
+                        textDecoration: "underline",
                       }}
                     >
                       {userId}
-                    </Text>
+                    </Link>
                   </Column>
                 </Row>
               </Section>
@@ -316,16 +319,6 @@ export const MonthlyBillEmail = ({
               >
                 Uttara, Dhaka, 1230
               </Text>
-              {/* <Text
-                style={{
-                  fontSize: "12px",
-                  margin: "0",
-                  padding: "0",
-                  lineHeight: 1.4,
-                }}
-              >
-                San Francisco, CA 94123
-              </Text> */}
               <Text
                 style={{
                   fontSize: "12px",
@@ -432,7 +425,6 @@ export const MonthlyBillEmail = ({
                   key={i}
                   style={{
                     margin: "0",
-                    // padding: "0",
                     lineHeight: 1.4,
                     color: "rgb(102,102,102)",
                     fontSize: "14px",
@@ -470,43 +462,83 @@ export const MonthlyBillEmail = ({
         </Section>
         <Hr style={{ margin: "30px 0 0 0" }} />
         <Section align="right">
-          <Row>
-            <Column style={{ display: "table-cell" }} align="right">
-              <Text
+          {totalDeposit <= totalBill ? (
+            <Row>
+              <Column style={{ display: "table-cell" }} align="right">
+                <Text
+                  style={{
+                    margin: "0",
+                    color: "rgb(102,102,102)",
+                    fontSize: "10px",
+                    fontWeight: "600",
+                    padding: "0px 30px 0px 0px",
+                    textAlign: "right",
+                  }}
+                >
+                  TOTAL DUE
+                </Text>
+              </Column>
+              <Column
                 style={{
-                  margin: "0",
-                  color: "rgb(102,102,102)",
-                  fontSize: "10px",
-                  fontWeight: "600",
-                  padding: "0px 30px 0px 0px",
-                  textAlign: "right",
+                  height: "48px",
+                  borderLeft: "1px solid",
+                  borderColor: "rgb(238,238,238)",
                 }}
-              >
-                TOTAL DUE
-              </Text>
-            </Column>
-            <Column
-              style={{
-                height: "48px",
-                borderLeft: "1px solid",
-                borderColor: "rgb(238,238,238)",
-              }}
-            ></Column>
-            <Column style={{ display: "table-cell", width: "90px" }}>
-              <Text
+              ></Column>
+              <Column style={{ display: "table-cell", width: "90px" }}>
+                <Text
+                  style={{
+                    margin: "0px 20px 0px 0px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    whiteSpace: "nowrap",
+                    textAlign: "right",
+                    color: "rgb(102,102,102)",
+                  }}
+                >
+                  {parseInt(totalBill) - parseInt(totalDeposit)} BDT
+                </Text>
+              </Column>
+            </Row>
+          ) : (
+            <Row>
+              <Column style={{ display: "table-cell" }} align="right">
+                <Text
+                  style={{
+                    margin: "0",
+                    color: "rgb(102,102,102)",
+                    fontSize: "10px",
+                    fontWeight: "600",
+                    padding: "0px 30px 0px 0px",
+                    textAlign: "right",
+                  }}
+                >
+                  Extra Money
+                </Text>
+              </Column>
+              <Column
                 style={{
-                  margin: "0px 20px 0px 0px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  whiteSpace: "nowrap",
-                  textAlign: "right",
-                  color: "rgb(102,102,102)",
+                  height: "48px",
+                  borderLeft: "1px solid",
+                  borderColor: "rgb(238,238,238)",
                 }}
-              >
-                {parseInt(totalBill) - parseInt(totalDeposit)} BDT
-              </Text>
-            </Column>
-          </Row>
+              ></Column>
+              <Column style={{ display: "table-cell", width: "90px" }}>
+                <Text
+                  style={{
+                    margin: "0px 20px 0px 0px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    whiteSpace: "nowrap",
+                    textAlign: "right",
+                    color: "rgb(102,102,102)",
+                  }}
+                >
+                  {(parseInt(totalBill) - parseInt(totalDeposit)) * -1} BDT
+                </Text>
+              </Column>
+            </Row>
+          )}
         </Section>
         <Hr style={{ margin: "0 0 10px 0" }} />
         <Section>
@@ -519,7 +551,6 @@ export const MonthlyBillEmail = ({
                 style={{
                   backgroundColor: "#fff",
                   padding: "6px",
-                  borderRadius: "100%",
                 }}
                 src={`https://cdn.glitch.global/0386827c-7a3c-4a82-b3fe-20c67f6f9f66/logo.png?v=1726675080378`}
                 width="50"
@@ -537,17 +568,9 @@ export const MonthlyBillEmail = ({
             color: "rgb(102,102,102)",
           }}
         >
-          <Link href="https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/accountSummary?mt=8">
-            Account Settings
-          </Link>{" "}
-          •{" "}
-          <Link href="https://www.apple.com/legal/itunes/us/sales.html">
-            Terms of Sale
-          </Link>{" "}
-          •{" "}
-          <Link href="https://www.apple.com/legal/privacy/">
-            Privacy Policy{" "}
-          </Link>
+          <Link href="">Account Settings</Link> •{" "}
+          <Link href="">Terms of Sale</Link> •{" "}
+          <Link href="">Privacy Policy </Link>
         </Text>
         <Text
           style={{
@@ -558,7 +581,7 @@ export const MonthlyBillEmail = ({
           }}
         >
           Copyright © 2024 The Crown Boys Hostel Inc. <br />{" "}
-          <Link href="https://www.apple.com/legal/">All rights reserved</Link>
+          <Link href="">All rights reserved</Link>
         </Text>
       </Container>
     </Body>

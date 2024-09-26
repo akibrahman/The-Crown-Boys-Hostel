@@ -1,10 +1,7 @@
 import Bill from "@/models/billModel";
-import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
-import User from "@/models/userModel";
-import bcryptjs from "bcryptjs";
-import { decode } from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
 export const POST = async () => {
   try {
@@ -54,13 +51,40 @@ async function delay(s) {
 
 export const PATCH = async () => {
   try {
-    await delay(10);
+    const transport = nodemailer.createTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASS,
+      },
+    });
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: "akibrahman5200@gmail.com",
+      subject: "Cron Job Test E-mail",
+      html: `<p>Cron Job: This mail is before Delay</p>`,
+    };
+    const mailOptions2 = {
+      from: process.env.GMAIL_USER,
+      to: "akibrahman5200@gmail.com",
+      subject: "Cron Job Test E-mail",
+      html: `<p>Cron Job: This mail is after Delay</p>`,
+    };
+    await transport.sendMail(mailOptions);
+    await delay(300);
+    await transport.sendMail(mailOptions2);
     return NextResponse.json(
-      { success: true, msg: "Runned Successfully" },
+      { success: true, msg: "Runned Successfully & E-mail Sent (5 min)" },
       { status: 200 }
     );
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: error?.message },
+      { status: 500 }
+    );
   }
 };

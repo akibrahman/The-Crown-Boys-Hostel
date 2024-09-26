@@ -1,5 +1,4 @@
 import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail";
-import MonthlyBillEmail_simple from "@/Components/MonthlyBillEmail/MonthlyBillEmail_simple";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
 import ManagerBill from "@/models/managerBillModel";
@@ -23,17 +22,16 @@ export const GET = async (req) => {
     ) {
       return NextResponse.json(
         { success: false, msg: "Unauthorized" },
-        { status: 400 }
+        { status: 401 }
       );
     }
-    const transport = nodemailer.createTransport({
-      service: "gmail",
-      host: "smtp.gmail.com",
+    const billTransport = nodemailer.createTransport({
+      host: "mail.thecrownboyshostel.com",
       port: 465,
       secure: true,
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASS,
+        user: process.env.BILL_EMAIL_USERNAME,
+        pass: process.env.BILL_EMAIL_PASSWORD,
       },
     });
     const isLastDayOfCurrentMonthInBangladesh = () => {
@@ -72,9 +70,7 @@ export const GET = async (req) => {
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     //! Second Last day of any month-----------------------
-    // if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
-    if (true) {
-      console.log("Second Last Day Run Started");
+    if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -295,10 +291,15 @@ export const GET = async (req) => {
       });
       await Promise.all(marketPromises);
       // Market Data creation for all verified managers End
+      await billTransport.sendMail({
+        from: `'CronJob Finished' <${process.env.BILL_EMAIL_USERNAME}>`,
+        to: "akibrahman5200@gmail.com,ashiknus@gmail.com,",
+        subject: "Last Day Of Month | Cron Job | The Crown Boys hostel",
+        html: `<p>The Cron Job Scheduled for Running EveryDay Executed Just</p><br/><p>The Script Designed for the Second Last Day of Every Month has Just Executed</p><br/><br/><p>The Crown Boys Hostel Automated Software</p>`,
+      });
     }
     //! Last day of any month------------------------------
-    // if (aboutLastDayOfCurrentMonth.isLastDay) {
-    if (true) {
+    if (aboutLastDayOfCurrentMonth.isLastDay) {
       console.log("Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -341,8 +342,6 @@ export const GET = async (req) => {
         month: currentMonth,
         status: "initiated",
       });
-      const allEmails = [];
-      const allNumbers = [];
       const userPromises = bills.map(async (bill) => {
         const user = await User.findById(bill.userId);
         const orders = await Order.find({
@@ -351,14 +350,13 @@ export const GET = async (req) => {
           year: bill.year,
         });
         const transactions = await Transaction.find({ billId: bill._id });
-        // const paidAmount =
-        //   transactions?.reduce((total, transaction) => {
-        //     const transactionSum = transaction.payments.reduce(
-        //       (sum, payment) => sum + payment.value,
-        //       0
-        //     );
-        //     return total + transactionSum;
-        //   }, 0) || 0;
+        const paidAmount = transactions?.reduce((total, transaction) => {
+          const transactionSum = transaction.payments.reduce(
+            (sum, payment) => sum + payment.value,
+            0
+          );
+          return total + transactionSum;
+        }, 0);
         const calculateMeals = (type) =>
           orders.reduce(
             (accumulator, currentValue) =>
@@ -402,18 +400,52 @@ export const GET = async (req) => {
         if (!nextBill) totalRent = 0;
         const totalBillInBDT =
           totalMealBillInBDT + totalUserCharges + totalRent;
-        if (nextBill)
-          bill.charges = [...user.charges, { note: "Rent", amount: totalRent }];
-        else bill.charges = [...user.charges];
+        let userTotalCharges = [];
+        if (nextBill) {
+          userTotalCharges = [
+            ...user.charges,
+            { note: "Rent", amount: totalRent },
+          ];
+        } else {
+          userTotalCharges = [...user.charges];
+        }
         totalRent = 0;
+        let mounthlyBillEmailHtml = render(
+          MonthlyBillEmail({
+            name: user.username,
+            email: user.email,
+            month: bill.month,
+            date: new Date().toLocaleString("en-US", {
+              timeZone: "Asia/Dhaka",
+            }),
+            billId: bill._id.toString(),
+            userId: user._id.toString(),
+            totalBreakfast: totalBreakfast,
+            totalLunch: totalLunch,
+            totalDinner: totalDinner,
+            totalDeposit: paidAmount,
+            totalBill: totalBillInBDT,
+            isRestDeposite: totalBillInBDT >= paidAmount ? false : true,
+            charges: userTotalCharges,
+          })
+        );
+        bill.charges = userTotalCharges;
         bill.totalBreakfast = totalBreakfast;
         bill.totalLunch = totalLunch;
         bill.totalDinner = totalDinner;
         bill.totalBillInBDT = totalBillInBDT;
-        allNumbers.push(user.contactNumber);
-        allEmails.push(user.email);
         bill.status = "calculated";
         await bill.save();
+        await sendSMS(
+          user.contactNumber,
+          `Hi, Mr. ${user.username}\nYour monthly bill has been calculated\nPlease check your E-mail properly with spam box to get details. Also you can check 'My Bills' from Dashboard.\n\nThe Crown Boys Hostel Automated System`
+        );
+        await billTransport.sendMail({
+          from: `'Monthly Bill | The Crown Boys Hostel' <${process.env.BILL_EMAIL_USERNAME}>`,
+          to: user.email,
+          subject: "Monthly Bill | The Crown Boys hostel",
+          html: mounthlyBillEmailHtml,
+        });
       });
       await Promise.all(userPromises);
       // User Bill Creation End
@@ -478,27 +510,27 @@ export const GET = async (req) => {
           mealRate,
         });
         await managerBill.save();
-        // Manager Meal Rate Creation SMS
+        await sendSMS(
+          manager.contactNumber,
+          `Hi, Mr. ${manager.username}\nYour monthly market bill with meal count and meal rate has been created. Check it from your profile.\n\nThe Crown Boys Hostel Automated System`
+        );
       });
       await Promise.all(managerPromises);
       // Manager Bill Creation End
       // SMS and E-mails sent Start
-      const mailOptions = {
-        from: "thecrownboyshostel@gmail.com",
-        to: "akibrahman5200@gmail.com",
-        // to: allEmails.join(","),
-        subject: "Monthly Bill - The Crown Boys hostel",
-        html: render(
-          MonthlyBillEmail_simple({ month: currentMonth, year: currentYear })
-        ),
-      };
-      transport.sendMail(mailOptions);
-      // sendSMS(
-      //   allNumbers.join(","),
-      //   `Monthly Bill Has Been Calculated, Please Check Your Dashboard\nDashboard : https://thecrownboyshostel.com/dashboard\nMy Bills : https://thecrownboyshostel.com/dashboard?displayData=myBills\nMy Transactions : "https://thecrownboyshostel.com/dashboard?displayData=myTransactions"`
-      // );
-      // SMS and E-mails sent End
+      await billTransport.sendMail({
+        from: `'CronJob Finished' <${process.env.BILL_EMAIL_USERNAME}>`,
+        to: "akibrahman5200@gmail.com,ashiknus@gmail.com,",
+        subject: "Last Day Of Month | Cron Job | The Crown Boys hostel",
+        html: `<p>The Cron Job Scheduled for Running EveryDay Executed Just</p><br/><p>The Script Designed for the Last Day of Every Month has Just Executed</p><br/><br/><p>The Crown Boys Hostel Automated Software</p>`,
+      });
     }
+    await billTransport.sendMail({
+      from: `'CronJob Update' <${process.env.BILL_EMAIL_USERNAME}>`,
+      to: "akibrahman5200@gmail.com,ashiknus@gmail.com,",
+      subject: "Last Day Of Month | Cron Job | The Crown Boys hostel",
+      html: `<p>The Cron Job Scheduled for Running EveryDay Executed Just</p><br/><p>This Cron Job will Detect the Last day of Current Month Automatically and will Execute the Written Script</p><br/><br/><p>The Crown Boys Hostel Automated Software</p>`,
+    });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);

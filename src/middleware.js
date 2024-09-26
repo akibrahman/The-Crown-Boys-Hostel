@@ -6,16 +6,10 @@ export async function middleware(req) {
   //! Manage Dashboard SSR --Start--
   if (path === "/dashboard" && !token) {
     const url = new URL("/signin", req.nextUrl);
-    console.log("=================================");
-    console.log("=================================", url);
-    console.log("=================================", req.nextUrl);
-    console.log("=================================", req.nextUrl.href);
     url.searchParams.set(
       "callbackUrl",
       `${req.nextUrl.pathname}${req.nextUrl.search}`
     );
-    console.log("=================================", url);
-    console.log("=================================");
     return NextResponse.redirect(url);
   }
   //! Manage Dashboard SSR --End--

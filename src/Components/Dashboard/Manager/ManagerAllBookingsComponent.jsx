@@ -31,6 +31,7 @@ const ManagerAllBookingsComponent = ({ user }) => {
       {/* <button
         // disabled
         onClick={async () => {
+          toast("Started");
           const { data } = await axios.get("/api/cronjob/cronjob", {
             headers: { Authorization: "Bearer 1234567890" },
           });
