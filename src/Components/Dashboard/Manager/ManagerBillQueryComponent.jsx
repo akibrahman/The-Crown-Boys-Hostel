@@ -3,17 +3,23 @@ import PreLoader from "@/Components/PreLoader/PreLoader";
 import Receipt from "@/Components/Receipt/Receipt";
 import { AuthContext } from "@/providers/ContextProvider";
 import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
+import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { FaTimes } from "react-icons/fa";
 import Select from "react-select";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 const ManagerBillQueryComponent = () => {
   const { user } = useContext(AuthContext);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("userId");
 
   const monthOrder = [
     "January",
@@ -58,9 +64,9 @@ const ManagerBillQueryComponent = () => {
 
   // Tab Menu
   const [activeTab, setActiveTab] = useState({
-    tab: "Special Query",
-    left: "62%",
-    width: "125px",
+    tab: "Month Wise",
+    left: "31%",
+    width: "110px",
   });
   const tabs = [
     { tab: "User Wise", left: "4%", width: "95px" },
@@ -68,56 +74,96 @@ const ManagerBillQueryComponent = () => {
     { tab: "Special Query", left: "62%", width: "125px" },
   ];
 
+  useEffect(() => {
+    if (!userId) return;
+    setActiveTab({ tab: "User Wise", left: "4%", width: "95px" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
   if (!myClients) return <PreLoader />;
 
   return (
-    <div className="min-h-full p-2 md:p-5 bg-dashboard text-slate-100 relative">
-      <p className="text-center font-semibold text-xl dark:text-white">
-        Bill Query
-      </p>
-      {/* Tab  */}
-      <div
-        className={`relative flex justify-center items-center gap-8 bg-[#44403C] w-max mx-auto px-7 py-2 rounded-full mt-4 z-10 select-none`}
-      >
+    <>
+      <div className="min-h-full p-2 md:p-5 bg-dashboard text-slate-100 relative">
+        <p className="text-center font-semibold text-xl dark:text-white">
+          Bill Query
+        </p>
+        {/* Tab  */}
         <div
-          style={{ left: activeTab.left, width: activeTab.width }}
-          className={`absolute top-0 transition-all duration-300 h-full bg-dashboard rounded border border-[#44403C] z-20`}
-        ></div>
-        {tabs.map((tab, index) => (
+          className={`relative flex justify-center items-center gap-8 bg-[#44403C] w-max mx-auto px-7 py-2 rounded-full mt-4 z-10 select-none`}
+        >
           <div
-            onClick={() => setActiveTab(tab)}
-            key={index}
-            className="z-30 cursor-pointer text-sm"
-          >
-            {tab.tab}
-          </div>
-        ))}
+            style={{ left: activeTab.left, width: activeTab.width }}
+            className={`absolute top-0 transition-all duration-300 h-full bg-dashboard rounded border border-[#44403C] z-20`}
+          ></div>
+          {tabs.map((tab, index) => (
+            <div
+              onClick={() => setActiveTab(tab)}
+              key={index}
+              className="z-30 cursor-pointer text-sm"
+            >
+              {tab.tab}
+            </div>
+          ))}
+        </div>
+        {/* Tab  */}
+        {activeTab.tab == "User Wise" && (
+          <UserWise
+            monthOrder={monthOrder}
+            currentYearBangladesh={currentYearBangladesh}
+            myClients={myClients}
+            userId={userId}
+            router={router}
+          />
+        )}
+        {activeTab.tab == "Month Wise" && (
+          <MonthWise
+            monthOrder={monthOrder}
+            currentYearBangladesh={currentYearBangladesh}
+            currentMonthBangladesh={currentMonthBangladesh}
+            myClients={myClients}
+          />
+        )}
+        {activeTab.tab == "Special Query" && <SpecialQuery user={user} />}
       </div>
-      {/* Tab  */}
-      {activeTab.tab == "User Wise" && (
-        <UserWise
-          monthOrder={monthOrder}
-          currentYearBangladesh={currentYearBangladesh}
-          myClients={myClients}
-        />
-      )}
-      {activeTab.tab == "Month Wise" && (
-        <MonthWise
-          monthOrder={monthOrder}
-          currentYearBangladesh={currentYearBangladesh}
-          currentMonthBangladesh={currentMonthBangladesh}
-          myClients={myClients}
-        />
-      )}
-      {activeTab.tab == "Special Query" && <SpecialQuery user={user} />}
-    </div>
+    </>
   );
 };
 
-const UserWise = ({ monthOrder, currentYearBangladesh, myClients }) => {
+const UserWise = ({
+  monthOrder,
+  currentYearBangladesh,
+  myClients,
+  userId,
+  router,
+}) => {
   const [result, setResult] = useState(null);
   const [searching, setSearching] = useState(false);
   const [managerAmount, setManagerAmount] = useState(null);
+
+  useEffect(() => {
+    if (!userId) return;
+    setSearching(true);
+    axios
+      .get(`/api/bills/getbills?userId=${userId}`)
+      .then(({ data }) => {
+        if (data.success) setResult(data.bills);
+        else setResult(null);
+        setSearching(false);
+      })
+      .catch((err) => {
+        setResult(null);
+        setSearching(false);
+        console.log("Bill Fetching Error:", err);
+      })
+      .finally(() => {
+        const url = new URL(window.location.href);
+        const baseUrl =
+          url.origin + url.pathname + "?displayData=managerBillQuery";
+        router.replace(baseUrl);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   const searchBillQuery = async (e) => {
     e.preventDefault();
@@ -388,8 +434,10 @@ const MonthWise = ({
 
 const SpecialQuery = ({ user }) => {
   const [name, setName] = useState("");
+  const [smsModal, setSmsModal] = useState([false, {}]);
+  const [smsModalSms, setSmsModalSms] = useState("");
 
-  const { data: dues, refetch } = useQuery({
+  const { data: dues, isLoading } = useQuery({
     queryKey: ["special-query-bill", "Mmanager-only", user?._id, name],
     queryFn: async ({ queryKey }) => {
       try {
@@ -406,51 +454,172 @@ const SpecialQuery = ({ user }) => {
   });
 
   return (
-    <div className="relative mt-4">
-      <p className="text-center font-semibold text-lg underline tracking-wider">
-        Pending Due Users
-      </p>
-      <div className="flex items-center justify-center mt-3">
-        <input
-          type="text"
-          name=""
-          id=""
-          placeholder="Search by Name"
-          className="px-5 py-2 rounded-md dark:bg-stone-700 dark:text-white bg-stone-300 outline-none inline-block mx-auto"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div className="mt-3 flex flex-col gap-2">
-        {dues?.map((due, i) => (
-          <div
-            className="w-full px-4 py-2 border flex items-center justify-between"
-            key={due._id}
+    <>
+      {smsModal[0] && (
+        <div className="fixed z-[50000] top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
+          <motion.div
+            initial={{ scale: 0.5, x: "-50%", y: "-50%", opacity: 0 }}
+            whileInView={{ scale: 1, x: "-50%", y: "-50%", opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, damping: 10 }}
+            className="absolute text-dashboard top-1/2 left-1/2 bg-white md:h-[80%] w-[95%] md:w-[60%] rounded-xl pb-5 md:pb-0 p-5"
           >
-            <div className="flex items-center gap-8">
-              <p>{i + 1}</p>
+            <FaTimes
+              className="text-2xl absolute top-1 right-2 text-slate-200 cursor-pointer duration-300 active:scale-90 bg-dashboard aspect-square rounded-full p-1"
+              onClick={() => {
+                setSmsModal([false, {}]);
+                setSmsModalSms("");
+              }}
+            />
+            <div className="flex items-center justify-center gap-10">
+              <div className="mt-5 pl-3 py-1.5 border-l-4 border-dashboard font-semibold">
+                <p> Name: {smsModal[1].name}</p>
+                <p> E-Mail: {smsModal[1].email}</p>
+                <p> Number: {smsModal[1].number}</p>
+              </div>
               <Image
-                src={due.photo == "/__" ? "/images/no-user.png" : due.photo}
-                width={40}
-                height={40}
-                alt={`Photo of ${due.name}`}
-                className="rounded-full h-10 w-10"
+                src={
+                  smsModal[1].photo == "/__"
+                    ? "/images/no-user.png"
+                    : smsModal[1].photo
+                }
+                width={60}
+                height={60}
+                alt={`Photo of ${smsModal[1].name}`}
+                className="rounded-full h-20 w-20"
               />
-              <p className="w-[150px] overflow-x-hidden">{due.name}</p>
-              <button className="px-6 py-1 rounded-full bg-blue-500 active:scale-90 duration-300 text-white">
-                Bills
+            </div>
+            <textarea
+              className="w-full mt-5 border border-dashboard bg-dashboard text-white font-medium p-5 rounded-xl"
+              rows="8"
+              value={smsModalSms}
+              onChange={(e) => {
+                setSmsModalSms(e.target.value);
+              }}
+            ></textarea>
+            <div className="flex items-center justify-center">
+              <button
+                onClick={async () => {
+                  try {
+                    const { data } = await axios.post("/api/sms", {
+                      msg: smsModalSms,
+                      receiver: [{ number: smsModal[1].number }],
+                    });
+                    if (!data.success) throw new Error("SMS Sent Error");
+                    toast.success("SMS Sent Successfully");
+                  } catch (error) {
+                    console.log(error);
+                    toast.error(
+                      error?.message ||
+                        error?.response?.data?.msg ||
+                        "SMS Sent Error"
+                    );
+                  } finally {
+                    setSmsModal([false, {}]);
+                    setSmsModalSms("");
+                  }
+                }}
+                className="px-10 py-1 bg-dashboard font-semibold text-white duration-300 active:scale-90 mt-3"
+              >
+                Send
               </button>
             </div>
-            <p>
-              {due.amounts.length > 1
-                ? `${due.amounts.join(" + ")} =${" "}
-              ${due.amounts.reduce((a, c) => a + c, 0)}/-`
-                : `${due.amounts[0]}/-`}
-            </p>
+          </motion.div>
+        </div>
+      )}
+      <div className="relative mt-4">
+        <p className="text-center font-semibold text-lg underline tracking-wider">
+          Pending Due Users
+        </p>
+        <div className="flex items-center justify-center mt-3">
+          <input
+            type="text"
+            placeholder="Search by Name"
+            className="px-5 py-2 rounded-md dark:bg-stone-700 dark:text-white bg-stone-300 outline-none inline-block mx-auto"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        {!dues || isLoading ? (
+          <div className="flex items-center justify-center gap-2 mt-6">
+            <p>Loading Statements</p>
+            <CgSpinner className="animate-spin text-xl text-white" />
           </div>
-        ))}
+        ) : dues.length > 0 ? (
+          <div className="mt-3 flex flex-col gap-2">
+            {dues?.map((due, i) => (
+              <div
+                className="w-full px-4 py-2 border flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0"
+                key={due._id}
+              >
+                <div className="flex items-center gap-2 md:gap-5">
+                  <p>{i + 1}</p>
+                  <Image
+                    src={due.photo == "/__" ? "/images/no-user.png" : due.photo}
+                    width={40}
+                    height={40}
+                    alt={`Photo of ${due.name}`}
+                    className="rounded-full h-10 w-10"
+                  />
+                  <p className="w-[100px] md:w-[150px] overflow-x-hidden text-sm md:text-base">
+                    {due.name}
+                  </p>
+                  <Link
+                    target="_blank"
+                    href={`/dashboard?displayData=managerBillQuery&userId=${due._id}`}
+                  >
+                    <button className="px-3 md:px-6 py-1 text-xs md:text-base rounded-full bg-blue-500 active:scale-90 duration-300 text-white">
+                      Bills
+                    </button>
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      setSmsModalSms(
+                        `Hi ${
+                          due?.name
+                        },\n\nThis is a reminder that you have outstanding dues with us. Please find the details below:\nOutstanding Amount:\n${
+                          due?.amounts?.length > 1
+                            ? `${due?.amounts.join(
+                                " + "
+                              )} = ${due?.amounts.reduce((a, c) => a + c, 0)}/-`
+                            : `${due?.amounts?.[0]}/-`
+                        }\n\nPlease check Dashboard > My Bills for more details.\n\nWe appreciate your timely attention to this.\n\nThank you,\nThe Crown Boys Hostel Management Team`
+                      );
+                      return setSmsModal([
+                        true,
+                        {
+                          name: due.name,
+                          number: due.number,
+                          email: due.email,
+                          photo: due.photo,
+                          amounts: due.amounts,
+                        },
+                      ]);
+                    }}
+                    className="px-3 md:px-6 py-1 text-xs md:text-base rounded-full bg-purple-500 active:scale-90 duration-300 text-white"
+                  >
+                    SMS
+                  </button>
+                  <button
+                    onClick={() => (window.location.href = `tel:${due.number}`)}
+                    className="px-3 md:px-6 py-1 text-xs md:text-base rounded-full bg-green-500 active:scale-90 duration-300 text-white"
+                  >
+                    Call
+                  </button>
+                </div>
+                <p>
+                  {due.amounts.length > 1
+                    ? `${due.amounts.join(" + ")} =${" "}
+           ${due.amounts.reduce((a, c) => a + c, 0)}/-`
+                    : `${due.amounts[0]}/-`}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center mt-6 text-red-500">No Statements Found</p>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 

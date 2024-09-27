@@ -2,8 +2,9 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaEye, FaFileInvoice, FaPlug, FaTimes } from "react-icons/fa";
@@ -656,23 +657,23 @@ const Receipt = ({
             }, 0) == totalBillInBDT &&
               status == "calculated") ||
               !isManageable || (
-                <button
-                  data-tooltip-id="gitt"
-                  data-tooltip-content={"Generate Invoice"}
-                  onClick={() =>
-                    route.push(
-                      `/dashboard?displayData=managerManualInvouce&billId=${id}`
-                    )
-                  }
-                  className="bg-green-500 text-white px-4 py-2 duration-300 rounded flex items-center gap-3 active:scale-90 w-max text-sm md:text-base"
+                <Link
+                  target="_blank"
+                  href={`/dashboard?displayData=managerManualInvouce&billId=${id}`}
                 >
-                  <FaFileInvoice className="text-xl" />
-                  {isMoneyAdding.state &&
-                    isMoneyAdding.id == id &&
-                    isMoneyAdding.method == "makePaid" && (
-                      <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
-                    )}
-                </button>
+                  <button
+                    data-tooltip-id="gitt"
+                    data-tooltip-content={"Generate Invoice"}
+                    className="bg-green-500 text-white px-4 py-2 duration-300 rounded flex items-center gap-3 active:scale-90 w-max text-sm md:text-base"
+                  >
+                    <FaFileInvoice className="text-xl" />
+                    {isMoneyAdding.state &&
+                      isMoneyAdding.id == id &&
+                      isMoneyAdding.method == "makePaid" && (
+                        <CgSpinner className="text-xl text-white cursor-pointer animate-spin" />
+                      )}
+                  </button>
+                </Link>
               )}
             {status == "initiated" ? (
               <p className=" text-blue-600 font-bold">Not Calculated</p>

@@ -61,7 +61,6 @@ export const GET = async (req) => {
               return {
                 billId: bill._id,
                 totalAmount: bill.totalBillInBDT - totalTransactionAmount,
-                m: bill.month,
               };
             } else {
               return null;
@@ -95,7 +94,6 @@ export const GET = async (req) => {
                   totalAmount: bill.isRentPaid
                     ? 2000 - totalTransactionAmount
                     : 2000 + totalRent - totalTransactionAmount,
-                  m: bill.month,
                 };
               }
             }
@@ -105,7 +103,10 @@ export const GET = async (req) => {
       const validBills = filteredBills.filter((bill) => bill !== null);
       if (validBills.length > 0) {
         finalDataToBeSent.push({
+          _id: userUnderManager._id,
           name: userUnderManager.username,
+          number: userUnderManager.contactNumber,
+          email: userUnderManager.email,
           photo: userUnderManager.profilePicture || "/images/no-user.png",
           amounts: validBills.map((bill) => bill.totalAmount),
           billIds: validBills.map((bill) => bill.billId),

@@ -1,5 +1,4 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
-import axios from "axios";
 import { NextResponse } from "next/server";
 
 await dbConfig();
@@ -24,7 +23,6 @@ export const POST = async (req) => {
       },
       body: JSON.stringify(data),
     });
-    console.log("----------", res);
     if (!res.ok) throw new Error("SMS can't be sent!");
     const ress = await res.json();
     if (ress.response_code == 1007) {
@@ -35,7 +33,7 @@ export const POST = async (req) => {
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { msg: error.message, success: true },
+      { msg: error.message, success: false },
       { status: 500 }
     );
   }
