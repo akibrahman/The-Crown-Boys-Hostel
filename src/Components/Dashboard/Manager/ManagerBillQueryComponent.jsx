@@ -5,10 +5,10 @@ import { AuthContext } from "@/providers/ContextProvider";
 import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import Image from "next/image";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
-import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import Select from "react-select";
 
 const ManagerBillQueryComponent = () => {
@@ -58,9 +58,9 @@ const ManagerBillQueryComponent = () => {
 
   // Tab Menu
   const [activeTab, setActiveTab] = useState({
-    tab: "Month Wise",
-    left: "31%",
-    width: "120px",
+    tab: "Special Query",
+    left: "62%",
+    width: "125px",
   });
   const tabs = [
     { tab: "User Wise", left: "4%", width: "95px" },
@@ -109,6 +109,7 @@ const ManagerBillQueryComponent = () => {
           myClients={myClients}
         />
       )}
+      {activeTab.tab == "Special Query" && <SpecialQuery user={user} />}
     </div>
   );
 };
@@ -380,6 +381,74 @@ const MonthWise = ({
               />
             ))}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const SpecialQuery = ({ user }) => {
+  const [name, setName] = useState("");
+
+  const { data: dues, refetch } = useQuery({
+    queryKey: ["special-query-bill", "Mmanager-only", user?._id, name],
+    queryFn: async ({ queryKey }) => {
+      try {
+        const { data } = await axios.get(
+          `/api/bills/getspecialquerybills?managerId=${queryKey[2]}&name=${queryKey[3]}`
+        );
+        if (!data.success) throw new Error();
+        return data.data;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    },
+  });
+
+  return (
+    <div className="relative mt-4">
+      <p className="text-center font-semibold text-lg underline tracking-wider">
+        Pending Due Users
+      </p>
+      <div className="flex items-center justify-center mt-3">
+        <input
+          type="text"
+          name=""
+          id=""
+          placeholder="Search by Name"
+          className="px-5 py-2 rounded-md dark:bg-stone-700 dark:text-white bg-stone-300 outline-none inline-block mx-auto"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div className="mt-3 flex flex-col gap-2">
+        {dues?.map((due, i) => (
+          <div
+            className="w-full px-4 py-2 border flex items-center justify-between"
+            key={due._id}
+          >
+            <div className="flex items-center gap-8">
+              <p>{i + 1}</p>
+              <Image
+                src={due.photo == "/__" ? "/images/no-user.png" : due.photo}
+                width={40}
+                height={40}
+                alt={`Photo of ${due.name}`}
+                className="rounded-full h-10 w-10"
+              />
+              <p className="w-[150px] overflow-x-hidden">{due.name}</p>
+              <button className="px-6 py-1 rounded-full bg-blue-500 active:scale-90 duration-300 text-white">
+                Bills
+              </button>
+            </div>
+            <p>
+              {due.amounts.length > 1
+                ? `${due.amounts.join(" + ")} =${" "}
+              ${due.amounts.reduce((a, c) => a + c, 0)}/-`
+                : `${due.amounts[0]}/-`}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );
