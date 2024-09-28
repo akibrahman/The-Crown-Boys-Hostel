@@ -163,7 +163,11 @@ const ManagerAllUsers = ({ user }) => {
                 <Image
                   width={150}
                   height={150}
-                  src={clientDetails.profilePicture}
+                  src={
+                    clientDetails.profilePicture == "/__"
+                      ? "/images/no-user.png"
+                      : clientDetails.profilePicture
+                  }
                   alt="Profile Picture"
                   className="object-cover aspect-square rounded-full"
                 />
@@ -392,7 +396,11 @@ const ManagerAllUsers = ({ user }) => {
               <p>{i + 1}</p>
               <Image
                 alt={`Profile picture of ${client.username} who is a manager`}
-                src={client.profilePicture}
+                src={
+                  client.profilePicture == "/__"
+                    ? "/images/no-user.png"
+                    : client.profilePicture
+                }
                 height={60}
                 width={60}
                 className="rounded-full aspect-square"
