@@ -8,13 +8,12 @@ import nodemailer from "nodemailer";
 export const sendEmail = async ({ email, emailType, userId, userName }) => {
   try {
     const transport = nodemailer.createTransport({
-      service: "gmail",
-      host: "smtp.gmail.com",
+      host: "mail.thecrownboyshostel.com",
       port: 465,
       secure: true,
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASS,
+        user: process.env.VERIFY_EMAIL_USERNAME,
+        pass: process.env.VERIFY_EMAIL_PASSWORD,
       },
     });
     let emailHtml;
@@ -32,9 +31,9 @@ export const sendEmail = async ({ email, emailType, userId, userName }) => {
         })
       );
       mailOptions = {
-        from: process.env.GMAIL_USER,
+        from: `'The Crown Boys Hostel' <${process.env.VERIFY_EMAIL_USERNAME}>`,
         to: email,
-        subject: "E-mail Verification",
+        subject: "E-mail Verification | The Crown Boys Hostel",
         html: emailHtml,
       };
     } else if (emailType === "reset") {
@@ -53,9 +52,9 @@ export const sendEmail = async ({ email, emailType, userId, userName }) => {
         })
       );
       mailOptions = {
-        from: process.env.GMAIL_USER,
+        from: `'The Crown Boys Hostel' <${process.env.VERIFY_EMAIL_USERNAME}>`,
         to: email,
-        subject: "Password Reset",
+        subject: "Password Reset | The Crown Boys Hostel",
         html: emailHtml,
       };
     }

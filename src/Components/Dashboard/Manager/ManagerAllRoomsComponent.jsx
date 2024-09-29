@@ -144,7 +144,6 @@ const ManagerAllRoomsComponent = ({ user }) => {
       (bed) => !targetRoom.beds.includes(bed)
     );
     if (missingBeds.length === 0 && extraBeds.length === 0) {
-      // Here the main function
       setTargetManageRoom(room);
       openManageRoomModal();
     } else {

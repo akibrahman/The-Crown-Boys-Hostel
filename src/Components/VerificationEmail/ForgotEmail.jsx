@@ -20,7 +20,6 @@ export const ForgotEmail = ({ userFirstname, url }) => (
         <Hr
           style={{
             borderColor: "#cccccc",
-            // margin: "20px 0",
           }}
         />
         <Text
@@ -49,16 +48,13 @@ export const ForgotEmail = ({ userFirstname, url }) => (
         <Hr
           style={{
             borderColor: "#cccccc",
-            // margin: "20px 0",
           }}
         />
         <Img
-          src={
-            "https://i.ibb.co/GCKb4jM/2302-i402-021-S-m004-c13-Smartphone-data-protection-flat-composition.jpg"
-          }
+          src="https://img.freepik.com/premium-photo/3d-password-reset-illustration-update-personal-data-concept-getting-new-username-password-account-information-protection-security-internet-trendy-modern-vector-3d-style_839035-1742766.jpg?w=740"
           width="500"
           height="250"
-          alt="Koala"
+          alt="Password Reset Image of The Crown Boys Hostel"
           style={logo}
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
@@ -72,7 +68,7 @@ export const ForgotEmail = ({ userFirstname, url }) => (
           </Button>
         </Section>
         <Text style={paragraph}>
-          Best,
+          Best Regurds,
           <br />
           Developer Team - Akib Rahman
         </Text>

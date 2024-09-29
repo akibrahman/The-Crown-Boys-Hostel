@@ -3,7 +3,7 @@ import Bill from "@/models/billModel";
 import Order from "@/models/orderModel";
 import { NextResponse } from "next/server";
 
-dbConfig();
+await dbConfig();
 
 export const POST = async (req) => {
   try {
@@ -16,9 +16,7 @@ export const POST = async (req) => {
       currentMonth,
       currentYear,
     } = await req.json();
-    // console.log("--------------------------------");
-    // console.log(currentDateNumber);
-    // return NextResponse.json({ success: true, msg: "OK" });
+
     for (let i = 1; i <= days; i++) {
       const newOrder = new Order({
         userId,

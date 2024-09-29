@@ -173,17 +173,6 @@ const ManagerManageRoomRoomSketch = ({
             A 42
           </p>
         </div>
-        <div className="absolute cursor-pointer right-[45%] top-[77%]">
-          <ManagerManageRoomUserIcon
-            selectSeat={selectSeat}
-            bedNo={"a43"}
-            room={room}
-          />
-
-          <p className="text-dashboard text-center text-sm font-semibold">
-            A 43
-          </p>
-        </div>
       </>
     );
   } else if (name == "a5") {

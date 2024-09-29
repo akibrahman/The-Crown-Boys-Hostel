@@ -3,7 +3,7 @@ import User from "@/models/userModel";
 import bcryptjs from "bcryptjs";
 import { NextResponse } from "next/server";
 
-dbConfig();
+await dbConfig();
 
 export async function POST(req) {
   try {
@@ -54,7 +54,6 @@ export async function POST(req) {
       newUser.nidBackPicture = body.nidBackPicture;
     }
     const savedUser = await newUser.save();
-    console.log(savedUser);
     return NextResponse.json(
       {
         msg: "Successfully User Craeted",
@@ -66,8 +65,7 @@ export async function POST(req) {
       }
     );
   } catch (error) {
-    console.log("--------------->", error.message);
-    console.log("--------------->", error.code);
+    console.log(error);
     return NextResponse.json(
       {
         msg: error.message,

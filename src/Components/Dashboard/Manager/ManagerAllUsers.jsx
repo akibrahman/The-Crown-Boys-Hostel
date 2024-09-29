@@ -277,49 +277,51 @@ const ManagerAllUsers = ({ user }) => {
                     //! Here
                     setGivingAuthorization(true);
                     try {
-                      await axios.post("/api/orders/makeorders", {
-                        userId: clientDetails._id,
-                        managerId: user._id,
-                        days: parseInt(currentDays[currentDays.length - 1]),
-                        currentMonthName: new Date().toLocaleDateString(
-                          "en-BD",
-                          {
-                            month: "long",
-                            timeZone: "Asia/Dhaka",
-                          }
-                        ),
-                        currentDateNumber: parseInt(
-                          new Date().toLocaleDateString("en-BD", {
-                            day: "numeric",
-                            timeZone: "Asia/Dhaka",
-                          })
-                        ),
-                        currentMonth: new Date(
-                          new Date().toLocaleString("en-US", {
-                            timeZone: "Asia/Dhaka",
-                          })
-                        ).getMonth(),
-                        currentYear: new Date(
-                          new Date().toLocaleString("en-US", {
-                            timeZone: "Asia/Dhaka",
-                          })
-                        ).getFullYear(),
-                      });
-
                       const { data } = await axios.post(
                         "api/clients/approveclient",
-                        { id: clientDetails._id }
+                        {
+                          userId: clientDetails._id,
+                          managerId: user._id,
+                          days: parseInt(currentDays[currentDays.length - 1]),
+                          currentMonthName: new Date().toLocaleDateString(
+                            "en-BD",
+                            {
+                              month: "long",
+                              timeZone: "Asia/Dhaka",
+                            }
+                          ),
+                          currentDateNumber: parseInt(
+                            new Date().toLocaleDateString("en-BD", {
+                              day: "numeric",
+                              timeZone: "Asia/Dhaka",
+                            })
+                          ),
+                          currentMonth: new Date(
+                            new Date().toLocaleString("en-US", {
+                              timeZone: "Asia/Dhaka",
+                            })
+                          ).getMonth(),
+                          currentYear: new Date(
+                            new Date().toLocaleString("en-US", {
+                              timeZone: "Asia/Dhaka",
+                            })
+                          ).getFullYear(),
+                        }
                       );
                       if (data.success) {
                         await clientRefetch();
                         toast.success("Authorization Provided");
-                      }
+                      } else throw new Error(data.msg);
                     } catch (error) {
                       console.log(
                         "Frontend problem when authorizing as a client"
                       );
                       console.log(error);
-                      toast.error("Authorization Error!");
+                      toast.error(
+                        error?.response?.data?.msg ||
+                          error?.message ||
+                          "Authorization Error!"
+                      );
                     } finally {
                       setGivingAuthorization(false);
                       closeModalForClientDetails();

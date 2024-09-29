@@ -13,7 +13,7 @@ export const roomStructure = [
   },
   {
     name: "a4",
-    beds: ["a41", "a42", "a43"],
+    beds: ["a41", "a42"],
   },
   {
     name: "a5",

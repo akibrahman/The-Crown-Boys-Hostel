@@ -481,6 +481,7 @@ const Component = ({ id }) => {
                     defaultValue={client.floor}
                     className="border border-gray-300 p-2 py-0.5 w-full rounded text-stone-900"
                   >
+                    <option value="0">Ground Floor</option>
                     <option value="1">First Floor</option>
                     <option value="2">Second Floor</option>
                     <option value="3">Third Floor</option>
@@ -488,11 +489,6 @@ const Component = ({ id }) => {
                     <option value="5">Fifth Floor</option>
                     <option value="6">Sixth Floor</option>
                     <option value="7">Seventh Floor</option>
-                    <option value="8">Eighth Floor</option>
-                    <option value="9">Nineth Floor</option>
-                    <option value="10">Tenth Floor</option>
-                    <option value="11">Eleventh Floor</option>
-                    <option value="12">Twelveth Floor</option>
                   </select>
                 </div>
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
