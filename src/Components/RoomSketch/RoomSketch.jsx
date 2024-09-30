@@ -239,26 +239,6 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
             <p className="text-green-500 text-center text-sm">Selected</p>
           )}
         </div>
-        <div className="absolute cursor-pointer right-[45%] top-[77%]">
-          <LuBedSingle
-            onClick={() => {
-              selectSeat("a43");
-            }}
-            className={`text-5xl duration-300 transition-all shadow-green-600 ${
-              selectedSeat.find((seat) => seat.bedNo == "a43")
-                ? "shadow-inner"
-                : "shadow-inner-none"
-            } ${
-              room.beds.find((bed) => bed?.bedNo == "a43")?.isBooked
-                ? "text-orange-600"
-                : "text-green-600"
-            }`}
-          />
-          <p className="text-primary text-center text-sm">A 43</p>
-          {selectedSeat.find((seat) => seat.bedNo == "a43") && (
-            <p className="text-green-500 text-center text-sm">Selected</p>
-          )}
-        </div>
       </>
     );
   } else if (name == "a5") {

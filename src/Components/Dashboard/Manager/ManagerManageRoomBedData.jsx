@@ -149,12 +149,13 @@ const ManagerManageRoomBedData = ({
                   }))
                   .find((uu) => uu.value === user) || null
               }
-              options={users.map((u) => {
-                return {
+              options={[
+                { value: "", label: "No User" }, // No User option at the start
+                ...users.map((u) => ({
                   value: u._id,
                   label: u.username,
-                };
-              })}
+                })),
+              ]}
               styles={customStylesForReactSelect}
             />
           </div>

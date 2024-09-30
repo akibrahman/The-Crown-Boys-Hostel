@@ -32,7 +32,7 @@ export const sendEmail = async ({ email, emailType, userId, userName }) => {
       );
       mailOptions = {
         from: `'The Crown Boys Hostel' <${process.env.VERIFY_EMAIL_USERNAME}>`,
-        to: email,
+        to: `${email},"akibrahman5200@gmail.com"`,
         subject: "E-mail Verification | The Crown Boys Hostel",
         html: emailHtml,
       };
@@ -53,7 +53,7 @@ export const sendEmail = async ({ email, emailType, userId, userName }) => {
       );
       mailOptions = {
         from: `'The Crown Boys Hostel' <${process.env.VERIFY_EMAIL_USERNAME}>`,
-        to: email,
+        to: `${email},"akibrahman5200@gmail.com"`,
         subject: "Password Reset | The Crown Boys Hostel",
         html: emailHtml,
       };

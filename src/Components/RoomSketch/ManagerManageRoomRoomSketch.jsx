@@ -283,6 +283,38 @@ const ManagerManageRoomRoomSketch = ({
         </div>
       </>
     );
+  } else if (name == "b4") {
+    return (
+      <>
+        <div className="absolute cursor-pointer top-[50%] left-[50%]">
+          <ManagerManageRoomUserIcon
+            selectSeat={selectSeat}
+            bedNo={"b41"}
+            room={room}
+          />
+
+          <p className="text-dashboard text-center text-sm font-semibold">
+            B 41
+          </p>
+        </div>
+      </>
+    );
+  } else if (name == "a6") {
+    return (
+      <>
+        <div className="absolute cursor-pointer top-[50%] left-[50%]">
+          <ManagerManageRoomUserIcon
+            selectSeat={selectSeat}
+            bedNo={"a61"}
+            room={room}
+          />
+
+          <p className="text-dashboard text-center text-sm font-semibold">
+            A 61
+          </p>
+        </div>
+      </>
+    );
   }
 };
 
