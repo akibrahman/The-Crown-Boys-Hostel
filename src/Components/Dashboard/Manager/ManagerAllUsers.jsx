@@ -134,8 +134,12 @@ const ManagerAllUsers = ({ user }) => {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
-      const currentMonth = new Date(currentDate).getMonth() + 1;
-      const currentYear = new Date(currentDate).getFullYear();
+      let currentMonth = new Date(currentDate).getMonth() + 1;
+      let currentYear = new Date(currentDate).getFullYear();
+      if (currentMonth >= 12 || currentMonth == "12") {
+        currentMonth = 0;
+        currentYear++;
+      }
       const dayCountOfCurrentMonth = parseInt(
         new Date(currentYear, currentMonth, 0).getDate()
       );

@@ -1,3 +1,4 @@
+import Bill from "@/models/billModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import { sendSMS } from "@/utils/sendSMS";
@@ -20,6 +21,7 @@ export const PUT = async (req) => {
       changedData,
     } = await req.json();
     if (!_id) return NextResponse.json({ success: false, msg: "Missing _id" });
+
     // About Block date
     if (blockDate && fromDate && fromDay) {
       const currentDateInBD = new Date().toLocaleString("en-US", {
@@ -109,7 +111,95 @@ export const PUT = async (req) => {
         );
       }
     } else if (clearBlockDate && clearBlockDate === "YES") {
-      const user = await User.findByIdAndUpdate(_id, {
+      const user = await User.findById(_id);
+      const isOrderExists = await Order.find({
+        month: new Date(
+          new Date().toLocaleString("en-US", {
+            timeZone: "Asia/Dhaka",
+          })
+        ).toLocaleDateString("en-BD", {
+          month: "long",
+          timeZone: "Asia/Dhaka",
+        }),
+        userId: _id,
+      });
+      if (!isOrderExists || isOrderExists.length <= 0) {
+        console.log("Creating Orders For This User");
+        let currentDate = new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Dhaka",
+        });
+        const currentMonthForOrder = new Date(currentDate).toLocaleDateString(
+          "en-BD",
+          {
+            month: "long",
+            timeZone: "Asia/Dhaka",
+          }
+        );
+        const currentYearForOrder = new Date(currentDate).getFullYear();
+        let currentMonthNumber = new Date(currentDate).getMonth();
+        let nextMonthNumber;
+        let currentYear;
+        let dayCountOfCurrentMonth;
+        if (currentMonthNumber < 11) {
+          nextMonthNumber = new Date(currentDate).getMonth() + 1;
+          currentYear = new Date(currentDate).getFullYear();
+          dayCountOfCurrentMonth = parseInt(
+            new Date(currentYear, nextMonthNumber, 0).getDate()
+          );
+        } else {
+          nextMonthNumber = 0;
+          currentYear = new Date(currentDate).getFullYear() + 1;
+          dayCountOfCurrentMonth = parseInt(
+            new Date(currentYear, nextMonthNumber, 0).getDate()
+          );
+        }
+        for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
+          await new Order({
+            userId: user._id,
+            managerId: user.manager,
+            month: currentMonthForOrder,
+            year: currentYearForOrder,
+            date: new Date(
+              currentYearForOrder,
+              currentMonthNumber,
+              i
+            ).toLocaleDateString("en-BD", { timeZone: "Asia/Dhaka" }),
+            breakfast: true,
+            lunch: true,
+            dinner: true,
+          }).save();
+        }
+      }
+      const isBillExists = await Bill.findOne({
+        month: new Date(
+          new Date().toLocaleString("en-US", {
+            timeZone: "Asia/Dhaka",
+          })
+        ).toLocaleDateString("en-BD", {
+          month: "long",
+          timeZone: "Asia/Dhaka",
+        }),
+        userId: _id,
+      });
+      if (!isBillExists) {
+        await new Bill({
+          userId: user._id,
+          month: new Date(
+            new Date().toLocaleString("en-US", {
+              timeZone: "Asia/Dhaka",
+            })
+          ).toLocaleDateString("en-BD", {
+            month: "long",
+            timeZone: "Asia/Dhaka",
+          }),
+          year: new Date(
+            new Date().toLocaleString("en-US", {
+              timeZone: "Asia/Dhaka",
+            })
+          ).getFullYear(),
+        }).save();
+      }
+      await User.findByIdAndUpdate(_id, {
         blockDate: "",
       });
       await sendSMS(

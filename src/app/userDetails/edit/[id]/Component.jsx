@@ -136,6 +136,7 @@ const Component = ({ id }) => {
         clearBlockDate: "YES",
         _id: client._id,
       });
+      console.log(data);
       if (data.success) toast.success(data.msg);
       else toast.error(data.msg);
     } catch (error) {

@@ -67,7 +67,26 @@ export const GET = async (req) => {
             }
           } else if (bill.status == "initiated") {
             const currentBDDate = getCurrentDateInBangladesh();
+            const isLastDayOfCurrentMonthInBangladesh = () => {
+              const today = new Date();
+              today.setUTCHours(today.getUTCHours() + 6);
+              const currentMonth = today.getUTCMonth();
+              const currentYear = today.getUTCFullYear();
+              const lastDayOfMonth = new Date(
+                Date.UTC(currentYear, currentMonth + 1, 0)
+              );
+              return {
+                isLastDay:
+                  today.getUTCDate() === lastDayOfMonth.getUTCDate() &&
+                  today.getUTCMonth() === lastDayOfMonth.getUTCMonth() &&
+                  today.getUTCFullYear() === lastDayOfMonth.getUTCFullYear(),
+              };
+            };
+            const aboutLastDayOfCurrentMonth =
+              isLastDayOfCurrentMonthInBangladesh();
             if (currentBDDate >= 1 && currentBDDate <= 10) {
+              return null;
+            } else if (aboutLastDayOfCurrentMonth.isLastDay) {
               return null;
             } else {
               const rooms = await Room.find({

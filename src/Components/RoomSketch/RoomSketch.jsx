@@ -421,6 +421,56 @@ const RoomSketch = ({ name, selectSeat, selectedSeat, room }) => {
         </div>
       </>
     );
+  } else if (name == "b4") {
+    return (
+      <>
+        <div className="absolute cursor-pointer top-[20%] left-[5%]">
+          <LuBedSingle
+            onClick={() => {
+              selectSeat("b41");
+            }}
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
+              selectedSeat.find((seat) => seat.bedNo == "b41")
+                ? "shadow-inner"
+                : "shadow-inner-none"
+            } ${
+              room.beds.find((bed) => bed?.bedNo == "b41")?.isBooked
+                ? "text-orange-600"
+                : "text-green-600"
+            }`}
+          />
+          <p className="text-primary text-center text-sm">B 41</p>
+          {selectedSeat.find((seat) => seat.bedNo == "b41") && (
+            <p className="text-green-500 text-center text-sm">Selected</p>
+          )}
+        </div>
+      </>
+    );
+  } else if (name == "a6") {
+    return (
+      <>
+        <div className="absolute cursor-pointer top-[20%] left-[5%]">
+          <LuBedSingle
+            onClick={() => {
+              selectSeat("a61");
+            }}
+            className={`text-5xl duration-300 transition-all shadow-green-600 ${
+              selectedSeat.find((seat) => seat.bedNo == "a61")
+                ? "shadow-inner"
+                : "shadow-inner-none"
+            } ${
+              room.beds.find((bed) => bed?.bedNo == "a61")?.isBooked
+                ? "text-orange-600"
+                : "text-green-600"
+            }`}
+          />
+          <p className="text-primary text-center text-sm">A 61</p>
+          {selectedSeat.find((seat) => seat.bedNo == "a61") && (
+            <p className="text-green-500 text-center text-sm">Selected</p>
+          )}
+        </div>
+      </>
+    );
   }
 };
 
