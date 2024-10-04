@@ -425,7 +425,7 @@ const ManagerAllUsers = ({ user }) => {
                         <TiTick className="text-3xl font-normal" />
                         Approved
                       </p>
-                      <Link href={`/userDetails/${client._id}`}>
+                      <Link href={`/userDetails/${client._id}`} target="_blank">
                         <button className="font-semibold flex items-center gap-2 bg-blue-500 text-white px-3 py-1 duration-300 active:scale-90">
                           Details <FaArrowRight />
                         </button>
