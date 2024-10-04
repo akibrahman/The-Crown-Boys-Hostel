@@ -116,7 +116,11 @@ const Component = ({ id }) => {
                   width={100}
                   height={100}
                   class="w-48 h-48 rounded-full mb-3"
-                  src={client.profilePicture}
+                  src={
+                    client.profilePicture == "/__"
+                      ? "/images/no-user.png"
+                      : client.profilePicture
+                  }
                 />
                 <h3 class="text-2xl font-semibold text-gray-800 dark:text-white">
                   {client.username}
@@ -135,7 +139,7 @@ const Component = ({ id }) => {
                   Authentication: {client.nidAuth ? "NID" : "Birth Certificate"}
                 </p>
                 <Link href={`/userDetails/edit/${client._id}`}>
-                  <button className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-red-500 active:scale-90 mt-3">
+                  <button className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-orange-500 active:scale-90 mt-3">
                     Edit
                   </button>
                 </Link>
@@ -148,6 +152,9 @@ const Component = ({ id }) => {
                 >
                   Download PDF
                   {pdfLoading && <CgSpinner className="animate-spin text-xl" />}
+                </button>
+                <button className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-red-500 active:scale-90 mt-3">
+                  Report
                 </button>
               </div>
             </div>
