@@ -23,6 +23,21 @@ const Component = ({ id }) => {
     },
   });
 
+  const report = async (_id) => {
+    try {
+      const { data } = await axios.post("/api/clients/report", { _id });
+      if (!data?.success) throw new Error(data?.msg);
+      toast.success(data?.msg);
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error?.response?.data?.msg ||
+          error?.message ||
+          "Something Went Wrong, Try Again"
+      );
+    }
+  };
+
   const [pdfLoading, setPdfLoading] = useState(false);
 
   const handlePrint = useReactToPrint({
@@ -153,7 +168,10 @@ const Component = ({ id }) => {
                   Download PDF
                   {pdfLoading && <CgSpinner className="animate-spin text-xl" />}
                 </button>
-                <button className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-red-500 active:scale-90 mt-3">
+                <button
+                  onClick={async () => await report(client._id)}
+                  className="duration-300 transition-all px-4 py-1 rounded-md font-medium bg-red-500 active:scale-90 mt-3"
+                >
                   Report
                 </button>
               </div>
