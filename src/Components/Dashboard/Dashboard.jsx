@@ -12,6 +12,7 @@ import { IoIosNotifications } from "react-icons/io";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
 import {
   FaAddressCard,
+  FaCashRegister,
   FaFile,
   FaFileInvoiceDollar,
   FaSms,
@@ -55,6 +56,7 @@ import useFcmToken from "@/hooks/useFcmToken";
 import ManagerSendNotificationComponent from "./Manager/ManagerSendNotificationComponent";
 import ManagerEmailsComponent from "./Manager/ManagerEmailsComponent";
 import TempCom from "../TempCom";
+import ManagerTransactionsComponent from "./Manager/ManagerTransactionsComponent";
 
 const Dashboard = ({ user }) => {
   // useUnloadWarning("Are");
@@ -109,6 +111,7 @@ const Dashboard = ({ user }) => {
         displayData == "managerOrderStatus" ||
         displayData == "managerSendSMS" ||
         displayData == "managerBillQuery" ||
+        displayData == "managerTransactions" ||
         displayData == "managerMealQuery" ||
         displayData == "managerMarketQuery" ||
         displayData == "managerMealUpdator" ||
@@ -227,6 +230,12 @@ const Dashboard = ({ user }) => {
       href: "/dashboard?displayData=managerBillQuery",
       icon: FaMoneyBillTrendUp,
       displayData: "managerBillQuery",
+    },
+    {
+      title: "Transactions",
+      href: "/dashboard?displayData=managerTransactions",
+      icon: FaCashRegister,
+      displayData: "managerTransactions",
     },
     {
       title: "Meal Query",
@@ -581,6 +590,8 @@ const Dashboard = ({ user }) => {
               <ManagerSendNotificationComponent user={user} />
             ) : displayData == "managerBillQuery" ? (
               <ManagerBillQueryComponent user={user} />
+            ) : displayData == "managerTransactions" ? (
+              <ManagerTransactionsComponent user={user} />
             ) : displayData == "managerMealQuery" ? (
               <ManagerMealQueryComponent user={user} />
             ) : displayData == "managerMarketQuery" ? (
