@@ -12,6 +12,9 @@ export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
     const forManager = searchParams.get("forManager");
+    const page = searchParams.get("page");
+    let limit = 10;
+    let skip = page * limit;
     if (
       !forManager ||
       (forManager != true &&
@@ -23,6 +26,7 @@ export const GET = async (req) => {
     let manager = null;
     let user = null;
     let id = null;
+    let transactions = [];
     const token = cookies()?.get("token")?.value;
     if (!token) throw new Error("Unauthorized 2 !!");
     try {
@@ -44,6 +48,58 @@ export const GET = async (req) => {
       manager = await User.findById(id);
       if (!manager || manager.role != "manager")
         throw new Error("Unauthorized !!");
+      transactions = await Transaction.aggregate([
+        {
+          $addFields: {
+            userIdObj: { $toObjectId: "$userId" },
+            createdAtDate: {
+              $toDate: "$transactionDate",
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userIdObj",
+            foreignField: "_id",
+            as: "userDetails",
+          },
+        },
+        {
+          $unwind: "$userDetails",
+        },
+        {
+          $match: {
+            "userDetails.manager": id,
+          },
+        },
+        {
+          $sort: { createdAtDate: -1 },
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            billId: 1,
+            note: 1,
+            reason: 1,
+            coupon: 1,
+            reference: 1,
+            transactionId: 1,
+            bKashTransactionId: 1,
+            transactionDate: 1,
+            method: 1,
+            tax: 1,
+            payments: 1,
+            userDetails: {
+              username: 1,
+              email: 1,
+              contactNumber: 1,
+              profilePicture: 1,
+            },
+          },
+        },
+      ]);
     } else if (forManager == false || forManager == "false") {
       const { id: tokenId } = jwt.decode(token);
       id = tokenId;
@@ -51,64 +107,50 @@ export const GET = async (req) => {
         throw new Error("Unauthorized !!");
       user = await User.findById(id);
       if (!user || user.role != "client") throw new Error("Unauthorized !!");
+      transactions = await Transaction.aggregate([
+        {
+          $addFields: {
+            createdAtDate: {
+              $toDate: "$transactionDate",
+            },
+          },
+        },
+        {
+          $match: {
+            userId: id,
+          },
+        },
+        {
+          $sort: { createdAtDate: -1 },
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            billId: 1,
+            note: 1,
+            reason: 1,
+            coupon: 1,
+            reference: 1,
+            transactionId: 1,
+            bKashTransactionId: 1,
+            transactionDate: 1,
+            method: 1,
+            tax: 1,
+            payments: 1,
+          },
+        },
+      ]);
     }
 
-    const transactions = await Transaction.aggregate([
-      {
-        $addFields: {
-          userIdObj: { $toObjectId: "$userId" },
-          createdAtDate: {
-            $toDate: "$transactionDate",
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "userIdObj",
-          foreignField: "_id",
-          as: "userDetails",
-        },
-      },
-      {
-        $unwind: "$userDetails",
-      },
-      {
-        $match: {
-          "userDetails.manager": id,
-        },
-      },
-      {
-        $sort: { createdAtDate: -1 },
-      },
-      {
-        $project: {
-          _id: 1,
-          userId: 1,
-          billId: 1,
-          note: 1,
-          reason: 1,
-          coupon: 1,
-          reference: 1,
-          transactionId: 1,
-          bKashTransactionId: 1,
-          transactionDate: 1,
-          method: 1,
-          tax: 1,
-          payments: 1,
-          userDetails: {
-            username: 1,
-            email: 1,
-            contactNumber: 1,
-            profilePicture: 1,
-          },
-        },
-      },
-    ]);
+    const lengthForPagination = transactions.length;
+
+    const transactionsToGo = transactions.slice(skip, skip + limit);
 
     return NextResponse.json({
       success: true,
-      transactions,
+      transactions: transactionsToGo,
+      lengthForPagination,
       msg: "Transactions fetched successfully",
     });
   } catch (error) {
