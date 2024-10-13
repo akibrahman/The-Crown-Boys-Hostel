@@ -5,8 +5,8 @@ const SystemPagination = ({
   setPage,
   pages,
   totalPages,
-  onlyNumbers,
-  onlyButtons,
+  onlyNumbers = false,
+  onlyButtons = false,
 }) => {
   return (
     <div className="flex items-center justify-center gap-3 py-10 p-1">

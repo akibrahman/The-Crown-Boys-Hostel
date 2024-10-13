@@ -1,20 +1,16 @@
 "use client";
 import PreLoader from "@/Components/PreLoader/PreLoader";
-import Receipt from "@/Components/Receipt/Receipt";
-import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { CgSpinner } from "react-icons/cg";
-import { FaEye, FaTimes } from "react-icons/fa";
-import Select from "react-select";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { FaEye } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import SystemPagination from "@/Components/Pagination/Pagination";
+import { CgSpinner } from "react-icons/cg";
 
 const ManagerTransactionsComponent = ({ user }) => {
   const router = useRouter();
@@ -54,7 +50,13 @@ const ManagerTransactionsComponent = ({ user }) => {
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
 
-  if (!transactions) return <PreLoader />;
+  if (!transactions)
+    return (
+      <div className="min-h-full p-2 md:p-5 bg-dashboard text-slate-100 flex items-center justify-center gap-2">
+        <CgSpinner className="animate-spin text-2xl text-white" />
+        <p>Loading Transactions...</p>
+      </div>
+    );
 
   return (
     <div className="min-h-full p-2 md:p-5 bg-dashboard text-slate-100 relative">
@@ -64,10 +66,10 @@ const ManagerTransactionsComponent = ({ user }) => {
       <div className="flex flex-col gap-3 mt-5">
         {transactions.map((t, i) => (
           <div
-            className="shadow-lg px-4 py-2 flex items-center justify-between"
+            className="shadow-lg px-1 md:px-4 py-2 flex items-center justify-center md:justify-between gap-3 md:gap-0"
             key={t._id}
           >
-            <p>{i + 1}.</p>
+            <p className="text-[10px] md:text-base">{i + 1}.</p>
             <Image
               src={
                 !t.userDetails.profilePicture ||
@@ -78,31 +80,32 @@ const ManagerTransactionsComponent = ({ user }) => {
               alt={`Profile Picture of ${t.userDetails.username}`}
               width="40"
               height="40"
-              className="w-10 h-10 rounded-full"
+              className="w-8 md:w-10 h-8 md:h-10 rounded-full aspect-square"
             />
             <p
-              className="flex-1 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+              className="w-[80px] overflow-hidden text-wrap md:w-[150px] text-[10px] md:text-base"
               title={t.userDetails.username}
             >
               {t.userDetails.username}
             </p>
-            <p className="w-[70px]">
+            <p className="w-[60px] md:w-[70px] text-[10px] md:text-base">
               {t.payments.reduce((a, c) => a + c.value, 0)} ৳
             </p>
             <p
-              className={`px-4 py-0.5 rounded-full text-white font-medium ${
+              className={`px-1 md:px-4 py-0.5 rounded-md md:rounded-full text-white font-medium text-[10px] md:text-base ${
                 t?.method == "bkash" ? "bg-pink-500" : "bg-blue-500"
               }`}
             >
               {convertCamelCaseToCapitalized(t?.method || "cash")}
             </p>
-            <p className="w-[240px]">
+            <p className="w-[140px] md:w-[240px] text-[10px] md:text-base">
               {new Date(t.transactionDate).toDateString()}
-              <span className="px-2"></span>
+              <br className="block md:hidden" />
+              <span className="md:px-2 px-0.5"></span>
               {new Date(t.transactionDate).toLocaleTimeString()}
             </p>
             <Link href={`/qr/${t.transactionId}`} target="_blank">
-              <FaEye className="text-xl duration-300 active:scale-90 text-blue-500 font-semibold hover:text-white cursor-pointer" />
+              <FaEye className="md:text-xl duration-300 active:scale-90 text-blue-500 font-semibold hover:text-white cursor-pointer" />
             </Link>
           </div>
         ))}
