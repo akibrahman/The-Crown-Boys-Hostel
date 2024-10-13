@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 export const dbConfig = async () => {
   try {
     await mongoose.connect(
-      // process.env.MONGO_URI,
-      "mongodb://localhost:27017",
+      process.env.MONGO_URI,
+      // "mongodb://localhost:27017",
       { dbName: "HostelPlatesDB" }
     );
     const connection = mongoose.connection;
