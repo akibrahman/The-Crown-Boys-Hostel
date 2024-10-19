@@ -52,6 +52,18 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  isBreakfastScanned: {
+    type: Boolean,
+    default: false,
+  },
+  isLunchScanned: {
+    type: Boolean,
+    default: false,
+  },
+  isDinnerScanned: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 delete mongoose.models.orders;

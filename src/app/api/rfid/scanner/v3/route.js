@@ -58,26 +58,26 @@ export const GET = async (req) => {
       },
       {
         $project: {
-          name: "$userData.username", // Name from User
-          cardId: "$rfidData.cardId", // CardId from RFID
+          name: "$userData.username",
+          cardId: "$rfidData.cardId",
           breakfast: {
             $add: [
               { $cond: [{ $eq: ["$breakfast", true] }, 1, 0] },
               "$guestBreakfastCount",
             ],
-          }, // Convert boolean to 1/0 and add guest count
+          },
           lunch: {
             $add: [
               { $cond: [{ $eq: ["$lunch", true] }, 1, 0] },
               "$guestLunchCount",
             ],
-          }, // Convert boolean to 1/0 and add guest count
+          },
           dinner: {
             $add: [
               { $cond: [{ $eq: ["$dinner", true] }, 1, 0] },
               "$guestDinnerCount",
             ],
-          }, // Convert boolean to 1/0 and add guest count
+          },
         },
       },
     ]);
