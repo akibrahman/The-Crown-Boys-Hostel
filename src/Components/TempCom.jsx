@@ -101,7 +101,7 @@ const TempCom = ({ user }) => {
       initial={{ scale: 0.5, x: "-50%", y: "-50%", opacity: 0 }}
       whileInView={{ scale: 1, x: "-50%", y: "-50%", opacity: 1 }}
       transition={{ type: "spring", stiffness: 100, damping: 15 }}
-      className="absolute text-purple-600 top-[45%] md:top-1/2 left-1/2 bg-white md:h-[80%] w-[95%] md:w-[60%] rounded-xl flex flex-col items-center justify-start gap-2 font-medium overflow-y-scroll p-10"
+      className="absolute text-purple-600 top-[50%] md:top-1/2 left-1/2 bg-white h-full overflow-y-scroll md:overflow-y-auto md:h-[80%] w-[95%] md:w-[60%] rounded-xl flex flex-col items-center justify-start gap-2 font-medium p-10"
     >
       <p className="font-bold text-2xl underline">E-KYC Data Update</p>
       <p className="font-bold text-xs underline">
