@@ -192,15 +192,15 @@ export const GET = async (req) => {
           ? meal == "breakfast" && dataArray[0].breakfast > 0
             ? isScanned != true
               ? "Enjoy Your Breakfast"
-              : "Breakfast has Already been Taken"
+              : "Breakfast is Taken"
             : meal == "lunch" && dataArray[0].lunch > 0
             ? isScanned != true
               ? "Enjoy Your Lunch"
-              : "Lunch has Already been Taken"
+              : "Lunch is Taken"
             : meal == "dinner" && dataArray[0].dinner > 0
             ? isScanned != true
               ? "Enjoy Your Dinner"
-              : "Dinner has Already been Taken"
+              : "Dinner is Taken"
             : "No Ordered Meal"
           : "Unknown Card",
       name: dataArray.length > 0 ? dataArray[0].name : "Guest",
