@@ -81,6 +81,9 @@ export const GET = async (req) => {
           isBreakfastScanned: { $ifNull: ["$isBreakfastScanned", false] },
           isLunchScanned: { $ifNull: ["$isLunchScanned", false] },
           isDinnerScanned: { $ifNull: ["$isDinnerScanned", false] },
+          date,
+          month,
+          year,
         },
       },
     ]);
