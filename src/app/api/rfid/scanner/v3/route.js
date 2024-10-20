@@ -78,6 +78,9 @@ export const GET = async (req) => {
               "$guestDinnerCount",
             ],
           },
+          isBreakfastScanned: 1,
+          isLunchScanned: 1,
+          isDinnerScanned: 1,
         },
       },
     ]);
