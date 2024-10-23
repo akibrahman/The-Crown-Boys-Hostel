@@ -14,8 +14,8 @@ const shopOrderSchema = new mongoose.Schema({
     default: "",
   },
   customerRoom: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "",
   },
   cart: {
     type: [{}],
