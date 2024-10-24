@@ -15,7 +15,15 @@ const FoodBlast = () => {
     queryFn: async () => {
       const { data } = await axios.get(`/api/shopitem`);
       if (data.success) {
-        return data.items;
+        const finalFoods = [...data.items];
+        finalFoods.sort((a, b) => {
+          const qtyA = Number(a.quantity) || 0;
+          const qtyB = Number(b.quantity) || 0;
+          if (qtyA === 0) return 1;
+          if (qtyB === 0) return -1;
+          return qtyA - qtyB;
+        });
+        return finalFoods;
       } else return [];
     },
   });
