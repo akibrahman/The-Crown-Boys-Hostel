@@ -9,11 +9,13 @@ import "./styleForNavBar.css";
 import { useRouter } from "next/navigation";
 import ColorButton from "../Buttons/ColorButton";
 import { CgSpinner } from "react-icons/cg";
+import MetalOutlineButton from "../Buttons/MetalOutlineButton";
 
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
   const withOutToken = [
     { title: "Home", url: "/" },
+    { title: "Food Blast", url: "/foodblast" },
     { title: "About Us", url: "/about-us" },
     { title: "Contact Us", url: "/contact-us" },
     { title: "Log In", url: "/signin" },
@@ -22,6 +24,7 @@ const NavBar = () => {
 
   const withToken = [
     { title: "Home", url: "/" },
+    { title: "Food Blast", url: "/foodblast" },
     { title: "About Us", url: "/about-us" },
     { title: "Contact Us", url: "/contact-us" },
     { title: "Order", url: "/order" },
@@ -30,6 +33,7 @@ const NavBar = () => {
 
   const whenLoading = [
     { title: "Home", url: "/" },
+    { title: "Food Blast", url: "/foodblast" },
     { title: "About Us", url: "/about-us" },
     { title: "Contact Us", url: "/contact-us" },
   ];
@@ -80,8 +84,10 @@ const NavMenus = ({ items, loading }) => {
                 key={i}
                 isLink={true}
                 link={item.url}
-                lable={"Dashboard"}
+                lable={item.title}
               />
+            ) : item.title == "Food Blast" ? (
+              <MetalOutlineButton key={i} link={item.url} lable={item.title} />
             ) : item.title == "Log In" ? (
               <ColorButton
                 key={i}
@@ -136,6 +142,8 @@ const NavMenus = ({ items, loading }) => {
                 link={item.url}
                 lable={"Dashboard"}
               />
+            ) : item.title == "Food Blast" ? (
+              <MetalOutlineButton key={i} link={item.url} lable={item.title} />
             ) : item.title == "Log In" ? (
               <ColorButton
                 key={i}
