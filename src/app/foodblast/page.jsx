@@ -10,10 +10,21 @@ import axios from "axios";
 import { CgSpinner } from "react-icons/cg";
 
 const FoodBlast = () => {
+  const [cart, setCart] = useState([]);
+  const [showCart, setShowCart] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [customer, setCustomer] = useState({
+    name: "",
+    number: "",
+    floor: "",
+    room: "",
+  });
+
   const { data: foods, refetch } = useQuery({
-    queryKey: ["shopItems"],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/shopitem`);
+    queryKey: ["shopItems", search],
+    queryFn: async ({ queryKey }) => {
+      const { data } = await axios.get(`/api/shopitem?search=${queryKey[1]}`);
       if (data.success) {
         const finalFoods = [...data.items];
         finalFoods.sort((a, b) => {
@@ -26,16 +37,6 @@ const FoodBlast = () => {
         return finalFoods;
       } else return [];
     },
-  });
-
-  const [cart, setCart] = useState([]);
-  const [showCart, setShowCart] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [customer, setCustomer] = useState({
-    name: "",
-    number: "",
-    floor: "",
-    room: "",
   });
 
   const addFood = async (_id) => {
@@ -116,7 +117,7 @@ const FoodBlast = () => {
   // if (!foods) return <PreLoader />;
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative w-full">
       <p className="select-none mt-3 text-base md:text-2xl font-medium text-center bg-orange-500 px-8 py-2 rounded-full w-max mx-auto text-white">
         Welcome to{" "}
         <span className="text-orange-500 font-bold bg-white px-8 py-1.5 rounded-full">
@@ -294,7 +295,13 @@ const FoodBlast = () => {
         </div>
       )}
       {/* Main Items  */}
-      <div className="p-3 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-5">
+      <input
+        type="text"
+        placeholder="Search Food..."
+        onChange={(e) => setSearch(e.target.value)}
+        className="px-6 py-2 rounded-md shadow mx-auto my-4 mt-6 outline-none w-[400px] block font-semibold text-orange-500"
+      />
+      <div className="p-3 md:p-10 md:pt-3 grid grid-cols-1 md:grid-cols-2 gap-5">
         {foods &&
           foods?.length > 0 &&
           foods?.map((_f, i) => (

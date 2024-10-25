@@ -8,7 +8,20 @@ await dbConfig();
 
 export const GET = async (req) => {
   try {
-    const items = await ShopItem.find();
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get("search") || "";
+    const searchFilter =
+      search && search.trim()
+        ? {
+            $or: [
+              { name: { $regex: search, $options: "i" } },
+              { description: { $regex: search, $options: "i" } },
+            ],
+          }
+        : {};
+    const items = await ShopItem.find(searchFilter);
+    console.log("I : ", items);
+    console.log("S : ", search);
     return NextResponse.json({
       success: true,
       items,
