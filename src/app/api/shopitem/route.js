@@ -1,5 +1,6 @@
 import ShopItem from "@/models/shopItemModel";
 import ShopOrder from "@/models/shopOrderModel";
+import { sendSMS } from "@/utils/sendSMS";
 import { NextResponse } from "next/server";
 const { dbConfig } = require("@/dbConfig/dbConfig");
 
@@ -26,6 +27,7 @@ export const POST = async (req) => {
         $inc: { quantity: -cart[j].qty },
       });
     }
+    await sendSMS("01709605097", `Order From - ${customer.name}`);
     await new ShopOrder({
       cart,
       customerName: customer.name,

@@ -30,6 +30,7 @@ const FoodBlast = () => {
 
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [customer, setCustomer] = useState({
     name: "",
     number: "",
@@ -86,6 +87,7 @@ const FoodBlast = () => {
       return;
     }
     try {
+      setLoading(true);
       const { data } = await axios.post("/api/shopitem", {
         cart,
         customer,
@@ -106,6 +108,8 @@ const FoodBlast = () => {
           "Something Went Error, Try Again!"
       );
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -278,10 +282,12 @@ const FoodBlast = () => {
             )}
             {cart.length > 0 && (
               <button
+                disabled={loading}
                 onClick={confirmOrder}
-                className="mb-10 px-8 py-2 border rounded-full border-orange-500 duration-300 active:scale-90 text-orange-500 font-semibold cursor-pointer"
+                className="flex items-center gap-2 mb-10 px-8 py-2 border rounded-full border-orange-500 duration-300 active:scale-90 text-orange-500 font-semibold cursor-pointer"
               >
                 Confirm
+                {loading && <CgSpinner className="text-xl animate-spin" />}
               </button>
             )}
           </motion.div>
