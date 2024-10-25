@@ -20,8 +20,6 @@ export const GET = async (req) => {
           }
         : {};
     const items = await ShopItem.find(searchFilter);
-    console.log("I : ", items);
-    console.log("S : ", search);
     return NextResponse.json({
       success: true,
       items,

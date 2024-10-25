@@ -74,7 +74,7 @@ const ManagerSendNotificationComponent = () => {
             token: r.fcm,
             title: e.target.title.value,
             message: e.target.body.value,
-            link: "https://thecrownboyshostel.com/dashboard",
+            link: e.target.link.value,
             image: "/images/logo.png",
           })
         );
@@ -185,6 +185,13 @@ const ManagerSendNotificationComponent = () => {
             placeholder="Enter Body"
             required
             name="body"
+            className="w-full md:w-[80%] rounded-xl bg-transparent text-white p-5 font-medium outline-none border resize-none"
+          ></input>
+          <input
+            placeholder="Enter Link"
+            required
+            defaultValue="https://thecrownboyshostel.com/foodblast"
+            name="link"
             className="w-full md:w-[80%] rounded-xl bg-transparent text-white p-5 font-medium outline-none border resize-none"
           ></input>
         </div>
