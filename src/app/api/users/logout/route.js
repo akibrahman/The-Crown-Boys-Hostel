@@ -12,12 +12,6 @@ export const GET = async () => {
       { status: 200 }
     );
     cookies().delete("token");
-    // response.cookies.set("token", "", {
-    //   httpOnly: true,
-    //   secure: true,
-    //   sameSite: true,
-    //   expires: new Date(0),
-    // });
     return response;
   } catch (error) {
     return NextResponse.json(
