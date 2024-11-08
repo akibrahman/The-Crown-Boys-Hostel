@@ -124,3 +124,43 @@ export const PUT = async (req) => {
     );
   }
 };
+
+export const DELETE = async (req) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const pageId = searchParams.get("pageId");
+    if (!pageId) throw new Error("Missing Data");
+
+    if (!mongoose.Types.ObjectId.isValid(pageId))
+      throw new Error("Invalid Page ID");
+
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      console.log(error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+    }
+
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+
+    await BookPage.findByIdAndDelete(pageId);
+
+    return NextResponse.json({
+      success: true,
+      msg: `${pageId} - Page Deleted`,
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, error, msg: error.message },
+      { status: 500 }
+    );
+  }
+};

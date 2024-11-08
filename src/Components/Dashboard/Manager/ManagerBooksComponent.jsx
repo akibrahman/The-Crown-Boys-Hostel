@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { useRouter, useSearchParams } from "next/navigation";
+import { MdDelete, MdOutlineEditNote } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const ManagerBooksComponent = ({ user }) => {
   const route = useRouter();
@@ -139,6 +141,34 @@ const ManagerBooksComponent = ({ user }) => {
       );
     } finally {
       setCreatePageData(initialStatePage);
+    }
+  };
+
+  const deletePage = async (id) => {
+    const swalData = await Swal.fire({
+      title: "Do you want to Delete this Page?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#1493EA",
+      cancelButtonColor: "#EF4444",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      background: "#141E30",
+      color: "#fff",
+    });
+    if (!swalData.isConfirmed) return;
+    try {
+      const { data } = await axios.delete(`/api/page?pageId=${id}`);
+      if (!data.success) throw new Error(data.msg);
+      setReloadBook(!reloadBook);
+      toast.success("Page Deleted");
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error?.response?.data?.msg || error?.message || "Something Went Wrong!"
+      );
+    } finally {
+      setSelectedPage(null);
     }
   };
 
@@ -294,23 +324,36 @@ const ManagerBooksComponent = ({ user }) => {
                   </p>
                 )}
                 {pages.length > 0 && (
-                  <div className="grid grid-cols-1 mt-3 gap-3">
+                  <div className="grid grid-cols-1 mt-3 gap-2">
                     {pages
-                      .filter((p) => (dateSearch ? p.date == dateSearch : true))
+                      .filter((p) =>
+                        dateSearch ? p.date.split("/")[0] == dateSearch : true
+                      )
                       .map((page) => (
                         <p
-                          onClick={() => {
-                            setSelectedPage(page);
-                            setAmount(calculateTotalAmount(page.textArea));
-                          }}
                           key={page._id}
-                          className={`text-center border rounded-md font-semibold py-1 duration-300 hover:shadow-2xl shadow-dashboard cursor-pointer active:scale-95 ${
+                          className={`border-2 border-double rounded-md font-bold py-0.5 duration-300 hover:shadow-2xl shadow-dashboard flex items-center justify-evenly select-none ${
                             selectedPage?.date == page?.date
-                              ? "border-dashboard text-dashboard font-bold"
-                              : "text-slate-300"
+                              ? "text-slate-600 bg-slate-300"
+                              : "text-slate-300 bg-transparent"
                           }`}
                         >
-                          {page.date}
+                          <p
+                            onClick={() => {
+                              setSelectedPage(page);
+                              setAmount(calculateTotalAmount(page.textArea));
+                            }}
+                            className="px-5 py-0.5 cursor-pointer active:scale-95 duration-300"
+                          >
+                            {page.date}
+                          </p>
+                          <div className="flex items-center justify-center gap-3">
+                            <MdOutlineEditNote className="cursor-pointer text-orange-500 text-xl duration-300 active:scale-90 hover:scale-105" />
+                            <MdDelete
+                              onClick={() => deletePage(page._id)}
+                              className="cursor-pointer text-red-500 text-xl duration-300 active:scale-90 hover:scale-105"
+                            />
+                          </div>
                         </p>
                       ))}
                   </div>
