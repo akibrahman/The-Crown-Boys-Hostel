@@ -12,6 +12,7 @@ import { IoIosNotifications } from "react-icons/io";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
 import {
   FaAddressCard,
+  FaBook,
   FaCashRegister,
   FaFile,
   FaFileInvoiceDollar,
@@ -54,9 +55,9 @@ import { BsHouseAdd, BsHouses } from "react-icons/bs";
 import ManagerAllRoomsComponent from "./Manager/ManagerAllRoomsComponent";
 import useFcmToken from "@/hooks/useFcmToken";
 import ManagerSendNotificationComponent from "./Manager/ManagerSendNotificationComponent";
-import ManagerEmailsComponent from "./Manager/ManagerEmailsComponent";
 import TempCom from "../TempCom";
 import ManagerTransactionsComponent from "./Manager/ManagerTransactionsComponent";
+import ManagerBooksComponent from "./Manager/ManagerBooksComponent";
 
 const Dashboard = ({ user }) => {
   // useUnloadWarning("Are");
@@ -292,10 +293,10 @@ const Dashboard = ({ user }) => {
       displayData: "managerManualInvouce",
     },
     {
-      title: "E-Mails",
-      href: "/dashboard?displayData=managerEmails",
-      icon: MdOutlineEmail,
-      displayData: "managerEmails",
+      title: "Books",
+      href: "/dashboard?displayData=managerBooks",
+      icon: FaBook,
+      displayData: "managerBooks",
     },
     {
       title: "File Manager",
@@ -604,8 +605,8 @@ const Dashboard = ({ user }) => {
               <ManagerAllBookingsComponent user={user} />
             ) : displayData == "managerManualInvouce" ? (
               <ManagerManualInvoiceComponent user={user} />
-            ) : displayData == "managerEmails" ? (
-              <ManagerEmailsComponent user={user} />
+            ) : displayData == "managerBooks" ? (
+              <ManagerBooksComponent user={user} />
             ) : displayData == "managerAddARoom" ? (
               <ManagerAddARoom user={user} />
             ) : displayData == "managerAllRooms" ? (

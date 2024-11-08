@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const ManagerEmailsComponent = ({ user }) => {
+const ManagerBooksComponent = ({ user }) => {
   const route = useRouter();
 
   const searchParams = useSearchParams();
@@ -497,4 +497,4 @@ const ManagerEmailsComponent = ({ user }) => {
     );
 };
 
-export default ManagerEmailsComponent;
+export default ManagerBooksComponent;
