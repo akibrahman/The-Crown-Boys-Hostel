@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import User from "@/models/userModel";
-import Book from "@/models/bookModel";
 import mongoose from "mongoose";
 import BookPage from "@/models/bookPageModel";
 
@@ -73,6 +72,9 @@ export const POST = async (req) => {
     const manager = await User.findById(jwtData?.id);
     if (!manager || manager.role != "manager")
       return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+
+    const isPageExists = await BookPage.findOne({ bookId, date });
+    if (isPageExists) throw new Error("Page already exists in this Book");
 
     await new BookPage({
       bookId,
