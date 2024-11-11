@@ -7,12 +7,13 @@ import mongoose from "mongoose";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { sendSMS } from "@/utils/sendSMS";
+import axios from "axios";
 
 await dbConfig();
 
 export const GET = async (req) => {
   try {
-    //
     const token = cookies()?.get("token")?.value;
     try {
       jwt.verify(token, process.env.TOKEN_SECRET);
@@ -23,7 +24,6 @@ export const GET = async (req) => {
       }
       return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
     }
-    //
     const { searchParams } = new URL(req.url);
     const billId = searchParams.get("id");
     let query = {};
@@ -42,7 +42,6 @@ export const GET = async (req) => {
 
 export const POST = async (req) => {
   try {
-    //
     const token = cookies()?.get("token")?.value;
     try {
       const jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
@@ -56,7 +55,6 @@ export const POST = async (req) => {
       }
       return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
     }
-    //
     const {
       billId,
       payments,
@@ -98,6 +96,21 @@ export const POST = async (req) => {
       tax: 0,
       payments,
     }).save();
+
+    const totalPayment = payments.reduce(
+      (sum, payment) => sum + payment.value,
+      0
+    );
+    const receiptLink = await axios.get(
+      `https://ulvis.net/api.php?url=https://thecrownboyshostel.com/qr/${transactionId}&private=1`
+    );
+    const sms = `Dear ${user.username},\nWe have received your payment of ${totalPayment} BDT.\nReceipt: ${receiptLink.data}\nThank you for choosing The Crown Boys Hostel.`;
+    await sendSMS(
+      !mongoose.Types.ObjectId.isValid(billId)
+        ? billId.split("__")[1]
+        : user?.contactNumber,
+      sms
+    );
     return NextResponse.json({
       success: true,
       msg: "Transaction saved successfully",

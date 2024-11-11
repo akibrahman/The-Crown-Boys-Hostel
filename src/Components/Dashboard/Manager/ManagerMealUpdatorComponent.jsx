@@ -204,7 +204,7 @@ const ManagerMealUpdatorComponent = () => {
                     <input
                       onClick={async () => {
                         setLoading(true);
-                        const { data } = await axios.patch(
+                        const { data } = await axios.put(
                           "/api/orders/updateorder",
                           {
                             meal: "breakfast",
@@ -240,7 +240,7 @@ const ManagerMealUpdatorComponent = () => {
                     <input
                       onClick={async () => {
                         setLoading(true);
-                        const { data } = await axios.patch(
+                        const { data } = await axios.put(
                           "/api/orders/updateorder",
                           { meal: "lunch", state: !lunch, id: order._id }
                         );
@@ -272,7 +272,7 @@ const ManagerMealUpdatorComponent = () => {
                     <input
                       onClick={async () => {
                         setLoading(true);
-                        const { data } = await axios.patch(
+                        const { data } = await axios.put(
                           "/api/orders/updateorder",
                           { meal: "dinner", state: !dinner, id: order._id }
                         );
@@ -301,7 +301,7 @@ const ManagerMealUpdatorComponent = () => {
                         onClick={async () => {
                           if (isGuestMeal) {
                             setLoading(true);
-                            const { data } = await axios.patch(
+                            const { data } = await axios.put(
                               "/api/orders/updateorder",
                               {
                                 meal: "guest",
@@ -350,7 +350,7 @@ const ManagerMealUpdatorComponent = () => {
                           return;
                         }
                         setLoading(true);
-                        const { data } = await axios.patch(
+                        const { data } = await axios.put(
                           "/api/orders/updateorder",
                           {
                             meal: "guest",

@@ -72,21 +72,21 @@ const ManagerTransactionsComponent = ({ user }) => {
             <p className="text-[10px] md:text-base">{i + 1}.</p>
             <Image
               src={
-                !t.userDetails.profilePicture ||
-                t.userDetails.profilePicture == "/__"
+                !t?.userDetails?.profilePicture ||
+                t?.userDetails?.profilePicture == "/__"
                   ? "/images/no-user.png"
-                  : t.userDetails.profilePicture
+                  : t?.userDetails?.profilePicture
               }
-              alt={`Profile Picture of ${t.userDetails.username}`}
+              alt={`Profile Picture of ${t?.userDetails?.username}`}
               width="40"
               height="40"
               className="w-8 md:w-10 h-8 md:h-10 rounded-full aspect-square"
             />
             <p
               className="w-[80px] overflow-hidden text-wrap md:w-[150px] text-[10px] md:text-base"
-              title={t.userDetails.username}
+              title={t?.userDetails?.username || t.userId}
             >
-              {t.userDetails.username}
+              {t?.userDetails?.username || t.userId}
             </p>
             <p className="w-[60px] md:w-[70px] text-[10px] md:text-base">
               {t.payments.reduce((a, c) => a + c.value, 0)} ৳

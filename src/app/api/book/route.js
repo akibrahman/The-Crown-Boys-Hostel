@@ -31,7 +31,7 @@ export const GET = async (req) => {
 
     const manager = await User.findById(jwtData?.id);
     if (!manager || manager.role != "manager")
-      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+      return NextResponse.json({ msg: "Unauthorized" }, { status: 401 });
 
     const book = await Book.findOne({ managerId: jwtData.id, _id: bookId });
     if (!book) throw new Error("Wrong Book ID");

@@ -175,9 +175,9 @@ const ManagerBooksComponent = ({ user }) => {
   const calculateTotalAmount = (textData) => {
     const lines = textData.trim().split("\n");
     const totalAmount = lines.reduce((sum, line) => {
-      const parts = line.trim().split(" ");
-      const amount = parseFloat(parts[1]);
-      return sum + (isNaN(amount) ? 0 : amount);
+      const match = line.match(/-?\d+(\.\d+)?$/); // Match a number (including negative or decimal)
+      const amount = match ? parseFloat(match[0]) : 0;
+      return sum + amount;
     }, 0);
     return totalAmount;
   };

@@ -1,7 +1,5 @@
 "use client";
 import axios from "axios";
-import crypto from "crypto";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import QRCode from "qrcode.react";
 import { useEffect, useRef, useState } from "react";

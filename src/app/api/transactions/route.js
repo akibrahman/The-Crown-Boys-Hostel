@@ -48,13 +48,21 @@ export const GET = async (req) => {
       manager = await User.findById(id);
       if (!manager || manager.role != "manager")
         throw new Error("Unauthorized !!");
+
+      //
       transactions = await Transaction.aggregate([
         {
           $addFields: {
-            userIdObj: { $toObjectId: "$userId" },
-            createdAtDate: {
-              $toDate: "$transactionDate",
+            userIdObj: {
+              $cond: {
+                if: {
+                  $regexMatch: { input: "$userId", regex: /^[0-9a-fA-F]{24}$/ },
+                },
+                then: { $toObjectId: "$userId" },
+                else: null,
+              },
             },
+            createdAtDate: { $toDate: "$transactionDate" },
           },
         },
         {
@@ -66,11 +74,17 @@ export const GET = async (req) => {
           },
         },
         {
-          $unwind: "$userDetails",
+          $unwind: {
+            path: "$userDetails",
+            preserveNullAndEmptyArrays: true,
+          },
         },
         {
           $match: {
-            "userDetails.manager": id,
+            $or: [
+              { "userDetails.manager": id },
+              { userDetails: { $eq: null } }, // Keeps entries without `userDetails`
+            ],
           },
         },
         {
@@ -100,6 +114,8 @@ export const GET = async (req) => {
           },
         },
       ]);
+
+      //
     } else if (forManager == false || forManager == "false") {
       const { id: tokenId } = jwt.decode(token);
       id = tokenId;
