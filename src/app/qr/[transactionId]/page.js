@@ -1,4 +1,5 @@
 "use server";
+import ReceiptPDFDownloadButton from "@/Components/ReceiptPDFDownloadButton/ReceiptPDFDownloadButton";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Transaction from "@/models/transactionModel";
 import User from "@/models/userModel";
@@ -41,15 +42,15 @@ const qr = async ({ params }) => {
   )
     user = await User.findById(transaction?.userId);
   return (
-    <div className="min-h-[90vh] text-sm md:text-base bg-dashboard text-stone-300 flex md:items-center items-start justify-center pt-8 md:pt-4 py-4">
+    <div className="min-h-[90vh] text-sm md:text-base bg-dashboard text-stone-300 flex flex-col items-center justify-center pt-8 md:pt-4 py-4">
       <div
         id="invoice__thecrownboyshostel"
-        className="bg-white w-[95%] md:w-[40%] shadow-md rounded-md md:p-4 p-2 text-gray-500"
+        className="bg-white min-w-[410px] w-[95%] md:w-[40%] shadow-md rounded-md md:p-4 p-2 text-gray-500"
       >
         <div className="flex justify-center">
           <Image
             src="/images/logo.png"
-            alt="Logo"
+            alt="The Crown Boys Hostel Logo"
             className="h-16 w-20"
             height="54"
             width="54"
@@ -174,6 +175,7 @@ const qr = async ({ params }) => {
         </div>
       </div>
       {/* <Invoice_Download /> */}
+      <ReceiptPDFDownloadButton id="invoice__thecrownboyshostel" />
     </div>
   );
 };
