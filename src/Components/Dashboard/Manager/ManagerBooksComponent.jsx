@@ -521,7 +521,7 @@ const ManagerBooksComponent = ({ user }) => {
                     );
                     // route.push(`&bookId=${book._id}`)
                   }}
-                  className="px-6 py-2 rounded-md border duration-300 hover:scale-105 cursor-pointer active:scale-50 select-none"
+                  className="px-6 py-2 rounded-md border duration-300 hover:scale-105 cursor-pointer active:scale-90 select-none"
                   style={{
                     boxShadow: `5px 10px 10px ${book.color}`,
                   }}
