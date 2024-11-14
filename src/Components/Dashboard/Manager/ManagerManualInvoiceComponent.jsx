@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import QRCode from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { useReactToPrint } from "react-to-print";
@@ -10,9 +9,12 @@ import { CgSpinner } from "react-icons/cg";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import Invoice from "@/Components/Invoice/Invoice";
+import InvoicePOS from "@/Components/Invoice/InvoicePOS";
 
 const ManagerManualInvoiceComponent = () => {
-  const componentRef = useRef();
+  const colorPrintRef = useRef();
+  const posPrintClientRef = useRef();
+  const posPrintManagerRef = useRef();
   const router = useRouter();
   const searchParams = useSearchParams();
   const billId = searchParams.get("billId");
@@ -25,7 +27,61 @@ const ManagerManualInvoiceComponent = () => {
   const [billLoading, setBillLoading] = useState(false);
 
   const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
+    content: () => colorPrintRef.current,
+    documentTitle: `Receipt_${invoiceName}_${new Date().toLocaleString()}`,
+    onBeforePrint: () => toast.success("Generating Invoice"),
+    onAfterPrint: async () => {
+      const swalRes = await Swal.fire({
+        title: "Did you received the cash?",
+        text: "Should I save the transaction to the DataBase and reset this page?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#1493EA",
+        cancelButtonColor: "#EF4444",
+        confirmButtonText: "Proceed",
+        cancelButtonText: "Cancel",
+        background: "#141E30",
+        color: "#fff",
+      });
+      if (swalRes.isConfirmed) {
+        if (!transactionId) {
+          toast.error(
+            "Something went wrong, Transactions didn't save, Try again"
+          );
+        } else await saveTransaction();
+      }
+    },
+  });
+
+  const printPosInvoiceForClient = useReactToPrint({
+    content: () => posPrintClientRef.current,
+    documentTitle: `Receipt_${invoiceName}_${new Date().toLocaleString()}`,
+    onBeforePrint: () => toast.success("Generating Invoice"),
+    onAfterPrint: async () => {
+      const swalRes = await Swal.fire({
+        title: "Did you received the cash?",
+        text: "Should I save the transaction to the DataBase and reset this page?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#1493EA",
+        cancelButtonColor: "#EF4444",
+        confirmButtonText: "Proceed",
+        cancelButtonText: "Cancel",
+        background: "#141E30",
+        color: "#fff",
+      });
+      if (swalRes.isConfirmed) {
+        if (!transactionId) {
+          toast.error(
+            "Something went wrong, Transactions didn't save, Try again"
+          );
+        } else await saveTransaction();
+      }
+    },
+  });
+
+  const printPosInvoiceForManager = useReactToPrint({
+    content: () => posPrintManagerRef.current,
     documentTitle: `Receipt_${invoiceName}_${new Date().toLocaleString()}`,
     onBeforePrint: () => toast.success("Generating Invoice"),
     onAfterPrint: async () => {
@@ -65,7 +121,6 @@ const ManagerManualInvoiceComponent = () => {
       });
       if (data.success) {
         toast.success(data?.msg);
-        setInvoiceData([]);
       } else {
         toast.error(data?.msg || "Transaction Error, Try Again");
       }
@@ -275,10 +330,10 @@ const ManagerManualInvoiceComponent = () => {
             disabled={!invoiceName || !invoiceNumber}
             className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-blue-500 text-white font-semibold mx-auto mt-5 block"
           >
-            Print Invoice
+            Print Color Invoice
           </button>
         )}
-        <div ref={componentRef} className="px-2 mt-5">
+        <div ref={colorPrintRef} className="px-2 mt-5">
           <div className="flex items-center gap-2">
             {/* Owner Copy  */}
             <Invoice
@@ -300,6 +355,54 @@ const ManagerManualInvoiceComponent = () => {
               invoiceData={invoiceData}
               methode="cash"
             />
+          </div>
+        </div>
+        <div className="ml-2 mt-4 flex items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-3">
+            {invoiceData.length > 0 && (
+              <button
+                onClick={printPosInvoiceForClient}
+                disabled={!invoiceName || !invoiceNumber}
+                className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-blue-500 text-white font-semibold mx-auto mt-5 block"
+              >
+                Print POS Invoice for Client
+              </button>
+            )}
+
+            <div className="w-[220px]" ref={posPrintClientRef}>
+              <InvoicePOS
+                officeCopy={false}
+                invoiceName={invoiceName}
+                invoiceNumber={invoiceNumber}
+                transactionDate={transactionDate}
+                transactionId={transactionId}
+                invoiceData={invoiceData}
+                methode="cash"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-3">
+            {invoiceData.length > 0 && (
+              <button
+                onClick={printPosInvoiceForManager}
+                disabled={!invoiceName || !invoiceNumber}
+                className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-blue-500 text-white font-semibold mx-auto mt-5 block"
+              >
+                Print POS Invoice for Manager
+              </button>
+            )}
+
+            <div className="w-[220px]" ref={posPrintManagerRef}>
+              <InvoicePOS
+                officeCopy={true}
+                invoiceName={invoiceName}
+                invoiceNumber={invoiceNumber}
+                transactionDate={transactionDate}
+                transactionId={transactionId}
+                invoiceData={invoiceData}
+                methode="cash"
+              />
+            </div>
           </div>
         </div>
       </div>
