@@ -9,7 +9,6 @@ import "./styleForNavBar.css";
 import { useRouter } from "next/navigation";
 import ColorButton from "../Buttons/ColorButton";
 import { CgSpinner } from "react-icons/cg";
-import MetalOutlineButton from "../Buttons/MetalOutlineButton";
 
 const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
@@ -68,16 +67,10 @@ const NavMenus = ({ items, loading }) => {
             width={"60"}
             height={"60"}
             alt="Logo"
-            className="rounded-full"
+            className=""
           />
-          <p className="text-sky-500 text-sm">
-            For any Query Call:{" "}
-            <Link href={"tel:01709605097"} className="underline">
-              01709-605097
-            </Link>
-          </p>
         </div>
-        <div className="flex text-base items-center justify-center gap-8">
+        <div className="flex text-base items-center justify-center gap-5">
           {items.map((item, i) =>
             item.title == "Dashboard" ? (
               <StarButton
@@ -86,8 +79,6 @@ const NavMenus = ({ items, loading }) => {
                 link={item.url}
                 lable={item.title}
               />
-            ) : item.title == "Food Blast" ? (
-              <MetalOutlineButton key={i} link={item.url} lable={item.title} />
             ) : item.title == "Log In" ? (
               <ColorButton
                 key={i}
@@ -119,16 +110,10 @@ const NavMenus = ({ items, loading }) => {
       </div>
       {/* Mobile View  */}
       <div
-        className={`z-10 block md:hidden fixed top-0 right-0 h-screen w-[70vw] duration-300 bg-dashboard pt-32 ${
+        className={`z-10 block md:hidden fixed top-0 right-0 h-screen w-[70vw] duration-300 bg-dashboard pt-20 ${
           sideBarIsOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <p className="text-sky-500 text-sm text-center">
-          For any Query Call:{" "}
-          <Link href={"tel:01709605097"} className="underline">
-            01709-605097
-          </Link>
-        </p>
         <div className="mt-28 flex flex-col text-white text-base items-center justify-center gap-5">
           {items.map((item, i) =>
             item.title == "Dashboard" ? (
@@ -142,8 +127,6 @@ const NavMenus = ({ items, loading }) => {
                 link={item.url}
                 lable={"Dashboard"}
               />
-            ) : item.title == "Food Blast" ? (
-              <MetalOutlineButton key={i} link={item.url} lable={item.title} />
             ) : item.title == "Log In" ? (
               <ColorButton
                 key={i}
@@ -189,7 +172,7 @@ const NavMenus = ({ items, loading }) => {
             width={"60"}
             height={"60"}
             alt="Logo"
-            className="rounded-full"
+            className=""
           />
           <div className="burger-menu-button z-40">
             <input

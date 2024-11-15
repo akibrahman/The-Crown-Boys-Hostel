@@ -195,7 +195,7 @@ const Registration = () => {
   if (!verifiedManagers) return <PreLoader />;
 
   return (
-    <div className="flex items-center justify-center dark:bg-gradient-to-r dark:from-primary dark:to-secondary dark:text-white">
+    <div className="flex items-center justify-center bg-dashboard text-slate-100">
       <div className={`p-10 rounded shadow-md w-full duration-300`}>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold mb-6">Sign Up</h2>

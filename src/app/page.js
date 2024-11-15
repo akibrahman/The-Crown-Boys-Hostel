@@ -32,7 +32,6 @@ const Home = () => {
         </div>
         <div className="w-[95%] md:w-1/2">
           <Image
-            // placeholder="blur"
             className=""
             src="/images/home-banner.png"
             height={100}

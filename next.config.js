@@ -23,6 +23,11 @@ module.exports = {
       },
       {
         protocol: "https",
+        hostname: "images.unsplash.com",
+        port: "",
+      },
+      {
+        protocol: "https",
         hostname: "firebasestorage.googleapis.com",
         port: "",
       },

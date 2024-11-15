@@ -55,12 +55,12 @@ const Signin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center dark:bg-gradient-to-r dark:from-primary dark:to-secondary px-5">
+    <div className="min-h-screen flex items-center justify-center bg-dashboard text-slate-100 px-5">
       <motion.div
         initial={{ scale: 0.5, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 10 }}
-        className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary p-8 rounded shadow shadow-sky-500 w-full max-w-md"
+        className="bg-dashboard text-slate-100 p-8 rounded shadow shadow-sky-500 w-full max-w-md"
       >
         <h2 className="text-2xl font-semibold mb-6 dark:text-white">Login</h2>
         <form onSubmit={handleSubmit}>
