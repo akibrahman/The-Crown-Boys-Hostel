@@ -30,7 +30,7 @@ const Page = () => {
   return (
     <div className="min-h-screen pb-20 bg-dashboard text-stone-300">
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-dashboard bg-opacity-75">
           <div className="relative">
             <Image
               src={selectedImage}

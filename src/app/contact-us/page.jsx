@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const page = () => {
   return (
-    <div className="min-h-screen pb-20 bg-gray-900 text-stone-300">
+    <div className="min-h-screen pb-20 bg-dashboard text-stone-200">
       <section className="py-8">
         <h2 className="text-3xl font-bold text-center text-white">
           Contact Us
@@ -20,9 +20,11 @@ const page = () => {
               <div>
                 <h3 className="text-xl font-medium">Call Us</h3>
                 <span className="text-sm text-gray-400">
-                  <a href="tel:+8801709605097">+88 01788-422002</a>
+                  <Link href="tel:+8801788422002">+88 01788-422002</Link>
                   <br />
-                  <a href="tel:+8801709605097">+88 01709-605097</a>
+                  <Link href="tel:+8801709605097">
+                    +88 01709-605097 (Developer)
+                  </Link>
                 </span>
               </div>
             </div>
@@ -31,13 +33,13 @@ const page = () => {
               <div>
                 <h3 className="text-xl font-medium">Email</h3>
                 <span className="text-sm text-gray-400">
-                  <a href="mailto:info@thecrownboyshostel.com">
+                  <Link href="mailto:info@thecrownboyshostel.com">
                     info@thecrownboyshostel.com
-                  </a>
+                  </Link>
                   <br />
-                  <a href="mailto:admin@thecrownboyshostel.com">
+                  <Link href="mailto:admin@thecrownboyshostel.com">
                     admin@thecrownboyshostel.com
-                  </a>
+                  </Link>
                 </span>
               </div>
             </div>
@@ -110,7 +112,8 @@ const page = () => {
               ></iframe>
             </div>
           </div>
-          <form action="" className="hidden grid gap-6">
+          {/* grid */}
+          <form action="" className="hidden gap-6">
             <div className="grid gap-4">
               <div className="w-[90%] md:w-full bg-white p-4 rounded-xl border border-red-500">
                 <label className="text-sm font-medium text-white">Name</label>
