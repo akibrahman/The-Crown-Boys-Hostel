@@ -15,8 +15,8 @@ const Footer = () => {
   if (showFooter)
     return (
       <>
-        <hr className="border-slate-300" />
-        <footer className="bg-dashboard lg:grid lg:grid-cols-5">
+        {/* <hr className="border-slate-400" /> */}
+        <footer className="bg-bg-color-dark lg:grid lg:grid-cols-5">
           <div className="relative block h-32 lg:col-span-2 lg:h-full p-10">
             <Image
               src="/images/logo.png"

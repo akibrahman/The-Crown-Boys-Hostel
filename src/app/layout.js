@@ -6,6 +6,7 @@ import "react-tooltip/dist/react-tooltip.css";
 import "./globals.css";
 import NavBar from "@/Components/NavBar/NavBar";
 import NextTopLoader from "nextjs-toploader";
+import ScrollToTop from "@/Components/scrollToTop/scrollToTop";
 
 export const metadata = {
   title: {
@@ -28,6 +29,7 @@ const RootLayout = ({ children }) => {
             {/* <FloodHelpComponent /> */}
             <div className="">{children}</div>
             <Footer />
+            <ScrollToTop />
           </ContextProvider>
         </TanstackProvider>
       </body>

@@ -13,31 +13,17 @@ export async function middleware(req) {
     return NextResponse.redirect(url);
   }
   //! Manage Dashboard SSR --End--
-  if ((path === "/profile" || path === "/order") && !token) {
+  else if (path === "/order" && !token) {
     // return NextResponse.redirect("/");
     const url = new URL("/signin", req.nextUrl);
-    url.searchParams.set("callbackUrl", req.nextUrl.href);
+    url.searchParams.set("callbackUrl", req.nextUrl.pathname);
     return NextResponse.redirect(url);
-  }
-  if ((path === "/orderStatus" || path === "/sms") && !token) {
-    // return NextResponse.redirect("/");
-    return NextResponse.redirect(new URL("/", req.nextUrl));
-  }
-  if ((path === "/signup" || path === "/login") && token) {
+  } else if ((path === "/signup" || path === "/signin") && token) {
     // return NextResponse.redirect("/login");
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 }
 
 export const config = {
-  matcher: [
-    "/",
-    "/dashboard",
-    "/profile",
-    "/login",
-    "/signup",
-    "/order",
-    "/orderStatus",
-    "/sms",
-  ],
+  matcher: ["/", "/dashboard", "/signin", "/signup", "/order"],
 };

@@ -110,7 +110,7 @@ const NavMenus = ({ items, loading }) => {
       </div>
       {/* Mobile View  */}
       <div
-        className={`z-10 block md:hidden fixed top-0 right-0 h-screen w-[70vw] duration-300 bg-dashboard pt-20 ${
+        className={`z-20 block md:hidden fixed top-0 right-0 h-screen w-[70vw] duration-300 bg-dashboard pt-20 ${
           sideBarIsOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

@@ -3,10 +3,15 @@ import { AuthContext } from "@/providers/ContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
+import { CgSpinner } from "react-icons/cg";
 import { FaTimes } from "react-icons/fa";
 import Modal from "react-modal";
+import { motion } from "framer-motion";
 import { Tooltip } from "react-tooltip";
+import Image from "next/image";
+import { useReactToPrint } from "react-to-print";
+import toast from "react-hot-toast";
 
 const ManagerOrderStatusComponent = () => {
   const route = useRouter();
@@ -31,7 +36,7 @@ const ManagerOrderStatusComponent = () => {
     timeZone: "Asia/Dhaka",
   });
 
-  const { data: orders } = useQuery({
+  const { data: orders, isLoading } = useQuery({
     queryKey: ["orderStatus", user?._id],
     queryFn: async () => {
       try {
@@ -189,6 +194,8 @@ const ManagerOrderStatusComponent = () => {
 
   //! For Modal
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [showPosPrint, setShowPosPrint] = useState(false);
+  const [posPrintData, setPosPrintData] = useState([]);
 
   const customStyles = {
     content: {
@@ -231,29 +238,7 @@ const ManagerOrderStatusComponent = () => {
     return highestFloor;
   };
   const [floorAnalysingData, setFloorAnalysingData] = useState([]);
-  const compareRoomNumbers = (a, b) => {
-    const roomOrder = {
-      a: ["a1", "a2", "a3", "a4", "a5", "a6"],
-      b: ["b1", "b2", "b3", "b4"],
-    };
-    const [aPrefix, aNumber] = [
-      a.roomNumber[0],
-      parseInt(a.roomNumber.slice(1)),
-    ];
-    const [bPrefix, bNumber] = [
-      b.roomNumber[0],
-      parseInt(b.roomNumber.slice(1)),
-    ];
-
-    if (aPrefix !== bPrefix) {
-      return aPrefix.localeCompare(bPrefix);
-    } else {
-      return (
-        roomOrder[aPrefix].indexOf(a.roomNumber) -
-        roomOrder[bPrefix].indexOf(b.roomNumber)
-      );
-    }
-  };
+  const [tab, setTab] = useState(1);
   const floorAnalyzer = (orders) => {
     const rooms = ["a1", "a2", "a3", "a4", "a5", "a6", "b1", "b2", "b3", "b4"];
     const analyzedData = [];
@@ -335,11 +320,32 @@ const ManagerOrderStatusComponent = () => {
     console.log(analyzedData);
     setFloorAnalysingData(analyzedData);
   };
+
+  const pos = useRef();
+
+  const printPos = useReactToPrint({
+    content: () => pos.current,
+    documentTitle: `Meal_${new Date().toLocaleString()}`,
+    onBeforePrint: () => toast.success("Generating..."),
+    onAfterPrint: () => {
+      toast.success("Completed...");
+      setShowPosPrint(false);
+      setPosPrintData([]);
+    },
+  });
+
   if (!user) return <PreLoader />;
   if (user.role != "manager") {
     route.push("/");
     return;
   }
+
+  if (!orders || isLoading)
+    return (
+      <div className="min-h-full bg-dashboard text-slate-100 font-semibold text-lg px-10 pb-20 flex items-center justify-center gap-2">
+        Loading <CgSpinner className="text-xl animate-spin" />
+      </div>
+    );
   return (
     <>
       <Modal
@@ -417,217 +423,397 @@ const ManagerOrderStatusComponent = () => {
           </div>
         </div>
       </Modal>
+
+      {showPosPrint && (
+        <div className="fixed z-50 top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
+          <motion.div
+            initial={{ scale: 0.5, x: "-50%", y: "-50%", opacity: 0 }}
+            whileInView={{ scale: 1, x: "-50%", y: "-50%", opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15 }}
+            className="absolute top-[45%] md:top-1/2 left-1/2 bg-white md:h-[80%] w-[95%] md:w-[60%] rounded-xl font-medium py-10 md:py-0 overflow-y-scroll"
+          >
+            <div className="mt-3 md:mt-6 flex items-start justify-center gap-5">
+              {/* Start  */}
+              <div
+                ref={pos}
+                className="bg-white shadow-md rounded-md p-4 text-gray-500 w-[220px]"
+              >
+                <div className="flex justify-center mb-1">
+                  <Image
+                    src="/images/logo-black.png"
+                    alt="The Crown Boys Hostel Logo"
+                    className="h-16 w-20"
+                    height="54"
+                    width="54"
+                  />
+                </div>
+                <h2 className="text-[16px] font-bold text-center text-black">
+                  The Crown Boys Hostel
+                </h2>
+                <p className="text-xs text-center text-black font-semibold">
+                  M/S Mijan Enterprise
+                </p>
+                <p className="text-xs text-center text-black font-semibold">
+                  TRAD/DNCC/003483/2024
+                </p>
+
+                <p className="text-xs text-center text-black font-semibold">
+                  Date:{" "}
+                  {tab == 1
+                    ? new Intl.DateTimeFormat("en-GB").format(
+                        new Date(todayDateString)
+                      )
+                    : tab == 2
+                    ? new Intl.DateTimeFormat("en-GB").format(
+                        new Date(tomorrowDateString)
+                      )
+                    : new Intl.DateTimeFormat("en-GB").format(
+                        new Date(yesterdayDateString)
+                      )}
+                </p>
+
+                <div className="w-full my-4 flex flex-col gap-2 text-black font-semibold items-center">
+                  {posPrintData.map((d) => (
+                    <div
+                      key={d._id}
+                      className="flex flex-col items-center gap-1 text-center"
+                    >
+                      <p>{d.user.username}</p>
+                      <p>
+                        {d.guestLunchCount + (d.lunch ? 1 : 0)}-
+                        {d.guestDinnerCount + (d.dinner ? 1 : 0)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="text-xs font-semibold text-black text-center mt-2">
+                  Shaplar Mor, Kamarpara, Uttara-10, Dhaka, Bangladesh
+                </p>
+                <div className="text-[4.5px] font-bold flex items-center justify-evenly mt-1">
+                  <p className="w-max">T/D No.: TRAD/DNCC/003483/2024</p>
+                  <p className="w-max">TIN No.: 485681855868</p>
+                  <p className="w-max">M/S MIJAN ENTERPRISE</p>
+                </div>
+              </div>
+              {/* End  */}
+              <button
+                onClick={() => {
+                  printPos();
+                }}
+                className="px-4 md:px-6 py-1 md:py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300 active:scale-90"
+              >
+                Print
+              </button>
+              <button
+                onClick={() => {
+                  setShowPosPrint(false);
+                  setPosPrintData([]);
+                }}
+                className="px-4 md:px-6 py-1 md:py-2 bg-orange-500 text-white rounded-md hover:bg-orange-500 transition duration-300 active:scale-90"
+              >
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       <div className="min-h-full bg-dashboard text-slate-100 px-10 pb-20">
         <p className="text-center font-semibold text-2xl pt-6 dark:text-white">
           Order Status
         </p>
-        {/* Order - Today  */}
-        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
-          <p className="md:w-[220px]">Today - {todayDateString}</p>
-          <p className="">Breakfast - {breakfastOfToday}</p>
-          <p className="">Lunch - {lunchOfToday}</p>
-          <p className="">Dinner - {dinnerOfToday}</p>
-          <p className="">
-            Total - {breakfastOfToday + lunchOfToday + dinnerOfToday}
-          </p>
-          {orderOfToday && (
-            <button
-              onClick={() => {
-                openModal();
-                floorAnalyzer(orderOfToday);
-              }}
-              className="bg-stone-700 text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-            >
-              Floor Analysis
-            </button>
-          )}
+        {/* Tabs  */}
+        <div className="flex items-center justify-evenly md:justify-center gap-0 md:gap-6 mt-4 md:mt-6">
+          <button
+            onClick={() => setTab(1)}
+            className={`px-4 md:px-8 py-1 text-sm md:text-base rounded-md text-white font-semibold ${
+              tab == 1 ? "bg-stroke-dark" : "bg-dark-black"
+            } duration-300 active:scale-90 cursor-pointer`}
+          >
+            Today
+          </button>
+          <button
+            onClick={() => setTab(2)}
+            className={`px-4 md:px-8 py-1 text-sm md:text-base rounded-md text-white font-semibold ${
+              tab == 2 ? "bg-stroke-dark" : "bg-dark-black"
+            } duration-300 active:scale-90 cursor-pointer`}
+          >
+            Tomorrow
+          </button>
+          <button
+            onClick={() => setTab(3)}
+            className={`px-4 md:px-8 py-1 text-sm md:text-base rounded-md text-white font-semibold ${
+              tab == 3 ? "bg-stroke-dark" : "bg-dark-black"
+            } duration-300 active:scale-90 cursor-pointer`}
+          >
+            Yesterday
+          </button>
         </div>
-        {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center max-h-60 overflow-y-scroll scrollbar-hide">
-          {orderOfToday?.map((order) => (
-            <div className="flex items-center gap-3 md:gap-8" key={order._id}>
-              <Tooltip className="z-50" id="orderstatustoday" />
-              <p
-                data-tooltip-id="orderstatustoday"
-                data-tooltip-content={
-                  order.isGuestMeal
-                    ? "Breakfast : " +
-                      order.guestBreakfastCount +
-                      " Lunch : " +
-                      order.guestLunchCount +
-                      " Dinner : " +
-                      order.guestDinnerCount
-                    : null
-                }
-                className={`${
-                  order.isGuestMeal ? "text-blue-500" : ""
-                } text-sm md:text-base w-max`}
+        {tab == 1 && (
+          <>
+            {/* Order - Today  */}
+            <div className="mt-4 md:mt-6 bg-dark-black text-white p-4 rounded-md font-semibold text-sm md:text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
+              <p className="md:w-[220px]">Today - {todayDateString}</p>
+              <p className="">Breakfast - {breakfastOfToday}</p>
+              <p className="">Lunch - {lunchOfToday}</p>
+              <p className="">Dinner - {dinnerOfToday}</p>
+              <p className="">
+                Total - {breakfastOfToday + lunchOfToday + dinnerOfToday}
+              </p>
+              {orderOfToday && (
+                <button
+                  onClick={() => {
+                    openModal();
+                    floorAnalyzer(orderOfToday);
+                  }}
+                  className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
+                >
+                  Floor Analysis
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  setPosPrintData(
+                    tab == 1
+                      ? orderOfToday
+                      : tab == 2
+                      ? orderOfTomorrow
+                      : orderOfYesterday
+                  );
+                  setShowPosPrint(true);
+                }}
+                className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
               >
-                {order.user.username}
-              </p>
-              <p className="text-sm md:text-base w-max">
-                {order.user.floor + 1} - ( {order.user.floor}
-                <sup>th</sup> Floor )
-              </p>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`w-2 h-2 ${
-                    order.breakfast ? "bg-green-500" : "bg-red-500"
-                  } rounded-full block`}
-                ></span>
-                <span
-                  className={`w-2 h-2 ${
-                    order.lunch ? "bg-green-500" : "bg-red-500"
-                  } rounded-full block`}
-                ></span>
-                <span
-                  className={`w-2 h-2 ${
-                    order.dinner ? "bg-green-500" : "bg-red-500"
-                  } rounded-full block`}
-                ></span>
-              </div>
+                Print POS
+              </button>
             </div>
-          ))}
-        </div>
+            {/* Order Details  */}
+            <div className="text-sm bg-dark-black px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
+              {orderOfToday?.map((order) => (
+                <div
+                  className="flex items-center gap-3 md:gap-8"
+                  key={order._id}
+                >
+                  <Tooltip className="z-50" id="orderstatustoday" />
+                  <p
+                    data-tooltip-id="orderstatustoday"
+                    data-tooltip-content={
+                      order.isGuestMeal
+                        ? "Breakfast : " +
+                          order.guestBreakfastCount +
+                          " Lunch : " +
+                          order.guestLunchCount +
+                          " Dinner : " +
+                          order.guestDinnerCount
+                        : null
+                    }
+                    className={`${
+                      order.isGuestMeal ? "text-blue-500" : ""
+                    } text-sm md:text-base w-max`}
+                  >
+                    {order.user.username}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`w-2 h-2 ${
+                        order.breakfast ? "bg-green-500" : "bg-red-500"
+                      } rounded-full block`}
+                    ></span>
+                    <span
+                      className={`w-2 h-2 ${
+                        order.lunch ? "bg-green-500" : "bg-red-500"
+                      } rounded-full block`}
+                    ></span>
+                    <span
+                      className={`w-2 h-2 ${
+                        order.dinner ? "bg-green-500" : "bg-red-500"
+                      } rounded-full block`}
+                    ></span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
-        {/* Order - Tomorrow  */}
-        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
-          <p className="md:w-[220px]">Tomorrow - {tomorrowDateString}</p>
-          <p className="">Breakfast - {breakfastOfTomorrow}</p>
-          <p className="">Lunch - {lunchOfTomorrow}</p>
-          <p className="">Dinner - {dinnerOfTomorrow}</p>
-          <p className="">
-            Total - {breakfastOfTomorrow + lunchOfTomorrow + dinnerOfTomorrow}
-          </p>
-          {orderOfTomorrow && (
-            <button
-              onClick={() => {
-                openModal();
-                floorAnalyzer(orderOfTomorrow);
-              }}
-              className="bg-stone-700 text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-            >
-              Floor Analysis
-            </button>
-          )}
-        </div>
-        {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center max-h-60 overflow-y-scroll scrollbar-hide">
-          {orderOfTomorrow?.map((order) => (
-            <div className="flex items-center gap-3 md:gap-8" key={order._id}>
-              <Tooltip className="z-50" id="orderstatustomorrow" />
-              <p
-                data-tooltip-id="orderstatustomorrow"
-                data-tooltip-content={
-                  order.isGuestMeal
-                    ? "Breakfast : " +
-                      order.guestBreakfastCount +
-                      " Lunch : " +
-                      order.guestLunchCount +
-                      " Dinner : " +
-                      order.guestDinnerCount
-                    : null
-                }
-                className={`${
-                  order.isGuestMeal ? "text-blue-500" : ""
-                } text-sm md:text-base w-max`}
+        {tab == 2 && (
+          <>
+            {" "}
+            {/* Order - Tomorrow  */}
+            <div className="mt-4 md:mt-6 bg-dark-black text-white p-4 rounded-md font-semibold text-sm md:text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
+              <p className="md:w-[220px]">Tomorrow - {tomorrowDateString}</p>
+              <p className="">Breakfast - {breakfastOfTomorrow}</p>
+              <p className="">Lunch - {lunchOfTomorrow}</p>
+              <p className="">Dinner - {dinnerOfTomorrow}</p>
+              <p className="">
+                Total -{" "}
+                {breakfastOfTomorrow + lunchOfTomorrow + dinnerOfTomorrow}
+              </p>
+              {orderOfTomorrow && (
+                <button
+                  onClick={() => {
+                    openModal();
+                    floorAnalyzer(orderOfTomorrow);
+                  }}
+                  className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
+                >
+                  Floor Analysis
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  setPosPrintData(
+                    tab == 1
+                      ? orderOfToday
+                      : tab == 2
+                      ? orderOfTomorrow
+                      : orderOfYesterday
+                  );
+                  setShowPosPrint(true);
+                }}
+                className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
               >
-                {order.user.username}
-              </p>
-              <p className="text-sm md:text-base w-max">
-                {order.user.floor + 1} - ( {order.user.floor}
-                <sup>th</sup> Floor )
-              </p>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`w-2 h-2 ${
-                    order.breakfast ? "bg-green-500" : "bg-red-500"
-                  } rounded-full block`}
-                ></span>
-                <span
-                  className={`w-2 h-2 ${
-                    order.lunch ? "bg-green-500" : "bg-red-500"
-                  } rounded-full block`}
-                ></span>
-                <span
-                  className={`w-2 h-2 ${
-                    order.dinner ? "bg-green-500" : "bg-red-500"
-                  } rounded-full block`}
-                ></span>
-              </div>
+                Print POS
+              </button>
             </div>
-          ))}
-        </div>
+            {/* Order Details  */}
+            <div className="text-sm bg-dark-black px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
+              {orderOfTomorrow?.map((order) => (
+                <div
+                  className="flex items-center gap-3 md:gap-8"
+                  key={order._id}
+                >
+                  <Tooltip className="z-50" id="orderstatustomorrow" />
+                  <p
+                    data-tooltip-id="orderstatustomorrow"
+                    data-tooltip-content={
+                      order.isGuestMeal
+                        ? "Breakfast : " +
+                          order.guestBreakfastCount +
+                          " Lunch : " +
+                          order.guestLunchCount +
+                          " Dinner : " +
+                          order.guestDinnerCount
+                        : null
+                    }
+                    className={`${
+                      order.isGuestMeal ? "text-blue-500" : ""
+                    } text-sm md:text-base w-max`}
+                  >
+                    {order.user.username}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`w-2 h-2 ${
+                        order.breakfast ? "bg-green-500" : "bg-red-500"
+                      } rounded-full block`}
+                    ></span>
+                    <span
+                      className={`w-2 h-2 ${
+                        order.lunch ? "bg-green-500" : "bg-red-500"
+                      } rounded-full block`}
+                    ></span>
+                    <span
+                      className={`w-2 h-2 ${
+                        order.dinner ? "bg-green-500" : "bg-red-500"
+                      } rounded-full block`}
+                    ></span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
-        {/* Order - Yesterday  */}
-        <div className="mt-10 bg-sky-500 text-stone-800 p-4 rounded-md font-semibold text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
-          <p className="md:w-[220px]">Yesterday - {yesterdayDateString}</p>
-          <p className="">Breakfast - {breakfastOfYesterday}</p>
-          <p className="">Lunch - {lunchOfYesterday}</p>
-          <p className="">Dinner - {dinnerOfYesterday}</p>
-          <p className="">
-            Total -{" "}
-            {breakfastOfYesterday + lunchOfYesterday + dinnerOfYesterday}
-          </p>
-          {orderOfYesterday && (
-            <button
-              onClick={() => {
-                openModal();
-                floorAnalyzer(orderOfYesterday);
-              }}
-              className="bg-stone-700 text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-            >
-              Floor Analysis
-            </button>
-          )}
-        </div>
-        {/* Order Details  */}
-        <div className="text-sm bg-stone-700 px-5 text-white py-2 mt-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center max-h-60 overflow-y-scroll scrollbar-hide">
-          {orderOfYesterday?.map((order) => (
-            <div className="flex items-center gap-3 md:gap-8" key={order._id}>
-              <Tooltip className="z-50" id="orderstatusyesterday" />
-              <p
-                data-tooltip-id="orderstatusyesterday"
-                data-tooltip-content={
-                  order.isGuestMeal
-                    ? "Breakfast : " +
-                      order.guestBreakfastCount +
-                      " Lunch : " +
-                      order.guestLunchCount +
-                      " Dinner : " +
-                      order.guestDinnerCount
-                    : null
-                }
-                className={`${
-                  order.isGuestMeal ? "text-blue-500" : ""
-                } text-sm md:text-base w-max`}
+        {tab == 3 && (
+          <>
+            {" "}
+            {/* Order - Yesterday  */}
+            <div className="mt-4 md:mt-6 bg-dark-black text-white p-4 rounded-md font-semibold text-sm md:text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
+              <p className="md:w-[220px]">Yesterday - {yesterdayDateString}</p>
+              <p className="">Breakfast - {breakfastOfYesterday}</p>
+              <p className="">Lunch - {lunchOfYesterday}</p>
+              <p className="">Dinner - {dinnerOfYesterday}</p>
+              <p className="">
+                Total -{" "}
+                {breakfastOfYesterday + lunchOfYesterday + dinnerOfYesterday}
+              </p>
+              {orderOfYesterday && (
+                <button
+                  onClick={() => {
+                    openModal();
+                    floorAnalyzer(orderOfYesterday);
+                  }}
+                  className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
+                >
+                  Floor Analysis
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  setPosPrintData(
+                    tab == 1
+                      ? orderOfToday
+                      : tab == 2
+                      ? orderOfTomorrow
+                      : orderOfYesterday
+                  );
+                  setShowPosPrint(true);
+                }}
+                className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
               >
-                {order.user.username}
-              </p>
-              <p className="text-sm md:text-base w-max">
-                {order.user.floor + 1} - ( {order.user.floor}
-                <sup>th</sup> Floor )
-              </p>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`w-2 h-2 ${
-                    order.breakfast ? "bg-green-500" : "bg-red-500"
-                  } rounded-full block`}
-                ></span>
-                <span
-                  className={`w-2 h-2 ${
-                    order.lunch ? "bg-green-500" : "bg-red-500"
-                  } rounded-full block`}
-                ></span>
-                <span
-                  className={`w-2 h-2 ${
-                    order.dinner ? "bg-green-500" : "bg-red-500"
-                  } rounded-full block`}
-                ></span>
-              </div>
+                Print POS
+              </button>
             </div>
-          ))}
-        </div>
+            {/* Order Details  */}
+            <div className="text-sm bg-dark-black px-5 text-white py-2 mt-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
+              {orderOfYesterday?.map((order) => (
+                <div
+                  className="flex items-center gap-3 md:gap-8"
+                  key={order._id}
+                >
+                  <Tooltip className="z-50" id="orderstatusyesterday" />
+                  <p
+                    data-tooltip-id="orderstatusyesterday"
+                    data-tooltip-content={
+                      order.isGuestMeal
+                        ? "Breakfast : " +
+                          order.guestBreakfastCount +
+                          " Lunch : " +
+                          order.guestLunchCount +
+                          " Dinner : " +
+                          order.guestDinnerCount
+                        : null
+                    }
+                    className={`${
+                      order.isGuestMeal ? "text-blue-500" : ""
+                    } text-sm md:text-base w-max`}
+                  >
+                    {order.user.username}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`w-2 h-2 ${
+                        order.breakfast ? "bg-green-500" : "bg-red-500"
+                      } rounded-full block`}
+                    ></span>
+                    <span
+                      className={`w-2 h-2 ${
+                        order.lunch ? "bg-green-500" : "bg-red-500"
+                      } rounded-full block`}
+                    ></span>
+                    <span
+                      className={`w-2 h-2 ${
+                        order.dinner ? "bg-green-500" : "bg-red-500"
+                      } rounded-full block`}
+                    ></span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </>
   );

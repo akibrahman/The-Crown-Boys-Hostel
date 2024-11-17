@@ -15,7 +15,16 @@ export const POST = async (req) => {
       {
         $match: {
           $and: [
-            { $or: [{ breakfast: true }, { lunch: true }, { dinner: true }] },
+            {
+              $or: [
+                { breakfast: true },
+                { lunch: true },
+                { dinner: true },
+                { $expr: { $gt: ["$guestBreakfastCount", 0] } },
+                { $expr: { $gt: ["$guestLunchCount", 0] } },
+                { $expr: { $gt: ["$guestDinnerCount", 0] } },
+              ],
+            },
             { $or: [{ date: yesterday }, { date: today }, { date: tomorrow }] },
           ],
         },
