@@ -1,46 +1,38 @@
 "use client";
-import PreLoader from "@/Components/PreLoader/PreLoader";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
 import { FaEye } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import SystemPagination from "@/Components/Pagination/Pagination";
 import { CgSpinner } from "react-icons/cg";
 
 const ManagerTransactionsComponent = ({ user }) => {
-  const router = useRouter();
-
-  const monthOrder = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
   const [page, setPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedMonth, setSelectedMonth] = useState(0);
   const [totalTransactions, setTotalTransactions] = useState(0);
 
-  const totalPages = Math.ceil(totalTransactions / 10);
+  const totalPages = Math.ceil(totalTransactions / itemsPerPage);
   const pages = [...new Array(totalPages ? totalPages : 0).fill(0)];
 
   const { data: transactions } = useQuery({
-    queryKey: ["manager", "transactions", user?._id, page],
+    queryKey: [
+      "manager",
+      "transactions",
+      user?._id,
+      page,
+      itemsPerPage,
+      selectedMonth,
+    ],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
-        `/api/transactions?forManager=${true}&page=${queryKey[3]}`
+        `/api/transactions?forManager=${true}&page=${
+          queryKey[3]
+        }&limit=${itemsPerPage}&month=${selectedMonth}`
       );
       if (data.success) {
         setTotalTransactions(data.lengthForPagination);
@@ -60,10 +52,89 @@ const ManagerTransactionsComponent = ({ user }) => {
 
   return (
     <div className="min-h-full p-2 md:p-5 bg-dashboard text-slate-100 relative">
-      <p className="text-center font-semibold text-xl dark:text-white">
+      <p className="text-center font-semibold text-xl md:text-2xl dark:text-white">
         Transactions
       </p>
-      <div className="flex flex-col gap-3 mt-5">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 mt-3 md:mt-4 text-stroke font-semibold text-sm md:text-base">
+        <div className="flex items-center justify-center gap-3 md:gap-6">
+          <p>
+            {transactions.length}/{totalTransactions}
+          </p>
+          <select
+            className="text-dark-black outline-none cursor-pointer px-2 md:px-4 py-0.5 md:py-1 rounded-md scrollbar-hide"
+            value={itemsPerPage}
+            onChange={(e) => setItemsPerPage(e.target.value)}
+          >
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="70">70</option>
+            <option value="all">All</option>
+          </select>
+          <select
+            className="text-dark-black outline-none cursor-pointer px-2 md:px-4 py-0.5 md:py-1 rounded-md scrollbar-hide"
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          >
+            <option value="0">Select Month</option>
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+        </div>
+        <div className="flex items-center justify-center gap-3 md:gap-6">
+          <p>
+            Cash:{" "}
+            {transactions
+              .filter((t) => (t?.method && t?.method == "bkash" ? false : true))
+              .reduce(
+                (a, c) => a + c.payments.reduce((a2, c2) => a2 + c2.value, 0),
+                0
+              )}{" "}
+            ৳
+          </p>
+          <p>
+            Bkash:{" "}
+            {transactions
+              .filter((t) => (t?.method && t?.method == "bkash" ? true : false))
+              .reduce(
+                (a, c) => a + c.payments.reduce((a2, c2) => a2 + c2.value, 0),
+                0
+              )}{" "}
+            ৳
+          </p>
+          <p>
+            Total:{" "}
+            {transactions
+              .filter((t) => (t?.method && t?.method == "bkash" ? false : true))
+              .reduce(
+                (a, c) => a + c.payments.reduce((a2, c2) => a2 + c2.value, 0),
+                0
+              ) +
+              transactions
+                .filter((t) =>
+                  t?.method && t?.method == "bkash" ? true : false
+                )
+                .reduce(
+                  (a, c) => a + c.payments.reduce((a2, c2) => a2 + c2.value, 0),
+                  0
+                )}{" "}
+            ৳
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col gap-3 mt-3 md:mt-4">
         {transactions.map((t, i) => (
           <div
             className="shadow-lg px-1 md:px-4 py-2 flex items-center justify-center md:justify-between gap-3 md:gap-0"

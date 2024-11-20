@@ -12,9 +12,10 @@ export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
     const forManager = searchParams.get("forManager");
-    const page = searchParams.get("page");
-    let limit = 10;
-    let skip = page * limit;
+    const page = searchParams.get("page") || 0;
+    const limit = searchParams.get("limit") || 10;
+    const month = searchParams.get("month") || 0;
+    let skip = String(limit) == "all" ? 0 : page * parseInt(limit);
     if (
       !forManager ||
       (forManager != true &&
@@ -49,7 +50,7 @@ export const GET = async (req) => {
       if (!manager || manager.role != "manager")
         throw new Error("Unauthorized !!");
 
-      //
+      // Manager
       transactions = await Transaction.aggregate([
         {
           $addFields: {
@@ -63,6 +64,7 @@ export const GET = async (req) => {
               },
             },
             createdAtDate: { $toDate: "$transactionDate" },
+            monthNumber: { $month: { $toDate: "$transactionDate" } }, // Extract month
           },
         },
         {
@@ -81,9 +83,14 @@ export const GET = async (req) => {
         },
         {
           $match: {
-            $or: [
-              { "userDetails.manager": id },
-              { userDetails: { $eq: null } }, // Keeps entries without `userDetails`
+            $and: [
+              {
+                $or: [
+                  { "userDetails.manager": id },
+                  { userDetails: { $eq: null } }, // Keeps entries without `userDetails`
+                ],
+              },
+              month != 0 ? { monthNumber: parseInt(month) } : {}, // Conditional month filter
             ],
           },
         },
@@ -114,8 +121,6 @@ export const GET = async (req) => {
           },
         },
       ]);
-
-      //
     } else if (forManager == false || forManager == "false") {
       const { id: tokenId } = jwt.decode(token);
       id = tokenId;
@@ -123,6 +128,7 @@ export const GET = async (req) => {
         throw new Error("Unauthorized !!");
       user = await User.findById(id);
       if (!user || user.role != "client") throw new Error("Unauthorized !!");
+      // Client
       transactions = await Transaction.aggregate([
         {
           $addFields: {
@@ -161,7 +167,10 @@ export const GET = async (req) => {
 
     const lengthForPagination = transactions.length;
 
-    const transactionsToGo = transactions.slice(skip, skip + limit);
+    const transactionsToGo =
+      String(limit) === "all"
+        ? transactions
+        : transactions.slice(skip, skip + parseInt(limit));
 
     return NextResponse.json({
       success: true,
