@@ -472,13 +472,21 @@ const ManagerOrderStatusComponent = () => {
                       )}
                 </p>
 
-                <div className="w-full my-4 flex flex-col gap-2 text-black font-semibold items-center">
+                <div className="w-full my-2 flex flex-col gap-1 text-black font-semibold items-center">
                   {posPrintData.map((d) => (
-                    <div
-                      key={d._id}
-                      className="flex flex-col items-center gap-1 text-center"
-                    >
-                      <p>{d.user.username}</p>
+                    <div key={d._id} className="flex gap-1 text-center text-xs">
+                      {/* <p>{d.user.username}</p> */}
+                      <p>
+                        {(() => {
+                          const parts = d.user.username.trim().split(" ");
+                          if (parts.length === 1) {
+                            return parts[0];
+                          } else if (parts.length >= 2) {
+                            return parts.slice(0, 2).join(" ");
+                          }
+                        })()}
+                      </p>
+
                       <p>
                         {d.guestLunchCount + (d.lunch ? 1 : 0)}-
                         {d.guestDinnerCount + (d.dinner ? 1 : 0)}
