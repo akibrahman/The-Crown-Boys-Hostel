@@ -20,7 +20,7 @@ const AboutSectionOne = () => {
   return (
     <section
       id="about"
-      className="pt-16 md:pt-20 lg:pt-28 bg-dark-black flex items-center justify-center px-4"
+      className="pt-6 md:pt-8 lg:pt-10 bg-dark-black flex items-center justify-center px-4"
     >
       <div className="container">
         <div className="border-b border-body-color/[.15] pb-16 dark:border-white/[.15] md:pb-20 lg:pb-28">
@@ -58,16 +58,10 @@ const AboutSectionOne = () => {
                 data-wow-delay=".2s"
               >
                 <Image
-                  src="/images/about/about-image.svg"
+                  src="/images/building.png"
                   alt="about-image"
                   fill
-                  className="drop-shadow-three mx-auto max-w-full dark:hidden dark:drop-shadow-none lg:mr-0"
-                />
-                <Image
-                  src="/images/about/about-image-dark.svg"
-                  alt="about-image"
-                  fill
-                  className="drop-shadow-three mx-auto hidden max-w-full dark:block dark:drop-shadow-none lg:mr-0"
+                  className="mx-auto max-w-full drop-shadow-none lg:mr-0 rounded-lg"
                 />
               </div>
             </div>

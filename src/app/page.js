@@ -1,5 +1,4 @@
 import AboutSectionOne from "@/Components/HomePage/AboutSectionOne";
-import AboutSectionTwo from "@/Components/HomePage/AboutSectionTwo";
 import Blog from "@/Components/HomePage/Blog";
 import Brands from "@/Components/HomePage/Brands";
 import Contact from "@/Components/HomePage/Contact";
@@ -9,6 +8,7 @@ import Pricing from "@/Components/HomePage/Pricing";
 import ScrollUp from "@/Components/HomePage/ScrollUp";
 import Testimonials from "@/Components/HomePage/Testimonials";
 import Video from "@/Components/HomePage/Video";
+import MijanSection from "@/Components/HomePage/MijanSection";
 
 export const metadata = {
   title: "The Crown Boys Hostel",
@@ -20,19 +20,15 @@ export default function Home() {
     <>
       <ScrollUp />
       <Hero />
+      <MijanSection />
       <Features />
-      {/* 
-      <Video  />
+      <Video />
       <Brands />
-      */}
       <AboutSectionOne />
-      <AboutSectionTwo />
       <Testimonials />
       <Pricing />
       <Blog />
       <Contact />
-      {/*
-       */}
     </>
   );
 }

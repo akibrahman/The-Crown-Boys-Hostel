@@ -11,7 +11,7 @@ const Pricing = () => {
   return (
     <section
       id="pricing"
-      className="relative bg-dark-black flex items-center justify-center z-10 py-16 md:py-20 lg:py-28"
+      className="relative bg-dark-black flex items-center justify-center z-10 py-6 md:py-8 lg:py-10"
     >
       <div className="container">
         <SectionTitle

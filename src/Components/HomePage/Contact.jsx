@@ -4,7 +4,7 @@ const Contact = () => {
   return (
     <section
       id="contact"
-      className="bg-dark-black flex items-center justify-center overflow-hidden py-16 md:py-20 lg:py-28"
+      className="bg-dark-black flex items-center justify-center overflow-hidden py-6 md:py-8 lg:py-10"
     >
       <div className="container">
         <div className="-mx-4 flex flex-wrap">
