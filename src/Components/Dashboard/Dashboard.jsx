@@ -58,6 +58,8 @@ import ManagerSendNotificationComponent from "./Manager/ManagerSendNotificationC
 import TempCom from "../TempCom";
 import ManagerTransactionsComponent from "./Manager/ManagerTransactionsComponent";
 import ManagerBooksComponent from "./Manager/ManagerBooksComponent";
+import ManagerSetChargeComponent from "./Manager/ManagerSetChargeComponent";
+import { RiBillFill } from "react-icons/ri";
 
 const Dashboard = ({ user }) => {
   // useUnloadWarning("Are");
@@ -111,6 +113,8 @@ const Dashboard = ({ user }) => {
         displayData == "managerMarketDetails" ||
         displayData == "managerOrderStatus" ||
         displayData == "managerSendSMS" ||
+        displayData == "ManagerSendNotificationComponent" ||
+        displayData == "ManagerSetChargeComponent" ||
         displayData == "managerBillQuery" ||
         displayData == "managerTransactions" ||
         displayData == "managerMealQuery" ||
@@ -225,6 +229,12 @@ const Dashboard = ({ user }) => {
       href: "/dashboard?displayData=managerSendNotification",
       icon: IoIosNotifications,
       displayData: "managerSendNotification",
+    },
+    {
+      title: "Set Charge",
+      href: "/dashboard?displayData=ManagerSetChargeComponent",
+      icon: RiBillFill,
+      displayData: "ManagerSetChargeComponent",
     },
     {
       title: "Bill Query",
@@ -589,6 +599,8 @@ const Dashboard = ({ user }) => {
             ) : //  <UnderConstruction />
             displayData == "managerSendNotification" ? (
               <ManagerSendNotificationComponent user={user} />
+            ) : displayData == "ManagerSetChargeComponent" ? (
+              <ManagerSetChargeComponent user={user} />
             ) : displayData == "managerBillQuery" ? (
               <ManagerBillQueryComponent user={user} />
             ) : displayData == "managerTransactions" ? (

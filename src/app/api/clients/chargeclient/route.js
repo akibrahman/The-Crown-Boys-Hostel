@@ -1,5 +1,7 @@
 import User from "@/models/userModel";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 const { dbConfig } = require("@/dbConfig/dbConfig");
 
@@ -34,6 +36,58 @@ export const PATCH = async (req) => {
     console.log(error);
     return NextResponse.json(
       { success: false, msg: "Server error!" },
+      { status: 500 }
+    );
+  }
+};
+
+// Manager Set Charge
+
+export const POST = async (req) => {
+  try {
+    let jwtData;
+    const token = cookies()?.get("token")?.value;
+    if (!token) throw new Error("Unauthorized !! No Token");
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json(
+        { msg: "Unauthorized !!", error },
+        { status: 401 }
+      );
+    }
+    const managerId = jwtData.id;
+    const { clients, chargeData } = await req.json();
+    if (
+      !Array.isArray(clients) ||
+      clients.length == 0 ||
+      !(
+        typeof chargeData === "object" &&
+        chargeData !== null &&
+        Object.keys(chargeData).length > 0
+      )
+    ) {
+      throw new Error(
+        "Either Clients is not Array or Empty or chargeData is not Object or Empty"
+      );
+    }
+    await Promise.all(
+      clients.map(async (client) => {
+        const user = await User.findById(client.value);
+        Object.entries(chargeData).forEach(([key, value]) => {
+          user.charges = [...user.charges, { note: key, amount: value }];
+        });
+        await user.save();
+      })
+    );
+    return NextResponse.json({ success: true, msg: "Charge Applied" });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, msg: error?.message || "Server error!" },
       { status: 500 }
     );
   }
