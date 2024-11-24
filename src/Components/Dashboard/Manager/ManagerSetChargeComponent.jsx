@@ -68,7 +68,7 @@ const ManagerSetChargeComponent = () => {
     try {
       await axios.post("/api/clients/chargeclient", {
         clients: receiver,
-        chargeData: { meal: 70, card: 140 },
+        chargeData: { new_meal: 70, card: 140 },
       });
       toast.success("Charge Applied");
     } catch (error) {

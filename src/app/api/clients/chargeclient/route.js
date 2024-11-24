@@ -77,8 +77,15 @@ export const POST = async (req) => {
     await Promise.all(
       clients.map(async (client) => {
         const user = await User.findById(client.value);
+        const usersCharges = user.charges;
         Object.entries(chargeData).forEach(([key, value]) => {
-          user.charges = [...user.charges, { note: key, amount: value }];
+          const newCharge = { note: key, amount: value };
+          const isExists = usersCharges.find(
+            (uc) =>
+              uc.note.trim().toLowerCase() == key.trim().toLowerCase() &&
+              uc.amount == value
+          );
+          if (!isExists) user.charges = [...user.charges, newCharge];
         });
         await user.save();
       })
