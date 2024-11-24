@@ -64,7 +64,17 @@ export const GET = async (req) => {
               },
             },
             createdAtDate: { $toDate: "$transactionDate" },
-            monthNumber: { $month: { $toDate: "$transactionDate" } }, // Extract month
+            monthNumber: { $month: { $toDate: "$transactionDate" } },
+            isAssigned: {
+              $and: [
+                {
+                  $regexMatch: { input: "$userId", regex: /^[0-9a-fA-F]{24}$/ },
+                },
+                {
+                  $regexMatch: { input: "$billId", regex: /^[0-9a-fA-F]{24}$/ },
+                },
+              ],
+            },
           },
         },
         {
@@ -111,6 +121,7 @@ export const GET = async (req) => {
             transactionDate: 1,
             method: 1,
             tax: 1,
+            isAssigned: 1,
             payments: 1,
             userDetails: {
               username: 1,

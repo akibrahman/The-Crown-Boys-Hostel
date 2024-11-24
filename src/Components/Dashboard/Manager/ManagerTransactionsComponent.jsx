@@ -162,13 +162,24 @@ const ManagerTransactionsComponent = ({ user }) => {
             <p className="w-[60px] md:w-[70px] text-[10px] md:text-base">
               {t.payments.reduce((a, c) => a + c.value, 0)} ৳
             </p>
-            <p
-              className={`px-1 md:px-4 py-0.5 rounded-md md:rounded-full text-white font-medium text-[10px] md:text-base ${
-                t?.method == "bkash" ? "bg-pink-500" : "bg-blue-500"
-              }`}
-            >
-              {convertCamelCaseToCapitalized(t?.method || "cash")}
-            </p>
+            <div className="flex flex-col items-center justify-center gap-1">
+              <p
+                className={`font-medium text-[10px] md:text-sm ${
+                  t?.method == "bkash" ? "text-pink-500" : "text-blue-500"
+                }`}
+              >
+                {convertCamelCaseToCapitalized(t?.method || "cash")}
+              </p>
+              <p
+                className={`text-[10px] md:text-sm font-medium px-2 py-0 md:py-0.5 rounded-full ${
+                  t.isAssigned
+                    ? "text-green-700 bg-green-200"
+                    : "text-orange-700 bg-orange-200"
+                }`}
+              >
+                {t.isAssigned ? "Assigned" : "Unassigned"}
+              </p>
+            </div>
             <p className="w-[140px] md:w-[240px] text-[10px] md:text-base">
               {new Date(t.transactionDate).toDateString()}
               <br className="block md:hidden" />

@@ -25,6 +25,7 @@ const ManagerManualInvoiceComponent = () => {
   const [formName, setFormName] = useState("");
   const [formValue, setFormValue] = useState("");
   const [billLoading, setBillLoading] = useState(false);
+  const [assignedMode, setAssignedMode] = useState(null);
 
   const handlePrint = useReactToPrint({
     content: () => colorPrintRef.current,
@@ -173,15 +174,20 @@ const ManagerManualInvoiceComponent = () => {
       )
       .catch((err) => console.log(err));
     detectDeviceType();
-    if (!billId) return;
+    if (!billId) {
+      setAssignedMode(false);
+      return;
+    }
     setBillLoading(true);
     axios
       .get(`/api/bills/getbill/${billId}`)
       .then((res) => {
+        if (!res.data.success) throw new Error(res.data.msg);
+        setAssignedMode(true);
         axios
           .get(`/api/transaction?id=${billId}`)
           .then((res2) => {
-            if (!res.data.success) return;
+            if (!res2.data.success) throw new Error(res2.data.msg);
             const billAmount = res?.data?.bill?.totalBillInBDT || 0;
             const paidAmount =
               res2?.data?.transactions?.reduce((total, transaction) => {
@@ -240,7 +246,14 @@ const ManagerManualInvoiceComponent = () => {
           })
           .catch((err2) => console.log("Transaction Fetching Error:", err2));
       })
-      .catch((err) => console.log("Bill Fetching Error:", err))
+      .catch((err) => {
+        const url = new URL(window.location.href);
+        const baseUrl =
+          url.origin + url.pathname + "?displayData=managerManualInvouce";
+        setAssignedMode(false);
+        console.log("Bill Fetching Error:", err);
+        return router.replace(baseUrl);
+      })
       .finally(() => setBillLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billId, router]);
@@ -260,9 +273,27 @@ const ManagerManualInvoiceComponent = () => {
             <p>Generating Auto Bill Based Invoice</p>
           </motion.div>
         )}
-        <p className="text-center font-semibold text-xl dark:text-white relative">
-          Create Invoice
-        </p>
+        <div className="flex items-center justify-center gap-2">
+          <p className="text-center font-semibold text-xl dark:text-white relative">
+            Create Invoice
+          </p>
+          <p
+            className={`text-sm md:text-base font-medium px-4 md:px-6 py-0.5 md:py-1 rounded-full flex items-center justify-center gap-2 ${
+              billLoading
+                ? "text-blue-700 bg-blue-200"
+                : assignedMode
+                ? "text-green-700 bg-green-200"
+                : "text-orange-700 bg-orange-200"
+            }`}
+          >
+            {billLoading
+              ? "Loading"
+              : assignedMode
+              ? "Assigned Mode"
+              : "Unassigned Mode"}
+            {billLoading && <CgSpinner className="text-xl animate-spin" />}
+          </p>
+        </div>
         <form className="flex items-center justify-center gap-10 text-black mt-5">
           <input
             placeholder="Receipent Name"
@@ -327,7 +358,7 @@ const ManagerManualInvoiceComponent = () => {
         {invoiceData.length > 0 && (
           <button
             onClick={handlePrint}
-            disabled={!invoiceName || !invoiceNumber}
+            disabled={!invoiceName || !invoiceNumber || billLoading}
             className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-blue-500 text-white font-semibold mx-auto mt-5 block"
           >
             Print Color Invoice
@@ -362,7 +393,7 @@ const ManagerManualInvoiceComponent = () => {
             {invoiceData.length > 0 && (
               <button
                 onClick={printPosInvoiceForClient}
-                disabled={!invoiceName || !invoiceNumber}
+                disabled={!invoiceName || !invoiceNumber || billLoading}
                 className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-blue-500 text-white font-semibold mx-auto mt-5 block"
               >
                 Print POS Invoice for Client
@@ -385,7 +416,7 @@ const ManagerManualInvoiceComponent = () => {
             {invoiceData.length > 0 && (
               <button
                 onClick={printPosInvoiceForManager}
-                disabled={!invoiceName || !invoiceNumber}
+                disabled={!invoiceName || !invoiceNumber || billLoading}
                 className="px-10 py-1 rounded-md duration-300 active:scale-90 hover:scale-105 bg-blue-500 text-white font-semibold mx-auto mt-5 block"
               >
                 Print POS Invoice for Manager
