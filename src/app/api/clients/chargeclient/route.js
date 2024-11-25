@@ -42,7 +42,6 @@ export const PATCH = async (req) => {
 };
 
 // Manager Set Charge
-
 export const POST = async (req) => {
   try {
     let jwtData;
@@ -91,6 +90,34 @@ export const POST = async (req) => {
       })
     );
     return NextResponse.json({ success: true, msg: "Charge Applied" });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, msg: error?.message || "Server error!" },
+      { status: 500 }
+    );
+  }
+};
+
+export const DELETE = async (req) => {
+  try {
+    let jwtData;
+    const token = cookies()?.get("token")?.value;
+    if (!token) throw new Error("Unauthorized !! No Token");
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json(
+        { msg: "Unauthorized !!", error },
+        { status: 401 }
+      );
+    }
+    const managerId = jwtData.id;
+    await User.updateMany({ manager: managerId }, { charges: [] });
+    return NextResponse.json({ success: true, msg: "Charges Deleted" });
   } catch (error) {
     console.log(error);
     return NextResponse.json(
