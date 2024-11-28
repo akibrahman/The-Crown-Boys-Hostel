@@ -100,7 +100,7 @@ const Order = () => {
       ) &&
       new Date(
         new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" })
-      ).getHours() < 15
+      ).getHours() < 17
       // new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Dhaka"})).getMinutes()
     ) {
       setLoading(true);
@@ -170,7 +170,6 @@ const Order = () => {
       toast.error("Wait till last day of this month!");
       return;
     } else if (
-      //!-------------------------------------------------
       new Date(selectedDate).toLocaleDateString("en-BD", {
         month: "long",
         timeZone: "Asia/Dhaka",
@@ -333,6 +332,7 @@ const Order = () => {
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
+                        return toast.error("Breakfast is not Available");
                         if (moment(date).isSame(moment(new Date()), "day")) {
                           toast.error("Today's Brakefast cann't be edited");
                           return;
@@ -379,7 +379,14 @@ const Order = () => {
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
-                        if (moment(date).isSame(moment(new Date()), "day")) {
+                        if (
+                          moment(date).isSame(moment(new Date()), "day") &&
+                          new Date(
+                            new Date().toLocaleString("en-US", {
+                              timeZone: "Asia/Dhaka",
+                            })
+                          ).getHours() >= 10
+                        ) {
                           toast.error("Today's Lunch cann't be edited");
                           return;
                         }
@@ -421,6 +428,17 @@ const Order = () => {
                   <label class="inline-flex items-center me-5 cursor-pointer">
                     <input
                       onClick={async () => {
+                        if (
+                          moment(date).isSame(moment(new Date()), "day") &&
+                          new Date(
+                            new Date().toLocaleString("en-US", {
+                              timeZone: "Asia/Dhaka",
+                            })
+                          ).getHours() >= 17
+                        ) {
+                          toast.error("Today's Dinner cann't be edited");
+                          return;
+                        }
                         setLoading(true);
                         const { data } = await axios.patch(
                           "/api/orders/updateorder",

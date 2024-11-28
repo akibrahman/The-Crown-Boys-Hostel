@@ -5,7 +5,7 @@ import Image from "next/image";
 import { VscGraphLine } from "react-icons/vsc";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { TbBrandBooking, TbBrandShopee } from "react-icons/tb";
 import { IoIosNotifications } from "react-icons/io";
@@ -331,8 +331,36 @@ const Dashboard = ({ user }) => {
     },
   ];
 
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleKeydown = (event) => {
+      if (event.key === "f" || event.key === "F") {
+        handleFullscreen();
+      }
+    };
+    document.addEventListener("keydown", handleKeydown);
+    return () => {
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, []);
+
+  const handleFullscreen = () => {
+    const elem = containerRef.current;
+
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    }
+  };
+
   return (
-    <>
+    <div ref={containerRef} className="h-full">
       {user?.isClient &&
         (user?.profilePicture == "/__" ||
           (user?.birthCertificatePicture == "/__" &&
@@ -637,7 +665,7 @@ const Dashboard = ({ user }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
