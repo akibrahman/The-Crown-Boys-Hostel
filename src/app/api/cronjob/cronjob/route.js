@@ -246,7 +246,7 @@ export const GET = async (req) => {
               "en-BD",
               { timeZone: "Asia/Dhaka" }
             ),
-            breakfast: true,
+            breakfast: false,
             lunch: true,
             dinner: true,
           });
@@ -336,7 +336,7 @@ export const GET = async (req) => {
         );
         nextYear = currentYear + 1;
       }
-      // User Bill Creation Start
+      // User Bill Calculation Start
       const bills = await Bill.find({
         year: currentYear,
         month: currentMonth,
@@ -399,15 +399,19 @@ export const GET = async (req) => {
         if (totalRent == 0) totalRent = 3500;
         if (!nextBill) totalRent = 0;
         const totalBillInBDT =
-          totalMealBillInBDT + totalUserCharges + totalRent;
-        let userTotalCharges = [];
+          totalMealBillInBDT + totalUserCharges + totalRent + 166;
+        let userTotalCharges = [
+          { note: "Special Meal", amount: 66 },
+          { note: "RFID Card", amount: 100 },
+        ];
         if (nextBill) {
           userTotalCharges = [
+            ...userTotalCharges,
             ...user.charges,
             { note: "Rent", amount: totalRent },
           ];
         } else {
-          userTotalCharges = [...user.charges];
+          userTotalCharges = [...userTotalCharges, ...user.charges];
         }
         totalRent = 0;
         let mounthlyBillEmailHtml = render(
