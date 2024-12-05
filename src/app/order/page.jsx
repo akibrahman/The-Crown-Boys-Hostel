@@ -488,7 +488,7 @@ const Order = () => {
                                 new Date().toLocaleString("en-US", {
                                   timeZone: "Asia/Dhaka",
                                 })
-                              ).getHours() >= 15) ||
+                              ).getHours() >= 17) ||
                             (new Date(date).toLocaleDateString("en-BD", {
                               month: "long",
                               timeZone: "Asia/Dhaka",
@@ -498,7 +498,7 @@ const Order = () => {
                                 new Date().toLocaleString("en-US", {
                                   timeZone: "Asia/Dhaka",
                                 })
-                              ).getHours() >= 15)
+                              ).getHours() >= 17)
                           ) {
                             toast.error(
                               "Today's Guest meal cann't be edited now"
@@ -585,6 +585,7 @@ const Order = () => {
                           className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md outline-none"
                           type="number"
                           onChange={(e) => {
+                            return toast.error("Breakfast is not Available");
                             if (
                               moment(date).isSame(moment(new Date()), "day")
                             ) {
@@ -608,7 +609,12 @@ const Order = () => {
                           type="number"
                           onChange={(e) => {
                             if (
-                              moment(date).isSame(moment(new Date()), "day")
+                              moment(date).isSame(moment(new Date()), "day") &&
+                              new Date(
+                                new Date().toLocaleString("en-US", {
+                                  timeZone: "Asia/Dhaka",
+                                })
+                              ).getHours() >= 10
                             ) {
                               toast.error(
                                 "Today's Guest-Lunch cann't be edited"
@@ -634,7 +640,7 @@ const Order = () => {
                                 new Date().toLocaleString("en-US", {
                                   timeZone: "Asia/Dhaka",
                                 })
-                              ).getHours() >= 15
+                              ).getHours() >= 17
                             ) {
                               toast.error(
                                 "Today's Guest-Dinner cann't be edited"

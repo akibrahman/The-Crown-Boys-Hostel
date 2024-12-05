@@ -315,9 +315,10 @@ const DateRangeMealOrder = ({
                 <p className="w-[100px] text-center">Breakfast:</p>
                 <div className="flex gap-4 items-center">
                   <button
-                    onClick={() =>
-                      breakfast === 1 ? setBreakfast(0) : setBreakfast(1)
-                    }
+                    onClick={() => {
+                      // breakfast === 1 ? setBreakfast(0) : setBreakfast(1)
+                      return toast.error("Breakfast is not Available");
+                    }}
                     style={{ height: "50px" }}
                     className={`text-stone-300 font-medium w-[100px] rounded cursor-pointer duration-300 active:scale-90 ${
                       breakfast === 1 ? "bg-green-500" : "bg-stone-800"

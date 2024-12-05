@@ -24,6 +24,51 @@ export const PUT = async (req) => {
 
     // About Block date
     if (blockDate && fromDate && fromDay) {
+      //
+      const isLastDayOfCurrentMonthInBangladesh = () => {
+        const today = new Date();
+        today.setUTCHours(today.getUTCHours() + 6);
+        const currentMonth = today.getUTCMonth();
+        const currentYear = today.getUTCFullYear();
+        const lastDayOfMonth = new Date(
+          Date.UTC(currentYear, currentMonth + 1, 0)
+        );
+        return {
+          isLastDay:
+            today.getUTCDate() === lastDayOfMonth.getUTCDate() &&
+            today.getUTCMonth() === lastDayOfMonth.getUTCMonth() &&
+            today.getUTCFullYear() === lastDayOfMonth.getUTCFullYear(),
+        };
+      };
+      const isSecondLastDayOfCurrentMonthInBangladesh = () => {
+        const today = new Date();
+        today.setUTCHours(today.getUTCHours() + 6);
+        const currentMonth = today.getUTCMonth();
+        const currentYear = today.getUTCFullYear();
+        const lastDayOfMonth = new Date(
+          Date.UTC(currentYear, currentMonth + 1, 0)
+        );
+        const secondLastDayOfMonth = new Date(lastDayOfMonth);
+        secondLastDayOfMonth.setUTCDate(lastDayOfMonth.getUTCDate() - 1);
+        return {
+          isSecondLastDay:
+            today.getUTCDate() === secondLastDayOfMonth.getUTCDate() &&
+            today.getUTCMonth() === secondLastDayOfMonth.getUTCMonth() &&
+            today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
+        };
+      };
+      const aboutSecondLastDayOfCurrentMonth =
+        isSecondLastDayOfCurrentMonthInBangladesh();
+      const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
+
+      if (
+        aboutSecondLastDayOfCurrentMonth.isSecondLastDay ||
+        aboutLastDayOfCurrentMonth.isLastDay
+      )
+        throw new Error(
+          "Client Blocking is not Allowed on Second Last or Last Day of any Month"
+        );
+      //
       const currentDateInBD = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -87,11 +132,6 @@ export const PUT = async (req) => {
             date:
               fromDate.split("/")[0] + "/" + i + "/" + fromDate.split("/")[2],
           });
-          console.log(
-            "Order: ",
-            order,
-            fromDate.split("/")[0] + "/" + i + "/" + fromDate.split("/")[2]
-          );
           if (!order) continue;
           order.breakfast = false;
           order.lunch = false;
@@ -111,6 +151,51 @@ export const PUT = async (req) => {
         );
       }
     } else if (clearBlockDate && clearBlockDate === "YES") {
+      //
+      const isLastDayOfCurrentMonthInBangladesh = () => {
+        const today = new Date();
+        today.setUTCHours(today.getUTCHours() + 6);
+        const currentMonth = today.getUTCMonth();
+        const currentYear = today.getUTCFullYear();
+        const lastDayOfMonth = new Date(
+          Date.UTC(currentYear, currentMonth + 1, 0)
+        );
+        return {
+          isLastDay:
+            today.getUTCDate() === lastDayOfMonth.getUTCDate() &&
+            today.getUTCMonth() === lastDayOfMonth.getUTCMonth() &&
+            today.getUTCFullYear() === lastDayOfMonth.getUTCFullYear(),
+        };
+      };
+      const isSecondLastDayOfCurrentMonthInBangladesh = () => {
+        const today = new Date();
+        today.setUTCHours(today.getUTCHours() + 6);
+        const currentMonth = today.getUTCMonth();
+        const currentYear = today.getUTCFullYear();
+        const lastDayOfMonth = new Date(
+          Date.UTC(currentYear, currentMonth + 1, 0)
+        );
+        const secondLastDayOfMonth = new Date(lastDayOfMonth);
+        secondLastDayOfMonth.setUTCDate(lastDayOfMonth.getUTCDate() - 1);
+        return {
+          isSecondLastDay:
+            today.getUTCDate() === secondLastDayOfMonth.getUTCDate() &&
+            today.getUTCMonth() === secondLastDayOfMonth.getUTCMonth() &&
+            today.getUTCFullYear() === secondLastDayOfMonth.getUTCFullYear(),
+        };
+      };
+      const aboutSecondLastDayOfCurrentMonth =
+        isSecondLastDayOfCurrentMonthInBangladesh();
+      const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
+
+      if (
+        aboutSecondLastDayOfCurrentMonth.isSecondLastDay ||
+        aboutLastDayOfCurrentMonth.isLastDay
+      )
+        throw new Error(
+          "Client Unblocking is not Allowed on Second Last or Last Day of any Month"
+        );
+      //
       const user = await User.findById(_id);
       const isOrderExists = await Order.find({
         month: new Date(
@@ -164,7 +249,7 @@ export const PUT = async (req) => {
               currentMonthNumber,
               i
             ).toLocaleDateString("en-BD", { timeZone: "Asia/Dhaka" }),
-            breakfast: true,
+            breakfast: false,
             lunch: true,
             dinner: true,
           }).save();
@@ -219,7 +304,7 @@ export const PUT = async (req) => {
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { success: false, msg: "Server error!" },
+      { success: false, msg: error.message || "Server error!" },
       { status: 500 }
     );
   }

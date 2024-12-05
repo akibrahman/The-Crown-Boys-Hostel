@@ -21,6 +21,8 @@ const Component = ({ id }) => {
     useState(false);
   const [date, setDate] = useState("");
   const [calenderShow, setCalenderShow] = useState(false);
+  const [blocking, setBlocking] = useState(false);
+  const [unblocking, setUnblocking] = useState(false);
 
   const { data: client, refetch: clientRefetch } = useQuery({
     queryKey: ["userEdit", id],
@@ -95,6 +97,7 @@ const Component = ({ id }) => {
   const saveBlockDate = async () => {
     if (!date) return toast.error("Date is not selected!");
     try {
+      setBlocking(true);
       const fromDate =
         new Date(date).toLocaleDateString("en-US", {
           timeZone: "Asia/Dhaka",
@@ -128,10 +131,12 @@ const Component = ({ id }) => {
       await clientRefetch();
       setCalenderShow(false);
       setDate("");
+      setBlocking(false);
     }
   };
   const clearBlockDate = async () => {
     try {
+      setUnblocking(true);
       const { data } = await axios.put("/api/clients/editclient", {
         clearBlockDate: "YES",
         _id: client._id,
@@ -148,6 +153,7 @@ const Component = ({ id }) => {
       await clientRefetch();
       setCalenderShow(false);
       setDate("");
+      setUnblocking(false);
     }
   };
 
@@ -817,6 +823,7 @@ const Component = ({ id }) => {
                     <button
                       onClick={clearBlockDate}
                       type="button"
+                      disabled={unblocking}
                       className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-orange-500 select-none cursor-pointer"
                     >
                       Clear
@@ -876,6 +883,7 @@ const Component = ({ id }) => {
                       <button
                         onClick={saveBlockDate}
                         type="button"
+                        disabled={blocking}
                         className="px-3 py-0.5 duration-300 active:scale-90 hover:scale-105 text-white bg-green-500 select-none cursor-pointer"
                       >
                         Save

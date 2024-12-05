@@ -51,33 +51,22 @@ async function delay(s) {
 
 export const PATCH = async () => {
   try {
-    const transport = nodemailer.createTransport({
-      service: "gmail",
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASS,
-      },
-    });
-    const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: "akibrahman5200@gmail.com",
-      subject: "Cron Job Test E-mail",
-      html: `<p>Cron Job: This mail is before Delay</p>`,
-    };
-    const mailOptions2 = {
-      from: process.env.GMAIL_USER,
-      to: "akibrahman5200@gmail.com",
-      subject: "Cron Job Test E-mail",
-      html: `<p>Cron Job: This mail is after Delay</p>`,
-    };
-    await transport.sendMail(mailOptions);
-    await delay(300);
-    await transport.sendMail(mailOptions2);
+    await Bill.updateMany(
+      { month: "November", year: 2024 },
+      {
+        $push: {
+          charges: {
+            $each: [
+              { note: "Special Meal", amount: 66 },
+              { note: "Special Meal", amount: 66 },
+            ],
+          },
+        },
+        $inc: { totalBillInBDT: 132 },
+      }
+    );
     return NextResponse.json(
-      { success: true, msg: "Runned Successfully & E-mail Sent (5 min)" },
+      { success: true, msg: "Runned Successfully" },
       { status: 200 }
     );
   } catch (error) {

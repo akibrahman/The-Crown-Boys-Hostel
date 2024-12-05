@@ -113,14 +113,6 @@ const Component = ({ id }) => {
           <FaArrowRight className="text-lg" />
         )}
       </div>
-      <Link
-        className="absolute top-5 left-1/2 -translate-x-1/2"
-        href="/dashboard?displayData=managerAllUsers"
-      >
-        <button className="text-sm px-3 py-1 rounded-full text-white font-semibold bg-blue-500 duration-300 active:scale-90">
-          All Users
-        </button>
-      </Link>
       <div ref={componentRef} class="bg-dashboard text-white">
         <div class="container mx-auto px-4 pb-16 pt-16">
           <div class="flex flex-wrap -mx-3">

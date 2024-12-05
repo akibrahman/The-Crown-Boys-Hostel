@@ -27,7 +27,7 @@ const OwnerControlPanel = ({ user }) => {
         className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
         onClick={async () => {
           setIsLoading(true);
-          const { data } = await axios.put("/api/orders/testapi");
+          const { data } = await axios.patch("/api/orders/testapi");
           if (data.success) toast.success("Completed");
           setIsLoading(false);
         }}
