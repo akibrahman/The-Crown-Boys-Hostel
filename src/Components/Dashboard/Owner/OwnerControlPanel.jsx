@@ -10,21 +10,33 @@ const OwnerControlPanel = ({ user }) => {
       <button
         disabled
         onClick={async () => {
-          const { data } = await axios.get("/api/cronjob/cronjob", {
-            headers: { Authorization: "Bearer 1234567890" },
-          });
-          if (data.success) {
-            console.log(data.data);
-            toast.success("Job Done");
-          } else toast.error("Job Error");
+          try {
+            setIsLoading(true);
+            const { data } = await axios.get("/api/cronjob/cronjob", {
+              headers: { Authorization: "Bearer 1234567890" },
+            });
+            if (data.success) {
+              console.log(data.data);
+              toast.success("Job Done");
+              alert("Job Done");
+            } else {
+              toast.error("Job Error");
+              alert("Job Error");
+            }
+          } catch (error) {
+            toast.error(error?.response?.data?.msg || error?.message || "X");
+            console.log(error);
+          } finally {
+            setIsLoading(false);
+          }
         }}
-        className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
+        className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 flex items-center justify-center gap-2"
       >
-        Cron Job
+        Cron Job {isLoading && <CgSpinner className="text-xl animate-spin" />}
       </button>
       <button
         disabled
-        className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 "
+        className="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold duration-300 active:scale-90 flex items-center justify-center gap-2"
         onClick={async () => {
           setIsLoading(true);
           const { data } = await axios.patch("/api/orders/testapi");

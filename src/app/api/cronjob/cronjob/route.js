@@ -7,6 +7,7 @@ import Order from "@/models/orderModel";
 import Room from "@/models/roomModel";
 import Transaction from "@/models/transactionModel";
 import User from "@/models/userModel";
+import { isFridayInBangladesh } from "@/utils/isFriday";
 import { sendSMS } from "@/utils/sendSMS";
 import { render } from "@react-email/render";
 import moment from "moment";
@@ -70,7 +71,8 @@ export const GET = async (req) => {
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     //! Second Last day of any month-----------------------
-    if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
+    // aboutSecondLastDayOfCurrentMonth.isSecondLastDay
+    if (true) {
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -299,7 +301,8 @@ export const GET = async (req) => {
       });
     }
     //! Last day of any month------------------------------
-    if (aboutLastDayOfCurrentMonth.isLastDay) {
+    // aboutLastDayOfCurrentMonth.isLastDay
+    if (true) {
       console.log("Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -357,11 +360,23 @@ export const GET = async (req) => {
           );
           return total + transactionSum;
         }, 0);
-        const calculateMeals = (type) =>
-          orders.reduce(
-            (accumulator, currentValue) =>
+        const calculateMeals = (type) => {
+          let charges = { note: "Special Meal", amount: 0 };
+          const count = orders.reduce((accumulator, currentValue) => {
+            let isMeal = 0;
+            if (currentValue[type]) isMeal = 1;
+            else isMeal = 0;
+            if (type == "lunch") {
+              if (currentValue[type]) {
+                const date = currentValue.date;
+                if (isFridayInBangladesh(date)) {
+                  charges.amount += 66;
+                }
+              }
+            }
+            return (
               accumulator +
-              (currentValue[type] ? 1 : 0) +
+              isMeal +
               (currentValue.isGuestMeal
                 ? parseInt(
                     currentValue[
@@ -370,21 +385,29 @@ export const GET = async (req) => {
                       }Count`
                     ]
                   ) || 0
-                : 0),
-            0
-          );
+                : 0)
+            );
+          }, 0);
+          if (charges.amount <= 0) charges = null;
+          if (type == "lunch") return [count, charges];
+          else return [count];
+        };
         const nextBill = await Bill.findOne({
           userId: bill.userId,
           year: nextYear,
           month: nextMonth,
         });
-        const totalBreakfast = calculateMeals("breakfast");
-        const totalLunch = calculateMeals("lunch");
-        const totalDinner = calculateMeals("dinner");
+        const [totalBreakfast] = calculateMeals("breakfast");
+        const [totalLunch, specialMealCharges] = calculateMeals("lunch");
+        const [totalDinner] = calculateMeals("dinner");
         const totalMealBillInBDT =
           totalBreakfast * 32 + totalLunch * 64 + totalDinner * 64 + 500;
         const totalUserCharges =
           user.charges?.reduce((a, b) => a + parseInt(b.amount), 0) || 0;
+        const totalSpecialMealCharges =
+          specialMealCharges && specialMealCharges?.amount
+            ? specialMealCharges.amount
+            : 0;
         const rooms = await Room.find({
           "beds.user": bill.userId.toString(),
         });
@@ -399,19 +422,24 @@ export const GET = async (req) => {
         if (totalRent == 0) totalRent = 3500;
         if (!nextBill) totalRent = 0;
         const totalBillInBDT =
-          totalMealBillInBDT + totalUserCharges + totalRent + 166;
-        let userTotalCharges = [
-          { note: "Special Meal", amount: 66 },
-          { note: "RFID Card", amount: 100 },
-        ];
+          totalMealBillInBDT +
+          totalUserCharges +
+          totalSpecialMealCharges +
+          totalRent;
+        let userTotalCharges = [];
         if (nextBill) {
           userTotalCharges = [
             ...userTotalCharges,
             ...user.charges,
+            ...(specialMealCharges ? [specialMealCharges] : []),
             { note: "Rent", amount: totalRent },
           ];
         } else {
-          userTotalCharges = [...userTotalCharges, ...user.charges];
+          userTotalCharges = [
+            ...userTotalCharges,
+            ...user.charges,
+            ...(specialMealCharges ? [specialMealCharges] : []),
+          ];
         }
         totalRent = 0;
         let mounthlyBillEmailHtml = render(
@@ -538,6 +566,9 @@ export const GET = async (req) => {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ error }, { status: 500 });
+    return NextResponse.json(
+      { error, success: false, msg: error.message },
+      { status: 500 }
+    );
   }
 };
