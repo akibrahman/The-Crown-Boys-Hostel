@@ -27,8 +27,8 @@ const AboutSectionOne = () => {
           <div className="-mx-4 flex flex-wrap items-center">
             <div className="w-full px-4 lg:w-1/2">
               <SectionTitle
-                title="Crafted for Startup, SaaS and Business Sites."
-                paragraph="The main ‘thrust’ is to focus on educating attendees on how to best protect highly vulnerable business applications with interactive panel discussions and roundtables."
+                title="Experience Comfortable Living at The Crown Boys Hostel"
+                paragraph="We provide a safe, comfortable, and affordable living space tailored for students and working professionals. With modern amenities and a convenient location, The Crown Boys Hostel is your perfect home away from home."
                 mb="44px"
               />
 
@@ -38,15 +38,15 @@ const AboutSectionOne = () => {
               >
                 <div className="mx-[-12px] flex flex-wrap">
                   <div className="w-full px-3 sm:w-1/2 lg:w-full xl:w-1/2">
-                    <List text="Premium quality" />
-                    <List text="Tailwind CSS" />
-                    <List text="Use for lifetime" />
+                    <List text="Affordable pricing (3000 BDT/month)" />
+                    <List text="Spacious rooms with extra bed options" />
+                    <List text="Secure environment with RFID access" />
                   </div>
 
                   <div className="w-full px-3 sm:w-1/2 lg:w-full xl:w-1/2">
-                    <List text="Next.js" />
-                    <List text="Rich documentation" />
-                    <List text="Developer friendly" />
+                    <List text="Hygienic meal plans" />
+                    <List text="24/7 customer support" />
+                    <List text="Prime location near essential services" />
                   </div>
                 </div>
               </div>

@@ -4,29 +4,29 @@ import SingleTestimonial from "./coms/SingleTestimonial";
 const testimonialData = [
   {
     id: 1,
-    name: "Musharof Chy",
-    designation: "Founder @TailGrids",
+    name: "Akib Rahman",
+    designation: "Student, IUBAT",
     content:
-      "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
-    image: "/images/testimonials/auth-01.png",
+      "Staying at The Crown Boys Hostel has been a great experience. The facilities are well-maintained, and the environment is very friendly. Highly recommended!",
+    image: "/images/testimonials/akibrahman5200.jpg",
     star: 5,
   },
   {
     id: 2,
-    name: "Devid Weilium",
-    designation: "Founder @UIdeck",
+    name: "Kazi Basirul Islam",
+    designation: "Employee, HaMeem Group",
     content:
-      "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
-    image: "/images/testimonials/auth-02.png",
+      "The high-speed internet and quiet study spaces are perfect for remote work. The food management system is also a lifesaver. A wonderful place to stay!",
+    image: "/images/testimonials/basirulislam02.jpg",
     star: 5,
   },
   {
     id: 3,
-    name: "Lethium Frenci",
-    designation: "Founder @Lineicons",
+    name: "Rahatul Islam sadik",
+    designation: "Student, IUBAT",
     content:
-      "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
-    image: "/images/testimonials/auth-03.png",
+      "I love how convenient and secure everything is here. The RFID-based meal management is very efficient, and the staff is super helpful.",
+    image: "/images/testimonials/rahatulislamsadik.jpg",
     star: 5,
   },
 ];
@@ -36,8 +36,8 @@ const Testimonials = () => {
     <section className="bg-bg-color-dark flex items-center justify-center relative z-10 py-6 md:py-8 lg:py-10">
       <div className="container">
         <SectionTitle
-          title="What Our Users Says"
-          paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+          title="What Our Residents Say"
+          paragraph="Hear from our current residents about their experience living at The Crown Boys Hostel. Our priority is to provide comfort, convenience, and a safe environment."
           center
         />
 

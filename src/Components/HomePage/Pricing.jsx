@@ -4,9 +4,10 @@ import { useState } from "react";
 import SectionTitle from "./coms/SectionTitle";
 import PricingBox from "./coms/PricingBox";
 import OfferList from "./coms/OfferList";
+import Link from "next/link";
 
 const Pricing = () => {
-  const [isMonthly, setIsMonthly] = useState(true);
+  const [isNonAC, setIsNonAC] = useState(true);
 
   return (
     <section
@@ -16,7 +17,7 @@ const Pricing = () => {
       <div className="container">
         <SectionTitle
           title="Simple and Affordable Pricing"
-          paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+          paragraph="The Crown Boys Hostel offers a straightforward pricing plan with no hidden costs. Experience comfort and convenience starting at just 3000 BDT per month with a one-time service charge of 1500 BDT."
           center
           width="665px"
         />
@@ -27,24 +28,24 @@ const Pricing = () => {
             data-wow-delay=".1s"
           >
             <span
-              onClick={() => setIsMonthly(true)}
+              onClick={() => setIsNonAC(true)}
               className={`${
-                isMonthly
+                isNonAC
                   ? "pointer-events-none text-primary"
                   : "text-dark dark:text-white"
               } mr-4 cursor-pointer text-base font-semibold`}
             >
-              Monthly
+              Non-AC
             </span>
             <div
-              onClick={() => setIsMonthly(!isMonthly)}
+              onClick={() => setIsNonAC(!isNonAC)}
               className="flex cursor-pointer items-center"
             >
               <div className="relative">
                 <div className="h-5 w-14 rounded-full bg-[#1D2144] shadow-inner"></div>
                 <div
                   className={`${
-                    isMonthly ? "" : "translate-x-full"
+                    isNonAC ? "" : "translate-x-full"
                   } shadow-switch-1 absolute left-0 top-[-4px] flex h-7 w-7 items-center justify-center rounded-full bg-primary transition`}
                 >
                   <span className="active h-4 w-4 rounded-full bg-white"></span>
@@ -52,59 +53,80 @@ const Pricing = () => {
               </div>
             </div>
             <span
-              onClick={() => setIsMonthly(false)}
+              onClick={() => setIsNonAC(false)}
               className={`${
-                isMonthly
+                isNonAC
                   ? "text-dark dark:text-white"
                   : "pointer-events-none text-primary"
               } ml-4 cursor-pointer text-base font-semibold`}
             >
-              Yearly
+              AC
             </span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
           <PricingBox
-            packageName="Lite"
-            price={isMonthly ? "40" : "120"}
-            duration={isMonthly ? "mo" : "yr"}
-            subtitle="Lorem ipsum dolor sit amet adiscing elit Mauris egestas enim."
+            packageName="2 Seat Room"
+            price={isNonAC ? "4999" : "19999"}
+            // duration={isNonAC ? "Non-AC" : "AC"}
+            duration={"Seat"}
+            subtitle="A cozy shared room, perfect for two residents with essential amenities."
           >
-            <OfferList text="All UI Components" status="active" />
-            <OfferList text="Use with Unlimited Projects" status="active" />
-            <OfferList text="Commercial Use" status="active" />
-            <OfferList text="Email Support" status="active" />
-            <OfferList text="Lifetime Access" status="inactive" />
-            <OfferList text="Free Lifetime Updates" status="inactive" />
+            {!isNonAC && (
+              <OfferList text="All Expenses Included" status="active" />
+            )}
+            <OfferList text="Daily Cleaning Service" status="active" />
+            <OfferList text="High-Speed WiFi" status="active" />
+            <OfferList text="Access to Study Room" status="active" />
+            <OfferList text="Electricity and Water Included" status="active" />
+            <OfferList text="Laundry Service" status="inactive" />
+            <OfferList text="Free Maintenance Support" status="inactive" />
           </PricingBox>
+
           <PricingBox
-            packageName="Basic"
-            price={isMonthly ? "399" : "789"}
-            duration={isMonthly ? "mo" : "yr"}
-            subtitle="Lorem ipsum dolor sit amet adiscing elit Mauris egestas enim."
+            packageName="3 Seat Room"
+            price={isNonAC ? "4499" : "14999"}
+            // duration={isNonAC ? "Non-AC" : "AC"}
+            duration={"Seat"}
+            subtitle="An ideal room for three individuals, combining comfort and community living."
           >
-            <OfferList text="All UI Components" status="active" />
-            <OfferList text="Use with Unlimited Projects" status="active" />
-            <OfferList text="Commercial Use" status="active" />
-            <OfferList text="Email Support" status="active" />
-            <OfferList text="Lifetime Access" status="active" />
-            <OfferList text="Free Lifetime Updates" status="inactive" />
+            {!isNonAC && (
+              <OfferList text="All Expenses Included" status="active" />
+            )}
+            <OfferList text="Daily Cleaning Service" status="active" />
+            <OfferList text="High-Speed WiFi" status="active" />
+            <OfferList text="Access to Study Room" status="active" />
+            <OfferList text="Electricity and Water Included" status="active" />
+            <OfferList text="Laundry Service" status="active" />
+            <OfferList text="Free Maintenance Support" status="inactive" />
           </PricingBox>
+
           <PricingBox
-            packageName="Plus"
-            price={isMonthly ? "589" : "999"}
-            duration={isMonthly ? "mo" : "yr"}
-            subtitle="Lorem ipsum dolor sit amet adiscing elit Mauris egestas enim."
+            packageName="4 Seat Room"
+            price={isNonAC ? "3999" : "9999"}
+            // duration={isNonAC ? "Non-AC" : "AC"}
+            duration={"Seat"}
+            subtitle="A budget-friendly option for groups of four, ensuring essential services."
           >
-            <OfferList text="All UI Components" status="active" />
-            <OfferList text="Use with Unlimited Projects" status="active" />
-            <OfferList text="Commercial Use" status="active" />
-            <OfferList text="Email Support" status="active" />
-            <OfferList text="Lifetime Access" status="active" />
-            <OfferList text="Free Lifetime Updates" status="active" />
+            {!isNonAC && (
+              <OfferList text="All Expenses Included" status="active" />
+            )}
+            <OfferList text="Daily Cleaning Service" status="active" />
+            <OfferList text="High-Speed WiFi" status="active" />
+            <OfferList text="Access to Study Room" status="active" />
+            <OfferList text="Electricity and Water Included" status="active" />
+            <OfferList text="Laundry Service" status="active" />
+            <OfferList text="Free Maintenance Support" status="active" />
           </PricingBox>
         </div>
+
+        <Link
+          href={"/rooms"}
+          className="flex w-[80%] md:w-[50%] mx-auto mt-2 md:mt-4 items-center justify-center rounded-sm bg-primary p-3 text-base font-semibold text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+        >
+          Details
+        </Link>
       </div>
 
       <div className="absolute bottom-0 left-0 z-[-1]">

@@ -9,8 +9,8 @@ const Video = () => {
     <section className="relative bg-dark-black z-10 py-6 md:py-8 lg:py-10">
       <div className="container">
         <SectionTitle
-          title="We are ready to help"
-          paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+          title="Experience Quality Living"
+          paragraph="Welcome to The Crown Boys Hostel, where comfort meets convenience. Watch our video to explore our premium facilities and see how we make your stay exceptional."
           center
           mb="80px"
         />

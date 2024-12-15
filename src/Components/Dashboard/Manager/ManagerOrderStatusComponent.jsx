@@ -12,6 +12,7 @@ import { Tooltip } from "react-tooltip";
 import Image from "next/image";
 import { useReactToPrint } from "react-to-print";
 import toast from "react-hot-toast";
+import OrderStatusComponent from "./OrderStatusComponent";
 
 const ManagerOrderStatusComponent = () => {
   const route = useRouter();
@@ -559,268 +560,36 @@ const ManagerOrderStatusComponent = () => {
           </button>
         </div>
         {tab == 1 && (
-          <>
-            {/* Order - Today  */}
-            <div className="mt-4 md:mt-6 bg-dark-black text-white p-4 rounded-md font-semibold text-sm md:text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
-              <p className="md:w-[220px]">Today - {todayDateString}</p>
-              <p className="">Breakfast - {breakfastOfToday}</p>
-              <p className="">Lunch - {lunchOfToday}</p>
-              <p className="">Dinner - {dinnerOfToday}</p>
-              <p className="">
-                Total - {breakfastOfToday + lunchOfToday + dinnerOfToday}
-              </p>
-              {orderOfToday && (
-                <button
-                  onClick={() => {
-                    openModal();
-                    floorAnalyzer(orderOfToday);
-                  }}
-                  className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-                >
-                  Floor Analysis
-                </button>
-              )}
-              <button
-                onClick={() => {
-                  setPosPrintData(
-                    tab == 1
-                      ? orderOfToday
-                      : tab == 2
-                      ? orderOfTomorrow
-                      : orderOfYesterday
-                  );
-                  setShowPosPrint(true);
-                }}
-                className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-              >
-                Print POS
-              </button>
-            </div>
-            {/* Order Details  */}
-            <div className="text-sm bg-dark-black px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
-              {orderOfToday?.map((order) => (
-                <div
-                  className="flex items-center gap-3 md:gap-8"
-                  key={order._id}
-                >
-                  <Tooltip className="z-50" id="orderstatustoday" />
-                  <p
-                    data-tooltip-id="orderstatustoday"
-                    data-tooltip-content={
-                      order.isGuestMeal
-                        ? "Breakfast : " +
-                          order.guestBreakfastCount +
-                          " Lunch : " +
-                          order.guestLunchCount +
-                          " Dinner : " +
-                          order.guestDinnerCount
-                        : null
-                    }
-                    className={`${
-                      order.isGuestMeal ? "text-blue-500" : ""
-                    } text-sm md:text-base w-max`}
-                  >
-                    {order.user.username}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`w-2 h-2 ${
-                        order.breakfast ? "bg-green-500" : "bg-red-500"
-                      } rounded-full block`}
-                    ></span>
-                    <span
-                      className={`w-2 h-2 ${
-                        order.lunch ? "bg-green-500" : "bg-red-500"
-                      } rounded-full block`}
-                    ></span>
-                    <span
-                      className={`w-2 h-2 ${
-                        order.dinner ? "bg-green-500" : "bg-red-500"
-                      } rounded-full block`}
-                    ></span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+          <OrderStatusComponent
+            date={todayDateString}
+            orders={orderOfToday}
+            openModal={openModal}
+            floorAnalyzer={floorAnalyzer}
+            setPosPrintData={setPosPrintData}
+            setShowPosPrint={setShowPosPrint}
+          />
         )}
 
         {tab == 2 && (
-          <>
-            {" "}
-            {/* Order - Tomorrow  */}
-            <div className="mt-4 md:mt-6 bg-dark-black text-white p-4 rounded-md font-semibold text-sm md:text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
-              <p className="md:w-[220px]">Tomorrow - {tomorrowDateString}</p>
-              <p className="">Breakfast - {breakfastOfTomorrow}</p>
-              <p className="">Lunch - {lunchOfTomorrow}</p>
-              <p className="">Dinner - {dinnerOfTomorrow}</p>
-              <p className="">
-                Total -{" "}
-                {breakfastOfTomorrow + lunchOfTomorrow + dinnerOfTomorrow}
-              </p>
-              {orderOfTomorrow && (
-                <button
-                  onClick={() => {
-                    openModal();
-                    floorAnalyzer(orderOfTomorrow);
-                  }}
-                  className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-                >
-                  Floor Analysis
-                </button>
-              )}
-              <button
-                onClick={() => {
-                  setPosPrintData(
-                    tab == 1
-                      ? orderOfToday
-                      : tab == 2
-                      ? orderOfTomorrow
-                      : orderOfYesterday
-                  );
-                  setShowPosPrint(true);
-                }}
-                className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-              >
-                Print POS
-              </button>
-            </div>
-            {/* Order Details  */}
-            <div className="text-sm bg-dark-black px-5 text-white py-2 my-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
-              {orderOfTomorrow?.map((order) => (
-                <div
-                  className="flex items-center gap-3 md:gap-8"
-                  key={order._id}
-                >
-                  <Tooltip className="z-50" id="orderstatustomorrow" />
-                  <p
-                    data-tooltip-id="orderstatustomorrow"
-                    data-tooltip-content={
-                      order.isGuestMeal
-                        ? "Breakfast : " +
-                          order.guestBreakfastCount +
-                          " Lunch : " +
-                          order.guestLunchCount +
-                          " Dinner : " +
-                          order.guestDinnerCount
-                        : null
-                    }
-                    className={`${
-                      order.isGuestMeal ? "text-blue-500" : ""
-                    } text-sm md:text-base w-max`}
-                  >
-                    {order.user.username}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`w-2 h-2 ${
-                        order.breakfast ? "bg-green-500" : "bg-red-500"
-                      } rounded-full block`}
-                    ></span>
-                    <span
-                      className={`w-2 h-2 ${
-                        order.lunch ? "bg-green-500" : "bg-red-500"
-                      } rounded-full block`}
-                    ></span>
-                    <span
-                      className={`w-2 h-2 ${
-                        order.dinner ? "bg-green-500" : "bg-red-500"
-                      } rounded-full block`}
-                    ></span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+          <OrderStatusComponent
+            date={tomorrowDateString}
+            orders={orderOfTomorrow}
+            openModal={openModal}
+            floorAnalyzer={floorAnalyzer}
+            setPosPrintData={setPosPrintData}
+            setShowPosPrint={setShowPosPrint}
+          />
         )}
 
         {tab == 3 && (
-          <>
-            {" "}
-            {/* Order - Yesterday  */}
-            <div className="mt-4 md:mt-6 bg-dark-black text-white p-4 rounded-md font-semibold text-sm md:text-lg flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
-              <p className="md:w-[220px]">Yesterday - {yesterdayDateString}</p>
-              <p className="">Breakfast - {breakfastOfYesterday}</p>
-              <p className="">Lunch - {lunchOfYesterday}</p>
-              <p className="">Dinner - {dinnerOfYesterday}</p>
-              <p className="">
-                Total -{" "}
-                {breakfastOfYesterday + lunchOfYesterday + dinnerOfYesterday}
-              </p>
-              {orderOfYesterday && (
-                <button
-                  onClick={() => {
-                    openModal();
-                    floorAnalyzer(orderOfYesterday);
-                  }}
-                  className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-                >
-                  Floor Analysis
-                </button>
-              )}
-              <button
-                onClick={() => {
-                  setPosPrintData(
-                    tab == 1
-                      ? orderOfToday
-                      : tab == 2
-                      ? orderOfTomorrow
-                      : orderOfYesterday
-                  );
-                  setShowPosPrint(true);
-                }}
-                className="bg-dark text-white px-4 py-2 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
-              >
-                Print POS
-              </button>
-            </div>
-            {/* Order Details  */}
-            <div className="text-sm bg-dark-black px-5 text-white py-2 mt-2 rounded-md grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
-              {orderOfYesterday?.map((order) => (
-                <div
-                  className="flex items-center gap-3 md:gap-8"
-                  key={order._id}
-                >
-                  <Tooltip className="z-50" id="orderstatusyesterday" />
-                  <p
-                    data-tooltip-id="orderstatusyesterday"
-                    data-tooltip-content={
-                      order.isGuestMeal
-                        ? "Breakfast : " +
-                          order.guestBreakfastCount +
-                          " Lunch : " +
-                          order.guestLunchCount +
-                          " Dinner : " +
-                          order.guestDinnerCount
-                        : null
-                    }
-                    className={`${
-                      order.isGuestMeal ? "text-blue-500" : ""
-                    } text-sm md:text-base w-max`}
-                  >
-                    {order.user.username}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`w-2 h-2 ${
-                        order.breakfast ? "bg-green-500" : "bg-red-500"
-                      } rounded-full block`}
-                    ></span>
-                    <span
-                      className={`w-2 h-2 ${
-                        order.lunch ? "bg-green-500" : "bg-red-500"
-                      } rounded-full block`}
-                    ></span>
-                    <span
-                      className={`w-2 h-2 ${
-                        order.dinner ? "bg-green-500" : "bg-red-500"
-                      } rounded-full block`}
-                    ></span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+          <OrderStatusComponent
+            date={yesterdayDateString}
+            orders={orderOfYesterday}
+            openModal={openModal}
+            floorAnalyzer={floorAnalyzer}
+            setPosPrintData={setPosPrintData}
+            setShowPosPrint={setShowPosPrint}
+          />
         )}
       </div>
     </>
