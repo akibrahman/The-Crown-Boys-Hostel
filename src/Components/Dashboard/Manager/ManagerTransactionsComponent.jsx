@@ -10,6 +10,7 @@ import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import SystemPagination from "@/Components/Pagination/Pagination";
 import { CgSpinner } from "react-icons/cg";
 import toast from "react-hot-toast";
+import ManagerEditTransactionComponent from "./ManagerEditTransactionComponent";
 
 const ManagerTransactionsComponent = ({ user }) => {
   const [page, setPage] = useState(0);
@@ -21,6 +22,7 @@ const ManagerTransactionsComponent = ({ user }) => {
   const [bgType, setBgType] = useState("");
 
   const [editTransaction, setEditTransaction] = useState(false);
+  const [editTransactionData, setEditTransactionData] = useState(null);
 
   useEffect(() => {
     const handleKeyDown = async (event) => {
@@ -31,10 +33,19 @@ const ManagerTransactionsComponent = ({ user }) => {
           if (!selectedTransaction) {
             setBgType("");
           } else {
-            setEditTransaction(true);
-            const { data } = await axios.get(
-              `/api/transaction/edit?transactionId=${selectedTransaction}`
-            );
+            try {
+              const { data } = await axios.get(
+                `/api/transaction/edit?transactionId=${selectedTransaction}`
+              );
+              setEditTransaction(true);
+              if (!data.success) throw new Error(data.msg);
+              setEditTransactionData(data);
+            } catch (error) {
+              setEditTransaction(false);
+              setEditTransactionData(null);
+              setSelectedTransaction("");
+              setBgType("");
+            }
           }
         }
       } else if (char == "Escape") {
@@ -75,19 +86,13 @@ const ManagerTransactionsComponent = ({ user }) => {
 
   if (editTransaction)
     return (
-      <div className="min-h-full p-2 md:p-5 bg-dashboard text-slate-100 relative">
-        <FaTimes
-          className="text-xl to-white absolute top-5 right-4 cursor-pointer"
-          onClick={() => {
-            setEditTransaction(false);
-            setBgType("");
-            setSelectedTransaction("");
-          }}
-        />
-        <p className="text-center font-semibold text-xl md:text-2xl dark:text-white">
-          Edit Transaction
-        </p>
-      </div>
+      <ManagerEditTransactionComponent
+        setEditTransaction={setEditTransaction}
+        setBgType={setBgType}
+        setSelectedTransaction={setSelectedTransaction}
+        setEditTransactionData={setEditTransactionData}
+        editTransactionData={editTransactionData}
+      />
     );
   else
     return (
