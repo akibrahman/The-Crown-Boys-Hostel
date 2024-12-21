@@ -72,7 +72,7 @@ export const GET = async (req) => {
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     //! Second Last day of any month-----------------------
     // aboutSecondLastDayOfCurrentMonth.isSecondLastDay
-    if (true) {
+    if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -302,7 +302,7 @@ export const GET = async (req) => {
     }
     //! Last day of any month------------------------------
     // aboutLastDayOfCurrentMonth.isLastDay
-    if (true) {
+    if (aboutLastDayOfCurrentMonth.isLastDay) {
       console.log("Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",

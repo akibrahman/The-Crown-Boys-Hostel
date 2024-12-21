@@ -12,6 +12,7 @@ export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
     const forManager = searchParams.get("forManager");
+    const nameOrEmail = searchParams.get("nameOrEmail");
     const page = searchParams.get("page") || 0;
     const limit = searchParams.get("limit") || 10;
     const month = searchParams.get("month") || 0;
@@ -101,6 +102,14 @@ export const GET = async (req) => {
                 ],
               },
               month != 0 ? { monthNumber: parseInt(month) } : {}, // Conditional month filter
+              nameOrEmail
+                ? {
+                    "userDetails.username": {
+                      $regex: nameOrEmail,
+                      $options: "i",
+                    },
+                  } // Match username with regex if nameOrEmail is provided
+                : {}, // No additional filter if nameOrEmail is not provided
             ],
           },
         },

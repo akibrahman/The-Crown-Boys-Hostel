@@ -80,8 +80,8 @@ const Pricing = () => {
             <OfferList text="High-Speed WiFi" status="active" />
             <OfferList text="Access to Study Room" status="active" />
             <OfferList text="Electricity and Water Included" status="active" />
-            <OfferList text="Laundry Service" status="inactive" />
-            <OfferList text="Free Maintenance Support" status="inactive" />
+            <OfferList text="Laundry Service" status="active" />
+            <OfferList text="Free Maintenance Support" status="active" />
           </PricingBox>
 
           <PricingBox
@@ -99,7 +99,7 @@ const Pricing = () => {
             <OfferList text="Access to Study Room" status="active" />
             <OfferList text="Electricity and Water Included" status="active" />
             <OfferList text="Laundry Service" status="active" />
-            <OfferList text="Free Maintenance Support" status="inactive" />
+            <OfferList text="Free Maintenance Support" status="active" />
           </PricingBox>
 
           <PricingBox
