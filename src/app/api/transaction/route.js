@@ -182,30 +182,46 @@ export const PATCH = async (req) => {
         success: false,
         msg: "Unauthorized - Unknown User",
       });
-    let currentDate = new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Dhaka",
-    });
-    let currentMonthNumber = new Date(currentDate).getMonth();
-    let currentYear = new Date(currentDate).getFullYear();
-    let nextMonth;
-    let nextYear;
-    if (currentMonthNumber < 11) {
-      nextMonth = new Date(
-        currentYear,
-        currentMonthNumber + 1,
-        1
-      ).toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      });
-      nextYear = currentYear;
-    } else {
-      nextMonth = new Date(currentYear + 1, 0, 1).toLocaleDateString("en-BD", {
-        month: "long",
-        timeZone: "Asia/Dhaka",
-      });
-      nextYear = currentYear + 1;
-    }
+    // let currentDate = new Date().toLocaleString("en-US", {
+    //   timeZone: "Asia/Dhaka",
+    // });
+    // let currentMonthNumber = new Date(currentDate).getMonth();
+    // let currentYear = new Date(currentDate).getFullYear();
+    // let nextMonth;
+    // let nextYear;
+    // if (currentMonthNumber < 11) {
+    //   nextMonth = new Date(
+    //     currentYear,
+    //     currentMonthNumber + 1,
+    //     1
+    //   ).toLocaleDateString("en-BD", {
+    //     month: "long",
+    //     timeZone: "Asia/Dhaka",
+    //   });
+    //   nextYear = currentYear;
+    // } else {
+    //   nextMonth = new Date(currentYear + 1, 0, 1).toLocaleDateString("en-BD", {
+    //     month: "long",
+    //     timeZone: "Asia/Dhaka",
+    //   });
+    //   nextYear = currentYear + 1;
+    // }
+    const nextYear =
+      new Date(`${bill.month} 1, 2000`).getMonth() < 11
+        ? bill.year
+        : bill.year + 1;
+
+    const nextMonth =
+      new Date(`${bill.month} 1, 2000`).getMonth() < 11
+        ? new Date(
+            bill.year,
+            new Date(`${bill.month} 1, 2000`).getMonth() + 1,
+            1
+          ).toLocaleDateString("en-BD", {
+            month: "long",
+            timeZone: "Asia/Dhaka",
+          })
+        : "January";
     const nextBill = await Bill.findOne({
       userId: bill.userId,
       year: nextYear,
