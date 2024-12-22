@@ -90,6 +90,7 @@ const ManagerTransactionsComponent = ({ user }) => {
         setEditTransaction={setEditTransaction}
         setBgType={setBgType}
         setSelectedTransaction={setSelectedTransaction}
+        selectedTransaction={selectedTransaction}
         setEditTransactionData={setEditTransactionData}
         editTransactionData={editTransactionData}
       />

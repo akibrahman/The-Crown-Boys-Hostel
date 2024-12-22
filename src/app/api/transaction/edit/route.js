@@ -64,6 +64,58 @@ export const GET = async (req) => {
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return NextResponse.json(
+      { success: false, msg: error.message },
+      { status: 500 }
+    );
+  }
+};
+
+export const PUT = async (req) => {
+  try {
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    if (!token)
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      console.log(error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
+    }
+
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+
+    const {
+      updateBill,
+      updatePayments,
+      newPayments,
+      newBillId,
+      transactionId,
+    } = await req.json();
+
+    if (updateBill && newBillId) {
+      await Transaction.findByIdAndUpdate(transactionId, { billId: newBillId });
+    }
+    if (updatePayments && newPayments) {
+      await Transaction.findByIdAndUpdate(transactionId, {
+        payments: newPayments,
+      });
+    }
+    return NextResponse.json({
+      success: true,
+      msg: "Operation Success!",
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, msg: error.message },
+      { status: 500 }
+    );
   }
 };

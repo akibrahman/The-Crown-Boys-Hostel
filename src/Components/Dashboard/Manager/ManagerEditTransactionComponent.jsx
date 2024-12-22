@@ -1,18 +1,22 @@
 import { CompareTwoArray, hasInvalidValues } from "@/utils/CompareTwoArray";
+import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
 import { FaTimes } from "react-icons/fa";
 
 const ManagerEditTransactionComponent = ({
   setEditTransaction,
   setBgType,
   setSelectedTransaction,
+  selectedTransaction,
   setEditTransactionData,
   editTransactionData,
 }) => {
   const [selectedNewBill, setSelectedNewBill] = useState(0);
   const [newPayments, setNewPayments] = useState(editTransactionData?.payments);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setNewPayments(editTransactionData.payments);
@@ -30,16 +34,26 @@ const ManagerEditTransactionComponent = ({
       if (!shouldTakeNewPayments && !selectedNewBill) {
         return toast("No Change Found");
       }
+      setLoading(true);
       const reqData = {
         updateBill: selectedNewBill ? true : false,
         updatePayments: shouldTakeNewPayments,
         newPayments: shouldTakeNewPayments ? newPayments : null,
         newBillId: selectedNewBill || null,
+        transactionId: selectedTransaction,
       };
-      toast("OK");
+      const { data } = await axios.put("/api/transaction/edit", reqData);
+      if (!data.success) throw new Error(data.msg);
+      toast.success(data.msg);
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.msg || error.message);
+    } finally {
+      setEditTransaction(false);
+      setEditTransactionData(null);
+      setSelectedTransaction("");
+      setBgType("");
+      setLoading(false);
     }
   };
 
@@ -128,9 +142,13 @@ const ManagerEditTransactionComponent = ({
           </div>
           <button
             onClick={save}
-            className="px-6 py-1 bg-green-500 text-white font-semibold cursor-pointer active:scale-90 mt-3 mx-auto block duration-300"
+            disabled={loading}
+            className="px-6 py-1 bg-green-500 text-white font-semibold cursor-pointer active:scale-90 mt-3 mx-auto duration-300 flex items-center justify-center gap-2"
           >
             Save
+            {loading && (
+              <CgSpinner className="font-semibold text-xl animate-spin" />
+            )}
           </button>
         </div>
       )}
