@@ -13,8 +13,6 @@ export const POST = async (req) => {
     const tomorrow = data.tomorrow;
     const custom = data.custom;
 
-    console.log(yesterday, custom);
-
     const dateConditions = [];
     if (yesterday) dateConditions.push({ date: yesterday });
     if (today) dateConditions.push({ date: today });
@@ -35,14 +33,6 @@ export const POST = async (req) => {
                 { $expr: { $gt: ["$guestDinnerCount", 0] } },
               ],
             },
-            // {
-            //   $or: [
-            //     yesterday ? { date: yesterday } : {},
-            //     today ? { date: today } : {},
-            //     tomorrow ? { date: tomorrow } : {},
-            //     custom ? { date: custom } : {},
-            //   ],
-            // },
             dateConditions.length > 0 ? { $or: dateConditions } : {},
           ],
         },

@@ -172,7 +172,7 @@ const Component = ({ id }) => {
           </motion.div>
         </div>
       )}
-      <div className="min-h-screen pt-5 md:pt-10 pb-20 md:pb-32 dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-gradient-to-r from-primary to-secondary dark:text-stone-300 text-stone-300 relative">
+      <div className="min-h-screen pt-5 md:pt-10 pb-20 md:pb-32 bg-dashboard text-stone-300 relative">
         {/*//! User Form  */}
         <div
           className={`${

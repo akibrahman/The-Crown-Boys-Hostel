@@ -31,7 +31,7 @@ const Rooms = () => {
     );
 
   return (
-    <div className="min-h-screen pb-20 bg-gradient-to-r from-primary to-secondary text-stone-300 relative">
+    <div className="min-h-screen pb-20 bg-dashboard text-stone-300 relative">
       {floor &&
       (floor == "1" ||
         floor == "3" ||
@@ -203,11 +203,11 @@ const TargetedRooms = ({ floor, totalSeats, availableSeats, rooms }) => {
               )}
               <div className="h-full w-max flex items-center">
                 <Image
-                  height={100}
-                  width={180}
+                  width={130}
+                  height={180}
                   src={room.image.src}
                   alt={`Image of  room number ${room.name} of 'The Crown Boys Hostel'`}
-                  className="block ounded-e-full rounded-xl"
+                  className="block ounded-e-full rounded-xl w-[130px] h-[180px]"
                 />
               </div>
               <div className="border-l-4 border-blue-500 pl-2 md:pl-4 py-3">
