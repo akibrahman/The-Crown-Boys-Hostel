@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "LogIn",
-  description: "Login to 'The Crown Boys Hostel'",
+  title: "Dashboard",
+  description: "Manage 'The Crown Boys Hostel'",
 };
 
 const layout = ({ children }) => {

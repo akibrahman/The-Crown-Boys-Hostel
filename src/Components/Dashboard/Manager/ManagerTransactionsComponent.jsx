@@ -60,7 +60,7 @@ const ManagerTransactionsComponent = ({ user }) => {
   const totalPages = Math.ceil(totalTransactions / itemsPerPage);
   const pages = [...new Array(totalPages ? totalPages : 0).fill(0)];
 
-  const { data: transactions } = useQuery({
+  const { data: transactions, refetch } = useQuery({
     queryKey: [
       "manager",
       "transactions",
@@ -82,6 +82,10 @@ const ManagerTransactionsComponent = ({ user }) => {
       }
     },
     enabled: user?._id && user?.role == "manager" ? true : false,
+  });
+
+  useEffect(() => {
+    refetch();
   });
 
   if (editTransaction)

@@ -68,130 +68,25 @@ const ManagerOrderStatusComponent = () => {
   const orderOfYesterday = orders
     ?.filter((order) => order.date == yesterdayDateString)
     .sort((a, b) => a.user.floor - b.user.floor);
-  //todo: Order of Today Calculation
-  const breakfastOfToday =
-    parseInt(orderOfToday?.filter((order) => order.breakfast == true).length) +
-    parseInt(
-      orderOfToday
-        ?.filter(
-          (order) => order.isGuestMeal == true && order.guestBreakfastCount > 0
-        )
-        .reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseInt(currentValue.guestBreakfastCount),
-          0
-        )
+
+  // Function to Identify the Lunch or Dinner
+  function getTimeRange() {
+    const bangladeshTimeOffset = 6 * 60;
+    const now = new Date();
+
+    const bangladeshTime = new Date(
+      now.getTime() + bangladeshTimeOffset * 60 * 1000
     );
-  const lunchOfToday =
-    parseInt(orderOfToday?.filter((order) => order.lunch == true).length) +
-    parseInt(
-      orderOfToday
-        ?.filter(
-          (order) => order.isGuestMeal == true && order.guestLunchCount > 0
-        )
-        .reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseInt(currentValue.guestLunchCount),
-          0
-        )
-    );
-  const dinnerOfToday =
-    parseInt(orderOfToday?.filter((order) => order.dinner == true).length) +
-    parseInt(
-      orderOfToday
-        ?.filter(
-          (order) => order.isGuestMeal == true && order.guestDinnerCount > 0
-        )
-        .reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseInt(currentValue.guestDinnerCount),
-          0
-        )
-    );
-  //todo: Order of Tomorow Calculation
-  const breakfastOfTomorrow =
-    parseInt(
-      orderOfTomorrow?.filter((order) => order.breakfast == true).length
-    ) +
-    parseInt(
-      orderOfTomorrow
-        ?.filter(
-          (order) => order.isGuestMeal == true && order.guestBreakfastCount > 0
-        )
-        .reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseInt(currentValue.guestBreakfastCount),
-          0
-        )
-    );
-  const lunchOfTomorrow =
-    parseInt(orderOfTomorrow?.filter((order) => order.lunch == true).length) +
-    parseInt(
-      orderOfTomorrow
-        ?.filter(
-          (order) => order.isGuestMeal == true && order.guestLunchCount > 0
-        )
-        .reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseInt(currentValue.guestLunchCount),
-          0
-        )
-    );
-  const dinnerOfTomorrow =
-    parseInt(orderOfTomorrow?.filter((order) => order.dinner == true).length) +
-    parseInt(
-      orderOfTomorrow
-        ?.filter(
-          (order) => order.isGuestMeal == true && order.guestDinnerCount > 0
-        )
-        .reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseInt(currentValue.guestDinnerCount),
-          0
-        )
-    );
-  //todo: Order of Yesterday Calculation
-  const breakfastOfYesterday =
-    parseInt(
-      orderOfYesterday?.filter((order) => order.breakfast == true).length
-    ) +
-    parseInt(
-      orderOfYesterday
-        ?.filter(
-          (order) => order.isGuestMeal == true && order.guestBreakfastCount > 0
-        )
-        .reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseInt(currentValue.guestBreakfastCount),
-          0
-        )
-    );
-  const lunchOfYesterday =
-    parseInt(orderOfYesterday?.filter((order) => order.lunch == true).length) +
-    parseInt(
-      orderOfYesterday
-        ?.filter(
-          (order) => order.isGuestMeal == true && order.guestLunchCount > 0
-        )
-        .reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseInt(currentValue.guestLunchCount),
-          0
-        )
-    );
-  const dinnerOfYesterday =
-    parseInt(orderOfYesterday?.filter((order) => order.dinner == true).length) +
-    parseInt(
-      orderOfYesterday
-        ?.filter(
-          (order) => order.isGuestMeal == true && order.guestDinnerCount > 0
-        )
-        .reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseInt(currentValue.guestDinnerCount),
-          0
-        )
-    );
+    const hours = bangladeshTime.getUTCHours();
+
+    if (hours >= 10 && hours < 18) {
+      return 1; // 10 AM to 6 PM
+    } else if (hours >= 18 || hours < 1) {
+      return 2; // 6 PM to 1 AM
+    } else {
+      return 3;
+    }
+  }
 
   //! For Modal
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -437,7 +332,7 @@ const ManagerOrderStatusComponent = () => {
               {/* Start  */}
               <div
                 ref={pos}
-                className="bg-white shadow-md rounded-md p-4 text-gray-500 w-[220px]"
+                className="bg-white shadow-md rounded-md p-4 text-gray-500 w-[220px] border border-black"
               >
                 <div className="flex justify-center mb-1">
                   <Image
@@ -470,14 +365,34 @@ const ManagerOrderStatusComponent = () => {
                       )
                     : new Intl.DateTimeFormat("en-GB").format(
                         new Date(yesterdayDateString)
-                      )}
+                      )}{" "}
+                  {new Date().toLocaleTimeString("en-BD", {
+                    timeZone: "Asia/Dhaka",
+                  })}
                 </p>
 
-                <div className="w-full my-2 flex flex-col gap-1 text-black font-semibold items-center">
+                {getTimeRange() == "1" ? (
+                  <p className="text-xs text-center text-black font-semibold">
+                    Lunch
+                  </p>
+                ) : getTimeRange() == "2" ? (
+                  <p className="text-xs text-center text-black font-semibold">
+                    Dinner
+                  </p>
+                ) : (
+                  <p className="text-xs text-center text-black font-semibold">
+                    Both
+                  </p>
+                )}
+
+                <div className="w-full my-3 flex flex-col gap-1 text-black font-semibold items-center text-sm">
                   {posPrintData.map((d) => (
-                    <div key={d._id} className="flex gap-1 text-center text-xs">
-                      {/* <p>{d.user.username}</p> */}
-                      <p>
+                    <div
+                      key={d._id}
+                      className="flex flex-col gap-1 text-center text-sm"
+                    >
+                      <p>{d.user.username}</p>
+                      {/* <p>
                         {(() => {
                           const parts = d.user.username.trim().split(" ");
                           if (parts.length === 1) {
@@ -486,12 +401,19 @@ const ManagerOrderStatusComponent = () => {
                             return parts.slice(0, 2).join(" ");
                           }
                         })()}
-                      </p>
+                      </p> */}
 
-                      <p>
-                        {d.guestLunchCount + (d.lunch ? 1 : 0)}-
-                        {d.guestDinnerCount + (d.dinner ? 1 : 0)}
-                      </p>
+                      {getTimeRange() == "1" ? (
+                        <p>{d.guestLunchCount + (d.lunch ? 1 : 0)}</p>
+                      ) : getTimeRange() == "2" ? (
+                        <p>{d.guestDinnerCount + (d.dinner ? 1 : 0)}</p>
+                      ) : (
+                        <div className="flex items-center justify-center gap-1">
+                          <p>{d.guestLunchCount + (d.lunch ? 1 : 0)}</p>
+                          <p>-</p>
+                          <p>{d.guestDinnerCount + (d.dinner ? 1 : 0)}</p>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -510,7 +432,7 @@ const ManagerOrderStatusComponent = () => {
                 onClick={() => {
                   printPos();
                 }}
-                className="px-4 md:px-6 py-1 md:py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300 active:scale-90"
+                className="px-4 md:px-6 py-1 md:py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 active:scale-90"
               >
                 Print
               </button>
@@ -519,7 +441,7 @@ const ManagerOrderStatusComponent = () => {
                   setShowPosPrint(false);
                   setPosPrintData([]);
                 }}
-                className="px-4 md:px-6 py-1 md:py-2 bg-orange-500 text-white rounded-md hover:bg-orange-500 transition duration-300 active:scale-90"
+                className="px-4 md:px-6 py-1 md:py-2 bg-red-500 text-white rounded hover:bg-red-500 transition duration-300 active:scale-90"
               >
                 Cancel
               </button>
