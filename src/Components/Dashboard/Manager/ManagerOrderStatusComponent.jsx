@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useReactToPrint } from "react-to-print";
 import toast from "react-hot-toast";
 import OrderStatusComponent from "./OrderStatusComponent";
+import OrderStatusCustomDateComponent from "./OrderStatusCustomDateComponent";
 
 const ManagerOrderStatusComponent = () => {
   const route = useRouter();
@@ -480,6 +481,14 @@ const ManagerOrderStatusComponent = () => {
           >
             Yesterday
           </button>
+          <button
+            onClick={() => setTab(4)}
+            className={`px-4 md:px-8 py-1 text-sm md:text-base rounded-md text-white font-semibold ${
+              tab == 4 ? "bg-stroke-dark" : "bg-dark-black"
+            } duration-300 active:scale-90 cursor-pointer`}
+          >
+            Custom Date
+          </button>
         </div>
         {tab == 1 && (
           <OrderStatusComponent
@@ -507,6 +516,15 @@ const ManagerOrderStatusComponent = () => {
           <OrderStatusComponent
             date={yesterdayDateString}
             orders={orderOfYesterday}
+            openModal={openModal}
+            floorAnalyzer={floorAnalyzer}
+            setPosPrintData={setPosPrintData}
+            setShowPosPrint={setShowPosPrint}
+          />
+        )}
+
+        {tab == 4 && (
+          <OrderStatusCustomDateComponent
             openModal={openModal}
             floorAnalyzer={floorAnalyzer}
             setPosPrintData={setPosPrintData}
