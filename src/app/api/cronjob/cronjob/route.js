@@ -371,6 +371,25 @@ export const GET = async (req) => {
                 const date = currentValue.date;
                 if (isFridayInBangladesh(date)) {
                   charges.amount += 66;
+                  if (
+                    currentValue.isGuestMeal &&
+                    parseInt(
+                      currentValue[
+                        `guest${
+                          type.charAt(0).toUpperCase() + type.slice(1)
+                        }Count`
+                      ]
+                    ) > 0
+                  ) {
+                    charges.amount +=
+                      parseInt(
+                        currentValue[
+                          `guest${
+                            type.charAt(0).toUpperCase() + type.slice(1)
+                          }Count`
+                        ]
+                      ) * 66;
+                  }
                 }
               }
             }
