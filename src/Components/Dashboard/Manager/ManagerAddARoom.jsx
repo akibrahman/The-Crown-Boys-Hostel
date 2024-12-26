@@ -120,7 +120,7 @@ const ManagerAddARoom = () => {
     }
 
     try {
-      const { data } = await axios.post(
+      const { data } = await axios.get(
         `/api/room/check?name=${roomData.name}&floor=${roomData.floor}`
       );
       if (!data.success) throw new Error(data.msg);
