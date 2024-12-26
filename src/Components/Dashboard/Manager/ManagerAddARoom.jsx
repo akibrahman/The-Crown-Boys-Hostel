@@ -17,6 +17,8 @@ const ManagerAddARoom = () => {
 
   const [roomData, setRoomData] = useState({
     name: "",
+    buildingName: "",
+    block: "",
     video: "",
     type: "",
     sketch: "",
@@ -117,6 +119,16 @@ const ManagerAddARoom = () => {
       }
     }
 
+    try {
+      const { data } = await axios.post(
+        `/api/room/check?name=${roomData.name}&floor=${roomData.floor}`
+      );
+      if (!data.success) throw new Error(data.msg);
+    } catch (error) {
+      console.log(error);
+      return toast.error(error?.response?.data?.msg || error.message);
+    }
+
     openModal();
     setuploading([true, "firebase"]);
 
@@ -201,6 +213,8 @@ const ManagerAddARoom = () => {
       // Log srcData after all uploads are done
       const finalData = {
         roomName: roomData.name,
+        buildingName: roomData.buildingName,
+        block: roomData.block,
         roomType: roomData.type,
         roomFloor: roomData.floor,
         roomToiletType: roomData.toilet.type,
@@ -223,6 +237,8 @@ const ManagerAddARoom = () => {
           setuploading([false, ""]);
           setRoomData({
             name: "",
+            buildingName: "",
+            block: "",
             video: "",
             type: "",
             sketch: "",
@@ -243,6 +259,9 @@ const ManagerAddARoom = () => {
             ],
           });
           toast.success(data.msg);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }
       } catch (error) {
         console.error("Server error", error);
@@ -371,10 +390,23 @@ const ManagerAddARoom = () => {
                 <option value="a4">A4</option>
                 <option value="a5">A5</option>
                 <option value="a6">A6</option>
+
                 <option value="b1">B1</option>
                 <option value="b2">B2</option>
                 <option value="b3">B3</option>
                 <option value="b4">B4</option>
+
+                <option value="c1">C1</option>
+                <option value="c2">C2</option>
+                <option value="c3">C3</option>
+                <option value="c4">C4</option>
+                <option value="c5">C5</option>
+
+                <option value="d1">D1</option>
+                <option value="d2">D2</option>
+                <option value="d3">D3</option>
+                <option value="d4">D4</option>
+                <option value="d5">D5</option>
               </select>
             </div>
             <div className="flex flex-col gap-2">
@@ -439,6 +471,39 @@ const ManagerAddARoom = () => {
           </div>
 
           <div className="mb-4 bg-gray-600 rounded-md flex flex-col md:flex-row items-center justify-center md:justify-around gap-4 md:gap-0 p-4">
+            <div className="flex flex-col gap-2">
+              <label className="block text-slate-100 font-semibold">
+                Building Name
+              </label>
+              <input
+                placeholder="Building Name"
+                type="text"
+                className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
+                required
+                onChange={handleChange}
+                value={roomData.buildingName}
+                name="buildingName"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="block text-slate-100 font-semibold">
+                Block
+              </label>
+              <select
+                className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
+                required
+                onChange={handleChange}
+                value={roomData.block}
+                name="block"
+                id=""
+              >
+                <option value="">Select Block</option>
+                <option value="a">A</option>
+                <option value="b">B</option>
+                <option value="c">C</option>
+                <option value="d">D</option>
+              </select>
+            </div>
             <div className="flex flex-col items-center gap-2 p-4">
               <label className="block text-slate-100 text-lg font-semibold">
                 Video
@@ -712,6 +777,7 @@ const ManagerAddARoom = () => {
                 type="file"
                 name="toilet.image"
                 id="toilet.image"
+                accept="image/*"
                 onChange={(e) => {
                   setError("");
 
@@ -837,6 +903,7 @@ const ManagerAddARoom = () => {
                     type="file"
                     name="image"
                     id={`image-bed-${index}`}
+                    accept="image/*"
                     onChange={(e) => {
                       setError("");
                       const { name, files } = e.target;

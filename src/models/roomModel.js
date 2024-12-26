@@ -4,6 +4,7 @@ const roomSchema = new mongoose.Schema({
   name: String,
   video: { src: String, path: String },
   block: String,
+  building: String,
   type: String,
   sketch: { src: String, path: String },
   floor: Number,

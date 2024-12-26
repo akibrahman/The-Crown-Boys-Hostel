@@ -340,8 +340,8 @@ const ManagerOrderStatusComponent = () => {
                     src="/images/logo-black.png"
                     alt="The Crown Boys Hostel Logo"
                     className="h-16 w-20"
-                    height="54"
-                    width="54"
+                    height="64"
+                    width="80"
                   />
                 </div>
                 <h2 className="text-[16px] font-bold text-center text-black">

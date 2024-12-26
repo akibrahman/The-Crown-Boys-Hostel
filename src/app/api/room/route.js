@@ -70,9 +70,11 @@ export const POST = async (req) => {
     const data = await req.json();
     await new Room({
       name: data.roomName,
+      building: data.buildingName,
       floor: parseInt(data.roomFloor),
       video: { src: data.roomVideoData.src, path: data.roomVideoData.path },
-      block: data.roomName.split("")[0] == "a" ? "a" : "b",
+      // block: data.roomName.split("")[0] == "a" ? "a" : "b",
+      block: data.block,
       type: data.roomType,
       sketch: { src: data.roomSketchData.src, path: data.roomSketchData.path },
       seats: data.roomBeds.length,
@@ -130,6 +132,7 @@ export const PUT = async (req) => {
     );
   }
 };
+
 export const PATCH = async (req) => {
   try {
     const data = await req.json();

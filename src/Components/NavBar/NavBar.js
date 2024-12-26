@@ -67,7 +67,7 @@ const NavMenus = ({ items, loading }) => {
             width={"60"}
             height={"60"}
             alt="Logo"
-            className=""
+            className="h-[60px] w-[60px]"
           />
         </div>
         <div className="flex text-base items-center justify-center gap-5">
