@@ -18,7 +18,6 @@ export async function generateStaticParams() {
 
 const Page = ({ params }) => {
   const { id } = params;
-  // return <p>{id}</p>;
   return <Component id={id} />;
 };
 
