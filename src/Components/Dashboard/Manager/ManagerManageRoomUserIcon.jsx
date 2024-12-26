@@ -9,7 +9,7 @@ const ManagerManageRoomUserIcon = ({ selectSeat, bedNo, room }) => {
   useEffect(() => {
     const getPicture = async (bedNo) => {
       const { data } = await axios.get(
-        `/api/room?name=${bedNo.substring(0, 2)}&floor=${room.floor}`
+        `/api/room?name=${room.name}&floor=${room.floor}`
       );
       const userId = data.rooms[0].beds.find((bed) => bed.bedNo == bedNo).user;
       if (!userId) return setImageUrl("/images/no-user.png");

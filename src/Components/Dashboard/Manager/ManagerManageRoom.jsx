@@ -66,7 +66,7 @@ const ManagerManageRoom = ({
               width={350}
               alt="Sketch"
               src={room.sketch.src}
-              className="w-full"
+              className="w-full mb-4"
             />
             <ManagerManageRoomRoomSketch
               name={room.name}

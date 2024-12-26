@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { storage } from "../../../../firebase.config";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { FaPlus, FaTimes } from "react-icons/fa";
+import { FaDownload, FaPlus, FaTimes } from "react-icons/fa";
 import { FaDeleteLeft, FaPencil } from "react-icons/fa6";
 import Image from "next/image";
 import Modal from "react-modal";
@@ -384,29 +384,29 @@ const ManagerAddARoom = () => {
                 name="name"
               >
                 <option value="">Select Name</option>
-                <option value="a1">A1</option>
-                <option value="a2">A2</option>
-                <option value="a3">A3</option>
-                <option value="a4">A4</option>
-                <option value="a5">A5</option>
-                <option value="a6">A6</option>
+                <option value="a1">A 1</option>
+                <option value="a2">A 2</option>
+                <option value="a3">A 3</option>
+                <option value="a4">A 4</option>
+                <option value="a5">A 5</option>
+                <option value="a6">A 6</option>
 
-                <option value="b1">B1</option>
-                <option value="b2">B2</option>
-                <option value="b3">B3</option>
-                <option value="b4">B4</option>
+                <option value="b1">B 1</option>
+                <option value="b2">B 2</option>
+                <option value="b3">B 3</option>
+                <option value="b4">B 4</option>
 
-                <option value="c1">C1</option>
-                <option value="c2">C2</option>
-                <option value="c3">C3</option>
-                <option value="c4">C4</option>
-                <option value="c5">C5</option>
+                <option value="c1">C 1</option>
+                <option value="c2">C 2</option>
+                <option value="c3">C 3</option>
+                <option value="c4">C 4</option>
+                <option value="c5">C 5</option>
 
-                <option value="d1">D1</option>
-                <option value="d2">D2</option>
-                <option value="d3">D3</option>
-                <option value="d4">D4</option>
-                <option value="d5">D5</option>
+                <option value="d1">D 1</option>
+                <option value="d2">D 2</option>
+                <option value="d3">D 3</option>
+                <option value="d4">D 4</option>
+                <option value="d5">D 5</option>
               </select>
             </div>
             <div className="flex flex-col gap-2">
@@ -672,7 +672,13 @@ const ManagerAddARoom = () => {
                   <FaPlus className="text-xl text-dashboard" />
                 </label>
               )}
-
+              <a
+                href="/images/sketch/a4-sketch.png"
+                download="a4-sketch.png"
+                className="text-white font-semibold text-sm underline flex items-center justify-center gap-1 hover:text-sky-300"
+              >
+                Default Sketch <FaDownload />
+              </a>
               <input
                 hidden
                 type="file"

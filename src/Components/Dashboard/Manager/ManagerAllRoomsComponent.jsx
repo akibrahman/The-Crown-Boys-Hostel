@@ -131,10 +131,16 @@ const ManagerAllRoomsComponent = ({ user }) => {
   };
 
   const roomManage = async (room) => {
+    setTargetManageRoom(room);
+    openManageRoomModal();
+    return;
     const targetRoom = roomStructure.find((roomm) => roomm.name === room.name);
     if (!targetRoom) {
-      console.log(`Room with name ${room.name} not found in roomStructure.`);
-      return;
+      return toast.error(
+        `Room with name ''${convertCamelCaseToCapitalized(
+          room.name
+        )}'' not found in roomStructure.`
+      );
     }
     const bedNumbers = room.beds.map((bed) => bed.bedNo);
     const missingBeds = targetRoom.beds.filter(

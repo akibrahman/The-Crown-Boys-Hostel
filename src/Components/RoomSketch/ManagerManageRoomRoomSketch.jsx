@@ -14,7 +14,7 @@ const ManagerManageRoomRoomSketch = ({
     setSelectedBedFetching(true);
     try {
       const { data } = await axios.get(
-        `/api/room?name=${bedNo.substring(0, 2)}&floor=${room.floor}`
+        `/api/room?name=${room.name}&floor=${room.floor}`
       );
       if (data.success) {
         setSelectedBed([
@@ -314,6 +314,24 @@ const ManagerManageRoomRoomSketch = ({
           </p>
         </div>
       </>
+    );
+  } else {
+    return (
+      <div className="flex items-center justify-center gap-4 flex-wrap h-full w-full absolute top-0 left-0 z-10">
+        {room.beds.map((bed, i) => (
+          <div key={i} className="cursor-pointer">
+            <ManagerManageRoomUserIcon
+              selectSeat={selectSeat}
+              bedNo={bed.bedNo}
+              room={room}
+            />
+
+            <p className="text-dashboard text-center text-sm font-semibold">
+              {`${bed.bedNo[0].toUpperCase()} ${bed.bedNo.slice(1)}`}
+            </p>
+          </div>
+        ))}
+      </div>
     );
   }
 };

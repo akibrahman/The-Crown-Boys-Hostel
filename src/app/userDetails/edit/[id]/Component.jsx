@@ -518,10 +518,23 @@ const Component = ({ id }) => {
                     <option value="a4">A 4</option>
                     <option value="a5">A 5</option>
                     <option value="a6">A 6</option>
+
                     <option value="b1">B 1</option>
                     <option value="b2">B 2</option>
                     <option value="b3">B 3</option>
                     <option value="b4">B 4</option>
+
+                    <option value="c1">C 1</option>
+                    <option value="c2">C 2</option>
+                    <option value="c3">C 3</option>
+                    <option value="c4">C 4</option>
+                    <option value="c5">C 5</option>
+
+                    <option value="d1">D 1</option>
+                    <option value="d2">D 2</option>
+                    <option value="d3">D 3</option>
+                    <option value="d4">D 4</option>
+                    <option value="d5">D 5</option>
                   </select>
                 </div>
                 {/* <div class="lg:w-1/2 md:w-full px-3 mb-6">
