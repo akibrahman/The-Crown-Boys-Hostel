@@ -173,7 +173,13 @@ const MyBillsComponent = ({ user }) => {
         </div>
       )}
       <div className="md:px-10 px-2 min-h-full bg-dashboard text-slate-100 overflow-x-hidden">
-        <p className="text-center font-medium text-xl text-white py-4">
+        <p
+          onClick={async () => {
+            const { data } = await axios.put("/api/orders/testapi");
+            toast(data.msg);
+          }}
+          className="text-center font-medium text-xl text-white py-4"
+        >
           My Bills
         </p>
         {dueAmountLoading ? (

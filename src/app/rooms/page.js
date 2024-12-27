@@ -1,4 +1,5 @@
 "use client";
+import { convertCamelCaseToCapitalized } from "@/utils/camelToCapitalize";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
@@ -235,6 +236,12 @@ const TargetedRooms = ({ floor, totalSeats, availableSeats, rooms }) => {
                   Block:{" "}
                   <span className="text-blue-500 font-medium">
                     {room.block.toUpperCase()}
+                  </span>
+                </p>
+                <p>
+                  Building:{" "}
+                  <span className="text-blue-500 font-medium">
+                    {convertCamelCaseToCapitalized(room.building)}
                   </span>
                 </p>
               </div>

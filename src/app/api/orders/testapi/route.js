@@ -1,5 +1,6 @@
 import Bill from "@/models/billModel";
 import Order from "@/models/orderModel";
+import Room from "@/models/roomModel";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -30,14 +31,11 @@ export const POST = async () => {
 // Blank All PP, NID & BC
 export const PUT = async (req) => {
   try {
-    // await User.updateMany({
-    //   profilePicture: "/__",
-    //   birthCertificatePicture: "/__",
-    //   nidFrontPicture: "/__",
-    //   nidBackPicture: "/__",
-    //   idPicture: "/__",
-    // });
-    return NextResponse.json({ success: true });
+    await Room.updateMany(
+      { building: { $exists: false } },
+      { $set: { building: "Main" } }
+    );
+    return NextResponse.json({ success: true, msg: "Done" });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ success: false, error }, { status: 500 });

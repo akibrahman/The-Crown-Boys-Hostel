@@ -335,6 +335,12 @@ const Component = ({ id }) => {
                     </span>
                   </p>
                   <p className="text-blue-500 font-medium">
+                    <span className="w-[70px] inline-block">Building:</span>
+                    <span className="text-white font-normal ml-5">
+                      {convertCamelCaseToCapitalized(room.building)}
+                    </span>
+                  </p>
+                  <p className="text-blue-500 font-medium">
                     <span className="w-[70px] inline-block">floor:</span>
                     <span className="text-white font-normal ml-5">
                       {room.floor}
