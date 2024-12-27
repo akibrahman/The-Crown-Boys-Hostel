@@ -103,7 +103,7 @@ const OrderStatusComponent = ({
                 openModal();
                 floorAnalyzer(orders);
               }}
-              className="bg-dark text-white px-4 py-1 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
+              className="bg-dark hidden text-white px-4 py-1 text-sm rounded-full active:scale-90 duration-300 hover:scale-x-110"
             >
               Floor
             </button>

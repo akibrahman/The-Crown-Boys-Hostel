@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { motion } from "framer-motion";
+import { isFridayInBangladesh } from "@/utils/isFriday";
 
 const CurrentMonthComponent = ({ user }) => {
   const [breakfastCount, setBreakfastCount] = useState(0);
@@ -34,6 +35,71 @@ const CurrentMonthComponent = ({ user }) => {
     },
     enabled: user?._id && user?.role == "client" ? true : false,
   });
+  console.log("calanderData", calanderData);
+  const calculateMeals = (type, orders) => {
+    let charges = { note: "Special Meal", amount: 0 };
+    const count = orders.reduce((accumulator, currentValue) => {
+      let isMeal = 0;
+      if (currentValue[type]) isMeal = 1;
+      else isMeal = 0;
+      if (type == "lunch") {
+        if (currentValue[type]) {
+          const date = currentValue.date;
+          if (isFridayInBangladesh(date)) {
+            charges.amount += 66;
+            if (
+              currentValue.isGuestMeal &&
+              parseInt(
+                currentValue[
+                  `guest${type.charAt(0).toUpperCase() + type.slice(1)}Count`
+                ]
+              ) > 0
+            ) {
+              charges.amount +=
+                parseInt(
+                  currentValue[
+                    `guest${type.charAt(0).toUpperCase() + type.slice(1)}Count`
+                  ]
+                ) * 66;
+            }
+          }
+        }
+      }
+      return (
+        accumulator +
+        isMeal +
+        (currentValue.isGuestMeal
+          ? parseInt(
+              currentValue[
+                `guest${type.charAt(0).toUpperCase() + type.slice(1)}Count`
+              ]
+            ) || 0
+          : 0)
+      );
+    }, 0);
+    if (charges.amount <= 0) charges = null;
+    if (type == "lunch") return [count, charges];
+    else return [count];
+  };
+  const calculateApproxBill = () => {
+    const [totalBreakfast] = calculateMeals("breakfast", calanderData);
+    const [totalLunch, specialMealCharges] = calculateMeals(
+      "lunch",
+      calanderData
+    );
+    const [totalDinner] = calculateMeals("dinner", calanderData);
+    const totalSpecialMealCharges =
+      specialMealCharges && specialMealCharges?.amount
+        ? specialMealCharges.amount
+        : 0;
+    let totalMealBillInBDT =
+      totalBreakfast * 32 +
+      totalLunch * 64 +
+      totalDinner * 64 +
+      500 +
+      totalSpecialMealCharges;
+    return totalMealBillInBDT;
+  };
   useEffect(() => {
     if (calanderData) {
       const breakfast = calanderData.reduce(
@@ -137,8 +203,7 @@ const CurrentMonthComponent = ({ user }) => {
           </span>
           <span> {currentMonth}</span>
           <span className="text-sm text-sky-500">
-            Approx. Bill -{" "}
-            {breakfastCount * 32 + lunchCount * 64 + dinnerCount * 64 + 500} BDT
+            Approx. Bill - {calculateApproxBill()} BDT
           </span>
         </motion.div>
         <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
