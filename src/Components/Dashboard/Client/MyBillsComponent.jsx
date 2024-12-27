@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Receipt from "../../Receipt/Receipt";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
 
 const MyBillsComponent = ({ user }) => {
   const route = useRouter();
@@ -49,15 +51,56 @@ const MyBillsComponent = ({ user }) => {
     "December",
   ];
 
-  const totalDue = bills
-    ? bills
-        .filter(
-          (bill1) =>
-            bill1.status == "calculated" &&
-            parseInt(bill1.paidBillInBDT) !== parseInt(bill1.totalBillInBDT)
-        )
-        .reduce((a, c) => a + (c.totalBillInBDT - c.paidBillInBDT), 0)
-    : 0;
+  const dueCalculator = async () => {
+    if (!bills) return;
+
+    const totalBill = bills
+      .filter((bill1) => bill1.status == "calculated")
+      .reduce((a, c) => a + c.totalBillInBDT, 0);
+
+    let totalDeposit = 0;
+
+    await Promise.all(
+      bills.map(async (bill) => {
+        const { data } = await axios.get(`/api/transaction?id=${bill._id}`);
+        if (!data.success) {
+          toast.error("Server Error!");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          totalDeposit += data.transactions.reduce((total, transaction) => {
+            const transactionSum = transaction.payments.reduce(
+              (sum, payment) => sum + payment.value,
+              0
+            );
+            return total + transactionSum;
+          }, 0);
+        }
+      })
+    );
+    console.log(totalBill, totalDeposit);
+    setDueAmountLoading(false);
+    return totalBill - totalDeposit;
+  };
+
+  const [dueAmount, setDueAmount] = useState(0);
+  const [dueAmountLoading, setDueAmountLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDue = async () => {
+      try {
+        const due = await dueCalculator();
+        setDueAmount(due);
+      } catch (error) {
+        console.error("Error fetching due amount:", error);
+        setDueAmount(0);
+      }
+    };
+
+    fetchDue();
+  });
+
   return (
     <>
       {/* Success  */}
@@ -133,13 +176,17 @@ const MyBillsComponent = ({ user }) => {
         <p className="text-center font-medium text-xl text-white py-4">
           My Bills
         </p>
-        {totalDue > 0 ? (
+        {dueAmountLoading ? (
+          <p className="text-center flex items-center justify-center">
+            <CgSpinner className="text-xl animate-spin text-white" />
+          </p>
+        ) : dueAmount > 0 ? (
           <div className="">
             <p className="text-center dark:text-red-500">
               Oops! You have Due, Please pay as soon as possible.
             </p>
             <p className="text-center font-semibold dark:text-red-500">
-              Total Due: {totalDue} BDT
+              Total Due: {dueAmount} BDT
             </p>
           </div>
         ) : (

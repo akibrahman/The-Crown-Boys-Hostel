@@ -35,7 +35,6 @@ const CurrentMonthComponent = ({ user }) => {
     },
     enabled: user?._id && user?.role == "client" ? true : false,
   });
-  console.log("calanderData", calanderData);
   const calculateMeals = (type, orders) => {
     let charges = { note: "Special Meal", amount: 0 };
     const count = orders.reduce((accumulator, currentValue) => {
