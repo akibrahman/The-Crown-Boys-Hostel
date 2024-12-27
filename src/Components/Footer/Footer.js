@@ -24,8 +24,7 @@ const Footer = () => {
               className="absolute h-full w-full object-cover scale-50 md:scale-[0.6]"
               layout="fill"
               objectFit="cover"
-              // placeholder="blur"
-              // blurDataURL="/images/building-blur.png"
+              unoptimized
             />
           </div>
 

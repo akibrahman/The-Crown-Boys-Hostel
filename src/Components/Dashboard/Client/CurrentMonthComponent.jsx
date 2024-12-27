@@ -37,7 +37,7 @@ const CurrentMonthComponent = ({ user }) => {
   });
   const calculateMeals = (type, orders) => {
     let charges = { note: "Special Meal", amount: 0 };
-    const count = orders.reduce((accumulator, currentValue) => {
+    const count = orders?.reduce((accumulator, currentValue) => {
       let isMeal = 0;
       if (currentValue[type]) isMeal = 1;
       else isMeal = 0;

@@ -68,6 +68,7 @@ const NavMenus = ({ items, loading }) => {
             height={"60"}
             alt="Logo"
             className="h-[60px] w-[60px]"
+            unoptimized
           />
         </div>
         <div className="flex text-base items-center justify-center gap-5">
@@ -172,7 +173,8 @@ const NavMenus = ({ items, loading }) => {
             width={"60"}
             height={"60"}
             alt="Logo"
-            className=""
+            className="h-[60px] w-[60px]"
+            unoptimized
           />
           <div className="burger-menu-button z-40">
             <input
