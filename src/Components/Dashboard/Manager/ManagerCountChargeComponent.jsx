@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
+import { FaTimes } from "react-icons/fa";
 import Select from "react-select";
 import Swal from "sweetalert2";
 
@@ -16,8 +17,6 @@ const ManagerCountChargeComponent = ({ user }) => {
   const [sendState, setSendState] = useState("");
   const [receiver, setReceiver] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [charges, setCharges] = useState({});
 
   const route = useRouter();
   const { data: clients, isLoading: clientsLoading } = useQuery({
@@ -61,24 +60,26 @@ const ManagerCountChargeComponent = ({ user }) => {
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
 
+  const [charges, setCharges] = useState([]);
+
   const setCharge = async () => {
     if (clientsLoading) return;
     if (!sendState) return toast.error("Select option!");
     if (receiver.length <= 0) return toast.error("No Receiver Selected!");
     setIsLoading(true);
     try {
-      await axios.post("/api/clients/chargeclient", {
+      await axios.post("/api/clients/countChargeclient", {
         clients: receiver,
-        chargeData: charges,
+        charges,
       });
-      toast.success("Charge Applied");
+      toast.success("Charges Applied");
     } catch (error) {
       toast.error("Failed to Apply Charge.");
       console.error(error);
     } finally {
       setReceiver([]);
       setSendState("");
-      setCharges({});
+      setCharges([]);
       setIsLoading(false);
     }
   };
@@ -87,40 +88,9 @@ const ManagerCountChargeComponent = ({ user }) => {
     e.preventDefault();
     const note = e.target.note.value;
     const amount = parseInt(e.target.amount.value);
+    const count = parseInt(e.target.count.value);
     e.target.reset();
-    setCharges((prevCharges) => ({
-      ...prevCharges,
-      [note]: amount,
-    }));
-  };
-
-  const clearAllCharges = async (e) => {
-    const isConfirmed = await Swal.fire({
-      title: "Clear All Charges?",
-      text: "You won't be able to revert this! All charges assigned to the users will be deleted permanently",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#1493EA",
-      cancelButtonColor: "#EF4444",
-      confirmButtonText: "Proceed",
-      cancelButtonText: "No",
-      background: "#141E30",
-      color: "#fff",
-    });
-    if (isConfirmed.isConfirmed) {
-      setIsDeleting(true);
-      try {
-        await axios.delete("/api/clients/chargeclient");
-        toast.success("All Charges Deleted");
-      } catch (error) {
-        toast.error("Failed to Delete Charges.");
-        console.error(error);
-      } finally {
-        setIsDeleting(false);
-      }
-    } else {
-      toast("Operation Cancelled");
-    }
+    setCharges((prevCharges) => [...prevCharges, { note, amount, count }]);
   };
 
   if (!user) return <PreLoader />;
@@ -218,14 +188,32 @@ const ManagerCountChargeComponent = ({ user }) => {
             <p className="underline text-base md:text-xl">Charges</p>
             <p>Selected: {receiver.length}</p>
           </div>
-          {Object.keys(charges).length == 0 && <p>No Charges Added</p>}
+          {charges.length == 0 && <p>No Charges Added</p>}
           <div className="flex flex-col items-center justify-center">
-            {Object.entries(charges).map(([key, value]) => (
-              <div key={key} className="grid grid-cols-2">
-                <p className="border min-w-[300px] text-center py-0.5">{key}</p>
-                <p className="border min-w-[300px] text-center py-0.5">
-                  {value}
+            {charges.map((charge, key) => (
+              <div
+                key={key}
+                className="flex items-center justify-center gap-3 px-2 py-0.5 w-full" // Adjust max width to the largest expected size
+              >
+                <p className="border px-3 text-center py-0.5 min-w-[250px]">
+                  {charge.note}
                 </p>
+                <p className="border px-3 text-center py-0.5 min-w-[60px]">
+                  {charge.amount}
+                </p>
+                <p className="border px-3 text-center py-0.5 min-w-[35px] aspect-square rounded-full flex items-center justify-center">
+                  {charge.count}
+                </p>
+                <FaTimes
+                  onClick={() => {
+                    setCharges((prevCharges) => {
+                      const tempCharges = [...prevCharges];
+                      tempCharges.splice(key, 1);
+                      return tempCharges;
+                    });
+                  }}
+                  className="text-red-500 text-xl cursor-pointer duration-300 active:scale-90"
+                />
               </div>
             ))}
           </div>
@@ -242,6 +230,13 @@ const ManagerCountChargeComponent = ({ user }) => {
             type="number"
             required
             name="amount"
+            className="rounded-md bg-transparent text-white px-4 py-1 font-medium outline-none border resize-none"
+          ></input>
+          <input
+            placeholder="Enter Count"
+            type="number"
+            required
+            name="count"
             className="rounded-md bg-transparent text-white px-4 py-1 font-medium outline-none border resize-none"
           ></input>
           <button
