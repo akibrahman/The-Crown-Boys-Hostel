@@ -1,6 +1,7 @@
 import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail";
 import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
+import CountCharge from "@/models/countChargeModel";
 import ManagerBill from "@/models/managerBillModel";
 import Market from "@/models/marketModel";
 import Order from "@/models/orderModel";
@@ -440,24 +441,35 @@ export const GET = async (req) => {
         });
         if (totalRent == 0) totalRent = 3500;
         if (!nextBill) totalRent = 0;
+        const countCharges = await CountCharge.find({ userId: bill.userId });
+        await CountCharge.deleteMany({ userId: bill.userId, count: 1 });
+        await CountCharge.updateMany(
+          { userId: bill.userId, count: { $gt: 1 } },
+          { $inc: { count: -1 } }
+        );
+        const countChargesObj = countCharges.map((cc) => ({
+          note: cc.note,
+          amount: cc.amount,
+        }));
+        const countChargesAmount = countCharges.reduce(
+          (a, c) => a + c.amount,
+          0
+        );
         const totalBillInBDT =
           totalMealBillInBDT +
           totalUserCharges +
+          countChargesAmount +
           totalSpecialMealCharges +
           totalRent;
-        let userTotalCharges = [];
+        let userTotalCharges = [
+          ...user.charges,
+          ...countChargesObj,
+          ...(specialMealCharges ? [specialMealCharges] : []),
+        ];
         if (nextBill) {
           userTotalCharges = [
             ...userTotalCharges,
-            ...user.charges,
-            ...(specialMealCharges ? [specialMealCharges] : []),
             { note: "Rent", amount: totalRent },
-          ];
-        } else {
-          userTotalCharges = [
-            ...userTotalCharges,
-            ...user.charges,
-            ...(specialMealCharges ? [specialMealCharges] : []),
           ];
         }
         totalRent = 0;

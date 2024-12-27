@@ -38,16 +38,14 @@ export const POST = async (req) => {
     }
     await Promise.all(
       clients.map(async (client) => {
-        await Promise.all(
-          charges.map(async (charge) => {
-            await new CountCharge({
-              userId: client.value,
-              note: charge.note,
-              amount: charge.amount,
-              count: charge.count,
-            }).save();
-          })
-        );
+        charges.map(async (charge) => {
+          await new CountCharge({
+            userId: client.value,
+            note: charge.note,
+            amount: charge.amount,
+            count: charge.count,
+          }).save();
+        });
       })
     );
     return NextResponse.json({ success: true, msg: "Charges Applied" });
