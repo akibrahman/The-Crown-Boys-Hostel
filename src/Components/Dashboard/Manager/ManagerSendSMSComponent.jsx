@@ -28,7 +28,7 @@ const ManagerSendSMSComponent = () => {
       else return 0;
     },
   });
-  const { data: clients } = useQuery({
+  const { data: clients, isLoading: clientsLoading } = useQuery({
     queryKey: ["clients", "manager", user?._id, "sms"],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
@@ -69,7 +69,6 @@ const ManagerSendSMSComponent = () => {
     },
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
-  console.log("->>>>>>>", clients);
   const sendSms = async (e) => {
     e.preventDefault();
     if (!sendState) return toast.error("Select option!");
@@ -122,51 +121,60 @@ const ManagerSendSMSComponent = () => {
       </p>
       <form onSubmit={sendSms} className="">
         <div className="flex flex-col gap-6 md:flex-row md:gap-0 items-center md:justify-between w-[80%] mx-auto mt-6">
-          <div className="">
-            <div className="flex items-center md:justify-center gap-3 md:gap-6">
-              <button
-                type="button"
-                onClick={() => {
-                  setReceiver([]);
-                  setSendState("single");
-                }}
-                className={`px-3 md:px-10 py-1 md:py-2 duration-300 active:scale-90 hover:scale-105 rounded-full font-medium tracking-wider text-white border ${
-                  sendState == "single"
-                    ? "bg-sky-500 border-sky-500"
-                    : "bg-transparent border-white"
-                }`}
+          <div className="flex items-center justify-center gap-2">
+            {clientsLoading ? (
+              <p
+                className={`text-sm md:text-base font-medium px-4 md:px-6 py-0.5 md:py-1 rounded-full flex items-center justify-center gap-2 text-blue-700 text-center bg-blue-200`}
               >
-                Single
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSendState("multiple");
-                  setReceiver([]);
-                }}
-                className={`px-3 md:px-10 py-1 md:py-2 duration-300 active:scale-90 hover:scale-105 rounded-full font-medium tracking-wider text-white border ${
-                  sendState == "multiple"
-                    ? "bg-sky-500 border-sky-500"
-                    : "bg-transparent border-white"
-                }`}
-              >
-                Multiple
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSendState("all");
-                  setReceiver(clients);
-                }}
-                className={`px-3 md:px-10 py-1 md:py-2 duration-300 active:scale-90 hover:scale-105 rounded-full font-medium tracking-wider text-white border ${
-                  sendState == "all"
-                    ? "bg-sky-500 border-sky-500"
-                    : "bg-transparent border-white"
-                }`}
-              >
-                All
-              </button>
-            </div>
+                Loading
+                <CgSpinner className="text-xl animate-spin" />
+              </p>
+            ) : (
+              <div className="flex items-center md:justify-center gap-3 md:gap-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setReceiver([]);
+                    setSendState("single");
+                  }}
+                  className={`px-3 md:px-10 py-1 md:py-2 duration-300 active:scale-90 hover:scale-105 rounded-full font-medium tracking-wider text-white border ${
+                    sendState == "single"
+                      ? "bg-sky-500 border-sky-500"
+                      : "bg-transparent border-white"
+                  }`}
+                >
+                  Single
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSendState("multiple");
+                    setReceiver([]);
+                  }}
+                  className={`px-3 md:px-10 py-1 md:py-2 duration-300 active:scale-90 hover:scale-105 rounded-full font-medium tracking-wider text-white border ${
+                    sendState == "multiple"
+                      ? "bg-sky-500 border-sky-500"
+                      : "bg-transparent border-white"
+                  }`}
+                >
+                  Multiple
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSendState("all");
+                    setReceiver(clients);
+                  }}
+                  className={`px-3 md:px-10 py-1 md:py-2 duration-300 active:scale-90 hover:scale-105 rounded-full font-medium tracking-wider text-white border ${
+                    sendState == "all"
+                      ? "bg-sky-500 border-sky-500"
+                      : "bg-transparent border-white"
+                  }`}
+                >
+                  All
+                </button>
+              </div>
+            )}
           </div>
           <div className="flex items-center justify-center">
             {sendState == "single" && (

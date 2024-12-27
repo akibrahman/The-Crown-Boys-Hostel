@@ -7,7 +7,12 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { TbBrandBooking, TbBrandShopee } from "react-icons/tb";
+import {
+  TbBrandBooking,
+  TbBrandShopee,
+  TbDeviceIpadDollar,
+  TbCoinTaka,
+} from "react-icons/tb";
 import { IoIosNotifications } from "react-icons/io";
 import { CgCalendarDates, CgProfile, CgSpinner } from "react-icons/cg";
 import {
@@ -19,7 +24,6 @@ import {
   FaSms,
   FaUsers,
 } from "react-icons/fa";
-import { TbCoinTaka } from "react-icons/tb";
 import { GrUserManager } from "react-icons/gr";
 import ProfileComponent from "./Client/ProfileComponent";
 import CurrentMonthComponent from "./Client/CurrentMonthComponent";
@@ -60,6 +64,7 @@ import ManagerTransactionsComponent from "./Manager/ManagerTransactionsComponent
 import ManagerBooksComponent from "./Manager/ManagerBooksComponent";
 import ManagerSetChargeComponent from "./Manager/ManagerSetChargeComponent";
 import { RiBillFill } from "react-icons/ri";
+import ManagerCountChargeComponent from "./Manager/ManagerCountChargeComponent";
 
 const Dashboard = ({ user }) => {
   // useUnloadWarning("Are");
@@ -113,8 +118,9 @@ const Dashboard = ({ user }) => {
         displayData == "managerMarketDetails" ||
         displayData == "managerOrderStatus" ||
         displayData == "managerSendSMS" ||
-        displayData == "ManagerSendNotificationComponent" ||
-        displayData == "ManagerSetChargeComponent" ||
+        displayData == "managerSendNotificationComponent" ||
+        displayData == "managerSetChargeComponent" ||
+        displayData == "managerCountChargeComponent" ||
         displayData == "managerBillQuery" ||
         displayData == "managerTransactions" ||
         displayData == "managerMealQuery" ||
@@ -232,9 +238,15 @@ const Dashboard = ({ user }) => {
     },
     {
       title: "Set Charge",
-      href: "/dashboard?displayData=ManagerSetChargeComponent",
+      href: "/dashboard?displayData=managerSetChargeComponent",
       icon: RiBillFill,
-      displayData: "ManagerSetChargeComponent",
+      displayData: "managerSetChargeComponent",
+    },
+    {
+      title: "Count Charge",
+      href: "/dashboard?displayData=managerCountChargeComponent",
+      icon: TbDeviceIpadDollar,
+      displayData: "managerCountChargeComponent",
     },
     {
       title: "Bill Query",
@@ -333,17 +345,17 @@ const Dashboard = ({ user }) => {
 
   const containerRef = useRef(null);
 
-  useEffect(() => {
-    const handleKeydown = (event) => {
-      if (event.key === "f" || event.key === "F") {
-        handleFullscreen();
-      }
-    };
-    document.addEventListener("keydown", handleKeydown);
-    return () => {
-      document.removeEventListener("keydown", handleKeydown);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const handleKeydown = (event) => {
+  //     if (event.key === "f" || event.key === "F") {
+  //       handleFullscreen();
+  //     }
+  //   };
+  //   document.addEventListener("keydown", handleKeydown);
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeydown);
+  //   };
+  // }, []);
 
   const handleFullscreen = () => {
     const elem = containerRef.current;
@@ -627,8 +639,10 @@ const Dashboard = ({ user }) => {
             ) : //  <UnderConstruction />
             displayData == "managerSendNotification" ? (
               <ManagerSendNotificationComponent user={user} />
-            ) : displayData == "ManagerSetChargeComponent" ? (
+            ) : displayData == "managerSetChargeComponent" ? (
               <ManagerSetChargeComponent user={user} />
+            ) : displayData == "managerCountChargeComponent" ? (
+              <ManagerCountChargeComponent user={user} />
             ) : displayData == "managerBillQuery" ? (
               <ManagerBillQueryComponent user={user} />
             ) : displayData == "managerTransactions" ? (
