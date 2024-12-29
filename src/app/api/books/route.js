@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import User from "@/models/userModel";
 import Book from "@/models/bookModel";
+import BookPage from "@/models/bookPageModel";
 
 await dbConfig();
 
@@ -25,7 +26,27 @@ export const GET = async (req) => {
     if (!manager || manager.role != "manager")
       return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
 
-    const books = await Book.find({ managerId: jwtData.id });
+    const calculateTotalAmount = (textData) => {
+      const lines = textData.trim().split("\n");
+      const totalAmount = lines.reduce((sum, line) => {
+        const match = line.match(/-?\d+(\.\d+)?$/);
+        const amount = match ? parseFloat(match[0]) : 0;
+        return sum + amount;
+      }, 0);
+      return totalAmount;
+    };
+
+    const allBooks = await Book.find({ managerId: jwtData.id });
+    const books = await Promise.all(
+      allBooks.map(async (book) => {
+        const pages = await BookPage.find({ bookId: book._id });
+        const totalAmount = pages.reduce(
+          (sum, page) => sum + calculateTotalAmount(page.textArea),
+          0
+        );
+        return { ...book.toObject(), totalAmount };
+      })
+    );
 
     return NextResponse.json({ success: true, books });
   } catch (error) {

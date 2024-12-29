@@ -39,7 +39,8 @@ const ManagerBooksComponent = ({ user }) => {
         ...prevData,
         isLoading: true,
       }));
-      axios(`/api/book?bookId=${bookId}`)
+      axios
+        .get(`/api/book?bookId=${bookId}`)
         .then((data) => {
           setPages(data.data.pages);
           setSelectedBook({
@@ -88,7 +89,7 @@ const ManagerBooksComponent = ({ user }) => {
     queryFn: async () => {
       const { data } = await axios.get(`/api/books`);
       if (data.success) {
-        return data.books;
+        return data.books.reverse();
       } else {
         return [];
       }
@@ -348,7 +349,6 @@ const ManagerBooksComponent = ({ user }) => {
                             {page.date}
                           </p>
                           <div className="flex items-center justify-center gap-3">
-                            <MdOutlineEditNote className="cursor-pointer text-orange-500 text-xl duration-300 active:scale-90 hover:scale-105" />
                             <MdDelete
                               onClick={() => deletePage(page._id)}
                               className="cursor-pointer text-red-500 text-xl duration-300 active:scale-90 hover:scale-105"
@@ -367,15 +367,20 @@ const ManagerBooksComponent = ({ user }) => {
                   </p>
                 ) : (
                   <p className="absolute top-5 font-semibold right-6 flex items-center gap-1 text-slate-500 ">
-                    <FaDollarSign className="" />
-                    {amount} BDT
+                    ৳ {amount} BDT
                   </p>
                 )}
-                <textarea
-                  onChange={(e) => writting(e.target.value)}
-                  value={selectedPage ? selectedPage?.textArea : ""}
-                  className="h-full w-full rounded-md bg-slate-900 outline-none p-4 text-slate-200 font-semibold resize-none"
-                ></textarea>
+                {selectedPage ? (
+                  <textarea
+                    onChange={(e) => writting(e.target.value)}
+                    value={selectedPage ? selectedPage?.textArea : ""}
+                    className="h-full w-full rounded-md bg-slate-900 outline-none p-4 text-slate-200 font-semibold resize-none"
+                  ></textarea>
+                ) : (
+                  <div className="flex items-center justify-center text-center w-full h-full">
+                    <p>Select Page</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -519,7 +524,6 @@ const ManagerBooksComponent = ({ user }) => {
                     route.push(
                       `${window.location.pathname}?${currentParams.toString()}`
                     );
-                    // route.push(`&bookId=${book._id}`)
                   }}
                   className="px-6 py-2 rounded-md border duration-300 hover:scale-105 cursor-pointer active:scale-90 select-none"
                   style={{
@@ -527,10 +531,13 @@ const ManagerBooksComponent = ({ user }) => {
                   }}
                   key={book._id}
                 >
-                  <p className="text-xl text-white font-semibold mb-2">
+                  <p className="text-xl text-white font-semibold mb1">
                     {book.title}
                   </p>
-                  <p className="text-sm text-slate-400">{book.subTitle}</p>
+                  <p className="text-sm text-slate-400">
+                    {book.subTitle}
+                    <span className="ml-2 font-bold">৳ {book.totalAmount}</span>
+                  </p>
                 </div>
               ))}
             </div>
