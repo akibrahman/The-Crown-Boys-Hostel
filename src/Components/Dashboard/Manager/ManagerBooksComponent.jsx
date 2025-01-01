@@ -3,12 +3,12 @@ import PreLoader from "@/Components/PreLoader/PreLoader";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { FaDollarSign, FaExchangeAlt, FaPlus, FaTimes } from "react-icons/fa";
+import { FaExchangeAlt, FaPlus, FaTimes } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { useRouter, useSearchParams } from "next/navigation";
-import { MdDelete, MdOutlineEditNote } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 
 const ManagerBooksComponent = ({ user }) => {

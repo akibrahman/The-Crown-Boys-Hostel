@@ -204,10 +204,12 @@ const MyBillsComponent = ({ user }) => {
         )}
         <div className="py-8 grid grid-cols-1 md:grid-cols-2 gap-4">
           {bills
-            ?.sort(
-              (a, b) =>
-                monthOrder.indexOf(b.month) - monthOrder.indexOf(a.month)
-            )
+            ?.sort((a, b) => {
+              if (b.year !== a.year) {
+                return b.year - a.year;
+              }
+              return monthOrder.indexOf(b.month) - monthOrder.indexOf(a.month);
+            })
             ?.map((bill, i) => (
               <motion.div
                 key={bill._id}
