@@ -55,12 +55,10 @@ export const MonthlyBillEmail = ({
                   backgroundColor: "#fff",
                   padding: "10px",
                 }}
-                src={
-                  "https://cdn.glitch.global/0386827c-7a3c-4a82-b3fe-20c67f6f9f66/logo.png?v=1726675080378"
-                }
+                src="https://thecrownboyshostel.com/images/logo.png"
                 width="85"
                 height="85"
-                alt="Apple Logo"
+                alt="The Crown Boys Hostel Logo"
               />
             </Column>
 
@@ -77,6 +75,7 @@ export const MonthlyBillEmail = ({
             </Column>
           </Row>
         </Section>
+
         <Section>
           <Text
             style={{
@@ -104,6 +103,7 @@ export const MonthlyBillEmail = ({
             </Text>
           )}
         </Section>
+
         <Section
           style={{
             borderCollapse: "collapse",
@@ -332,6 +332,7 @@ export const MonthlyBillEmail = ({
             </Column>
           </Row>
         </Section>
+
         <Section
           style={{
             borderCollapse: "collapse",
@@ -356,6 +357,7 @@ export const MonthlyBillEmail = ({
             Details
           </Text>
         </Section>
+
         <Section>
           <Text
             style={{
@@ -460,7 +462,9 @@ export const MonthlyBillEmail = ({
             Bill: {totalBill} BDT
           </Text>
         </Section>
+
         <Hr style={{ margin: "30px 0 0 0" }} />
+
         <Section align="right">
           {totalDeposit <= totalBill ? (
             <Row>
@@ -540,7 +544,9 @@ export const MonthlyBillEmail = ({
             </Row>
           )}
         </Section>
+
         <Hr style={{ margin: "0 0 10px 0" }} />
+
         <Section>
           <Row>
             <Column
@@ -552,7 +558,7 @@ export const MonthlyBillEmail = ({
                   backgroundColor: "#fff",
                   padding: "6px",
                 }}
-                src={`https://cdn.glitch.global/0386827c-7a3c-4a82-b3fe-20c67f6f9f66/logo.png?v=1726675080378`}
+                src="https://thecrownboyshostel.com/images/logo.png"
                 width="50"
                 height="50"
                 alt="The crown Boys Hostel"
@@ -560,6 +566,7 @@ export const MonthlyBillEmail = ({
             </Column>
           </Row>
         </Section>
+
         <Text
           style={{
             margin: "8px 0 0 0",
@@ -572,6 +579,7 @@ export const MonthlyBillEmail = ({
           <Link href="">Terms of Sale</Link> •{" "}
           <Link href="">Privacy Policy </Link>
         </Text>
+
         <Text
           style={{
             margin: "25px 0 0 0",

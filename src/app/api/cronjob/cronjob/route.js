@@ -73,7 +73,7 @@ export const GET = async (req) => {
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     //! Second Last day of any month-----------------------
     // aboutSecondLastDayOfCurrentMonth.isSecondLastDay
-    if (true) {
+    if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
@@ -303,7 +303,7 @@ export const GET = async (req) => {
     }
     //! Last day of any month------------------------------
     // aboutLastDayOfCurrentMonth.isLastDay
-    if (true) {
+    if (aboutLastDayOfCurrentMonth.isLastDay) {
       console.log("Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -473,109 +473,25 @@ export const GET = async (req) => {
           ];
         }
         totalRent = 0;
-        // let mounthlyBillEmailHtml = render(
-        //   MonthlyBillEmail({
-        //     name: user.username,
-        //     email: user.email,
-        //     month: bill.month,
-        //     year: bill.year,
-        //     date: new Date().toLocaleString("en-US", {
-        //       timeZone: "Asia/Dhaka",
-        //     }),
-        //     billId: bill._id.toString(),
-        //     userId: user._id.toString(),
-        //     totalBreakfast: totalBreakfast,
-        //     totalLunch: totalLunch,
-        //     totalDinner: totalDinner,
-        //     totalDeposit: paidAmount,
-        //     totalBill: totalBillInBDT,
-        //     charges: userTotalCharges,
-        //     // isRestDeposite: totalBillInBDT >= paidAmount ? false : true,
-        //   })
-        // );
-        let mounthlyBillEmailHtml = `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Bill Summary</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    margin: 0;
-                    padding: 20px;
-                }
-                .bill-container {
-                    max-width: 600px;
-                    margin: 0 auto;
-                    border: 1px solid #ccc;
-                    border-radius: 8px;
-                    padding: 20px;
-                    background-color: #f9f9f9;
-                }
-                .header {
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
-                .details {
-                    margin-bottom: 15px;
-                }
-                .details p {
-                    margin: 5px 0;
-                }
-                .summary {
-                    margin-top: 20px;
-                }
-                .summary p {
-                    margin: 8px 0;
-                }
-                .total {
-                    font-weight: bold;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="bill-container">
-                <div class="header">
-                    <h1>Bill Summary</h1>
-                </div>
-                <div class="details">
-                    <p><strong>Name:</strong> ${user.username}</p>
-                    <p><strong>Email:</strong> ${user.email}</p>
-                    <p><strong>Month:</strong> ${bill.month}</p>
-                    <p><strong>Year:</strong> ${bill.year}</p>
-                    <p><strong>Date:</strong> ${new Date().toLocaleString(
-                      "en-US",
-                      { timeZone: "Asia/Dhaka" }
-                    )}</p>
-                    <p><strong>Bill ID:</strong> ${bill._id.toString()}</p>
-                    <p><strong>User ID:</strong> ${user._id.toString()}</p>
-                </div>
-                <div class="summary">
-                    <p><strong>Total Breakfast:</strong> ${totalBreakfast}</p>
-                    <p><strong>Total Lunch:</strong> ${totalLunch}</p>
-                    <p><strong>Total Dinner:</strong> ${totalDinner}</p>
-                    <p><strong>Total Deposit:</strong> ${paidAmount}</p>
-                    <p><strong>Total Bill:</strong> ${totalBillInBDT}</p>
-                    <div class="charges-list">
-                        <strong>Charges:</strong>
-                        ${userTotalCharges
-                          .map(
-                            (charge) => `
-                                <div class="charge-item">
-                                    <p><strong>${charge.note}:</strong> ${charge.amount}</p>
-                                </div>
-                            `
-                          )
-                          .join("")}
-                    </div>
-                    <p class="total"><strong>Net Amount Due:</strong> ${
-                      totalBillInBDT - paidAmount
-                    }</p>
-                </div>
-            </div>
-        </body>
-        </html>`;
+        let mounthlyBillEmailHtml = render(
+          MonthlyBillEmail({
+            name: user.username,
+            email: user.email,
+            month: bill.month,
+            year: bill.year,
+            date: new Date().toLocaleString("en-US", {
+              timeZone: "Asia/Dhaka",
+            }),
+            billId: bill._id.toString(),
+            userId: user._id.toString(),
+            totalBreakfast: totalBreakfast,
+            totalLunch: totalLunch,
+            totalDinner: totalDinner,
+            totalDeposit: paidAmount,
+            totalBill: totalBillInBDT,
+            charges: userTotalCharges,
+          })
+        );
 
         bill.charges = userTotalCharges;
         bill.totalBreakfast = totalBreakfast;
@@ -587,8 +503,7 @@ export const GET = async (req) => {
         if (user.email == "akibrahman5200@gmail.com") {
           await sendSMS(
             user.contactNumber,
-            "TEST"
-            // `Hi, Mr. ${user.username}\nYour monthly bill has been calculated\nPlease check your E-mail properly with spam box to get details. Also you can check 'My Bills' from Dashboard.\n\nThe Crown Boys Hostel Automated System`
+            `Hi, Mr. ${user.username}\nYour monthly bill has been calculated\nPlease check your E-mail properly with spam box to get details. Also you can check 'My Bills' from Dashboard.\n\nThe Crown Boys Hostel Automated System`
           );
           try {
             await billTransport.sendMail({
@@ -673,10 +588,10 @@ export const GET = async (req) => {
           mealRate,
         });
         await managerBill.save();
-        // await sendSMS(
-        //   manager.contactNumber,
-        //   `Hi, Mr. ${manager.username}\nYour monthly market bill with meal count and meal rate has been created. Check it from your profile.\n\nThe Crown Boys Hostel Automated System`
-        // );
+        await sendSMS(
+          manager.contactNumber,
+          `Hi, Mr. ${manager.username}\nYour monthly market bill with meal count and meal rate has been created. Check it from your profile.\n\nThe Crown Boys Hostel Automated System`
+        );
       });
       await Promise.all(managerPromises);
       // Manager Bill Creation End

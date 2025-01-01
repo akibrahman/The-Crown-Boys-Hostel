@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bill Summary</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      .bill-container {
+        max-width: 600px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #f9f9f9;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .details {
+        margin-bottom: 15px;
+      }
+      .details p {
+        margin: 5px 0;
+      }
+      .summary {
+        margin-top: 20px;
+      }
+      .summary p {
+        margin: 8px 0;
+      }
+      .total {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bill-container">
+      <div class="header">
+        <h1>Bill Summary</h1>
+      </div>
+      <div class="details">
+        <p><strong>Name:</strong> ${user.username}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Month:</strong> ${bill.month}</p>
+        <p><strong>Year:</strong> ${bill.year}</p>
+        <p>
+          <strong>Date:</strong> ${new Date().toLocaleString( "en-US", {
+          timeZone: "Asia/Dhaka" } )}
+        </p>
+        <p><strong>Bill ID:</strong> ${bill._id.toString()}</p>
+        <p><strong>User ID:</strong> ${user._id.toString()}</p>
+      </div>
+      <div class="summary">
+        <p><strong>Total Breakfast:</strong> ${totalBreakfast}</p>
+        <p><strong>Total Lunch:</strong> ${totalLunch}</p>
+        <p><strong>Total Dinner:</strong> ${totalDinner}</p>
+        <p><strong>Total Deposit:</strong> ${paidAmount}</p>
+        <p><strong>Total Bill:</strong> ${totalBillInBDT}</p>
+        <div class="charges-list">
+          <strong>Charges:</strong>
+          ${userTotalCharges .map( (charge) => `
+          <div class="charge-item">
+            <p><strong>${charge.note}:</strong> ${charge.amount}</p>
+          </div>
+          ` ) .join("")}
+        </div>
+        <p class="total">
+          <strong>Net Amount Due:</strong> ${ totalBillInBDT - paidAmount }
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
