@@ -69,7 +69,7 @@ export const POST = async (req) => {
         month: currentMonthName,
         year: currentYear,
         date: new Date(currentYear, currentMonth, i).toLocaleDateString(),
-        breakfast: i <= currentDateNumber ? false : true,
+        breakfast: false,
         lunch: i <= currentDateNumber ? false : true,
         dinner: i <= currentDateNumber ? false : true,
       });

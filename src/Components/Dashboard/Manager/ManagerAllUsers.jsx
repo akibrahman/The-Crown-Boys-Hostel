@@ -10,6 +10,8 @@ import { IoSearchOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import toast from "react-hot-toast";
 import moment from "moment";
+import { deleteObject, listAll, ref } from "firebase/storage";
+import { storage } from "../../../../firebase.config";
 
 const ManagerAllUsers = ({ user }) => {
   const [clientName, setClientName] = useState("");
@@ -161,7 +163,7 @@ const ManagerAllUsers = ({ user }) => {
         style={customStylesForclientDetailsModal}
       >
         {clientDetails && (
-          <div className="dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white dark:text-white font-semibold p-10 h-[90vh] overflow-y-scroll w-full">
+          <div className="text-white bg-dashboard font-semibold p-10 h-[90vh] overflow-y-scroll w-full">
             <div className="flex items-center gap-10">
               <div className="mb-4">
                 <Image
@@ -173,7 +175,7 @@ const ManagerAllUsers = ({ user }) => {
                       : clientDetails.profilePicture
                   }
                   alt="Profile Picture"
-                  className="object-cover aspect-square rounded-full"
+                  className="object-cover aspect-square rounded-full h-[150px] w-[150px]"
                 />
               </div>
               <div>
@@ -244,7 +246,6 @@ const ManagerAllUsers = ({ user }) => {
                     "Are you sure to decline your client?"
                   );
                   if (confirmation) {
-                    //! Here
                     setDeclining(true);
                     try {
                       const { data } = await axios.post(
@@ -252,8 +253,18 @@ const ManagerAllUsers = ({ user }) => {
                         { id: clientDetails._id }
                       );
                       if (data.success) {
+                        const folderRef = ref(storage, "user_info/");
+                        const listResult = await listAll(folderRef);
+                        const matchingItems = listResult.items.filter((item) =>
+                          item.name.startsWith(`${data.email.toString()}`)
+                        );
+                        for (const itemRef of matchingItems) {
+                          await deleteObject(itemRef);
+                        }
                         await clientRefetch();
-                        toast.success("Client Declined");
+                        toast.success("Client Declined Successfully");
+                      } else {
+                        throw new Error(data.msg);
                       }
                     } catch (error) {
                       console.log("Frontend problem when declining a client");

@@ -11,7 +11,11 @@ export const POST = async (req) => {
       `Hi ${user.username},\nYour registration has been declined from the Authority, Please contact with us for more Details\n\nThe Corwn Boys Hostel Authority Team`
     );
     await User.findByIdAndDelete(id);
-    return NextResponse.json({ msg: "Deleted", success: true });
+    return NextResponse.json({
+      msg: "Deleted",
+      success: true,
+      email: user.email,
+    });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

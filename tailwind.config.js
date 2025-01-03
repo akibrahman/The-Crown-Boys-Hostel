@@ -2,6 +2,7 @@
 module.exports = {
   optimizeCss: false,
   enableBabelRuntime: true,
+  // purge is Necessary in Vercel Deployment
   purge: ["./src/**/*.{js,ts,jsx,tsx}"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
