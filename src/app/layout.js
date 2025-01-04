@@ -4,6 +4,7 @@ import TanstackProvider from "@/providers/TanstackProvider";
 import { Toaster } from "react-hot-toast";
 import "react-tooltip/dist/react-tooltip.css";
 import "./globals.css";
+import "./dashboard.css";
 import NavBar from "@/Components/NavBar/NavBar";
 import NextTopLoader from "nextjs-toploader";
 import ScrollToTop from "@/Components/scrollToTop/scrollToTop";
