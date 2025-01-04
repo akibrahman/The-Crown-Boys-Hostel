@@ -1,5 +1,6 @@
 import MonthlyBillEmail from "@/Components/MonthlyBillEmail/MonthlyBillEmail";
 import ForgotEmail from "@/Components/VerificationEmail/ForgotEmail";
+import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
 import Order from "@/models/orderModel";
 import Transaction from "@/models/transactionModel";
@@ -8,6 +9,8 @@ import { sendSMS } from "@/utils/sendSMS";
 import { render } from "@react-email/render";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+
+await dbConfig();
 
 export const POST = async () => {
   try {
