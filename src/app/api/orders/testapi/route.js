@@ -12,18 +12,18 @@ import nodemailer from "nodemailer";
 export const POST = async () => {
   try {
     await Order.deleteMany({
-      userId: "663916d667e9d16d56add11d",
-      month: "July",
-      year: 2024,
+      userId: "",
+      month: "January",
+      year: 2025,
     });
     await Bill.deleteMany({
-      userId: "663916d667e9d16d56add11d",
-      month: "July",
-      year: 2024,
+      userId: "",
+      month: "January",
+      year: 2025,
     });
-    // await User.findByIdAndUpdate("", {
-    //   isClientVerified: false,
-    // });
+    await User.findByIdAndUpdate("", {
+      isClientVerified: false,
+    });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);

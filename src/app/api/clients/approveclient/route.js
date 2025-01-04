@@ -1,8 +1,11 @@
+import { dbConfig } from "@/dbConfig/dbConfig";
 import Bill from "@/models/billModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import { sendSMS } from "@/utils/sendSMS";
 import { NextResponse } from "next/server";
+
+await dbConfig();
 
 export const POST = async (req) => {
   try {
@@ -15,7 +18,27 @@ export const POST = async (req) => {
       currentMonth,
       currentYear,
     } = await req.json();
-
+    if (
+      userId == null ||
+      managerId == null ||
+      days == null ||
+      currentDateNumber == null ||
+      currentMonthName == null ||
+      currentMonth == null ||
+      currentYear == null
+    )
+      throw new Error(
+        "Data Missing" +
+          `
+__userId__:__${userId}__     
+__managerId__:__${managerId}__
+__days__:__${days}__
+__currentDateNumber__:__${currentDateNumber}__
+__currentMonthName__:__${currentMonthName}__
+__currentMonth__:__${currentMonth}__
+__currentYear__:__${currentYear}__
+        `
+      );
     //
     const isLastDayOfCurrentMonthInBangladesh = () => {
       const today = new Date();
@@ -60,27 +83,44 @@ export const POST = async (req) => {
       throw new Error(
         "Client Acception is not Allowed on Second Last or Last Day of any Month"
       );
-    //
 
     for (let i = 1; i <= days; i++) {
-      const newOrder = new Order({
+      const isOrder = await Order.findOne({
         userId,
-        managerId,
         month: currentMonthName,
         year: currentYear,
         date: new Date(currentYear, currentMonth, i).toLocaleDateString(),
-        breakfast: false,
-        lunch: i <= currentDateNumber ? false : true,
-        dinner: i <= currentDateNumber ? false : true,
       });
-      await newOrder.save();
+      if (isOrder) {
+        console.log("Order Exists!");
+      } else {
+        await new Order({
+          userId,
+          managerId,
+          month: currentMonthName,
+          year: currentYear,
+          date: new Date(currentYear, currentMonth, i).toLocaleDateString(),
+          breakfast: false,
+          lunch: i <= currentDateNumber ? false : true,
+          dinner: i <= currentDateNumber ? false : true,
+        }).save();
+      }
     }
-    const newBill = new Bill({
+    const isBill = await Bill.findOne({
       userId,
       month: currentMonthName,
       year: currentYear,
     });
-    await newBill.save();
+    if (isBill) {
+      console.log("Bill Exists!");
+    } else {
+      await new Bill({
+        userId,
+        month: currentMonthName,
+        year: currentYear,
+      }).save();
+    }
+
     const user = await User.findByIdAndUpdate(userId, {
       isClientVerified: true,
     });

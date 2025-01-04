@@ -136,12 +136,16 @@ const ManagerAllUsers = ({ user }) => {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
+      console.log(currentDate);
       let currentMonth = new Date(currentDate).getMonth() + 1;
       let currentYear = new Date(currentDate).getFullYear();
+      console.log(currentMonth, currentYear);
       if (currentMonth >= 12 || currentMonth == "12") {
+        console.log("True");
         currentMonth = 0;
         currentYear++;
       }
+      console.log(currentMonth, currentYear);
       const dayCountOfCurrentMonth = parseInt(
         new Date(currentYear, currentMonth, 0).getDate()
       );
@@ -150,6 +154,7 @@ const ManagerAllUsers = ({ user }) => {
       for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
         tempArray.push(i);
       }
+      console.log(tempArray);
       setCurrentDays(tempArray);
     }
   }, [user?.role]);
@@ -292,36 +297,62 @@ const ManagerAllUsers = ({ user }) => {
                     //! Here
                     setGivingAuthorization(true);
                     try {
+                      const userId = clientDetails._id;
+                      const managerId = user._id;
+                      const days = parseInt(
+                        currentDays[currentDays.length - 1]
+                      );
+                      const currentMonthName = new Date().toLocaleDateString(
+                        "en-BD",
+                        {
+                          month: "long",
+                          timeZone: "Asia/Dhaka",
+                        }
+                      );
+                      const currentDateNumber = parseInt(
+                        new Date().toLocaleDateString("en-BD", {
+                          day: "numeric",
+                          timeZone: "Asia/Dhaka",
+                        })
+                      );
+                      const currentMonth = new Date(
+                        new Date().toLocaleString("en-US", {
+                          timeZone: "Asia/Dhaka",
+                        })
+                      ).getMonth();
+                      const currentYear = new Date(
+                        new Date().toLocaleString("en-US", {
+                          timeZone: "Asia/Dhaka",
+                        })
+                      ).getFullYear();
+
+                      const payLoad = {
+                        userId,
+                        managerId,
+                        days,
+                        currentMonthName,
+                        currentDateNumber,
+                        currentMonth,
+                        currentYear,
+                      };
+
+                      console.log(payLoad);
+
+                      if (
+                        userId == null ||
+                        managerId == null ||
+                        days == null ||
+                        currentMonthName == null ||
+                        currentDateNumber == null ||
+                        currentMonth == null ||
+                        currentYear == null
+                      ) {
+                        return toast.error("Missing Data!");
+                      }
+
                       const { data } = await axios.post(
                         "api/clients/approveclient",
-                        {
-                          userId: clientDetails._id,
-                          managerId: user._id,
-                          days: parseInt(currentDays[currentDays.length - 1]),
-                          currentMonthName: new Date().toLocaleDateString(
-                            "en-BD",
-                            {
-                              month: "long",
-                              timeZone: "Asia/Dhaka",
-                            }
-                          ),
-                          currentDateNumber: parseInt(
-                            new Date().toLocaleDateString("en-BD", {
-                              day: "numeric",
-                              timeZone: "Asia/Dhaka",
-                            })
-                          ),
-                          currentMonth: new Date(
-                            new Date().toLocaleString("en-US", {
-                              timeZone: "Asia/Dhaka",
-                            })
-                          ).getMonth(),
-                          currentYear: new Date(
-                            new Date().toLocaleString("en-US", {
-                              timeZone: "Asia/Dhaka",
-                            })
-                          ).getFullYear(),
-                        }
+                        payLoad
                       );
                       if (data.success) {
                         await clientRefetch();
