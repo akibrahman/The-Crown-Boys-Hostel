@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import CountCharge from "@/models/countChargeModel";
+import User from "@/models/userModel";
 
 const { dbConfig } = require("@/dbConfig/dbConfig");
 
@@ -98,6 +99,11 @@ export const GET = async (req) => {
           "user.image": "$user.profilePicture",
         },
       },
+      {
+        $sort: {
+          count: 1,
+        },
+      },
     ]);
     return NextResponse.json({ charges, success: true });
   } catch (error) {
@@ -109,30 +115,37 @@ export const GET = async (req) => {
   }
 };
 
-// export const DELETE = async (req) => {
-//   try {
-//     let jwtData;
-//     const token = cookies()?.get("token")?.value;
-//     if (!token) throw new Error("Unauthorized !! No Token");
-//     try {
-//       jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
-//     } catch (error) {
-//       if (error.message == "invalid token" || "jwt malformed") {
-//         cookies().delete("token");
-//       }
-//       return NextResponse.json(
-//         { msg: "Unauthorized !!", error },
-//         { status: 401 }
-//       );
-//     }
-//     const managerId = jwtData.id;
-//     await User.updateMany({ manager: managerId }, { charges: [] });
-//     return NextResponse.json({ success: true, msg: "Charges Deleted" });
-//   } catch (error) {
-//     console.log(error);
-//     return NextResponse.json(
-//       { success: false, msg: error?.message || "Server error!" },
-//       { status: 500 }
-//     );
-//   }
-// };
+export const DELETE = async (req) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    if (!id) throw new Error("Unauthorized !! No ID");
+    let jwtData;
+    const token = cookies()?.get("token")?.value;
+    if (!token) throw new Error("Unauthorized !! No Token");
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json(
+        { msg: "Unauthorized !!", error },
+        { status: 401 }
+      );
+    }
+    const managerId = jwtData.id;
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+    await CountCharge.findByIdAndDelete(id);
+
+    return NextResponse.json({ success: true, msg: "Charge Deleted" });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, msg: error?.message || "Server error!" },
+      { status: 500 }
+    );
+  }
+};

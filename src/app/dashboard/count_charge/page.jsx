@@ -11,7 +11,9 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaTimes } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import Select from "react-select";
+import Swal from "sweetalert2";
 
 const ManagerCountChargeComponent = () => {
   const { user } = useContext(AuthContext);
@@ -19,6 +21,7 @@ const ManagerCountChargeComponent = () => {
   const [sendState, setSendState] = useState("");
   const [receiver, setReceiver] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState([false, ""]);
 
   const route = useRouter();
   const { data: clients, isLoading: clientsLoading } = useQuery({
@@ -101,6 +104,33 @@ const ManagerCountChargeComponent = () => {
       setSendState("");
       setCharges([]);
       setIsLoading(false);
+    }
+  };
+
+  const deleteCharge = async (id) => {
+    const swalData = await Swal.fire({
+      title: "Do you want to Delete this Charge?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#1493EA",
+      cancelButtonColor: "#EF4444",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      background: "#141E30",
+      color: "#fff",
+    });
+    if (!swalData.isConfirmed) return;
+
+    setIsDeleting([true, id]);
+    try {
+      await axios.delete(`/api/clients/countChargeclient?id=${id}`);
+      await countChargesRefetch();
+      toast.success("Charge Deleted Successfully");
+    } catch (error) {
+      toast.error("Failed to Delete Charge.");
+      console.error(error);
+    } finally {
+      setIsDeleting([false, ""]);
     }
   };
 
@@ -275,7 +305,7 @@ const ManagerCountChargeComponent = () => {
           {isLoading && <CgSpinner className="text-xl animate-spin" />}
         </button>
       </form>
-      <div className="w-full">
+      <div className="w-full mt-6">
         <div className="flex items-center justify-center my-3">
           <p className="text-center font-semibold text-2xl text-white relative flex items-center justify-between">
             Charges
@@ -283,9 +313,13 @@ const ManagerCountChargeComponent = () => {
         </div>
         {countChargesLoading ? (
           <CgSpinner className="animate-spin text-xl text-white my-6 mx-auto text-center" />
+        ) : countCharges.length <= 0 ? (
+          <p className="py-3 text-center font-semibold">
+            No Charges Added Yet!
+          </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {countCharges?.map((countCharge) => (
+            {countCharges.map((countCharge) => (
               <div
                 key={countCharge._id}
                 className="bg-gray-800 rounded-md p-4 mb-4 shadow-md flex items-center gap-6"
@@ -297,7 +331,7 @@ const ManagerCountChargeComponent = () => {
                   width="64"
                   className="w-16 h-16 rounded-full object-cover mr-4"
                 />
-                <div className="text-white">
+                <div className="text-white flex-1">
                   <h3 className="font-semibold text-lg">{countCharge.note}</h3>
                   <p className="text-sm">
                     <span className="font-semibold">Amount:</span> ৳{" "}
@@ -316,6 +350,14 @@ const ManagerCountChargeComponent = () => {
                     {countCharge.user.email}
                   </p>
                 </div>
+                {isDeleting[0] && isDeleting[1] == countCharge._id ? (
+                  <CgSpinner className="aspect-square text-4xl p-2 rounded-full text-blue-500 bg-blue-200 animate-spin" />
+                ) : (
+                  <MdDelete
+                    onClick={() => deleteCharge(countCharge._id)}
+                    className="aspect-square text-4xl p-2 rounded-full text-red-500 bg-red-200 cursor-pointer duration-300 active:scale-90"
+                  />
+                )}
               </div>
             ))}
           </div>
