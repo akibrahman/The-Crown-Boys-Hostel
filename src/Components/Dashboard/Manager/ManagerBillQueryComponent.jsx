@@ -270,10 +270,14 @@ const UserWise = ({
           {result &&
             result.length > 0 &&
             result
-              .sort(
-                (a, b) =>
+              .sort((a, b) => {
+                if (b.year !== a.year) {
+                  return b.year - a.year;
+                }
+                return (
                   monthOrder.indexOf(b.month) - monthOrder.indexOf(a.month)
-              )
+                );
+              })
               .map((bill) => (
                 <Receipt
                   key={bill._id}
