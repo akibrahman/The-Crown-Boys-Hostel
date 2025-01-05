@@ -58,6 +58,57 @@ export const POST = async (req) => {
   }
 };
 
+export const GET = async (req) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const managerId = searchParams.get("managerId");
+    if (!managerId) {
+      throw new Error("managerId is required");
+    }
+    const charges = await CountCharge.aggregate([
+      {
+        $addFields: {
+          userIdObj: { $toObjectId: "$userId" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userIdObj",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $match: {
+          "user.manager": managerId,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          note: 1,
+          amount: 1,
+          count: 1,
+          "user.name": "$user.username",
+          "user.email": 1,
+          "user.image": "$user.profilePicture",
+        },
+      },
+    ]);
+    return NextResponse.json({ charges, success: true });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, msg: error.message },
+      { status: 500 }
+    );
+  }
+};
+
 // export const DELETE = async (req) => {
 //   try {
 //     let jwtData;

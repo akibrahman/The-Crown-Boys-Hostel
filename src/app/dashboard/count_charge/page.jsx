@@ -5,6 +5,7 @@ import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import moment from "moment";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
@@ -21,7 +22,7 @@ const ManagerCountChargeComponent = () => {
 
   const route = useRouter();
   const { data: clients, isLoading: clientsLoading } = useQuery({
-    queryKey: ["clients", "manager", user?._id, "notification"],
+    queryKey: ["clients", "manager", user?._id],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
         `/api/clients/getclients?id=${queryKey[2]}&onlyApproved=1&clientName=`
@@ -61,6 +62,23 @@ const ManagerCountChargeComponent = () => {
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
 
+  const {
+    data: countCharges,
+    isLoading: countChargesLoading,
+    refetch: countChargesRefetch,
+  } = useQuery({
+    queryKey: ["manager", user?._id, "countCharges", "get"],
+    queryFn: async ({ queryKey }) => {
+      const { data } = await axios.get(
+        `/api/clients/countChargeclient?managerId=${queryKey[1]}`
+      );
+      if (data.success) {
+        return data.charges;
+      } else return [];
+    },
+    enabled: user?._id && user?.role == "manager" ? true : false,
+  });
+
   const [charges, setCharges] = useState([]);
 
   const setCharge = async () => {
@@ -73,6 +91,7 @@ const ManagerCountChargeComponent = () => {
         clients: receiver,
         charges,
       });
+      await countChargesRefetch();
       toast.success("Charges Applied");
     } catch (error) {
       toast.error("Failed to Apply Charge.");
@@ -256,6 +275,52 @@ const ManagerCountChargeComponent = () => {
           {isLoading && <CgSpinner className="text-xl animate-spin" />}
         </button>
       </form>
+      <div className="w-full">
+        <div className="flex items-center justify-center my-3">
+          <p className="text-center font-semibold text-2xl text-white relative flex items-center justify-between">
+            Charges
+          </p>
+        </div>
+        {countChargesLoading ? (
+          <CgSpinner className="animate-spin text-xl text-white my-6 mx-auto text-center" />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {countCharges?.map((countCharge) => (
+              <div
+                key={countCharge._id}
+                className="bg-gray-800 rounded-md p-4 mb-4 shadow-md flex items-center gap-6"
+              >
+                <Image
+                  src={countCharge.user.image}
+                  alt={countCharge.user.name}
+                  height="64"
+                  width="64"
+                  className="w-16 h-16 rounded-full object-cover mr-4"
+                />
+                <div className="text-white">
+                  <h3 className="font-semibold text-lg">{countCharge.note}</h3>
+                  <p className="text-sm">
+                    <span className="font-semibold">Amount:</span> ৳{" "}
+                    {countCharge.amount}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-semibold">Count:</span>{" "}
+                    {countCharge.count}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-semibold">Name:</span>{" "}
+                    {countCharge.user.name}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-semibold">Email:</span>{" "}
+                    {countCharge.user.email}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

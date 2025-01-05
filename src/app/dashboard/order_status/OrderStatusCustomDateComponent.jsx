@@ -2,6 +2,7 @@
 
 import React, { useContext, useState } from "react";
 import DatePicker from "react-date-picker";
+import "react-date-picker/dist/DatePicker.css";
 import { LuCalendarPlus } from "react-icons/lu";
 import OrderStatusComponent from "./OrderStatusComponent";
 import { useQuery } from "@tanstack/react-query";
