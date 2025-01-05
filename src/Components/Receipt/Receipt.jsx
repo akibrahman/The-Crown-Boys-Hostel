@@ -657,10 +657,7 @@ const Receipt = ({
             }, 0) == totalBillInBDT &&
               status == "calculated") ||
               !isManageable || (
-                <Link
-                  target="_blank"
-                  href={`/dashboard?displayData=managerManualInvouce&billId=${id}`}
-                >
+                <Link target="_blank" href={`/dashboard/invoice?billId=${id}`}>
                   <button
                     data-tooltip-id="gitt"
                     data-tooltip-content={"Generate Invoice"}
