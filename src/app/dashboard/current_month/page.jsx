@@ -6,6 +6,7 @@ import { Tooltip } from "react-tooltip";
 import { motion } from "framer-motion";
 import { isFridayInBangladesh } from "@/utils/isFriday";
 import { AuthContext } from "@/providers/ContextProvider";
+import BlockMsg from "@/Components/BlockMsg/BlockMsg";
 
 const CurrentMonthComponent = () => {
   const { user } = useContext(AuthContext);
@@ -161,6 +162,22 @@ const CurrentMonthComponent = () => {
     },
     enabled: user?._id && user?.role == "client" ? true : false,
   });
+
+  if (
+    user?.blockDate &&
+    moment(user?.blockDate).isBefore(
+      moment(
+        new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Dhaka",
+        }),
+        "M/D/YYYY, h:mm:ss A"
+      ),
+      "day"
+    )
+  ) {
+    return <BlockMsg />;
+  }
+
   return (
     <div className="min-h-full bg-dashboard text-slate-100 overflow-x-hidden">
       <div className="p-6 px-10 flex flex-col-reverse gap-3 items-center md:flex-row-reverse md:gap-0 justify-between">

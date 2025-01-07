@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import { FaTimes } from "react-icons/fa";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { storage } from "../../../../firebase.config";
+import BlockMsg from "@/Components/BlockMsg/BlockMsg";
 
 const FileUpload = () => {
   const { user, userRefetch } = useContext(AuthContext);
@@ -126,10 +127,22 @@ const FileUpload = () => {
   };
 
   if (!user) return <PreLoader />;
-  if (user?.success == false) {
-    route.push("/");
-    return;
+
+  if (
+    user?.blockDate &&
+    moment(user?.blockDate).isBefore(
+      moment(
+        new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Dhaka",
+        }),
+        "M/D/YYYY, h:mm:ss A"
+      ),
+      "day"
+    )
+  ) {
+    return <BlockMsg />;
   }
+
   return (
     <div className="min-h-screen pb-20 bg-dashboard text-slate-100 overflow-x-hidden">
       <motion.div
