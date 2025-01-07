@@ -103,7 +103,7 @@ export const GET = async (req) => {
         )}&paymentID=${executeData.paymentID}`
     );
   } catch (error) {
-    console.log("===========================>", error.message);
+    console.log(error.message);
     return NextResponse.redirect(redirectUrl + `?success=false`);
   }
 };
