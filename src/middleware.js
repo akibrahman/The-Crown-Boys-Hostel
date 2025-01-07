@@ -63,7 +63,7 @@ export async function middleware(req) {
     }
   }
   if (userRoutes.includes(pathname)) {
-    if (role !== "client") {
+    if (role != "client") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
   }

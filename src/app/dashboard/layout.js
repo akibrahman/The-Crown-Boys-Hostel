@@ -1,5 +1,7 @@
 "use client";
 
+import AuthorizationNeede from "@/Components/Dashboard/AuthorizationNeede";
+import UserNotVerifiedPage from "@/Components/Dashboard/UserNotVerifiedPage";
 import PreLoader from "@/Components/PreLoader/PreLoader";
 import { AuthContext } from "@/providers/ContextProvider";
 import axios from "axios";
@@ -251,6 +253,23 @@ const Layout = ({ children }) => {
     ];
 
   if (!user) return <PreLoader />;
+
+  if (!user.isVerified)
+    return (
+      <div className="h-[calc(100vh-85px)]">
+        <UserNotVerifiedPage user={user} />
+      </div>
+    );
+  if (
+    user.isVerified &&
+    ((user.role == "client" && !user.isClientVerified) ||
+      (user.role == "manager" && !user.isManagerVerified))
+  )
+    return (
+      <div className="h-[calc(100vh-85px)]">
+        <AuthorizationNeede user={user} />
+      </div>
+    );
 
   return (
     <div className="relative">

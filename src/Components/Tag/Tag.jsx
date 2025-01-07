@@ -9,6 +9,7 @@ const Tag = () => {
         alt="Logo of The Crown Boys Hostel"
         height={60}
         width={60}
+        className="h-[60px] w-[60px] aspect-square"
       />
       <p className="w-max text-xl">The Crown Boys Hostel</p>
       <p className="w-max text-xs">Best in the mess life</p>

@@ -258,7 +258,7 @@ const Clients = () => {
                     setDeclining(true);
                     try {
                       const { data } = await axios.post(
-                        "api/clients/declineclient",
+                        "/api/clients/declineclient",
                         { id: clientDetails._id }
                       );
                       if (data.success) {
@@ -273,6 +273,7 @@ const Clients = () => {
                         await clientRefetch();
                         toast.success("Client Declined Successfully");
                       } else {
+                        toast("BCEND Success False");
                         throw new Error(data.msg);
                       }
                     } catch (error) {
@@ -355,7 +356,7 @@ const Clients = () => {
                       }
 
                       const { data } = await axios.post(
-                        "api/clients/approveclient",
+                        "/api/clients/approveclient",
                         payLoad
                       );
                       if (data.success) {
