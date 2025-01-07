@@ -21,7 +21,7 @@ import {
   FaSms,
   FaUsers,
 } from "react-icons/fa";
-import { FaBagShopping, FaMoneyBillTrendUp } from "react-icons/fa6";
+import { FaBagShopping, FaBowlFood, FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GiHotMeal } from "react-icons/gi";
 import { GrUserManager } from "react-icons/gr";
 import { IoIosNotifications } from "react-icons/io";
@@ -71,6 +71,12 @@ const Layout = ({ children }) => {
         href: "/dashboard",
         icon: CgProfile,
         displayData: "",
+      },
+      {
+        title: "Order",
+        href: "/dashboard/order",
+        icon: FaBowlFood,
+        displayData: "order",
       },
       {
         title: "Current Month",
