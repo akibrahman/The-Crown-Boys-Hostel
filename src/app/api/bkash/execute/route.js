@@ -7,7 +7,7 @@ import Bill from "@/models/billModel";
 await dbConfig();
 
 export const GET = async (req) => {
-  const redirectUrl = `${process.env.CLIENT_SIDE}/dashboard?displayData=myBills`;
+  const redirectUrl = `${process.env.CLIENT_SIDE}/dashboard/my_bills`;
   try {
     let queries = [];
     const { searchParams } = new URL(req.url);
@@ -19,7 +19,7 @@ export const GET = async (req) => {
     if (status == "cancel") {
       return NextResponse.redirect(
         redirectUrl +
-          `&success=false&status=${status}&paymentID=${paymentID}&message=${encodeURIComponent(
+          `?success=false&status=${status}&paymentID=${paymentID}&message=${encodeURIComponent(
             "Payment Cancelled"
           )}`
       );
@@ -27,7 +27,7 @@ export const GET = async (req) => {
     if (status === "failure") {
       return NextResponse.redirect(
         redirectUrl +
-          `&success=false&status=${status}&paymentID=${paymentID}&message=${encodeURIComponent(
+          `?success=false&status=${status}&paymentID=${paymentID}&message=${encodeURIComponent(
             "Payment Failed"
           )}`
       );
@@ -68,7 +68,7 @@ export const GET = async (req) => {
     ) {
       return NextResponse.redirect(
         redirectUrl +
-          `&success=false&status=${executeData?.transactionStatus}&paymentID=${
+          `?success=false&status=${executeData?.transactionStatus}&paymentID=${
             executeData.paymentID
           }&message=${encodeURIComponent(executeData?.statusMessage)}`
       );
@@ -95,7 +95,7 @@ export const GET = async (req) => {
     }
     return NextResponse.redirect(
       redirectUrl +
-        `&success=true&status=success&transactionId=${
+        `?success=true&status=success&transactionId=${
           executeData.merchantInvoiceNumber
         }&trxId=${executeData.trxID}&amount=${invoiceData.reduce(
           (a, c) => a + parseInt(c.value),
@@ -104,6 +104,6 @@ export const GET = async (req) => {
     );
   } catch (error) {
     console.log("===========================>", error.message);
-    return NextResponse.redirect(redirectUrl + `&success=false`);
+    return NextResponse.redirect(redirectUrl + `?success=false`);
   }
 };

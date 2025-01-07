@@ -9,13 +9,13 @@ import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { AuthContext } from "@/providers/ContextProvider";
 import Receipt from "@/Components/Receipt/Receipt";
+import PreLoader from "@/Components/PreLoader/PreLoader";
 
 const MyBillsComponent = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   const route = useRouter();
   const searchParams = useSearchParams();
   const success = searchParams.get("success");
-  const status = searchParams.get("status");
   const amount = searchParams.get("amount");
   const paymentID = searchParams.get("paymentID");
   const transactionId = searchParams.get("transactionId");
@@ -24,7 +24,7 @@ const MyBillsComponent = () => {
 
   const clearUrl = () => {
     const url = new URL(window.location.href);
-    const baseUrl = url.origin + url.pathname + "?displayData=myBills";
+    const baseUrl = url.origin + url.pathname;
     return route.replace(baseUrl);
   };
 
@@ -103,6 +103,8 @@ const MyBillsComponent = () => {
 
     fetchDue();
   });
+
+  if (loading) return <PreLoader />;
 
   return (
     <>
