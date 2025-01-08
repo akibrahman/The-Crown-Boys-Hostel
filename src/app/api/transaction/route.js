@@ -103,7 +103,9 @@ export const POST = async (req) => {
     );
     try {
       const receiptLink = await axios.get(
-        `https://ulvis.net/api.php?url=https://thecrownboyshostel.com/qr/${transactionId}&private=1`
+        `https://ulvis.net/api.php?url=${encodeURIComponent(
+          `https://thecrownboyshostel.com/qr/${transactionId}`
+        )}&private=1`
       );
       const sms = `Dear ${user.username},\nWe have received your payment of ${totalPayment} BDT.\nReceipt: ${receiptLink.data}\nThank you for choosing The Crown Boys Hostel.`;
       await sendSMS(
