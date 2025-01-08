@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { sendSMS } from "@/utils/sendSMS";
-import axios from "axios";
 
 await dbConfig();
 
@@ -102,26 +101,14 @@ export const POST = async (req) => {
       0
     );
     try {
-      const receiptLink = await axios.get(
-        `https://ulvis.net/api.php?url=${encodeURIComponent(
-          `https://thecrownboyshostel.com/qr/${transactionId}`
-        )}&private=1`
-      );
-      const sms = `Dear ${user.username},\nWe have received your payment of ${totalPayment} BDT.\nReceipt: ${receiptLink.data}\nThank you for choosing The Crown Boys Hostel.`;
-      await sendSMS(
-        !mongoose.Types.ObjectId.isValid(billId)
-          ? billId.split("__")[1]
-          : user?.contactNumber,
-        sms
-      );
-    } catch (error) {
-      console.log(error);
-      return NextResponse.json({
-        success: true,
-        msg: `Transaction saved successfully But SMS Sent Error - Error is: ${error.message}`,
-      });
-    }
-
+    } catch (error) {}
+    const sms = `Dear ${user.username},\nWe have received your payment of ${totalPayment} BDT.\n\nThank you for choosing The Crown Boys Hostel.`;
+    await sendSMS(
+      !mongoose.Types.ObjectId.isValid(billId)
+        ? billId.split("__")[1]
+        : user?.contactNumber,
+      sms
+    );
     return NextResponse.json({
       success: true,
       msg: "Transaction saved successfully",
