@@ -101,9 +101,10 @@ export const POST = async (req) => {
       (sum, payment) => sum + payment.value,
       0
     );
-    const receiptLink = await axios.get(
-      `https://ulvis.net/api.php?url=https://thecrownboyshostel.com/qr/${transactionId}&private=1`
-    );
+    // const receiptLink = await axios.get(
+    //   `https://ulvis.net/api.php?url=https://thecrownboyshostel.com/qr/${transactionId}&private=1`
+    // );
+    const receiptLink = { data: "__test__" };
     const sms = `Dear ${user.username},\nWe have received your payment of ${totalPayment} BDT.\nReceipt: ${receiptLink.data}\nThank you for choosing The Crown Boys Hostel.`;
     await sendSMS(
       !mongoose.Types.ObjectId.isValid(billId)
