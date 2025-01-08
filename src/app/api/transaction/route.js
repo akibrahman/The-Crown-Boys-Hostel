@@ -117,7 +117,10 @@ export const POST = async (req) => {
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return NextResponse.json(
+      { success: false, msg: error.message, error },
+      { status: 500 }
+    );
   }
 };
 
