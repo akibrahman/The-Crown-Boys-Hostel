@@ -67,7 +67,6 @@ const NavMenus = ({ items, loading }) => {
             className="h-[60px] w-[60px]"
             unoptimized
           />
-          <p>NextAuth Branch</p>
         </div>
         <div className="flex text-base items-center justify-center gap-5">
           {items.map((item, i) =>
