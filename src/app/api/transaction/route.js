@@ -100,8 +100,6 @@ export const POST = async (req) => {
       (sum, payment) => sum + payment.value,
       0
     );
-    try {
-    } catch (error) {}
     const sms = `Dear ${user.username},\nWe have received your payment of ${totalPayment} BDT.\n\nThank you for choosing The Crown Boys Hostel.`;
     await sendSMS(
       !mongoose.Types.ObjectId.isValid(billId)
