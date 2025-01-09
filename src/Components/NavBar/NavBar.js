@@ -14,7 +14,6 @@ const NavBar = () => {
   const { user, loading } = useContext(AuthContext);
   const withOutToken = [
     { title: "Home", url: "/" },
-    { title: "Food Blast", url: "/foodblast" },
     { title: "About Us", url: "/about-us" },
     { title: "Contact Us", url: "/contact-us" },
     { title: "Log In", url: "/signin" },
@@ -23,7 +22,6 @@ const NavBar = () => {
 
   const withToken = [
     { title: "Home", url: "/" },
-    { title: "Food Blast", url: "/foodblast" },
     { title: "About Us", url: "/about-us" },
     { title: "Contact Us", url: "/contact-us" },
     { title: "Order", url: "/order" },
@@ -32,7 +30,6 @@ const NavBar = () => {
 
   const whenLoading = [
     { title: "Home", url: "/" },
-    { title: "Food Blast", url: "/foodblast" },
     { title: "About Us", url: "/about-us" },
     { title: "Contact Us", url: "/contact-us" },
   ];
