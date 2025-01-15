@@ -2,6 +2,7 @@ import { dbConfig } from "@/dbConfig/dbConfig";
 import Transaction from "@/models/transactionModel";
 import User from "@/models/userModel";
 import jwt from "jsonwebtoken";
+import moment from "moment";
 import mongoose from "mongoose";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -16,6 +17,9 @@ export const GET = async (req) => {
     const page = searchParams.get("page") || 0;
     const limit = searchParams.get("limit") || 10;
     const month = searchParams.get("month") || 0;
+    const fromDate = searchParams.get("fromDate");
+    const toDate = searchParams.get("toDate");
+
     let skip = String(limit) == "all" ? 0 : page * parseInt(limit);
     if (
       !forManager ||
@@ -185,9 +189,19 @@ export const GET = async (req) => {
       ]);
     }
 
-    const lengthForPagination = transactions.length;
+    if (toDate && fromDate) {
+      transactions = transactions.filter(
+        (t) =>
+          moment(t.transactionDate).isSameOrAfter(moment(fromDate), "day") &&
+          moment(t.transactionDate).isSameOrBefore(moment(toDate), "day")
+      );
+    }
 
-    const transactionsToGo =
+    // Do All Filter Before That
+
+    let lengthForPagination = transactions.length;
+
+    let transactionsToGo =
       String(limit) === "all"
         ? transactions
         : transactions.slice(skip, skip + parseInt(limit));

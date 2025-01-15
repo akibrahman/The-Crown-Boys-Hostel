@@ -10,6 +10,8 @@ import SystemPagination from "@/Components/Pagination/Pagination";
 import { CgSpinner } from "react-icons/cg";
 import ManagerEditTransactionComponent from "./ManagerEditTransactionComponent";
 import { AuthContext } from "@/providers/ContextProvider";
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const ManagerTransactionsComponent = () => {
   const { user } = useContext(AuthContext);
@@ -21,6 +23,8 @@ const ManagerTransactionsComponent = () => {
   const [nameOrEmail, setNameOrEmail] = useState("");
   const [selectedTransaction, setSelectedTransaction] = useState("");
   const [bgType, setBgType] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
   const [editTransaction, setEditTransaction] = useState(false);
   const [editTransactionData, setEditTransactionData] = useState(null);
@@ -70,20 +74,37 @@ const ManagerTransactionsComponent = () => {
       itemsPerPage,
       selectedMonth,
       nameOrEmail,
+      fromDate,
+      toDate,
     ],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
-        `/api/transactions?forManager=${true}&page=${queryKey[3]}&limit=${
-          queryKey[4]
-        }&month=${queryKey[5]}&nameOrEmail=${queryKey[6]}`
+        `/api/transactions?forManager=true&page=${queryKey[3]}&limit=${queryKey[4]}&month=${queryKey[5]}&nameOrEmail=${queryKey[6]}&fromDate=${queryKey[7]}&toDate=${queryKey[8]}`
       );
       if (data.success) {
         setTotalTransactions(data.lengthForPagination);
         return data.transactions;
       }
     },
-    enabled: user?._id && user?.role == "manager" ? true : false,
+    enabled: user?._id && user?.role === "manager",
   });
+
+  const handleDateChange = (type, value) => {
+    if (type === "from") {
+      if (toDate && new Date(value) > new Date(toDate)) {
+        toast.error("From Date must be earlier than or equal to To Date.");
+        return;
+      }
+      setFromDate(value);
+    } else if (type === "to") {
+      if (fromDate && new Date(value) < new Date(fromDate)) {
+        toast.error("To Date must be later than or equal to From Date.");
+        return;
+      }
+      setToDate(value);
+    }
+    refetch();
+  };
 
   useEffect(() => {
     refetch();
@@ -114,7 +135,25 @@ const ManagerTransactionsComponent = () => {
             <select
               className="text-dark-black outline-none cursor-pointer px-2 md:px-4 py-0.5 md:py-1 rounded-md scrollbar-hide"
               value={itemsPerPage}
-              onChange={(e) => setItemsPerPage(e.target.value)}
+              onChange={async (e) => {
+                const selectedValue = e.target.value;
+                if (selectedValue == "all") {
+                  const swalData = await Swal.fire({
+                    title: "Do You Want to Fetch All Transactions?",
+                    text: "Number of Transactions can be Large and may Take a Several Moments!",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonColor: "#1493EA",
+                    cancelButtonColor: "#EF4444",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    background: "#141E30",
+                    color: "#fff",
+                  });
+                  if (!swalData.isConfirmed) return;
+                }
+                setItemsPerPage(selectedValue);
+              }}
             >
               <option value="10">10</option>
               <option value="20">20</option>
@@ -198,6 +237,31 @@ const ManagerTransactionsComponent = () => {
               ৳
             </p>
           </div>
+        </div>
+        <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 mt-3 md:mt-4 text-stroke font-semibold text-sm md:text-base">
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => handleDateChange("from", e.target.value)}
+            className="border px-2 md:px-4 py-0.5 md:py-1 rounded-md text-black outline-none"
+            placeholder="From Date"
+          />
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => handleDateChange("to", e.target.value)}
+            className="border px-2 md:px-4 py-0.5 md:py-1 rounded-md text-black outline-none"
+            placeholder="To Date"
+          />
+          {(toDate || fromDate) && (
+            <FaTimes
+              onClick={() => {
+                setToDate("");
+                setFromDate("");
+              }}
+              className="font-semibold text-xl text-white duration-300 active:scale-90 cursor-pointer"
+            />
+          )}
         </div>
         {transactions ? (
           <div className="flex flex-col gap-3 mt-3 md:mt-4">
