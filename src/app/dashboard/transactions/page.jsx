@@ -332,13 +332,15 @@ const ManagerTransactionsComponent = () => {
             <p>Loading Transactions...</p>
           </div>
         )}
-        <SystemPagination
-          page={page}
-          setPage={setPage}
-          pages={pages}
-          totalPages={totalPages}
-          onlyButtons={true}
-        />
+        {parseInt(transactions?.length || 0) == parseInt(totalTransactions) || (
+          <SystemPagination
+            page={page}
+            setPage={setPage}
+            pages={pages}
+            totalPages={totalPages}
+            onlyButtons={true}
+          />
+        )}
       </div>
     );
 };

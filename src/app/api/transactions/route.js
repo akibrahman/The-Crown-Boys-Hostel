@@ -159,11 +159,15 @@ export const GET = async (req) => {
             createdAtDate: {
               $toDate: "$transactionDate",
             },
+            monthNumber: { $month: { $toDate: "$transactionDate" } },
           },
         },
         {
           $match: {
-            userId: id,
+            $and: [
+              month != 0 ? { monthNumber: parseInt(month) } : {},
+              { userId: id },
+            ],
           },
         },
         {
