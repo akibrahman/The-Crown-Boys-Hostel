@@ -1,10 +1,12 @@
+import { dbConfig } from "@/dbConfig/dbConfig";
 import Market from "@/models/marketModel";
 import { NextResponse } from "next/server";
+
+await dbConfig();
 
 export const PUT = async (req) => {
   try {
     const { id1, id2, marketData } = await req.json();
-    console.log(id1, "--", id2);
     const monthMarkets = await Market.findById(id1);
     const targetedDate = monthMarkets.data.find((mrkt) => mrkt._id.equals(id2));
     targetedDate.details = marketData;
