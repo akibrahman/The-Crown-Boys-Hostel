@@ -25,6 +25,18 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  source: {
+    type: String,
+    required: true,
+  },
+  checkIn: {
+    type: String,
+    required: true,
+  },
+  transactionId: {
+    type: String,
+    default: "",
+  },
   beds: {
     type: [{}],
     default: [],

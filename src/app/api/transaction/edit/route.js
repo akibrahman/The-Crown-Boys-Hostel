@@ -39,12 +39,6 @@ export const GET = async (req) => {
     const bill = await Bill.findById(transaction.billId);
     const bills = await Bill.find({ userId: bill.userId });
     const user = await User.findById(bill.userId);
-    console.log("Bill: ", bill);
-    console.log("Payments: ", transaction.payments);
-    console.log(
-      "Amount: ",
-      transaction.payments.reduce((a, c) => a + c.value, 0)
-    );
     return NextResponse.json({
       success: true,
       user: {

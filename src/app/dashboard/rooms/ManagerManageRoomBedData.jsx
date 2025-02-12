@@ -9,6 +9,7 @@ import { FaTimes } from "react-icons/fa";
 import Swal from "sweetalert2";
 import Select from "react-select";
 import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
+import Link from "next/link";
 
 const ManagerManageRoomBedData = ({
   selectedBed,
@@ -195,13 +196,23 @@ const ManagerManageRoomBedData = ({
             className="w-[100px] h-[130px] rounded-md"
           />
         </div>
-        <button
-          onClick={saveBed}
-          className="px-4 py-1 rounded-md bg-blue-500 text-white font-semibold duration-300 flex items-center justify-center gap-2 active:scale-90"
-        >
-          Save
-          {loading && <CgSpinner className="text-xl animate-spin" />}
-        </button>
+        <div className="flex items-center justify-center gap-6">
+          <button
+            onClick={saveBed}
+            className="px-4 py-1 rounded-md bg-blue-500 text-white font-semibold duration-300 flex items-center justify-center gap-2 active:scale-90"
+          >
+            Save
+            {loading && <CgSpinner className="text-xl animate-spin" />}
+          </button>
+          <Link
+            href={`/dashboard/bookings?roomId=${room._id}&roomFloor=${room.floor}&roomName=${room.name}&roomBuilding=${room.building}&bedNo=${selectedBed[1].bedNo}`}
+            target="_blank"
+            className="px-4 py-1 rounded-md bg-purple-500 text-white font-semibold duration-300 flex items-center justify-center gap-2 active:scale-90"
+          >
+            Book
+            {loading && <CgSpinner className="text-xl animate-spin" />}
+          </Link>
+        </div>
       </div>
     </div>
   );

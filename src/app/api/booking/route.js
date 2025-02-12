@@ -13,13 +13,14 @@ await dbConfig();
 export const PATCH = async () => {
   try {
     const bookings = await Booking.find({});
+    console.log(bookings);
     return NextResponse.json({
       success: true,
       msg: "Got All Bookings",
       bookings,
     });
   } catch (error) {
-    console.log("=====================", error.message);
+    console.log(error.message);
     return NextResponse.json(
       { success: false, msg: "Server error, Try again!", error },
       { status: 501 }
