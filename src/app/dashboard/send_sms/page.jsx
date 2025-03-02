@@ -73,7 +73,7 @@ const ManagerSendSMSComponent = () => {
     e.preventDefault();
     if (!sendState) return toast.error("Select option!");
     if (
-      parseFloat(Math.ceil(character / 145) * 0.25).toFixed(2) *
+      parseFloat(Math.ceil(character / 70) * 0.35).toFixed(2) *
         receiver.length >=
       smsBalance
     ) {
@@ -223,7 +223,7 @@ const ManagerSendSMSComponent = () => {
             >
               Section:{" "}
               <span className="text-sky-500 font-medium">
-                {Math.ceil(character / 145)}
+                {Math.ceil(character / 70)}
               </span>
             </p>
             <p
@@ -233,7 +233,7 @@ const ManagerSendSMSComponent = () => {
               Charge:{" "}
               <span className="text-sky-500 font-medium">
                 {parseFloat(
-                  Math.ceil(character / 145) * 0.35 * receiver?.length
+                  Math.ceil(character / 70) * 0.35 * receiver?.length
                 ).toFixed(2)}
               </span>
               BDT
