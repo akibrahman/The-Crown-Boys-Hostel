@@ -21,6 +21,7 @@ export const GET = async (req) => {
       ...bill.toObject(),
       userName,
     }));
+    console.log(bills);
     return NextResponse.json({ bills, success: true });
   } catch (error) {
     console.log(error);

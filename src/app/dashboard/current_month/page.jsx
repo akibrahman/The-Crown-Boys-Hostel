@@ -151,9 +151,9 @@ const CurrentMonthComponent = () => {
     queryFn: async ({ queryKey }) => {
       try {
         const { data } = await axios.get(
-          `/api/bills/getbills?userId=${queryKey[2]}&month=${currentMonth}&year=${currentYear}`
+          `/api/bills/getdepositeamount?userId=${queryKey[2]}&month=${currentMonth}&year=${currentYear}`
         );
-        if (data.success) return data.bills[0].paidBillInBDT;
+        if (data.success) return data?.totalDeposite || 0;
         else return 0;
       } catch (error) {
         console.log(error);
