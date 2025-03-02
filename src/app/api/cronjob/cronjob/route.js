@@ -72,7 +72,6 @@ export const GET = async (req) => {
       isSecondLastDayOfCurrentMonthInBangladesh();
     const aboutLastDayOfCurrentMonth = isLastDayOfCurrentMonthInBangladesh();
     //! Second Last day of any month-----------------------
-    // aboutSecondLastDayOfCurrentMonth.isSecondLastDay
     if (aboutSecondLastDayOfCurrentMonth.isSecondLastDay) {
       let currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -302,7 +301,6 @@ export const GET = async (req) => {
       });
     }
     //! Last day of any month------------------------------
-    // aboutLastDayOfCurrentMonth.isLastDay
     if (aboutLastDayOfCurrentMonth.isLastDay) {
       console.log("Last Day Run Started");
       let currentDate = new Date().toLocaleString("en-US", {
@@ -371,7 +369,7 @@ export const GET = async (req) => {
               if (currentValue[type]) {
                 const date = currentValue.date;
                 if (isFridayInBangladesh(date)) {
-                  charges.amount += 66;
+                  charges.amount += 55;
                   if (
                     currentValue.isGuestMeal &&
                     parseInt(
@@ -389,7 +387,7 @@ export const GET = async (req) => {
                             type.charAt(0).toUpperCase() + type.slice(1)
                           }Count`
                         ]
-                      ) * 66;
+                      ) * 55;
                   }
                 }
               }
@@ -421,7 +419,7 @@ export const GET = async (req) => {
         const [totalLunch, specialMealCharges] = calculateMeals("lunch");
         const [totalDinner] = calculateMeals("dinner");
         const totalMealBillInBDT =
-          totalBreakfast * 32 + totalLunch * 64 + totalDinner * 64 + 500;
+          totalBreakfast * 32 + totalLunch * 75 + totalDinner * 75 + 500;
         const totalUserCharges =
           user.charges?.reduce((a, b) => a + parseInt(b.amount), 0) || 0;
         const totalSpecialMealCharges =

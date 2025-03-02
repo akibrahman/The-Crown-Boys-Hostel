@@ -282,9 +282,7 @@ const Order = () => {
       <div className="flex flex-col gap-0">
         {/* Date Picker  */}
         <div className="pt-10 pb-20 flex flex-col md:flex-row justify-center items-center gap-10">
-          <p className="text-xl font-semibold tracking-widest">
-            Select Date:
-          </p>
+          <p className="text-xl font-semibold tracking-widest">Select Date:</p>
           <DatePicker
             className={""}
             format="dd - MM - y"
@@ -319,8 +317,9 @@ const Order = () => {
             <>
               {/* Breakfast   */}
               <div
-                className={`duration-700 transition-all ease-in-out flex items-center justify-between gap-8 border border-red-500 py-5 px-12 md:px-20 rounded-xl ${breakfast ? "shadow-2xl shadow-red-500" : ""
-                  }`}
+                className={`duration-700 transition-all ease-in-out flex items-center justify-between gap-8 border border-red-500 py-5 px-12 md:px-20 rounded-xl ${
+                  breakfast ? "shadow-2xl shadow-red-500" : ""
+                }`}
               >
                 <p className="text-2xl font-semibold">Breakfast:</p>
                 <label class="inline-flex items-center me-5 cursor-pointer">
@@ -365,10 +364,11 @@ const Order = () => {
               </div>
               {/* Lunch   */}
               <div
-                className={`duration-700 transition-all ease-in-out flex items-center justify-between gap-8 border border-green-500 py-5 px-12 md:px-20 rounded-xl ${lunch ? "shadow-2xl shadow-green-500" : ""
-                  }`}
+                className={`duration-700 transition-all ease-in-out flex items-center justify-between gap-8 border border-green-500 py-5 px-12 md:px-20 rounded-xl ${
+                  lunch ? "shadow-2xl shadow-green-500" : ""
+                }`}
               >
-                <p className="text-2xl font-semibold">Lunch:</p>
+                <p className="text-2xl font-semibold">Sehri:</p>
                 <label class="inline-flex items-center me-5 cursor-pointer">
                   <input
                     onClick={async () => {
@@ -378,9 +378,9 @@ const Order = () => {
                           new Date().toLocaleString("en-US", {
                             timeZone: "Asia/Dhaka",
                           })
-                        ).getHours() >= 10
+                        ).getHours() >= 1
                       ) {
-                        toast.error("Today's Lunch cann't be edited");
+                        toast.error("Today's Serhi cann't be edited");
                         return;
                       }
                       setLoading(true);
@@ -413,8 +413,9 @@ const Order = () => {
               </div>
               {/* Dinner   */}
               <div
-                className={`duration-700 transition-all ease-in-out flex items-center justify-between gap-8 border border-blue-500 py-5 px-12 md:px-20 rounded-xl ${dinner ? "shadow-2xl shadow-blue-500" : ""
-                  }`}
+                className={`duration-700 transition-all ease-in-out flex items-center justify-between gap-8 border border-blue-500 py-5 px-12 md:px-20 rounded-xl ${
+                  dinner ? "shadow-2xl shadow-blue-500" : ""
+                }`}
               >
                 <p className="text-2xl font-semibold">Dinner:</p>
                 <label class="inline-flex items-center me-5 cursor-pointer">
@@ -578,9 +579,7 @@ const Order = () => {
                         type="number"
                         onChange={(e) => {
                           return toast.error("Breakfast is not Available");
-                          if (
-                            moment(date).isSame(moment(new Date()), "day")
-                          ) {
+                          if (moment(date).isSame(moment(new Date()), "day")) {
                             toast.error(
                               "Today's Guest-Breakfast cann't be edited"
                             );
@@ -594,7 +593,7 @@ const Order = () => {
                       />
                     </div>
                     <div className="flex items-center gap-3">
-                      <p className="min-w-[100px]">Lunch:</p>
+                      <p className="min-w-[100px]">Sehri:</p>
                       <input
                         min={0}
                         className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md outline-none"
@@ -606,11 +605,9 @@ const Order = () => {
                               new Date().toLocaleString("en-US", {
                                 timeZone: "Asia/Dhaka",
                               })
-                            ).getHours() >= 10
+                            ).getHours() >= 1
                           ) {
-                            toast.error(
-                              "Today's Guest-Lunch cann't be edited"
-                            );
+                            toast.error("Today's Guest-Sehri cann't be edited");
                             return;
                           }
                           setGuestMealLunchCount(e.target.value);

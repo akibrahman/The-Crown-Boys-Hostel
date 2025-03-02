@@ -87,7 +87,7 @@ const OrderStatusComponent = ({
             <p className="">Scanned : {breakfastScannedCount}</p>
           </div>
           <div className="">
-            <p className="">Lunch : {lunchCount}</p>
+            <p className="">Sehri : {lunchCount}</p>
             <p className="">Scanned : {lunchScannedCount}</p>
           </div>
           <div className="">
@@ -129,10 +129,10 @@ const OrderStatusComponent = ({
             <p
               data-tooltip-id="orderstatustomorrow"
               data-tooltip-content={
-                order.isGuestMeal
-                  ? "Breakfast : " +
+                 order.isGuestMeal
+                  ?"Guest : " + "Breakfast : " +
                     order.guestBreakfastCount +
-                    " Lunch : " +
+                    " Sehri : " +
                     order.guestLunchCount +
                     " Dinner : " +
                     order.guestDinnerCount

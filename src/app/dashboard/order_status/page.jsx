@@ -376,7 +376,7 @@ const ManagerOrderStatusComponent = () => {
 
                 {getTimeRange() == "1" ? (
                   <p className="text-xs text-center text-black font-semibold">
-                    Lunch
+                    Sehri
                   </p>
                 ) : getTimeRange() == "2" ? (
                   <p className="text-xs text-center text-black font-semibold">
