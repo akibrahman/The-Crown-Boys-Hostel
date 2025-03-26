@@ -1,5 +1,4 @@
 "use client";
-
 import AuthorizationNeede from "@/Components/Dashboard/AuthorizationNeede";
 import UserNotVerifiedPage from "@/Components/Dashboard/UserNotVerifiedPage";
 import PreLoader from "@/Components/PreLoader/PreLoader";
@@ -204,6 +203,12 @@ const Layout = ({ children }) => {
         href: "/dashboard/rfid",
         icon: FaAddressCard,
         displayData: "rfid",
+      },
+      {
+        title: "bUILDINGS",
+        href: "/dashboard/BUILDINGS",
+        icon: FaAddressCard,
+        displayData: "BUILDINGS",
       },
       {
         title: "Add Room",

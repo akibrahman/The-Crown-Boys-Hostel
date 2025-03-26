@@ -15,7 +15,7 @@ const Home = () => {
 
   useEffect(() => {
     socket.current.on("image_upload", async (data) => {
-      setImage(`data:image/jpeg;base64,${data}`);
+      if (data) setImage(`data:image/jpeg;base64,${data}`);
     });
   });
 

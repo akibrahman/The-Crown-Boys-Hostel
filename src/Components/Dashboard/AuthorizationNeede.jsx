@@ -1,6 +1,5 @@
 import React from "react";
 import BubbleFloating from "../BubbleFloating/BubbleFloating";
-import Image from "next/image";
 import Tag from "../Tag/Tag";
 
 const AuthorizationNeede = () => {
