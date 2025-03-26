@@ -12,6 +12,7 @@ import { AuthContext } from "@/providers/ContextProvider";
 import AddBuinding from "./AddBuinding";
 import Image from "next/image";
 import { RiEdit2Fill } from "react-icons/ri";
+import EditBuilding from "./EditBuilding";
 
 const ManagerBuildingsComponent = () => {
   const route = useRouter();
@@ -96,7 +97,7 @@ const ManagerBuildingsComponent = () => {
                   alt={building.name}
                   width="500"
                   height="500"
-                  className="w-52 h-5w-52 object-cover aspect-square p-5 mx-auto rounded"
+                  className="w-52 h-60 object-cover aspect-square mx-auto rounded-xl"
                 />
               )}
 
@@ -123,14 +124,18 @@ const ManagerBuildingsComponent = () => {
                   </div>
                   <div className="flex items-center justify-center gap-4">
                     {deleting[0] && deleting[1] == building._id ? (
-                      <CgSpinner className="text-3xl text-blue-500 bg-blue-200 animate-spin p-1.5 rounded-full cursor-wait" />
+                      <CgSpinner className="text-3xl text-red-500 bg-red-200 animate-spin p-1.5 rounded-full cursor-wait" />
                     ) : (
                       <MdDelete
                         onClick={() => deleteBuilding(building._id)}
                         className="text-3xl text-red-500 bg-red-200 p-1.5 rounded-full duration-300 active:scale-90 cursor-pointer"
                       />
                     )}
-                    <RiEdit2Fill className="text-3xl text-orange-500 bg-orange-200 p-1 rounded-full duration-300 active:scale-90 cursor-pointer" />
+                    <EditBuilding
+                      building={building}
+                      user={user}
+                      refetch={refetch}
+                    />
                   </div>
                 </div>
               </div>

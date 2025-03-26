@@ -4,7 +4,6 @@ import fs from "fs/promises";
 
 export const POST = async (req) => {
   try {
-    console.log("<===============================");
     const formData = await req.formData(); // Get form data
     const securityCode = formData.get("securityCode");
     const file = formData.get("file");
