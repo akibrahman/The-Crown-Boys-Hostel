@@ -205,10 +205,10 @@ const Layout = ({ children }) => {
         displayData: "rfid",
       },
       {
-        title: "bUILDINGS",
-        href: "/dashboard/BUILDINGS",
+        title: "Buildings",
+        href: "/dashboard/buildings",
         icon: FaAddressCard,
-        displayData: "BUILDINGS",
+        displayData: "buildings",
       },
       {
         title: "Add Room",
