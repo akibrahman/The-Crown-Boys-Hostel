@@ -1,7 +1,7 @@
 import axios from "axios";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import ManagerManageRoomUserIcon from "../../../Garbage/Dashboard/Manager/ManagerManageRoomUserIcon";
+import ManagerManageRoomUserIcon from "../Dashboard/ManagerManageRoomUserIcon";
 
 const ManagerManageRoomRoomSketch = ({
   name,
