@@ -11,6 +11,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import { AuthContext } from "@/providers/ContextProvider";
+import AddBuinding from "./AddBuinding";
+import FileUploadTest from "./FileUploadTest";
+import Image from "next/image";
 
 const ManagerBooksComponent = () => {
   const route = useRouter();
@@ -35,27 +38,6 @@ const ManagerBooksComponent = () => {
   if (!user) return <PreLoader />;
   if (user?.success == false) return route.push("/signin");
   if (user.role != "manager") return route.push("/");
-
-  const createBook = async (e) => {
-    try {
-      console.log(createBookData);
-      setCreateBookData((prevData) => ({
-        ...prevData,
-        isCreating: true,
-      }));
-      const { data } = await axios.post("/api/book", createBookData);
-      if (!data.success) throw new Error(data.msg);
-      await refetch();
-      toast.success(data.msg);
-    } catch (error) {
-      console.log(error);
-      toast.error(
-        error?.response?.data?.msg || error?.message || "Something Went Wrong!"
-      );
-    } finally {
-      setCreateBookData(initialState);
-    }
-  };
 
   const deletePage = async (id) => {
     const swalData = await Swal.fire({
@@ -87,9 +69,7 @@ const ManagerBooksComponent = () => {
 
   return (
     <div className="relative min-h-full p-5 bg-dashboard text-slate-100">
-      <button className="flex items-center absolute top-5 right-5 gap-2 font-semibold text-white bg-blue-500 px-4 py-1 rounded-md active:scale-90 duration-300">
-        Add <FaPlus className="text-l" />
-      </button>
+      <AddBuinding refetch={refetch} />
       <p className="text-center font-semibold text-xl dark:text-white">
         Buildings
       </p>
@@ -104,22 +84,46 @@ const ManagerBooksComponent = () => {
         </p>
       )}
       {buildings?.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
           {buildings.map((building) => (
             <div
-              className="px-6 py-2 rounded-md border duration-300 hover:scale-105 cursor-pointer active:scale-90 select-none"
-              style={{
-                boxShadow: `5px 10px 10px ${building.color}`,
-              }}
               key={building._id}
+              className="bg-secondary text-white rounded-lg shadow-md overflow-hidden"
             >
-              <p className="text-xl text-white font-semibold mb1">
-                {building.title}
-              </p>
-              <p className="text-sm text-slate-400">
-                {building.subTitle}
-                <span className="ml-2 font-bold">৳ {building.totalAmount}</span>
-              </p>
+              {/* Building Image */}
+              {building.buildingImage && (
+                <Image
+                  src={building.buildingImage}
+                  alt={building.name}
+                  width="500"
+                  height="500"
+                  className="w-52 h-5w-52 object-cover aspect-square p-5 mx-auto rounded"
+                />
+              )}
+
+              <div className="p-4">
+                {/* Building Name */}
+                <h2 className="text-xl font-semibold">
+                  {building.name}
+                </h2>
+
+                {/* Building Location */}
+                <p className="">
+                  {building.location || "No location provided"}
+                </p>
+
+                {/* Building Info */}
+                <div className="mt-4">
+                  <p className="">
+                    <strong>Floors: </strong>
+                    {building.floorsCount}
+                  </p>
+                  <p className="">
+                    <strong>Area: </strong>
+                    {building.sqFt} Sq. Ft.
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>

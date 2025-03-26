@@ -14,8 +14,12 @@ const buildingSchema = new mongoose.Schema({
     default: "",
   },
   floorsCount: {
-    type: Number,
-    default: 5,
+    type: String,
+    default: "G+n",
+  },
+  buildingImage: {
+    type: String,
+    default: "",
   },
   sqFt: {
     type: Number,

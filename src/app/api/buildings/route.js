@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import User from "@/models/userModel";
-import Book from "@/models/bookModel";
-import BookPage from "@/models/bookPageModel";
 import Building from "@/models/buildingModel";
 
 await dbConfig();
