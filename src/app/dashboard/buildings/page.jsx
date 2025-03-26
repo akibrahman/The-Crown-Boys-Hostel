@@ -3,21 +3,20 @@ import PreLoader from "@/Components/PreLoader/PreLoader";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { FaExchangeAlt, FaPlus, FaTimes } from "react-icons/fa";
-import { motion } from "framer-motion";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import { AuthContext } from "@/providers/ContextProvider";
 import AddBuinding from "./AddBuinding";
-import FileUploadTest from "./FileUploadTest";
 import Image from "next/image";
+import { RiEdit2Fill } from "react-icons/ri";
 
-const ManagerBooksComponent = () => {
+const ManagerBuildingsComponent = () => {
   const route = useRouter();
   const { user } = useContext(AuthContext);
+  const [deleting, setDeleting] = useState([false, ""]);
   const {
     data: buildings,
     refetch,
@@ -39,9 +38,9 @@ const ManagerBooksComponent = () => {
   if (user?.success == false) return route.push("/signin");
   if (user.role != "manager") return route.push("/");
 
-  const deletePage = async (id) => {
+  const deleteBuilding = async (id) => {
     const swalData = await Swal.fire({
-      title: "Do you want to Delete this Page?",
+      title: "Do you want to Delete this Building?",
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#1493EA",
@@ -53,17 +52,17 @@ const ManagerBooksComponent = () => {
     });
     if (!swalData.isConfirmed) return;
     try {
-      const { data } = await axios.delete(`/api/page?pageId=${id}`);
+      if (!id) return;
+      setDeleting([true, id]);
+      const { data } = await axios.delete(`/api/building?buildingId=${id}`);
       if (!data.success) throw new Error(data.msg);
-      setReloadBook(!reloadBook);
-      toast.success("Page Deleted");
+      await refetch();
+      toast.success(data.msg);
     } catch (error) {
       console.log(error);
-      toast.error(
-        error?.response?.data?.msg || error?.message || "Something Went Wrong!"
-      );
+      toast.error(error?.response?.data?.msg || error?.message);
     } finally {
-      setSelectedPage(null);
+      setDeleting[(false, "")];
     }
   };
 
@@ -103,9 +102,7 @@ const ManagerBooksComponent = () => {
 
               <div className="p-4">
                 {/* Building Name */}
-                <h2 className="text-xl font-semibold">
-                  {building.name}
-                </h2>
+                <h2 className="text-xl font-semibold">{building.name}</h2>
 
                 {/* Building Location */}
                 <p className="">
@@ -113,15 +110,28 @@ const ManagerBooksComponent = () => {
                 </p>
 
                 {/* Building Info */}
-                <div className="mt-4">
-                  <p className="">
-                    <strong>Floors: </strong>
-                    {building.floorsCount}
-                  </p>
-                  <p className="">
-                    <strong>Area: </strong>
-                    {building.sqFt} Sq. Ft.
-                  </p>
+                <div className="mt-4 flex items-end justify-between">
+                  <div className="">
+                    <p className="">
+                      <strong>Floors: </strong>
+                      {building.floorsCount}
+                    </p>
+                    <p className="">
+                      <strong>Area: </strong>
+                      {building.sqFt} Sq. Ft.
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-center gap-4">
+                    {deleting[0] && deleting[1] == building._id ? (
+                      <CgSpinner className="text-3xl text-blue-500 bg-blue-200 animate-spin p-1.5 rounded-full cursor-wait" />
+                    ) : (
+                      <MdDelete
+                        onClick={() => deleteBuilding(building._id)}
+                        className="text-3xl text-red-500 bg-red-200 p-1.5 rounded-full duration-300 active:scale-90 cursor-pointer"
+                      />
+                    )}
+                    <RiEdit2Fill className="text-3xl text-orange-500 bg-orange-200 p-1 rounded-full duration-300 active:scale-90 cursor-pointer" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -132,4 +142,4 @@ const ManagerBooksComponent = () => {
   );
 };
 
-export default ManagerBooksComponent;
+export default ManagerBuildingsComponent;

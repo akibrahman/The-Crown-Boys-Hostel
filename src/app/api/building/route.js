@@ -5,6 +5,9 @@ import jwt from "jsonwebtoken";
 import User from "@/models/userModel";
 import Building from "@/models/buildingModel";
 import axios from "axios";
+import mongoose from "mongoose";
+import path from "path";
+import fs from "fs";
 
 await dbConfig();
 
@@ -68,6 +71,61 @@ export const POST = async (req) => {
     return NextResponse.json({
       success: true,
       msg: `${name} - Building Created`,
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, error, msg: error.message },
+      { status: 500 }
+    );
+  }
+};
+
+export const DELETE = async (req) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const buildingId = searchParams.get("buildingId");
+    if (!buildingId) throw new Error("Missing Data");
+
+    if (!mongoose.Types.ObjectId.isValid(buildingId))
+      throw new Error("Invalid Building ID");
+
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      console.log(error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+    }
+
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+    const targetBuilding = await Building.findById(buildingId);
+
+    // Delete the building folder
+    const buildingImagePath = targetBuilding.buildingImage;
+    const pathParts = buildingImagePath.split("/");
+    pathParts.pop();
+    const folderPath = path.join(process.cwd(), "public", ...pathParts);
+    // Remove the folder if it exists
+    fs.rmdir(folderPath, { recursive: true }, (err) => {
+      if (err) {
+        console.error(`Error deleting folder: ${folderPath}`, err);
+      } else {
+        console.log(`Successfully deleted folder: ${folderPath}`);
+      }
+    });
+
+    await Building.findByIdAndDelete(buildingId);
+
+    return NextResponse.json({
+      success: true,
+      msg: `"${targetBuilding.name}" - Building Deleted`,
     });
   } catch (error) {
     console.log(error);

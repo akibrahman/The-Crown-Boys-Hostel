@@ -15,7 +15,7 @@ const AddBuinding = ({ refetch }) => {
     name: "",
     location: "",
     floorsCount: "",
-    sqFt: 500,
+    sqFt: 0,
     adding: false,
     buildingImage: null,
   });
@@ -49,6 +49,7 @@ const AddBuinding = ({ refetch }) => {
   const closeModal = () => {
     setIsModalOpen(false);
     setFormData({
+      managerId: user?._id,
       name: "",
       location: "",
       floorsCount: "",
