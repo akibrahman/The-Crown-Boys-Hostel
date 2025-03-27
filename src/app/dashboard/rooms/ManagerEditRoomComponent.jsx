@@ -804,14 +804,15 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
             <div className="flex items-center justify-center gap-20">
               <button
                 type="button"
-                className="bg-blue-500 text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
+                className="bg-green-500 text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
                 onClick={openBedPlacement}
               >
                 Bed Placement
               </button>
               <button
+                disabled={roomData.beds.find((b) => !b.top && !b.left)}
                 type="submit"
-                className="bg-green-500 text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
+                className="bg-primary disabled:bg-gray-500 disabled:pointer-events-none text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
               >
                 Submit
               </button>
