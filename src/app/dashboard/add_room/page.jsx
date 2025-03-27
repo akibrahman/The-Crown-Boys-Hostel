@@ -55,6 +55,8 @@ const ManagerAddARoom = () => {
         bedNo: "",
         isBooked: false,
         image: "",
+        top: "",
+        left: "",
       },
     ],
   });
@@ -91,6 +93,8 @@ const ManagerAddARoom = () => {
           bedNo: "",
           isBooked: false,
           image: "",
+          top: "",
+          left: "",
         },
       ],
     }));
@@ -106,6 +110,7 @@ const ManagerAddARoom = () => {
   };
 
   const finalSubmit = async (e) => {
+    e.preventDefault();
     // return;
     if (!roomData.video) {
       setError("Room Video is required, Add one");
@@ -220,8 +225,7 @@ const ManagerAddARoom = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const openBedPlacement = () => {
     if (!roomData.sketch) return;
     if (roomData.beds.length == 0) return;
     openModal();
@@ -286,10 +290,10 @@ const ManagerAddARoom = () => {
                 />
               ))}
               <button
-                onClick={() => finalSubmit()}
-                className="mt-2 bg-blue-500 text-white p-2 rounded"
+                onClick={closeModal}
+                className="mt-2 bg-blue-500 text-white p-2 rounded block mx-auto"
               >
-                Save Positions
+                Done
               </button>
             </div>
           </div>
@@ -297,7 +301,7 @@ const ManagerAddARoom = () => {
       </Modal>
       <div className="container min-h-full bg-dashboard text-white mx-auto p-6 duration-300">
         <h1 className="text-2xl font-bold mb-4 text-center">Add Room</h1>
-        <form onSubmit={handleSubmit} className="shadow-md rounded-lg p-6">
+        <form onSubmit={finalSubmit} className="shadow-md rounded-lg p-6">
           {/* Room Information Fields */}
           <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-0 bg-gray-600 p-4 rounded-md mb-4">
             <div className="flex flex-col gap-2">
@@ -829,12 +833,22 @@ const ManagerAddARoom = () => {
             </div>
           )}
 
-          <button
-            type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded-md mx-auto block mt-6"
-          >
-            Submit
-          </button>
+          <div className="flex items-center justify-center gap-6 mt-6">
+            <button
+              type="button"
+              className="bg-primary text-white px-4 py-2 rounded-md mx-auto block"
+              onClick={openBedPlacement}
+            >
+              Bed Placement
+            </button>
+            <button
+              disabled={roomData.beds.find((b) => !b.top && !b.left)}
+              type="submit"
+              className="bg-primary disabled:bg-gray-500 text-white px-4 py-2 rounded-md mx-auto block"
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </>
