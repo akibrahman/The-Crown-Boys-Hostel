@@ -2,16 +2,16 @@ import mongoose from "mongoose";
 
 const roomSchema = new mongoose.Schema({
   name: String,
-  video: { src: String, path: String },
+  video: String,
   block: String,
   building: String,
   type: String,
-  sketch: { src: String, path: String },
+  sketch: String,
   floor: Number,
-  image: { src: String, path: String },
+  image: String,
   seats: Number,
-  toilet: { toiletType: String, image: { src: String, path: String } },
-  balcony: { balconyState: Boolean, image: { src: String, path: String } },
+  toilet: { toiletType: String, image: String },
+  balcony: { balconyState: Boolean, image: String },
   beds: [
     {
       user: String,
@@ -20,7 +20,7 @@ const roomSchema = new mongoose.Schema({
       bookingCharge: Number,
       bedNo: String,
       isBooked: Boolean,
-      image: { src: String, path: String },
+      image: String,
     },
   ],
 });

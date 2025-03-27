@@ -344,34 +344,34 @@ const ManagerAllRoomsComponent = () => {
                 <h3 className="text-lg font-medium">Pictures</h3>
                 <div className="flex items-center justify-center gap-3">
                   <Image
-                    unoptimized={true}
-                    src={room.image.src}
+                    // unoptimized={true}
+                    src={room.image}
                     alt={`Room ${room.name}`}
                     className="aspect-square rounded-full"
                     width={60}
                     height={60}
                   />
                   <Image
-                    unoptimized={true}
-                    src={room.sketch.src}
+                    // unoptimized={true}
+                    src={room.sketch}
                     alt={`Room ${room.name} Sketch`}
                     className="aspect-square rounded-full"
                     width={60}
                     height={60}
                   />
                   <Image
-                    unoptimized={true}
-                    src={room.toilet.image.src}
+                    // unoptimized={true}
+                    src={room.toilet.image}
                     alt={`Room ${room.name} Toilet`}
                     className="aspect-square rounded-full"
                     width={60}
                     height={60}
                   />
                   <Image
-                    unoptimized={true}
+                    // unoptimized={true}
                     src={
                       room.balcony.balconyState
-                        ? room.balcony.image.src || "/images/no-balcony.png"
+                        ? room.balcony.image || "/images/no-balcony.png"
                         : "/images/no-balcony.png"
                     }
                     alt={`Room ${room.name} Balcony`}
@@ -401,8 +401,8 @@ const ManagerAllRoomsComponent = () => {
                           Bed No: {convertCamelCaseToCapitalized(bed.bedNo)}
                         </label>
                         <Image
-                          unoptimized={true}
-                          src={bed.image.src}
+                          // unoptimized={true}
+                          src={bed.image}
                           alt={`Bed ${bed.bedNo}`}
                           className="aspect-square rounded-full"
                           width={60}

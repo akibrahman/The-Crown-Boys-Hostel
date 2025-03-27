@@ -1,4 +1,5 @@
 import Room from "@/models/roomModel";
+import axios from "axios";
 import { NextResponse } from "next/server";
 
 const { dbConfig } = require("@/dbConfig/dbConfig");
@@ -66,6 +67,94 @@ export const GET = async (req) => {
 };
 
 export const POST = async (req) => {
+  const formData = await req.formData();
+  const roomName = formData.get("roomName");
+  const buildingName = formData.get("buildingName");
+  const roomVideo = formData.get("roomVideo");
+  const block = formData.get("block");
+  const roomType = formData.get("roomType");
+  const roomFloor = formData.get("roomFloor");
+  const roomToiletType = formData.get("roomToiletType");
+  const roomBalconyState =
+    formData.get("roomBalconyState") === "true" ? true : false;
+  const roomImage = formData.get("roomImage");
+  const roomSketch = formData.get("roomSketch");
+  const roomToilet = formData.get("roomToilet");
+  const roomBalcony = formData.get("roomBalcony");
+  const bedsCount = formData.get("beds");
+  let beds = [];
+  let i = 0;
+  let filesToBeUploaded = [
+    { title: "Room Image", file: roomImage, url: "" },
+    { title: "Room Sketch", file: roomSketch, url: "" },
+    { title: "Toilet Image", file: roomToilet, url: "" },
+  ];
+  if (roomBalconyState)
+    filesToBeUploaded.push({
+      title: "Balcony Image",
+      file: roomBalcony,
+      url: "",
+    });
+  for (i = 1; i <= parseInt(bedsCount); i++) {
+    let bed = JSON.parse(formData.get(`bedData-${i}`));
+    let bedImage = formData.get(`bedImage-${i}`);
+    bed["image"] = bedImage;
+    beds.push(bed);
+    filesToBeUploaded.push({
+      title: `bedImage-${bed.bedNo}`,
+      file: bedImage,
+      url: "",
+    });
+  }
+  for (i = 1; i <= filesToBeUploaded.length; i++) {
+    const data = filesToBeUploaded[i - 1];
+    const dataForImageUrl = new FormData();
+    dataForImageUrl.append("file", data.file);
+    dataForImageUrl.append("path", `/rooms`);
+    dataForImageUrl.append("size", "5");
+    dataForImageUrl.append("fileType", "jpg,png,jpeg,webp");
+    dataForImageUrl.append("securityCode", process.env.TOKEN_SECRET);
+    try {
+      const { data: uploadResponse } = await axios.post(
+        `${process.env.BASE_URL}/api/singleFileUpload`,
+        dataForImageUrl
+      );
+      if (!uploadResponse.success) throw new Error(data.msg);
+      filesToBeUploaded = filesToBeUploaded.map((file) =>
+        file.title === data.title ? { ...file, url: uploadResponse.path } : file
+      );
+    } catch (error) {
+      throw new Error(error.response.data.msg);
+    }
+  }
+  const bedsForRoom = beds.map((b) => ({
+    ...b,
+    image: filesToBeUploaded.find((bf) => bf.title === `bedImage-${b.bedNo}`)
+      .url,
+  }));
+  await new Room({
+    name: roomName,
+    building: buildingName,
+    floor: parseInt(roomFloor),
+    video: roomVideo,
+    block: block,
+    type: roomType,
+    sketch: filesToBeUploaded.find((f) => f.title == "Room Sketch").url,
+    seats: bedsCount,
+    toilet: {
+      toiletType: roomToiletType,
+      image: filesToBeUploaded.find((f) => f.title == "Toilet Image").url,
+    },
+    balcony: {
+      balconyState: roomBalconyState,
+      image: roomBalconyState
+        ? filesToBeUploaded.find((f) => f.title == "Balcony Image").url
+        : "",
+    },
+    image: filesToBeUploaded.find((f) => f.title == "Room Image").url,
+    beds: bedsForRoom,
+  }).save();
+  return NextResponse.json({ success: true, msg: "Room added successfully" });
   try {
     const data = await req.json();
     await new Room({

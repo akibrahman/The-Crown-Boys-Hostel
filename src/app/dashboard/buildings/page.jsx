@@ -27,7 +27,7 @@ const ManagerBuildingsComponent = () => {
     queryFn: async () => {
       const { data } = await axios.get(`/api/buildings`);
       if (data.success) {
-        return data.buildings.reverse();
+        return data.buildings;
       } else {
         return [];
       }

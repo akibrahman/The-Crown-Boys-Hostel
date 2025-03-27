@@ -17,6 +17,7 @@ import {
   FaCashRegister,
   FaFile,
   FaFileInvoiceDollar,
+  FaRegBuilding,
   FaSms,
   FaUsers,
 } from "react-icons/fa";
@@ -207,7 +208,7 @@ const Layout = ({ children }) => {
       {
         title: "Buildings",
         href: "/dashboard/buildings",
-        icon: FaAddressCard,
+        icon: FaRegBuilding,
         displayData: "buildings",
       },
       {

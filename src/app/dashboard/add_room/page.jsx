@@ -9,11 +9,21 @@ import { FaDeleteLeft, FaPencil } from "react-icons/fa6";
 import Image from "next/image";
 import Modal from "react-modal";
 import { CgSpinner } from "react-icons/cg";
+import { useQuery } from "@tanstack/react-query";
 
 const ManagerAddARoom = () => {
   const [uploading, setuploading] = useState([false, ""]);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
+
+  const { data: buildings } = useQuery({
+    queryKey: ["buildings", "add_room"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/buildings");
+      if (data.success) return data.buildings;
+      else return [];
+    },
+  });
 
   const [roomData, setRoomData] = useState({
     name: "",
@@ -65,7 +75,8 @@ const ManagerAddARoom = () => {
         ...prevData.beds,
         {
           user: "",
-          rent: { userRent: 0, displayRent: 0 },
+          userRent: 0,
+          displayRent: 0,
           bookingCharge: 0,
           bedNo: "",
           isBooked: false,
@@ -121,7 +132,7 @@ const ManagerAddARoom = () => {
 
     try {
       const { data } = await axios.get(
-        `/api/room/check?name=${roomData.name}&floor=${roomData.floor}`
+        `/api/room/check?name=${roomData.name}&floor=${roomData.floor}&building=${roomData.buildingName}`
       );
       if (!data.success) throw new Error(data.msg);
     } catch (error) {
@@ -129,106 +140,127 @@ const ManagerAddARoom = () => {
       return toast.error(error?.response?.data?.msg || error.message);
     }
 
-    openModal();
-    setuploading([true, "firebase"]);
+    //! openModal();
+    // setuploading([true, "fileUploading"]);
 
-    const uploadFile = (file, path) => {
-      return new Promise((resolve, reject) => {
-        const storageRef = ref(storage, path);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(progress);
-            setProgress(parseInt(progress));
-          },
-          (error) => {
-            console.log(error);
-            toast.error("Firebase error");
-            reject(error);
-          },
-          async () => {
-            const url = await getDownloadURL(uploadTask.snapshot.ref);
-            resolve({ src: url, path });
-          }
-        );
-      });
-    };
+    // const uploadFile = (file, path) => {
+    //   return new Promise((resolve, reject) => {
+    //     const storageRef = ref(storage, path);
+    //     const uploadTask = uploadBytesResumable(storageRef, file);
+    //     uploadTask.on(
+    //       "state_changed",
+    //       (snapshot) => {
+    //         const progress =
+    //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //         console.log(progress);
+    //         setProgress(parseInt(progress));
+    //       },
+    //       (error) => {
+    //         console.log(error);
+    //         toast.error("Firebase error");
+    //         reject(error);
+    //       },
+    //       async () => {
+    //         const url = await getDownloadURL(uploadTask.snapshot.ref);
+    //         resolve({ src: url, path });
+    //       }
+    //     );
+    //   });
+    // };
 
     try {
-      // Room Video
-      const roomVideoPath = `rooms/${roomData.name}/video/${roomData.name}.mp4`;
-      const roomVideoUpload = uploadFile(roomData.video, roomVideoPath);
+      //! Room Video
+      // const roomVideoPath = `rooms/${roomData.name}/video/${roomData.name}.mp4`;
+      // const roomVideoUpload = uploadFile(roomData.video, roomVideoPath);
 
-      // Room Image
-      const roomImagePath = `rooms/${roomData.name}/image/${roomData.name}.jpg`;
-      const roomImageUpload = uploadFile(roomData.image, roomImagePath);
+      //! Room Image
+      // const roomImagePath = `rooms/${roomData.name}/image/${roomData.name}.jpg`;
+      // const roomImageUpload = uploadFile(roomData.image, roomImagePath);
 
-      // Room Sketch
-      const roomSketchPath = `rooms/${roomData.name}/sketch/${roomData.name}-sketch.jpg`;
-      const roomSketchUpload = uploadFile(roomData.sketch, roomSketchPath);
+      //! Room Sketch
+      // const roomSketchPath = `rooms/${roomData.name}/sketch/${roomData.name}-sketch.jpg`;
+      // const roomSketchUpload = uploadFile(roomData.sketch, roomSketchPath);
 
-      // Room Toilet Image
-      const roomToiletImagePath = `rooms/${roomData.name}/image/${roomData.name}-toilet.jpg`;
-      const roomToiletImageUpload = uploadFile(
-        roomData.toilet.image,
-        roomToiletImagePath
-      );
+      //! Room Toilet Image
+      // const roomToiletImagePath = `rooms/${roomData.name}/image/${roomData.name}-toilet.jpg`;
+      // const roomToiletImageUpload = uploadFile(
+      //   roomData.toilet.image,
+      //   roomToiletImagePath
+      // );
 
-      // Room Balcony Image
-      let roomBalconyImageUpload = Promise.resolve(null);
-      if (roomData.balcony.state) {
-        const roomBalconyImagePath = `rooms/${roomData.name}/image/${roomData.name}-balcony.jpg`;
-        roomBalconyImageUpload = uploadFile(
-          roomData.balcony.image,
-          roomBalconyImagePath
-        );
-      }
+      //! Room Balcony Image
+      // let roomBalconyImageUpload = Promise.resolve(null);
+      // if (roomData.balcony.state) {
+      //   const roomBalconyImagePath = `rooms/${roomData.name}/image/${roomData.name}-balcony.jpg`;
+      //   roomBalconyImageUpload = uploadFile(
+      //     roomData.balcony.image,
+      //     roomBalconyImagePath
+      //   );
+      // }
 
-      // Room Beds Image
-      const roomBedsImageUploads = roomData.beds.map((bed, i) => {
-        const roomBedsImagePath = `rooms/${roomData.name}/image/${roomData.name}-${bed.bedNo}.jpg`;
-        return uploadFile(bed.image, roomBedsImagePath);
+      //! Room Beds Image
+      // const roomBedsImageUploads = roomData.beds.map((bed, i) => {
+      //   const roomBedsImagePath = `rooms/${roomData.name}/image/${roomData.name}-${bed.bedNo}.jpg`;
+      //   return uploadFile(bed.image, roomBedsImagePath);
+      // });
+
+      //! Wait for all uploads to complete
+      // const [
+      //   roomVideoData,
+      //   roomImageData,
+      //   roomSketchData,
+      //   roomToiletImageData,
+      //   roomBalconyImageData,
+      //   ...roomBedsImageData
+      // ] = await Promise.all([
+      //   roomVideoUpload,
+      //   roomImageUpload,
+      //   roomSketchUpload,
+      //   roomToiletImageUpload,
+      //   roomBalconyImageUpload,
+      //   ...roomBedsImageUploads,
+      // ]);
+
+      //! Log srcData after all uploads are done
+      // const finalData = {
+      //   roomName: roomData.name,
+      //   buildingName: roomData.buildingName,
+      //   block: roomData.block,
+      //   roomType: roomData.type,
+      //   roomFloor: roomData.floor,
+      //   roomToiletType: roomData.toilet.type,
+      //   roomBalconyState: roomData.balcony.state,
+      //   roomVideo: roomData.video,
+      //   roomImageData: roomImageData,
+      //   roomSketchData: roomSketchData,
+      //   roomToiletImageData,
+      //   roomBalconyImageData,
+      //   roomBeds: roomData.beds.map((bed, i) => {
+      //     return { ...bed, image: roomBedsImageData[i] };
+      //   }),
+      // };
+      const dataToSend = new FormData();
+      dataToSend.append("roomName", roomData.name);
+      dataToSend.append("buildingName", roomData.buildingName);
+      dataToSend.append("block", roomData.block);
+      dataToSend.append("roomType", roomData.type);
+      dataToSend.append("roomFloor", roomData.floor);
+      dataToSend.append("roomToiletType", roomData.toilet.type);
+      dataToSend.append("roomBalconyState", roomData.balcony.state);
+      dataToSend.append("roomVideo", roomData.video);
+      dataToSend.append("roomImage", roomData.image);
+      dataToSend.append("roomSketch", roomData.sketch);
+      dataToSend.append("roomToilet", roomData.toilet.image);
+      dataToSend.append("roomBalcony", roomData.balcony.image);
+      dataToSend.append("beds", roomData.beds.length);
+      roomData.beds.forEach((bed, i) => {
+        const { image, ...rest } = bed;
+        dataToSend.append(`bedData-${i + 1}`, JSON.stringify(rest));
+        dataToSend.append(`bedImage-${i + 1}`, image);
       });
-
-      // Wait for all uploads to complete
-      const [
-        roomVideoData,
-        roomImageData,
-        roomSketchData,
-        roomToiletImageData,
-        roomBalconyImageData,
-        ...roomBedsImageData
-      ] = await Promise.all([
-        roomVideoUpload,
-        roomImageUpload,
-        roomSketchUpload,
-        roomToiletImageUpload,
-        roomBalconyImageUpload,
-        ...roomBedsImageUploads,
-      ]);
-
-      // Log srcData after all uploads are done
-      const finalData = {
-        roomName: roomData.name,
-        buildingName: roomData.buildingName,
-        block: roomData.block,
-        roomType: roomData.type,
-        roomFloor: roomData.floor,
-        roomToiletType: roomData.toilet.type,
-        roomBalconyState: roomData.balcony.state,
-        roomVideoData: roomVideoData,
-        roomImageData: roomImageData,
-        roomSketchData: roomSketchData,
-        roomToiletImageData,
-        roomBalconyImageData,
-        roomBeds: roomData.beds.map((bed, i) => {
-          return { ...bed, image: roomBedsImageData[i] };
-        }),
-      };
-      console.log(finalData);
+      const { data } = await axios.post("/api/room", dataToSend);
+      toast.success("OK");
+      return;
       setuploading([true, "backend"]);
       try {
         const { data } = await axios.post("/api/room", finalData);
@@ -316,7 +348,7 @@ const ManagerAddARoom = () => {
         style={customStyles}
       >
         <div className="px-32 py-20">
-          {uploading[0] && uploading[1] == "firebase" && (
+          {uploading[0] && uploading[1] == "fileUploading" && (
             <div className="flex items-center gap-3">
               <p className="text-dashboard font-semibold">Uploading Assets</p>
               <CgSpinner className="text-xl text-dashboard animate-spin" />
@@ -376,38 +408,15 @@ const ManagerAddARoom = () => {
               <label className="block text-slate-100 font-semibold">
                 Room Name
               </label>
-              <select
+              <input
+                placeholder="Room Name"
+                type="text"
                 className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
                 required
                 onChange={handleChange}
                 value={roomData.name}
                 name="name"
-              >
-                <option value="">Select Name</option>
-                <option value="a1">A 1</option>
-                <option value="a2">A 2</option>
-                <option value="a3">A 3</option>
-                <option value="a4">A 4</option>
-                <option value="a5">A 5</option>
-                <option value="a6">A 6</option>
-
-                <option value="b1">B 1</option>
-                <option value="b2">B 2</option>
-                <option value="b3">B 3</option>
-                <option value="b4">B 4</option>
-
-                <option value="c1">C 1</option>
-                <option value="c2">C 2</option>
-                <option value="c3">C 3</option>
-                <option value="c4">C 4</option>
-                <option value="c5">C 5</option>
-
-                <option value="d1">D 1</option>
-                <option value="d2">D 2</option>
-                <option value="d3">D 3</option>
-                <option value="d4">D 4</option>
-                <option value="d5">D 5</option>
-              </select>
+              />
             </div>
             <div className="flex flex-col gap-2">
               <label className="block text-slate-100 font-semibold">Type</label>
@@ -444,6 +453,11 @@ const ManagerAddARoom = () => {
                 <option value="5">Fifth Floor</option>
                 <option value="6">Sixth Floor</option>
                 <option value="7">Seventh Floor</option>
+                <option value="8">Eighth Floor</option>
+                <option value="9">Nineth Floor</option>
+                <option value="10">Tenth Floor</option>
+                <option value="11">Eleventh Floor</option>
+                <option value="12">Twelveth Floor</option>
               </select>
             </div>
             <div className="flex flex-col gap-2">
@@ -475,70 +489,46 @@ const ManagerAddARoom = () => {
               <label className="block text-slate-100 font-semibold">
                 Building Name
               </label>
-              <input
-                placeholder="Building Name"
-                type="text"
+              <select
                 className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
                 required
                 onChange={handleChange}
                 value={roomData.buildingName}
                 name="buildingName"
-              />
+              >
+                <option value="">Select Buildiing</option>
+                {buildings?.map((building) => (
+                  <option value={building._id}>{building.name}</option>
+                ))}
+              </select>
             </div>
             <div className="flex flex-col gap-2">
               <label className="block text-slate-100 font-semibold">
                 Block
               </label>
-              <select
+              <input
+                placeholder="Block"
+                type="text"
                 className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
                 required
                 onChange={handleChange}
                 value={roomData.block}
                 name="block"
-                id=""
-              >
-                <option value="">Select Block</option>
-                <option value="a">A</option>
-                <option value="b">B</option>
-                <option value="c">C</option>
-                <option value="d">D</option>
-              </select>
+              />
             </div>
-            <div className="flex flex-col items-center gap-2 p-4">
-              <label className="block text-slate-100 text-lg font-semibold">
+
+            <div className="flex flex-col gap-2">
+              <label className="block text-slate-100 font-semibold">
                 Video
               </label>
-              {roomData.video && (
-                <video
-                  src={URL.createObjectURL(roomData.video)}
-                  title={`Room ${roomData.name} Video`}
-                  className="aspect-auto rounded-md"
-                  height={50}
-                  width={200}
-                  controls
-                ></video>
-              )}
-              <label htmlFor="video">
-                {roomData.video ? (
-                  <FaPencil className="border-2 rounded-full p-1 text-3xl border-dashboard text-slate-100 cursor-pointer" />
-                ) : (
-                  <FaPlus className="border-2 rounded-full p-1 text-3xl border-dashboard text-slate-100 cursor-pointer" />
-                )}
-              </label>
               <input
-                hidden
-                type="file"
+                placeholder="Youtube Embedded iFrame"
+                type="text"
+                className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
+                required
+                onChange={handleChange}
+                value={roomData.video}
                 name="video"
-                id="video"
-                accept="video/*"
-                onChange={(e) => {
-                  setError("");
-                  setRoomData((prevData) => ({
-                    ...prevData,
-                    video: e.target.files[0],
-                  }));
-                }}
-                className="mt-1 p-2 w-full border rounded-md"
               />
             </div>
 
