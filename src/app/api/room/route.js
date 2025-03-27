@@ -79,7 +79,10 @@ export const POST = async (req) => {
     const formData = await req.formData();
     const roomName = formData.get("roomName");
     const buildingName = formData.get("buildingName");
-    const roomVideo = formData.get("roomVideo");
+    const roomVideo = formData
+      .get("roomVideo")
+      .replace(/width="\d+"/, `width="350"`)
+      .replace(/height="\d+"/, `height="450"`);
     const block = formData.get("block");
     const roomType = formData.get("roomType");
     const roomFloor = formData.get("roomFloor");

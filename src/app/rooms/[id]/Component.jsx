@@ -247,12 +247,10 @@ const Component = ({ id }) => {
           {/*//! Video Div  */}
           <div className="flex flex-col items-center gap-4">
             <p>Room Video</p>
-            <video
-              width="350"
-              height="400"
-              src={room.video.src}
-              controls={true}
-            ></video>
+            <div
+              dangerouslySetInnerHTML={{ __html: room.video }}
+              className=""
+            ></div>
           </div>
           {/*//! Sketch Div  */}
           <div className="flex flex-col items-center gap-4 relative">
@@ -262,7 +260,7 @@ const Component = ({ id }) => {
                 height={100}
                 width={450}
                 alt="Sketch"
-                src={room.sketch.src}
+                src={room.sketch}
                 className="w-full"
               />
               <RoomSketch
@@ -291,7 +289,7 @@ const Component = ({ id }) => {
               height={100}
               width={400}
               alt="Sketch"
-              src={room.image.src}
+              src={room.image}
               className="rounded-md"
             />
             <p>Beds Images</p>
@@ -302,7 +300,7 @@ const Component = ({ id }) => {
                     height={100}
                     width={200}
                     alt="Sketch"
-                    src={bed.image.src}
+                    src={bed.image}
                     className="w[65%] rounded-md"
                   />
                   <div className="">
@@ -373,7 +371,7 @@ const Component = ({ id }) => {
                   width={180}
                   height={100}
                   alt="Picture of Toilet"
-                  src={room.toilet.image.src}
+                  src={room.toilet.image}
                   className="rounded-md"
                 />
                 <p className="text-center mt-2">
@@ -390,9 +388,7 @@ const Component = ({ id }) => {
                     width={180}
                     height={100}
                     alt="Picture of Toilet"
-                    src={
-                      room.balcony.balconyState ? room.balcony.image.src : ""
-                    }
+                    src={room.balcony.balconyState ? room.balcony.image : ""}
                     className="rounded-md"
                   />
                 )}
@@ -435,7 +431,7 @@ const Component = ({ id }) => {
                         src={
                           seat.singleRoom.beds.find(
                             (bedd) => bedd.bedNo == seat.bedNo
-                          ).image.src
+                          ).image
                         }
                         className="rounded-md"
                       />

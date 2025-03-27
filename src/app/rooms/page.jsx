@@ -33,13 +33,7 @@ const Rooms = () => {
 
   return (
     <div className="min-h-screen pb-20 bg-dashboard text-stone-300 relative">
-      {floor &&
-      (floor == "1" ||
-        floor == "3" ||
-        floor == "4" ||
-        floor == "5" ||
-        floor == "6" ||
-        floor == "7") ? (
+      {floor ? (
         <div>
           <TargetedRooms
             rooms={allRooms.filter((room) => room.floor == floor)}
@@ -206,7 +200,7 @@ const TargetedRooms = ({ floor, totalSeats, availableSeats, rooms }) => {
                 <Image
                   width={130}
                   height={180}
-                  src={room.image.src}
+                  src={room.image}
                   alt={`Image of  room number ${room.name} of 'The Crown Boys Hostel'`}
                   className="block ounded-e-full rounded-xl w-[130px] h-[180px]"
                 />
