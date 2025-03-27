@@ -2,6 +2,8 @@ import Building from "@/models/buildingModel";
 import Room from "@/models/roomModel";
 import axios from "axios";
 import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs";
 
 const { dbConfig } = require("@/dbConfig/dbConfig");
 
@@ -193,6 +195,169 @@ export const POST = async (req) => {
 
 export const PUT = async (req) => {
   try {
+    const formData = await req.formData();
+    const _id = formData.get("_id");
+    const roomType = formData.get("roomType");
+    const roomToiletType = formData.get("roomToiletType");
+    const roomVideo = formData.get("roomVideo");
+    const roomBalconyState =
+      formData.get("roomBalconyState") === "true" ? true : false;
+    const roomImage = formData.get("roomImage");
+    const roomSketch = formData.get("roomSketch");
+    const roomToilet = formData.get("roomToilet");
+    const roomBalcony = formData.get("roomBalcony");
+    const bedsCount = formData.get("beds");
+
+    const room = await Room.findById(_id);
+
+    let beds = [];
+    let i = 0;
+    let filesToBeUploaded = [
+      { title: "Room Image", file: roomImage, url: "" },
+      { title: "Room Sketch", file: roomSketch, url: "" },
+      { title: "Toilet Image", file: roomToilet, url: "" },
+    ];
+    if (roomBalconyState)
+      filesToBeUploaded.push({
+        title: "Balcony Image",
+        file: roomBalcony,
+        url: "",
+      });
+    for (i = 1; i <= parseInt(bedsCount); i++) {
+      let bed = JSON.parse(formData.get(`bedData-${i}`));
+      let bedImage = formData.get(`bedImage-${i}`);
+      bed["image"] = bedImage;
+      beds.push(bed);
+      filesToBeUploaded.push({
+        title: `bedImage-${bed.bedNo}`,
+        file: bedImage,
+        url: "",
+      });
+    }
+
+    for (i = 1; i <= filesToBeUploaded.length; i++) {
+      const data = filesToBeUploaded[i - 1];
+      if (data.file instanceof File === false) {
+        filesToBeUploaded = filesToBeUploaded.map((file) =>
+          file.title === data.title ? { ...file, url: data.file } : file
+        );
+        continue;
+      }
+      const dataForImageUrl = new FormData();
+      dataForImageUrl.append("file", data.file);
+      dataForImageUrl.append("path", `/rooms`);
+      dataForImageUrl.append("size", "5");
+      dataForImageUrl.append("fileType", "jpg,png,jpeg,webp");
+      dataForImageUrl.append("securityCode", process.env.TOKEN_SECRET);
+      try {
+        const { data: uploadResponse } = await axios.post(
+          `${process.env.BASE_URL}/api/singleFileUpload`,
+          dataForImageUrl
+        );
+        if (!uploadResponse.success) throw new Error(data.msg);
+        filesToBeUploaded = filesToBeUploaded.map((file) =>
+          file.title === data.title
+            ? { ...file, url: uploadResponse.path }
+            : file
+        );
+
+        let pathParts = "";
+        if (data.title.includes("bedImage-")) {
+          const bedNo = data.title.split("-")[1];
+          const bed = room.beds.find((b) => b.bedNo == bedNo);
+          if (bed) {
+            pathParts = bed.image.split("/");
+            const imagePath = path.join(process.cwd(), "public", ...pathParts);
+            fs.unlink(imagePath, (err) => {
+              if (err) {
+                console.error(`Error deleting folder: ${imagePath}`, err);
+              } else {
+                console.log(`Successfully deleted folder: ${imagePath}`);
+              }
+            });
+          }
+        }
+        if (data.title === "Room Image") {
+          pathParts = room.image.split("/");
+        }
+        if (data.title === "Room Sketch") {
+          pathParts = room.sketch.split("/");
+        }
+        if (data.title === "Toilet Image") {
+          pathParts = room.toilet.image.split("/");
+        }
+        if (data.title === "Balcony Image" && roomBalconyState) {
+          pathParts = room.balcony.image.split("/");
+        }
+        if (pathParts) {
+          const imagePath = path.join(process.cwd(), "public", ...pathParts);
+          fs.unlink(imagePath, (err) => {
+            if (err) {
+              console.error(`Error deleting folder: ${imagePath}`, err);
+            } else {
+              console.log(`Successfully deleted folder: ${imagePath}`);
+            }
+          });
+        }
+      } catch (error) {
+        throw new Error(error.response.data.msg);
+      }
+    }
+
+    if (room.balcony.balconyState && !roomBalconyState) {
+      const imagePathB = path.join(
+        process.cwd(),
+        "public",
+        ...room.balcony.image.split("/")
+      );
+      fs.unlink(imagePathB, (err) => {
+        if (err) {
+          console.error(`Error deleting folder: ${imagePathB}`, err);
+        } else {
+          console.log(`Successfully deleted folder: ${imagePathB}`);
+        }
+      });
+    }
+
+    const bedsForRoom = beds.map((b) => {
+      const target = filesToBeUploaded.find(
+        (bf) => bf.title === `bedImage-${b.bedNo}`
+      );
+      return {
+        ...b,
+        image: target.file instanceof File ? target.url : target.file,
+      };
+    });
+
+    console.log(filesToBeUploaded.find((f) => f.title == "Toilet Image").url);
+
+    await Room.findOneAndUpdate(
+      { name: room.name, building: room.building },
+      {
+        $set: {
+          type: roomType,
+          video: roomVideo,
+          "toilet.toiletType": roomToiletType,
+          "toilet.image": filesToBeUploaded.find(
+            (f) => f.title == "Toilet Image"
+          ).url,
+          "balcony.balconyState": roomBalconyState,
+          "balcony.image": roomBalconyState
+            ? filesToBeUploaded.find((f) => f.title == "Balcony Image").url
+            : "",
+          beds: bedsForRoom,
+          sketch: filesToBeUploaded.find((f) => f.title == "Room Sketch").url,
+          seats: bedsCount,
+          image: filesToBeUploaded.find((f) => f.title == "Room Image").url,
+        },
+      }
+    );
+
+    return NextResponse.json({
+      success: true,
+      msg: "Room updated successfully",
+    });
+
     const data = await req.json();
     await Room.findByIdAndUpdate(data._id, {
       $set: {

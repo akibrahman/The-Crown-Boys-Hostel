@@ -7,6 +7,7 @@ export const POST = async (req) => {
     const formData = await req.formData(); // Get form data
     const securityCode = formData.get("securityCode");
     const file = formData.get("file");
+    const customName = formData.get("customName");
     const pathParam = formData.get("path")
       ? `uploads${formData.get("path")}`
       : "uploads"; // Default path: /public/uploads
@@ -66,7 +67,7 @@ export const POST = async (req) => {
     const uploadDir = path.join(process.cwd(), "public", pathParam);
     await fs.mkdir(uploadDir, { recursive: true });
 
-    const fileName = `${Date.now()}-${file.name}`;
+    const fileName = customName || `${Date.now()}-${file.name}`;
     const filePath = path.join(uploadDir, fileName);
 
     // Save the file

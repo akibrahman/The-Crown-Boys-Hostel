@@ -96,11 +96,12 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
         ...prevData.beds,
         {
           user: "",
-          rent: { userRent: 0, displayRent: 0 },
+          userRent: 0,
+          displayRent: 0,
           bookingCharge: 0,
           bedNo: "",
           isBooked: false,
-          image: { src: "", path: "", file: "" },
+          image: "",
         },
       ],
     }));
@@ -126,114 +127,82 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //
-    const uploadFile = (file, path) => {
-      return new Promise((resolve, reject) => {
-        const storageRef = ref(storage, path);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(progress);
-            setProgress(parseInt(progress));
-          },
-          (error) => {
-            console.log(error);
-            toast.error("Firebase error");
-            reject(error);
-          },
-          async () => {
-            const url = await getDownloadURL(uploadTask.snapshot.ref);
-            resolve({ src: url, path });
-          }
-        );
-      });
-    };
-    openUpdatingModal();
-    setuploading([true, "firebase"]);
+    if (!roomData.video) {
+      setError("Room Video is required, Add one");
+      return;
+    }
+    if (!roomData.sketch) {
+      setError("Room Sketch is required, Add one");
+      return;
+    }
+    if (!roomData.image) {
+      setError("Room Image is required, Add one");
+      return;
+    }
+    if (!roomData.toilet.image) {
+      setError("Toilet Image is required, Add one");
+      return;
+    }
+    if (roomData.beds.length == 0) {
+      setError("Atleast one bed should be added, Add one");
+      return;
+    }
+    if (roomData.balcony.state && !roomData.balcony.image) {
+      setError("Balcony Image is required, Add one");
+      return;
+    }
+    for (let bed of roomData.beds) {
+      if (!bed.image) {
+        setError(`Add Image to bed no: ${bed.bedNo}`);
+        return;
+      }
+    }
+    // openUpdatingModal();
+    // setuploading([true, "firebase"]);
     try {
-      // Room Image
-      let roomImageUpload = Promise.resolve(null);
-      if (roomData.image.file) {
-        const roomImagePath = `rooms/${roomData.name}/image/${roomData.name}.jpg`;
-        roomImageUpload = uploadFile(roomData.image.file, roomImagePath);
-      }
-      // Room Video
-      let roomVideoUpload = Promise.resolve(null);
-      if (roomData.video.file) {
-        const roomVideoPath = `rooms/${roomData.name}/video/${roomData.name}.mp4`;
-        roomVideoUpload = uploadFile(roomData.video.file, roomVideoPath);
-      }
-
-      // Room Sketch
-      let roomSketchUpload = Promise.resolve(null);
-      if (roomData.sketch.file) {
-        const roomSketchPath = `rooms/${roomData.name}/sketch/${roomData.name}-sketch.jpg`;
-        roomSketchUpload = uploadFile(roomData.sketch.file, roomSketchPath);
-      }
-
-      // Room Toilet Image
-      let roomToiletImageUpload = Promise.resolve(null);
-      if (roomData.toilet.image.file) {
-        const roomToiletImagePath = `rooms/${roomData.name}/image/${roomData.name}-toilet.jpg`;
-        roomToiletImageUpload = uploadFile(
-          roomData.toilet.image.file,
-          roomToiletImagePath
-        );
-      }
-
-      // Room Balcony Image
-      let roomBalconyImageUpload = Promise.resolve(null);
-      if (roomData.balcony.balconyState && roomData.balcony.image.file) {
-        const roomBalconyImagePath = `rooms/${roomData.name}/image/${roomData.name}-balcony.jpg`;
-        roomBalconyImageUpload = uploadFile(
-          roomData.balcony.image.file,
-          roomBalconyImagePath
-        );
-      }
-
-      // Room Beds Image
-      const roomBedsImageUploads = roomData.beds.map((bed, i) => {
-        if (bed.image.file) {
-          const roomBedsImagePath = `rooms/${roomData.name}/image/${roomData.name}-${bed.bedNo}.jpg`;
-          return uploadFile(bed.image.file, roomBedsImagePath);
-        } else {
-          return { src: bed.image.src, path: bed.image.path };
-        }
+      const dataToSend = new FormData();
+      dataToSend.append("_id", id);
+      dataToSend.append("roomType", roomData.type);
+      dataToSend.append("roomToiletType", roomData.toilet.toiletType);
+      dataToSend.append("roomVideo", roomData.video);
+      dataToSend.append("roomBalconyState", roomData.balcony.balconyState);
+      dataToSend.append("roomImage", roomData.image);
+      dataToSend.append("roomSketch", roomData.sketch);
+      dataToSend.append("roomToilet", roomData.toilet.image);
+      dataToSend.append(
+        "roomBalcony",
+        roomData.balcony.balconyState ? roomData.balcony.image : ""
+      );
+      dataToSend.append("beds", roomData.beds.length);
+      roomData.beds.forEach((bed, i) => {
+        const { image, ...rest } = bed;
+        dataToSend.append(`bedData-${i + 1}`, JSON.stringify(rest));
+        dataToSend.append(`bedImage-${i + 1}`, image);
       });
-      const [
-        roomBalconyImageUploadData,
-        roomToiletImageUploadData,
-        roomSketchUploadData,
-        roomImageUploadData,
-        roomVideoUploadData,
-        ...roomBedsImageData
-      ] = await Promise.all([
-        roomBalconyImageUpload,
-        roomToiletImageUpload,
-        roomSketchUpload,
-        roomImageUpload,
-        roomVideoUpload,
-        ...roomBedsImageUploads,
-      ]);
+
+      const { data } = await axios.put("/api/room", dataToSend);
+      if (!data.success) throw new Error(data.msg);
+      await refetch();
+      closeUpdatingModal();
+      setuploading([false, ""]);
+      setRoomData({});
+      closeModal();
+      toast.success(data.msg);
+
+      return;
+
+      // dataToSend.append("beds", roomData.beds.length);
       const finalData = {
         _id: id,
-        roomName: roomData.name,
         roomType: roomData.type,
-        roomFloor: roomData.floor,
         roomToiletType: roomData.toilet.toiletType,
         roomBalconyState: roomData.balcony.balconyState,
         roomBeds: roomData.beds.map((bed, i) => {
-          return { ...bed, image: roomBedsImageData[i] };
+          return { ...bed };
         }),
       };
-      console.log(finalData);
-
       setuploading([true, "backend"]);
       try {
-        const { data } = await axios.put("/api/room", finalData);
         if (data.success) {
           await refetch();
           closeUpdatingModal();
@@ -334,32 +303,19 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 <label className="block text-white font-semibold">
                   Room Name
                 </label>
-                <select
-                  className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
+                <input
+                  placeholder="Room Name"
+                  type="text"
+                  className="px-4 py-1.5 rounded-md font-medium outline-none"
                   required
                   disabled
-                  // onChange={handleChange}
-                  value={roomData.name}
+                  value={roomData.name.toUpperCase().split("").join(" ")}
                   name="name"
-                >
-                  <option value="">Select Name</option>
-                  <option value="a1">A1</option>
-                  <option value="a2">A2</option>
-                  <option value="a3">A3</option>
-                  <option value="a4">A4</option>
-                  <option value="a5">A5</option>
-                  <option value="a6">A6</option>
-                  <option value="b1">B1</option>
-                  <option value="b2">B2</option>
-                  <option value="b3">B3</option>
-                  <option value="b4">B4</option>
-                </select>
+                />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="block text-white font-semibold">
-                  Type
-                </label>
+                <label className="block text-white font-semibold">Type</label>
                 <select
                   className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
                   required
@@ -373,28 +329,16 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="block text-white font-semibold">
-                  Floor
-                </label>
-                <select
-                  className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
+                <label className="block text-white font-semibold">Floor</label>
+                <input
+                  placeholder="Room Name"
+                  type="text"
+                  className="px-4 py-1.5 rounded-md font-medium outline-none"
                   required
-                  // onChange={handleChange}
                   disabled
                   value={roomData.floor}
-                  name="floor"
-                  id=""
-                >
-                  <option value="">Select Floor</option>
-                  <option value="0">Ground Floor</option>
-                  <option value="1">First Floor</option>
-                  <option value="2">Second Floor</option>
-                  <option value="3">Third Floor</option>
-                  <option value="4">Fourth Floor</option>
-                  <option value="5">Fifth Floor</option>
-                  <option value="6">Sixth Floor</option>
-                  <option value="7">Seventh Floor</option>
-                </select>
+                  name="name"
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="block text-white font-semibold">
@@ -428,34 +372,14 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 <label className="block text-white text-lg font-semibold">
                   Video
                 </label>
-                <video
-                  src={roomData.video.src}
-                  title={`Room ${roomData.name} Video`}
-                  className="aspect-auto rounded-md"
-                  height={50}
-                  width={200}
-                  controls
-                ></video>
-                <label htmlFor="video">
-                  <FaPencil className="border-2 rounded-full p-1 text-3xl border-dashboard text-white cursor-pointer" />
-                </label>
                 <input
-                  hidden
-                  type="file"
+                  placeholder="Youtube Embedded iFrame"
+                  type="text"
+                  className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none w-[500px]"
+                  required
+                  onChange={handleChange}
+                  value={roomData.video}
                   name="video"
-                  id="video"
-                  accept="video/*"
-                  onChange={(e) => {
-                    setRoomData((prevData) => ({
-                      ...prevData,
-                      video: {
-                        ...roomData.video,
-                        src: URL.createObjectURL(e.target.files[0]),
-                        file: e.target.files[0],
-                      },
-                    }));
-                  }}
-                  className="mt-1 p-2 w-full border rounded-md"
                 />
               </div>
 
@@ -504,11 +428,15 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                   >
                     Balcony Image
                   </label>
-                  {roomData.balcony.image.src ? (
+                  {roomData.balcony.image ? (
                     <>
                       <Image
                         unoptimized={true}
-                        src={roomData.balcony.image.src}
+                        src={
+                          roomData.balcony.image instanceof File
+                            ? URL.createObjectURL(roomData.balcony.image)
+                            : roomData.balcony.image
+                        }
                         alt={`Room ${roomData.name} Balcony`}
                         width={100}
                         height={130}
@@ -521,11 +449,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                             ...prevData,
                             balcony: {
                               ...prevData.balcony,
-                              image: {
-                                ...roomData.balcony.image,
-                                src: "",
-                                file: null,
-                              },
+                              image: "",
                             },
                           }));
                         }}
@@ -549,11 +473,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                         ...prevData,
                         balcony: {
                           ...roomData.balcony,
-                          image: {
-                            ...roomData.balcony.image,
-                            src: URL.createObjectURL(e.target.files[0]),
-                            file: e.target.files[0],
-                          },
+                          image: e.target.files[0],
                         },
                       }));
                     }}
@@ -571,11 +491,15 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 >
                   Room Sketch
                 </label>
-                {roomData.sketch.src ? (
+                {roomData.sketch ? (
                   <>
                     <Image
                       unoptimized={true}
-                      src={roomData.sketch.src}
+                      src={
+                        roomData.sketch instanceof File
+                          ? URL.createObjectURL(roomData.sketch)
+                          : roomData.sketch
+                      }
                       alt={`Room ${roomData.name} Sketch`}
                       width={100}
                       height={130}
@@ -586,11 +510,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                       onClick={() =>
                         setRoomData((prevData) => ({
                           ...prevData,
-                          sketch: {
-                            ...roomData.sketch,
-                            src: "",
-                            file: null,
-                          },
+                          sketch: "",
                         }))
                       }
                     />
@@ -613,11 +533,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                   onChange={(e) => {
                     setRoomData((prevData) => ({
                       ...prevData,
-                      sketch: {
-                        ...roomData.sketch,
-                        src: URL.createObjectURL(e.target.files[0]),
-                        file: e.target.files[0],
-                      },
+                      sketch: e.target.files[0],
                     }));
                   }}
                   className="mt-1 p-2 w-full border rounded-md"
@@ -628,11 +544,15 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 <label className="block text-white font-semibold">
                   Room Image
                 </label>
-                {roomData.image.src ? (
+                {roomData.image ? (
                   <>
                     <Image
                       unoptimized={true}
-                      src={roomData.image.src}
+                      src={
+                        roomData.image instanceof File
+                          ? URL.createObjectURL(roomData.image)
+                          : roomData.image
+                      }
                       alt={`Room ${roomData.name}`}
                       width={100}
                       height={130}
@@ -643,11 +563,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                       onClick={() =>
                         setRoomData((prevData) => ({
                           ...prevData,
-                          image: {
-                            ...roomData.image,
-                            src: "",
-                            file: null,
-                          },
+                          image: "",
                         }))
                       }
                     />
@@ -669,11 +585,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                   onChange={(e) => {
                     setRoomData((prevData) => ({
                       ...prevData,
-                      image: {
-                        ...roomData.image,
-                        src: URL.createObjectURL(e.target.files[0]),
-                        file: e.target.files[0],
-                      },
+                      image: e.target.files[0],
                     }));
                   }}
                   className="mt-1 p-2 w-full border rounded-md"
@@ -687,11 +599,15 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                 >
                   Toilet Image
                 </label>
-                {roomData.toilet.image.src ? (
+                {roomData.toilet.image ? (
                   <>
                     <Image
                       unoptimized={true}
-                      src={roomData.toilet.image.src}
+                      src={
+                        roomData.toilet.image instanceof File
+                          ? URL.createObjectURL(roomData.toilet.image)
+                          : roomData.toilet.image
+                      }
                       alt={`Room ${roomData.name} Toilet`}
                       width={100}
                       height={130}
@@ -704,11 +620,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                           ...prevData,
                           toilet: {
                             ...prevData.toilet,
-                            image: {
-                              ...roomData.toilet.image,
-                              src: "",
-                              file: null,
-                            },
+                            image: "",
                           },
                         }))
                       }
@@ -732,11 +644,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                       ...prevData,
                       toilet: {
                         ...roomData.toilet,
-                        image: {
-                          ...roomData.toilet.image,
-                          src: URL.createObjectURL(e.target.files[0]),
-                          file: e.target.files[0],
-                        },
+                        image: e.target.files[0],
                       },
                     }));
                   }}
@@ -822,11 +730,15 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                       Bed Image
                     </label>
 
-                    {bed.image.src ? (
+                    {bed.image ? (
                       <>
                         <Image
                           unoptimized={true}
-                          src={bed.image.src}
+                          src={
+                            bed.image instanceof File
+                              ? URL.createObjectURL(bed.image)
+                              : bed.image
+                          }
                           alt={`Room ${roomData.name} Bed ${bed.bedNo}`}
                           width={100}
                           height={130}
@@ -836,8 +748,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                           className="text-xl text-dashboard duration-300 cursor-pointer active:scale-90"
                           onClick={() => {
                             const beds = [...roomData.beds];
-                            beds[index].image.src = "";
-                            beds[index].image.file = null;
+                            beds[index].image = "";
                             setRoomData((prevData) => ({
                               ...prevData,
                               beds,
@@ -863,8 +774,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
                         setError("");
                         const { name, files } = e.target;
                         const beds = [...roomData.beds];
-                        beds[index].image.src = URL.createObjectURL(files[0]);
-                        beds[index].image.file = files[0];
+                        beds[index].image = files[0];
                         setRoomData((prevData) => ({
                           ...prevData,
                           beds,
