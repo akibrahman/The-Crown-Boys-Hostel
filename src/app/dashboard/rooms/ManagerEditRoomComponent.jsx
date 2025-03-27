@@ -10,6 +10,7 @@ import Modal from "react-modal";
 import { storage } from "../../../../firebase.config";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { CgSpinner } from "react-icons/cg";
+import DraggableBed from "@/Components/RoomSketch/DraggableBed";
 
 const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
   const { data: room } = useQuery({
@@ -102,6 +103,8 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
           bedNo: "",
           isBooked: false,
           image: "",
+          top: "",
+          left: "",
         },
       ],
     }));
@@ -116,13 +119,28 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
   };
 
   const [updatingModal, setUpdatingModal] = useState(false);
+  const [isOpenBedPlacementModal, setIsOpenBedPlacementModal] = useState(false);
 
-  const openUpdatingModal = () => {
-    setUpdatingModal(true);
+  const openBedPlacementModal = () => {
+    setIsOpenBedPlacementModal(true);
   };
-
-  const closeUpdatingModal = () => {
-    setUpdatingModal(false);
+  const closeBedPlacementModal = () => {
+    setIsOpenBedPlacementModal(false);
+  };
+  const openBedPlacement = () => {
+    if (!roomData.sketch) return;
+    if (roomData.beds.length == 0) return;
+    openBedPlacementModal();
+  };
+  const updateBedPosition = (bedNo, top, left) => {
+    let beds = [...roomData.beds];
+    beds = beds.map((b) =>
+      b.bedNo == bedNo ? { ...b, top: `${top}%`, left: `${left}%` } : b
+    );
+    setRoomData((prevData) => ({
+      ...prevData,
+      beds,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -183,7 +201,6 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
       const { data } = await axios.put("/api/room", dataToSend);
       if (!data.success) throw new Error(data.msg);
       await refetch();
-      closeUpdatingModal();
       setuploading([false, ""]);
       setRoomData({});
       closeModal();
@@ -233,61 +250,42 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
   return (
     <>
       <Modal
-        isOpen={updatingModal}
-        // onRequestClose={closeModal}
+        isOpen={isOpenBedPlacementModal}
+        onRequestClose={closeBedPlacementModal}
         style={customStyles2}
       >
-        <div className="px-32 py-20">
-          {uploading[0] && uploading[1] == "firebase" && (
-            <div className="flex items-center gap-3">
-              <p className="text-dashboard font-semibold">Uploading Assets</p>
-              <CgSpinner className="text-xl text-dashboard animate-spin" />
-            </div>
-          )}
-          {uploading[0] && uploading[1] == "backend" && (
-            <div className="flex items-center gap-3">
-              <p className="text-dashboard font-semibold">Making room ready</p>
-              <CgSpinner className="text-xl text-dashboard animate-spin" />
-            </div>
-          )}
-          <div className="flex items-center justify-center mt-5">
-            <div class="relative w-20 h-20">
-              <svg class="w-full h-full" viewBox="0 0 100 100">
-                <circle
-                  class="text-gray-200 stroke-current"
-                  stroke-width="10"
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                ></circle>
-                <circle
-                  class="text-sky-500  progress-ring__circle stroke-current"
-                  stroke-width="10"
-                  stroke-linecap="round"
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  stroke-dasharray="251.2"
-                  stroke-dashoffset={`calc(251.2 - (251.2 * ${progress}) / 100)`}
-                ></circle>
-                <text
-                  x="50"
-                  y="50"
-                  fill="#1F2937"
-                  font-family="Verdana"
-                  font-size="15"
-                  fontWeight="bold"
-                  text-anchor="middle"
-                  alignment-baseline="middle"
-                >
-                  {progress} %
-                </text>
-              </svg>
+        {isOpenBedPlacementModal && (
+          <div className="relative px-32 py-20">
+            <FaTimes
+              onClick={closeBedPlacementModal}
+              className="text-xl absolute top-4 right-4 cursor-pointer duration-300 active:scale-90"
+            />
+            <div className="relative room-container w-[350px] h-[430px] border">
+              <img
+                src={
+                  roomData?.sketch && roomData?.sketch instanceof File
+                    ? URL.createObjectURL(roomData.sketch)
+                    : roomData.sketch
+                }
+                alt="Room Sketch"
+                className="w-full h-full object-contain"
+              />
+              {roomData.beds.map((bed) => (
+                <DraggableBed
+                  key={bed.bedNo}
+                  bed={bed}
+                  onPositionChange={updateBedPosition}
+                />
+              ))}
+              <button
+                onClick={closeBedPlacementModal}
+                className="mt-2 bg-blue-500 text-white p-2 rounded block mx-auto"
+              >
+                Done
+              </button>
             </div>
           </div>
-        </div>
+        )}
       </Modal>
       <Modal
         isOpen={modalIsOpen}
@@ -804,6 +802,13 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
             )}
 
             <div className="flex items-center justify-center gap-20">
+              <button
+                type="button"
+                className="bg-blue-500 text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
+                onClick={openBedPlacement}
+              >
+                Bed Placement
+              </button>
               <button
                 type="submit"
                 className="bg-green-500 text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
