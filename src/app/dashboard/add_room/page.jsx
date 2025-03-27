@@ -10,11 +10,21 @@ import Image from "next/image";
 import Modal from "react-modal";
 import { CgSpinner } from "react-icons/cg";
 import { useQuery } from "@tanstack/react-query";
+import DraggableBed from "@/Components/RoomSketch/DraggableBed";
 
 const ManagerAddARoom = () => {
   const [uploading, setuploading] = useState([false, ""]);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   const { data: buildings } = useQuery({
     queryKey: ["buildings", "add_room"],
@@ -95,7 +105,7 @@ const ManagerAddARoom = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const finalSubmit = async (e) => {
     e.preventDefault();
 
     // return;
@@ -139,106 +149,9 @@ const ManagerAddARoom = () => {
       console.log(error);
       return toast.error(error?.response?.data?.msg || error.message);
     }
-
-    //! openModal();
     // setuploading([true, "fileUploading"]);
 
-    // const uploadFile = (file, path) => {
-    //   return new Promise((resolve, reject) => {
-    //     const storageRef = ref(storage, path);
-    //     const uploadTask = uploadBytesResumable(storageRef, file);
-    //     uploadTask.on(
-    //       "state_changed",
-    //       (snapshot) => {
-    //         const progress =
-    //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //         console.log(progress);
-    //         setProgress(parseInt(progress));
-    //       },
-    //       (error) => {
-    //         console.log(error);
-    //         toast.error("Firebase error");
-    //         reject(error);
-    //       },
-    //       async () => {
-    //         const url = await getDownloadURL(uploadTask.snapshot.ref);
-    //         resolve({ src: url, path });
-    //       }
-    //     );
-    //   });
-    // };
-
     try {
-      //! Room Video
-      // const roomVideoPath = `rooms/${roomData.name}/video/${roomData.name}.mp4`;
-      // const roomVideoUpload = uploadFile(roomData.video, roomVideoPath);
-
-      //! Room Image
-      // const roomImagePath = `rooms/${roomData.name}/image/${roomData.name}.jpg`;
-      // const roomImageUpload = uploadFile(roomData.image, roomImagePath);
-
-      //! Room Sketch
-      // const roomSketchPath = `rooms/${roomData.name}/sketch/${roomData.name}-sketch.jpg`;
-      // const roomSketchUpload = uploadFile(roomData.sketch, roomSketchPath);
-
-      //! Room Toilet Image
-      // const roomToiletImagePath = `rooms/${roomData.name}/image/${roomData.name}-toilet.jpg`;
-      // const roomToiletImageUpload = uploadFile(
-      //   roomData.toilet.image,
-      //   roomToiletImagePath
-      // );
-
-      //! Room Balcony Image
-      // let roomBalconyImageUpload = Promise.resolve(null);
-      // if (roomData.balcony.state) {
-      //   const roomBalconyImagePath = `rooms/${roomData.name}/image/${roomData.name}-balcony.jpg`;
-      //   roomBalconyImageUpload = uploadFile(
-      //     roomData.balcony.image,
-      //     roomBalconyImagePath
-      //   );
-      // }
-
-      //! Room Beds Image
-      // const roomBedsImageUploads = roomData.beds.map((bed, i) => {
-      //   const roomBedsImagePath = `rooms/${roomData.name}/image/${roomData.name}-${bed.bedNo}.jpg`;
-      //   return uploadFile(bed.image, roomBedsImagePath);
-      // });
-
-      //! Wait for all uploads to complete
-      // const [
-      //   roomVideoData,
-      //   roomImageData,
-      //   roomSketchData,
-      //   roomToiletImageData,
-      //   roomBalconyImageData,
-      //   ...roomBedsImageData
-      // ] = await Promise.all([
-      //   roomVideoUpload,
-      //   roomImageUpload,
-      //   roomSketchUpload,
-      //   roomToiletImageUpload,
-      //   roomBalconyImageUpload,
-      //   ...roomBedsImageUploads,
-      // ]);
-
-      //! Log srcData after all uploads are done
-      // const finalData = {
-      //   roomName: roomData.name,
-      //   buildingName: roomData.buildingName,
-      //   block: roomData.block,
-      //   roomType: roomData.type,
-      //   roomFloor: roomData.floor,
-      //   roomToiletType: roomData.toilet.type,
-      //   roomBalconyState: roomData.balcony.state,
-      //   roomVideo: roomData.video,
-      //   roomImageData: roomImageData,
-      //   roomSketchData: roomSketchData,
-      //   roomToiletImageData,
-      //   roomBalconyImageData,
-      //   roomBeds: roomData.beds.map((bed, i) => {
-      //     return { ...bed, image: roomBedsImageData[i] };
-      //   }),
-      // };
       const dataToSend = new FormData();
       dataToSend.append("roomName", roomData.name);
       dataToSend.append("buildingName", roomData.buildingName);
@@ -258,7 +171,7 @@ const ManagerAddARoom = () => {
         dataToSend.append(`bedData-${i + 1}`, JSON.stringify(rest));
         dataToSend.append(`bedImage-${i + 1}`, image);
       });
-      const { data } = await axios.post("/api/room", dataToSend);
+      // const { data } = await axios.post("/api/room", dataToSend);
       toast.success("OK");
       return;
       setuploading([true, "backend"]);
@@ -309,6 +222,13 @@ const ManagerAddARoom = () => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!roomData.sketch) return;
+    if (roomData.beds.length == 0) return;
+    openModal();
+  };
+
   const customStyles = {
     content: {
       top: "50%",
@@ -330,74 +250,52 @@ const ManagerAddARoom = () => {
     },
   };
 
-  const [modalIsOpen, setIsOpen] = useState(false);
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
+  const updateBedPosition = (bedNo, top, left) => {
+    let beds = [...roomData.beds];
+    beds = beds.map((b) =>
+      b.bedNo == bedNo ? { ...b, top: `${top}%`, left: `${left}%` } : b
+    );
+    setRoomData((prevData) => ({
+      ...prevData,
+      beds,
+    }));
   };
 
   return (
     <>
       <Modal
         isOpen={modalIsOpen}
-        // onRequestClose={closeModal}
+        onRequestClose={closeModal}
         style={customStyles}
       >
-        <div className="px-32 py-20">
-          {uploading[0] && uploading[1] == "fileUploading" && (
-            <div className="flex items-center gap-3">
-              <p className="text-dashboard font-semibold">Uploading Assets</p>
-              <CgSpinner className="text-xl text-dashboard animate-spin" />
-            </div>
-          )}
-          {uploading[0] && uploading[1] == "backend" && (
-            <div className="flex items-center gap-3">
-              <p className="text-dashboard font-semibold">Making room ready</p>
-              <CgSpinner className="text-xl text-dashboard animate-spin" />
-            </div>
-          )}
-          <div className="flex items-center justify-center mt-5">
-            <div class="relative w-20 h-20">
-              <svg class="w-full h-full" viewBox="0 0 100 100">
-                <circle
-                  class="text-gray-200 stroke-current"
-                  stroke-width="10"
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                ></circle>
-                <circle
-                  class="text-sky-500  progress-ring__circle stroke-current"
-                  stroke-width="10"
-                  stroke-linecap="round"
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  stroke-dasharray="251.2"
-                  stroke-dashoffset={`calc(251.2 - (251.2 * ${progress}) / 100)`}
-                ></circle>
-                <text
-                  x="50"
-                  y="50"
-                  fill="#1F2937"
-                  font-family="Verdana"
-                  font-size="15"
-                  fontWeight="bold"
-                  text-anchor="middle"
-                  alignment-baseline="middle"
-                >
-                  {progress} %
-                </text>
-              </svg>
+        {modalIsOpen && (
+          <div className="relative px-32 py-20">
+            <FaTimes
+              onClick={closeModal}
+              className="text-xl absolute top-4 right-4 cursor-pointer duration-300 active:scale-90"
+            />
+            <div className="relative room-container w-[350px] h-[430px] border">
+              <img
+                src={roomData?.sketch && URL.createObjectURL(roomData.sketch)}
+                alt="Room Sketch"
+                className="w-full h-full object-contain"
+              />
+              {roomData.beds.map((bed) => (
+                <DraggableBed
+                  key={bed.bedNo}
+                  bed={bed}
+                  onPositionChange={updateBedPosition}
+                />
+              ))}
+              <button
+                onClick={() => console.log(roomData.beds)}
+                className="mt-2 bg-blue-500 text-white p-2 rounded"
+              >
+                Save Positions
+              </button>
             </div>
           </div>
-        </div>
+        )}
       </Modal>
       <div className="container min-h-full bg-dashboard text-white mx-auto p-6 duration-300">
         <h1 className="text-2xl font-bold mb-4 text-center">Add Room</h1>
