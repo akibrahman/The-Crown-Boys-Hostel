@@ -189,7 +189,7 @@ const ManagerManageRoomBedData = ({
 
           <Image
             unoptimized={true}
-            src={selectedBed[1].image.src}
+            src={selectedBed[1].image}
             alt={`Room ${room.name} Bed ${selectedBed[1].bedNo}`}
             width={100}
             height={130}

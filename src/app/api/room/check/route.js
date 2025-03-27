@@ -10,12 +10,21 @@ export const GET = async (req) => {
     const name = searchParams.get("name");
     const floor = searchParams.get("floor");
     const building = searchParams.get("building");
-
-    const room = await Room.findOne({ name, floor, building });
+    let msg = "Checked!";
+    let success = true;
+    const room = await Room.findOne({ name, floor });
+    const room2 = await Room.findOne({ name, building: { $ne: building } });
+    if (room) {
+      msg = "Room Already Exists!";
+      success = false;
+    } else if (room2) {
+      msg = "Room Already Exists with Same Name!";
+      success = false;
+    }
 
     return NextResponse.json({
-      success: room ? false : true,
-      msg: room ? "Room Exists!" : "Checked",
+      success,
+      msg,
       room: room || {},
     });
   } catch (error) {
