@@ -330,6 +330,26 @@ export const PUT = async (req) => {
       };
     });
 
+    const deletedBeds = room.beds.filter(
+      (roomBed) => !bedsForRoom.some((newBed) => newBed.bedNo === roomBed.bedNo)
+    );
+    if (deletedBeds.length != 0) {
+      deletedBeds.forEach((b) => {
+        const imagePathDB = path.join(
+          process.cwd(),
+          "public",
+          ...b.image.split("/")
+        );
+        fs.unlink(imagePathDB, (err) => {
+          if (err) {
+            console.error(`Error deleting folder: ${imagePathDB}`, err);
+          } else {
+            console.log(`Successfully deleted folder: ${imagePathDB}`);
+          }
+        });
+      });
+    }
+
     console.log(filesToBeUploaded.find((f) => f.title == "Toilet Image").url);
 
     await Room.findOneAndUpdate(
