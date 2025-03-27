@@ -106,8 +106,6 @@ const ManagerAddARoom = () => {
   };
 
   const finalSubmit = async (e) => {
-    e.preventDefault();
-
     // return;
     if (!roomData.video) {
       setError("Room Video is required, Add one");
@@ -171,7 +169,7 @@ const ManagerAddARoom = () => {
         dataToSend.append(`bedData-${i + 1}`, JSON.stringify(rest));
         dataToSend.append(`bedImage-${i + 1}`, image);
       });
-      // const { data } = await axios.post("/api/room", dataToSend);
+      const { data } = await axios.post("/api/room", dataToSend);
       toast.success("OK");
       return;
       setuploading([true, "backend"]);
@@ -288,7 +286,7 @@ const ManagerAddARoom = () => {
                 />
               ))}
               <button
-                onClick={() => console.log(roomData.beds)}
+                onClick={() => finalSubmit()}
                 className="mt-2 bg-blue-500 text-white p-2 rounded"
               >
                 Save Positions

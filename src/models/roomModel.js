@@ -21,6 +21,8 @@ const roomSchema = new mongoose.Schema({
       bedNo: String,
       isBooked: Boolean,
       image: String,
+      top: String,
+      left: String,
     },
   ],
 });

@@ -160,6 +160,7 @@ export const POST = async (req) => {
           (bf) => bf.title === `bedImage-${b.bedNo}`
         ).url,
       }));
+      console.log(bedsForRoom);
       await new Room({
         name: roomName,
         building: buildingName,

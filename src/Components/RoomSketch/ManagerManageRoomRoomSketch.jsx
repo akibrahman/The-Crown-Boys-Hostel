@@ -319,7 +319,11 @@ const ManagerManageRoomRoomSketch = ({
     return (
       <div className="flex items-center justify-center gap-4 flex-wrap h-full w-full absolute top-0 left-0 z-10">
         {room.beds.map((bed, i) => (
-          <div key={i} className="cursor-pointer">
+          <div
+            key={i}
+            style={{ left: bed.left, top: bed.top }}
+            className="absolute cursor-pointer"
+          >
             <ManagerManageRoomUserIcon
               selectSeat={selectSeat}
               bedNo={bed.bedNo}
