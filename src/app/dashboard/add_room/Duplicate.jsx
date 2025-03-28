@@ -107,8 +107,8 @@ const Duplicate = ({
               value={query.building}
             >
               <option value="">Select Buildiing</option>
-              {buildings?.map((building) => (
-                <option key={building._id} value={building._id}>
+              {buildings?.map((building, i) => (
+                <option key={i} value={building._id}>
                   {building.name}
                 </option>
               ))}
@@ -162,8 +162,8 @@ const Duplicate = ({
           {query.floors.length > 0 && (
             <p className="flex items-center gap-2 text-sm mt-1">
               Added Floors:
-              {query.floors.map((f) => (
-                <span>{f}, </span>
+              {query.floors.map((f, i) => (
+                <span key={i}>{f}, </span>
               ))}
             </p>
           )}
