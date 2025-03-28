@@ -4,6 +4,9 @@ import axios from "axios";
 import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
+import User from "@/models/userModel";
 
 const { dbConfig } = require("@/dbConfig/dbConfig");
 
@@ -87,7 +90,7 @@ export const POST = async (req) => {
       .replace(/height="\d+"/, `height="450"`);
     const block = formData.get("block");
     const roomType = formData.get("roomType");
-    const roomFloor = formData.get("roomFloor");
+    const roomFloor = parseInt(formData.get("roomFloor"));
     const roomToiletType = formData.get("roomToiletType");
     const roomBalconyState =
       formData.get("roomBalconyState") === "true" ? true : false;
@@ -96,9 +99,42 @@ export const POST = async (req) => {
     const roomToilet = formData.get("roomToilet");
     const roomBalcony = formData.get("roomBalcony");
     const bedsCount = formData.get("beds");
+
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      console.log(error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+    }
+
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+
+    const sameNameAndFloor = await Room.findOne({
+      name: roomName,
+      floor: roomFloor,
+      managerId: jwtData?.id,
+    });
+    if (sameNameAndFloor) throw new Error("Room Already Exists!");
+
+    const sameNameButDiffBuilding = await Room.findOne({
+      name: roomName,
+      building: { $ne: buildingName },
+      managerId: jwtData?.id,
+    });
+    if (sameNameButDiffBuilding)
+      throw new Error("Room Already Exists with Same Name!");
+
     const isSameStructuredRoom = await Room.findOne({
       name: roomName,
       building: buildingName,
+      managerId: jwtData?.id,
     }).lean();
     if (isSameStructuredRoom) {
       await new Room({
@@ -163,6 +199,7 @@ export const POST = async (req) => {
       console.log(bedsForRoom);
       await new Room({
         name: roomName,
+        managerId: jwtData?.id,
         building: buildingName,
         floor: parseInt(roomFloor),
         video: roomVideo,
@@ -209,7 +246,25 @@ export const PUT = async (req) => {
     const roomBalcony = formData.get("roomBalcony");
     const bedsCount = formData.get("beds");
 
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      console.log(error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+    }
+
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+
     const room = await Room.findById(_id);
+    if (room.managerId != jwtData?.id)
+      throw new Error("Unauthorized, Not Editable!");
 
     let beds = [];
     let i = 0;
@@ -350,10 +405,8 @@ export const PUT = async (req) => {
       });
     }
 
-    console.log(filesToBeUploaded.find((f) => f.title == "Toilet Image").url);
-
     await Room.findOneAndUpdate(
-      { name: room.name, building: room.building },
+      { name: room.name, building: room.building, managerId: jwtData?.id },
       {
         $set: {
           type: roomType,
@@ -408,9 +461,29 @@ export const PUT = async (req) => {
 export const PATCH = async (req) => {
   try {
     const data = await req.json();
-    await Room.findByIdAndUpdate(data._id, {
-      beds: data.beds,
-    });
+
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      console.log(error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+    }
+
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+
+    const room = await Room.findOne({ _id: data._id });
+    if (!room) throw new Error("Invalid ID!");
+    if (room.managerId != jwtData?.id) throw new Error("Unauthorized!");
+    room.beds = data.beds;
+
+    await room.save();
 
     return NextResponse.json({
       success: true,

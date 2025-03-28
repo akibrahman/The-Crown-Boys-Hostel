@@ -1,11 +1,9 @@
 "use client";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import React, { useState } from "react";
-import { storage } from "../../../../firebase.config";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { FaDownload, FaPlus, FaTimes } from "react-icons/fa";
-import { FaDeleteLeft, FaPencil } from "react-icons/fa6";
+import { FaDeleteLeft } from "react-icons/fa6";
 import Image from "next/image";
 import Modal from "react-modal";
 import { CgSpinner } from "react-icons/cg";
@@ -13,8 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import DraggableBed from "@/Components/RoomSketch/DraggableBed";
 
 const ManagerAddARoom = () => {
-  const [uploading, setuploading] = useState([false, ""]);
-  const [progress, setProgress] = useState(0);
+  const [uploading, setuploading] = useState(false);
   const [error, setError] = useState("");
   const [bedPlacementModalIsOpen, setBedPlacementModalIsOpen] = useState(false);
   const [roomDuplicateModalIsOpen, setRoomDuplicateModalIsOpen] =
@@ -82,7 +79,7 @@ const ManagerAddARoom = () => {
   const handleBedChange = (index, e) => {
     const { name, value } = e.target;
     const beds = [...roomData.beds];
-    beds[index][name] = value;
+    beds[index][name] = value.toLowerCase();
     setRoomData((prevData) => ({
       ...prevData,
       beds,
@@ -152,23 +149,12 @@ const ManagerAddARoom = () => {
         return;
       }
     }
-
-    try {
-      const { data } = await axios.get(
-        `/api/room/check?name=${roomData.name}&floor=${roomData.floor}&building=${roomData.buildingName}`
-      );
-      if (!data.success) throw new Error(data.msg);
-    } catch (error) {
-      console.log(error);
-      return toast.error(error?.response?.data?.msg || error.message);
-    }
-    // setuploading([true, "fileUploading"]);
-
+    setuploading(true);
     try {
       const dataToSend = new FormData();
-      dataToSend.append("roomName", roomData.name);
+      dataToSend.append("roomName", roomData.name.toLowerCase());
       dataToSend.append("buildingName", roomData.buildingName);
-      dataToSend.append("block", roomData.block);
+      dataToSend.append("block", roomData.block.toLowerCase());
       dataToSend.append("roomType", roomData.type);
       dataToSend.append("roomFloor", roomData.floor);
       dataToSend.append("roomToiletType", roomData.toilet.type);
@@ -185,52 +171,42 @@ const ManagerAddARoom = () => {
         dataToSend.append(`bedImage-${i + 1}`, image);
       });
       const { data } = await axios.post("/api/room", dataToSend);
-      toast.success("OK");
-      return;
-      setuploading([true, "backend"]);
-      try {
-        const { data } = await axios.post("/api/room", finalData);
-        if (data.success) {
-          closeBedPlacementModal();
-          setuploading([false, ""]);
-          setRoomData({
-            name: "",
-            buildingName: "",
-            block: "",
-            video: "",
-            type: "",
-            sketch: "",
-            floor: 0,
+      if (!data.success) throw new Error(data.msg);
+      setRoomData({
+        name: "",
+        buildingName: "",
+        block: "",
+        video: "",
+        type: "",
+        sketch: "",
+        floor: 0,
+        image: "",
+        toilet: { type: "", image: "" },
+        balcony: { state: false, image: "" },
+        beds: [
+          {
+            user: "",
+            userRent: 0,
+            displayRent: 0,
+            bookingCharge: 0,
+            bedNo: "",
+            isBooked: false,
             image: "",
-            toilet: { type: "", image: "" },
-            balcony: { state: false, image: "" },
-            beds: [
-              {
-                user: "",
-                userRent: 0,
-                displayRent: 0,
-                bookingCharge: 0,
-                bedNo: "",
-                isBooked: false,
-                image: "",
-              },
-            ],
-          });
-          toast.success(data.msg);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        }
-      } catch (error) {
-        console.error("Server error", error);
-        setuploading([false, ""]);
-        toast.error(error.response.data.msg);
-        closeBedPlacementModal();
-      }
+            left: "",
+            top: "",
+          },
+        ],
+      });
+      setuploading(false);
+      toast.success(data.msg);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error("Error uploading files:", error);
-      setuploading([false, ""]);
-      toast.error("Error uploading the assets to Firebase, Try again!");
+      setuploading(false);
+      toast.error("Error Adding the Room, Try again!");
+    } finally {
       closeBedPlacementModal();
     }
   };
@@ -249,12 +225,7 @@ const ManagerAddARoom = () => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      // backgroundColor: "#000",
-      // border: "1px solid #EAB308",
       padding: "30",
-      //   width: "90%",
-      // overflow: "scroll",
-      //   height: "90%",
     },
     overlay: {
       zIndex: 500,
@@ -271,8 +242,8 @@ const ManagerAddARoom = () => {
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
       padding: "30",
-        width: "90%",
-        height: "90%",
+      width: "90%",
+      height: "90%",
     },
     overlay: {
       zIndex: 500,
@@ -350,7 +321,7 @@ const ManagerAddARoom = () => {
         <h1 className="text-2xl font-bold mb-4 text-center">Add Room</h1>
         <p
           onClick={openRoomDuplicateModal}
-          className="ml-6 text-primary font-medium cursor-pointer underline hover:font-semibold duration-300"
+          className="text-center text-primary font-medium cursor-pointer underline hover:font-semibold duration-300"
         >
           Would you like to add the same room in the same building but on a
           different floor?
@@ -889,18 +860,24 @@ const ManagerAddARoom = () => {
 
           <div className="flex items-center justify-center gap-6 mt-6">
             <button
+              disabled={
+                !roomData.sketch || roomData.beds.length == 0 || uploading
+              }
               type="button"
-              className="bg-green-500 text-white px-4 py-2 rounded-md mx-auto block"
+              className="bg-green-500 disabled:bg-gray-500 text-white px-4 py-2 rounded-md mx-auto block"
               onClick={openBedPlacement}
             >
               Bed Placement
             </button>
             <button
-              disabled={roomData.beds.find((b) => !b.top && !b.left)}
+              disabled={
+                roomData.beds.find((b) => !b.top && !b.left) || uploading
+              }
               type="submit"
-              className="bg-primary disabled:bg-gray-500 text-white px-4 py-2 rounded-md mx-auto block"
+              className="bg-primary disabled:bg-gray-500 text-white px-4 py-2 rounded-md mx-auto flex items-center justify-center gap-4"
             >
-              Submit
+              Submit{" "}
+              {uploading && <CgSpinner className="text-xl animate-spin" />}
             </button>
           </div>
         </form>

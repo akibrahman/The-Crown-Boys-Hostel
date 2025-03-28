@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const roomSchema = new mongoose.Schema({
+  managerId: String,
   name: String,
   video: String,
   block: String,
