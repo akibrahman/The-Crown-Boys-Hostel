@@ -20,6 +20,7 @@ export const GET = async (req) => {
     const name = searchParams.get("name");
     const floor = searchParams.get("floor");
     const filter = searchParams.get("filter");
+    const building = searchParams.get("building");
     let page = parseInt(searchParams.get("page") || 0);
 
     let skip = 0;
@@ -36,6 +37,7 @@ export const GET = async (req) => {
     if (id) query = { ...query, _id: id };
     if (name) query = { ...query, name: { $regex: new RegExp(name, "i") } };
     if (floor) query = { ...query, floor: parseInt(floor) };
+    if (building) query = { ...query, building: building };
 
     let rooms = await Room.find(query).lean();
 

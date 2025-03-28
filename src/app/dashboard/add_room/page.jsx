@@ -9,6 +9,7 @@ import Modal from "react-modal";
 import { CgSpinner } from "react-icons/cg";
 import { useQuery } from "@tanstack/react-query";
 import DraggableBed from "@/Components/RoomSketch/DraggableBed";
+import Duplicate from "./Duplicate";
 
 const ManagerAddARoom = () => {
   const [uploading, setuploading] = useState(false);
@@ -233,24 +234,6 @@ const ManagerAddARoom = () => {
     },
   };
 
-  const customStyles2 = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      padding: "30",
-      width: "90%",
-      height: "90%",
-    },
-    overlay: {
-      zIndex: 500,
-      backgroundColor: "rgba(0,0,0,0.6)",
-    },
-  };
-
   const updateBedPosition = (bedNo, top, left) => {
     let beds = [...roomData.beds];
     beds = beds.map((b) =>
@@ -265,23 +248,11 @@ const ManagerAddARoom = () => {
   return (
     <>
       {/*// Room Duplicate Modal */}
-      <Modal
-        isOpen={roomDuplicateModalIsOpen}
-        onRequestClose={closeRoomDuplicateModal}
-        style={customStyles2}
-      >
-        {roomDuplicateModalIsOpen && (
-          <div className="relative px-32 py-20">
-            <FaTimes
-              onClick={closeRoomDuplicateModal}
-              className="text-xl absolute top-4 right-4 cursor-pointer duration-300 active:scale-90"
-            />
-            <button className="mt-2 bg-blue-500 text-white p-2 rounded block mx-auto">
-              Duplicate
-            </button>
-          </div>
-        )}
-      </Modal>
+      <Duplicate
+        buildings={buildings}
+        closeRoomDuplicateModal={closeRoomDuplicateModal}
+        roomDuplicateModalIsOpen={roomDuplicateModalIsOpen}
+      />
       {/*// Bed Placement Modal */}
       <Modal
         isOpen={bedPlacementModalIsOpen}

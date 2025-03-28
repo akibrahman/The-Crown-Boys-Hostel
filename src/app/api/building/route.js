@@ -8,6 +8,7 @@ import axios from "axios";
 import mongoose from "mongoose";
 import path from "path";
 import fs from "fs";
+import Room from "@/models/roomModel";
 
 await dbConfig();
 
@@ -221,6 +222,10 @@ export const DELETE = async (req) => {
     const manager = await User.findById(jwtData?.id);
     if (!manager || manager.role != "manager")
       return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+
+    const room = await Room.findOne({ building: buildingId });
+    if (room) throw new Error("Building has Rooms, first delete those!");
+
     const targetBuilding = await Building.findById(buildingId);
 
     // Delete the building folder

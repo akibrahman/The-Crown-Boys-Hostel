@@ -63,7 +63,7 @@ const ManagerBuildingsComponent = () => {
       console.log(error);
       toast.error(error?.response?.data?.msg || error?.message);
     } finally {
-      setDeleting[(false, "")];
+      setDeleting([false, ""]);
     }
   };
 
@@ -97,7 +97,7 @@ const ManagerBuildingsComponent = () => {
                   alt={building.name}
                   width="500"
                   height="500"
-                  className="w-52 h-60 object-cover aspect-square mx-auto rounded-xl"
+                  className="w-52 h-60 object-cover aspect-square mx-auto rounded-xl mt-6"
                 />
               )}
 
