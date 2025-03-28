@@ -198,7 +198,6 @@ export const POST = async (req) => {
           (bf) => bf.title === `bedImage-${b.bedNo}`
         ).url,
       }));
-      console.log(bedsForRoom);
       await new Room({
         name: roomName,
         managerId: jwtData?.id,
@@ -540,7 +539,6 @@ export const DELETE = async (req) => {
       room.beds.forEach((b) => {
         pathsToBeUnlinked.push(b.image.split("/"));
       });
-      console.log(pathsToBeUnlinked);
       pathsToBeUnlinked.forEach((p) => {
         const imagePath = path.join(process.cwd(), "public", ...p);
         fs.unlink(imagePath, (err) => {

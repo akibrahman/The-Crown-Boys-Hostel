@@ -226,6 +226,7 @@ const ManagerAllRoomsComponent = () => {
           <input
             onChange={(e) => setNameRef(e.target.value)}
             value={nameRef}
+            placeholder="Room Name"
             type="text"
             className="px-1 md:px-4 text-xs md:text-base py-1.5 rounded-md font-medium text-gray-50 outline-none bg-gray-500"
           />

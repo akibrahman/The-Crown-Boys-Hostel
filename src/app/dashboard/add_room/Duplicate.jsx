@@ -34,9 +34,10 @@ const Duplicate = ({
   const [query, setQuery] = useState({
     name: "",
     building: "",
-    selectedBed: "",
+    selectedRoom: "",
     floor: "",
     floors: [],
+    loading: false,
   });
   const { data: room, isLoading } = useQuery({
     queryKey: ["room", "add_room", "duplicate", query.name, query.building],
@@ -55,11 +56,32 @@ const Duplicate = ({
     setQuery({
       name: "",
       building: "",
-      selectedBed: "",
+      selectedRoom: "",
       floor: "",
       floors: [],
+      loading: false,
     });
     closeRoomDuplicateModal();
+  };
+  const handleSubmit = async () => {
+    try {
+      const floors = query.floors;
+      const roomId = query.selectedRoom;
+      if (!roomId || !floors || floors.length <= 0)
+        return toast.error("Missing Data!");
+      setQuery((prev) => ({ ...prev, loading: true }));
+      const { data } = await axios.post("/api/room/duplicate", {
+        floors,
+        roomId,
+      });
+      if (!data.success) throw new Error(data.msg);
+      toast.success(data.msg);
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      toast.error(error?.response?.data?.msg || error.message);
+    } finally {
+      setQuery((prev) => ({ ...prev, loading: false }));
+    }
   };
   return (
     <Modal
@@ -116,10 +138,10 @@ const Duplicate = ({
           ) : (
             <div
               onClick={() =>
-                setQuery((prev) => ({ ...prev, selectedBed: room._id }))
+                setQuery((prev) => ({ ...prev, selectedRoom: room?._id }))
               }
               className={`flex items-center justify-center gap-4 mt-5 border border-slate-800 py-1 px-3 rounded-full cursor-pointer active:scale-90 duration-300 select-none ${
-                query.selectedBed == room._id
+                query.selectedRoom == room?._id
                   ? "border-double"
                   : "border-dotted"
               }`}
@@ -138,7 +160,7 @@ const Duplicate = ({
             </div>
           )}
           {query.floors.length > 0 && (
-            <p className="flex items-center gap-2 text-sm mt-1 mb-5">
+            <p className="flex items-center gap-2 text-sm mt-1">
               Added Floors:
               {query.floors.map((f) => (
                 <span>{f}, </span>
@@ -147,33 +169,25 @@ const Duplicate = ({
           )}
           {!isLoading &&
             room &&
-            query.selectedBed &&
-            room._id == query.selectedBed && (
+            query.selectedRoom &&
+            room?._id == query.selectedRoom && (
               <select
-                className="px-4 py-1.5 rounded-md font-medium text-gray-500 outline-none"
+                className="px-4 py-1.5 font-medium text-gray-500 outline-none border-b-2 cursor-pointer border-dashboard mt-3"
                 onChange={(e) => {
                   const selectedFloor = parseInt(e.target.value);
-
-                  if (!selectedFloor || selectedFloor === room.floor) {
+                  if (!selectedFloor || selectedFloor === room?.floor) {
                     return toast.error("Selected room is on this Floor!");
                   }
-
-                  const newFloors = query.floors.includes(selectedFloor)
-                    ? query.floors.filter((floor) => floor !== selectedFloor)
-                    : [...query.floors, selectedFloor];
-
-                  setQuery((prev) => ({
-                    ...prev,
-                    floor: "",
-                  }));
-
-                  setTimeout(() => {
-                    setQuery((prev) => ({
+                  setQuery((prev) => {
+                    const newFloors = prev.floors.includes(selectedFloor)
+                      ? prev.floors.filter((floor) => floor !== selectedFloor)
+                      : [...prev.floors, selectedFloor];
+                    return {
                       ...prev,
                       floor: selectedFloor,
                       floors: newFloors,
-                    }));
-                  }, 0);
+                    };
+                  });
                 }}
                 value={query.floor}
               >
@@ -193,11 +207,20 @@ const Duplicate = ({
                 <option value="12">Twelfth Floor</option>
               </select>
             )}
-          {!isLoading && query.selectedBed && (
-            <button className="bg-dashboard text-white py-2 px-4 font-semibold duration-300 active:scale-90 rounded block mx-auto">
-              Duplicate
-            </button>
-          )}
+          <button
+            disabled={
+              isLoading ||
+              !query.selectedRoom ||
+              room?._id != query.selectedRoom ||
+              query.floors.length <= 0 ||
+              query.loading
+            }
+            onClick={handleSubmit}
+            className="bg-dashboard disabled:bg-gray-500 select-none disabled:pointer-events-none text-white py-2 px-4 font-semibold duration-300 active:scale-90 rounded flex items-center justify-center gap-2 mx-auto mt-5"
+          >
+            Duplicate{" "}
+            {query.loading && <CgSpinner className="text-xl animate-spin" />}
+          </button>
         </div>
       )}
     </Modal>
