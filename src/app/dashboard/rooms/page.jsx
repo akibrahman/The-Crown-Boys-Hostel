@@ -19,6 +19,7 @@ import ManagerManageRoom from "./ManagerManageRoom";
 import SystemPagination from "@/Components/Pagination/Pagination";
 import { AuthContext } from "@/providers/ContextProvider";
 import { storage } from "../../../../firebase.config";
+import Swal from "sweetalert2";
 
 const ManagerAllRoomsComponent = () => {
   const { user } = useContext(AuthContext);
@@ -94,7 +95,7 @@ const ManagerAllRoomsComponent = () => {
     setEditRoomId("");
   };
 
-  const [deleting, setDeleting] = useState(false);
+  const [deleting, setDeleting] = useState([false, ""]);
 
   const deleteFolderContents = async (folderRef) => {
     const listResponse = await listAll(folderRef);
@@ -107,27 +108,35 @@ const ManagerAllRoomsComponent = () => {
     await Promise.all([...deletePromises, ...folderDeletePromises]);
   };
 
-  const deleteRoom = async (id, name) => {
-    const confirmed = confirm("Are you sure to delete the room?");
-    if (!confirmed) return;
-    setDeleting(true);
+  const deleteRoom = async (id, name, building) => {
+    if (!id || !name || !building) return;
+    const swalRes = await Swal.fire({
+      title: "Do you want to Delete the Room?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#1493EA",
+      cancelButtonColor: "#EF4444",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      background: "#141E30",
+      color: "#fff",
+    });
+    if (!swalRes.isConfirmed) {
+      return;
+    }
+    setDeleting([true, id]);
     try {
-      const { data } = await axios.delete(`/api/room?id=${id}&name=${name}`);
-      if (data.success) {
-        if (data.count == 0) {
-          const deleteRef = ref(storage, `rooms/${name}`);
-          await deleteFolderContents(deleteRef);
-        }
-        await refetch();
-        toast.success("Room deleted successfully");
-      } else {
-        toast.error("Server error, Try Again");
-      }
+      const { data } = await axios.delete(
+        `/api/room?id=${id}&name=${name}&building=${building}`
+      );
+      if (!data.success) throw new Error(data.msg);
+      await refetch();
+      toast.success("Room deleted successfully");
     } catch (error) {
       console.log(error);
-      toast.error("Server error, Try Again");
+      toast.error(error?.response?.data?.msg || error.message);
     } finally {
-      setDeleting(false);
+      setDeleting([false, ""]);
     }
   };
 
@@ -401,7 +410,6 @@ const ManagerAllRoomsComponent = () => {
                           Bed No: {convertCamelCaseToCapitalized(bed.bedNo)}
                         </label>
                         <Image
-                          // unoptimized={true}
                           src={bed.image}
                           alt={`Bed ${bed.bedNo}`}
                           className="aspect-square rounded-full"
@@ -415,11 +423,13 @@ const ManagerAllRoomsComponent = () => {
               </div>
 
               <div className="flex flex-row md:flex-col items-center justify-center gap-5 mt-5 md:mt-0">
-                {deleting ? (
+                {deleting[0] && deleting[1] == room._id ? (
                   <CgSpinner className="font-semibold text-2xl text-red-500 animate-spin" />
                 ) : (
                   <FaDeleteLeft
-                    onClick={() => deleteRoom(room._id, room.name)}
+                    onClick={() =>
+                      deleteRoom(room._id, room.name, room.buildingId)
+                    }
                     className="font-semibold text-2xl text-red-500 cursor-pointer duration-300 active:scale-90"
                   />
                 )}

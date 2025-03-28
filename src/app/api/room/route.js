@@ -58,7 +58,7 @@ export const GET = async (req) => {
     rooms = await Promise.all(
       rooms.map(async (room) => {
         const building = await Building.findById(room.building).lean();
-        return { ...room, building: building.name };
+        return { ...room, building: building.name, buildingId: building._id };
       })
     );
 
@@ -502,13 +502,57 @@ export const DELETE = async (req) => {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   const name = searchParams.get("name");
+  const building = searchParams.get("building");
+  if (!id || !name || !building) throw new Error("Invalid ID!");
   try {
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      console.log(error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+    }
+
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+
+    const room = await Room.findById(id);
+    if (!room) throw new Error("Invalid ID!");
+    if (room.managerId != jwtData?.id) throw new Error("Unauthorized!");
+
     await Room.findByIdAndDelete(id);
-    const existingRooms = await Room.find({ name });
+    const existingRooms = await Room.find({ name, building });
+    if (existingRooms.length === 0) {
+      let pathsToBeUnlinked = [
+        room.image.split("/"),
+        room.sketch.split("/"),
+        room.toilet.image.split("/"),
+      ];
+      if (room.balcony.balconyState)
+        pathsToBeUnlinked.push(room.balcony.image.split("/"));
+      room.beds.forEach((b) => {
+        pathsToBeUnlinked.push(b.image.split("/"));
+      });
+      console.log(pathsToBeUnlinked);
+      pathsToBeUnlinked.forEach((p) => {
+        const imagePath = path.join(process.cwd(), "public", ...p);
+        fs.unlink(imagePath, (err) => {
+          if (err) {
+            console.error(`Error deleting folder: ${imagePath}`, err);
+          } else {
+            console.log(`Successfully deleted folder: ${imagePath}`);
+          }
+        });
+      });
+    }
     return NextResponse.json({
       success: true,
       msg: "Room deleted successfully",
-      count: existingRooms.length,
     });
   } catch (error) {
     console.log(error);
