@@ -16,14 +16,24 @@ const ManagerAddARoom = () => {
   const [uploading, setuploading] = useState([false, ""]);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [bedPlacementModalIsOpen, setBedPlacementModalIsOpen] = useState(false);
+  const [roomDuplicateModalIsOpen, setRoomDuplicateModalIsOpen] =
+    useState(false);
 
-  const openModal = () => {
-    setIsOpen(true);
+  const openBedPlacementModal = () => {
+    setBedPlacementModalIsOpen(true);
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
+  const closeBedPlacementModal = () => {
+    setBedPlacementModalIsOpen(false);
+  };
+
+  const openRoomDuplicateModal = () => {
+    setRoomDuplicateModalIsOpen(true);
+  };
+
+  const closeRoomDuplicateModal = () => {
+    setRoomDuplicateModalIsOpen(false);
   };
 
   const { data: buildings } = useQuery({
@@ -181,7 +191,7 @@ const ManagerAddARoom = () => {
       try {
         const { data } = await axios.post("/api/room", finalData);
         if (data.success) {
-          closeModal();
+          closeBedPlacementModal();
           setuploading([false, ""]);
           setRoomData({
             name: "",
@@ -215,20 +225,20 @@ const ManagerAddARoom = () => {
         console.error("Server error", error);
         setuploading([false, ""]);
         toast.error(error.response.data.msg);
-        closeModal();
+        closeBedPlacementModal();
       }
     } catch (error) {
       console.error("Error uploading files:", error);
       setuploading([false, ""]);
       toast.error("Error uploading the assets to Firebase, Try again!");
-      closeModal();
+      closeBedPlacementModal();
     }
   };
 
   const openBedPlacement = () => {
     if (!roomData.sketch) return;
     if (roomData.beds.length == 0) return;
-    openModal();
+    openBedPlacementModal();
   };
 
   const customStyles = {
@@ -252,6 +262,24 @@ const ManagerAddARoom = () => {
     },
   };
 
+  const customStyles2 = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      padding: "30",
+        width: "90%",
+        height: "90%",
+    },
+    overlay: {
+      zIndex: 500,
+      backgroundColor: "rgba(0,0,0,0.6)",
+    },
+  };
+
   const updateBedPosition = (bedNo, top, left) => {
     let beds = [...roomData.beds];
     beds = beds.map((b) =>
@@ -265,15 +293,34 @@ const ManagerAddARoom = () => {
 
   return (
     <>
+      {/*// Room Duplicate Modal */}
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
+        isOpen={roomDuplicateModalIsOpen}
+        onRequestClose={closeRoomDuplicateModal}
+        style={customStyles2}
       >
-        {modalIsOpen && (
+        {roomDuplicateModalIsOpen && (
           <div className="relative px-32 py-20">
             <FaTimes
-              onClick={closeModal}
+              onClick={closeRoomDuplicateModal}
+              className="text-xl absolute top-4 right-4 cursor-pointer duration-300 active:scale-90"
+            />
+            <button className="mt-2 bg-blue-500 text-white p-2 rounded block mx-auto">
+              Duplicate
+            </button>
+          </div>
+        )}
+      </Modal>
+      {/*// Bed Placement Modal */}
+      <Modal
+        isOpen={bedPlacementModalIsOpen}
+        onRequestClose={closeBedPlacementModal}
+        style={customStyles}
+      >
+        {bedPlacementModalIsOpen && (
+          <div className="relative px-32 py-20">
+            <FaTimes
+              onClick={closeBedPlacementModal}
               className="text-xl absolute top-4 right-4 cursor-pointer duration-300 active:scale-90"
             />
             <div className="relative room-container w-[350px] h-[430px] border">
@@ -290,7 +337,7 @@ const ManagerAddARoom = () => {
                 />
               ))}
               <button
-                onClick={closeModal}
+                onClick={closeBedPlacementModal}
                 className="mt-2 bg-blue-500 text-white p-2 rounded block mx-auto"
               >
                 Done
@@ -301,6 +348,13 @@ const ManagerAddARoom = () => {
       </Modal>
       <div className="container min-h-full bg-dashboard text-white mx-auto p-6 duration-300">
         <h1 className="text-2xl font-bold mb-4 text-center">Add Room</h1>
+        <p
+          onClick={openRoomDuplicateModal}
+          className="ml-6 text-primary font-medium cursor-pointer underline hover:font-semibold duration-300"
+        >
+          Would you like to add the same room in the same building but on a
+          different floor?
+        </p>
         <form onSubmit={finalSubmit} className="shadow-md rounded-lg p-6">
           {/* Room Information Fields */}
           <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-0 bg-gray-600 p-4 rounded-md mb-4">
