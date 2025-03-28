@@ -68,8 +68,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
     },
   };
 
-  const [uploading, setuploading] = useState([false, ""]);
-  const [progress, setProgress] = useState(0);
+  const [editing, setEditing] = useState(false);
   const [error, setError] = useState("");
 
   const [roomData, setRoomData] = useState(room);
@@ -118,7 +117,6 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
     }));
   };
 
-  const [updatingModal, setUpdatingModal] = useState(false);
   const [isOpenBedPlacementModal, setIsOpenBedPlacementModal] = useState(false);
 
   const openBedPlacementModal = () => {
@@ -175,8 +173,7 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
         return;
       }
     }
-    // openUpdatingModal();
-    // setuploading([true, "firebase"]);
+    setEditing(true);
     try {
       const dataToSend = new FormData();
       dataToSend.append("_id", id);
@@ -201,44 +198,14 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
       const { data } = await axios.put("/api/room", dataToSend);
       if (!data.success) throw new Error(data.msg);
       await refetch();
-      setuploading([false, ""]);
       setRoomData({});
       closeModal();
+      setEditing(false);
       toast.success(data.msg);
-
-      return;
-
-      // dataToSend.append("beds", roomData.beds.length);
-      const finalData = {
-        _id: id,
-        roomType: roomData.type,
-        roomToiletType: roomData.toilet.toiletType,
-        roomBalconyState: roomData.balcony.balconyState,
-        roomBeds: roomData.beds.map((bed, i) => {
-          return { ...bed };
-        }),
-      };
-      setuploading([true, "backend"]);
-      try {
-        if (data.success) {
-          await refetch();
-          closeUpdatingModal();
-          setuploading([false, ""]);
-          setRoomData({});
-          closeModal();
-          toast.success(data.msg);
-        }
-      } catch (error) {
-        console.error("Server error", error);
-        closeUpdatingModal();
-        setuploading([false, ""]);
-        toast.error(error.response.data.msg);
-      }
     } catch (error) {
-      console.error("Error uploading files:", error);
-      closeUpdatingModal();
-      setuploading([false, ""]);
-      toast.error("Error uploading the assets to Firebase, Try again!");
+      console.error(error);
+      setEditing(false);
+      toast.error(error?.response?.data?.msg || error.message);
     }
   };
 
@@ -803,23 +770,28 @@ const ManagerEditRoomComponent = ({ id, modalIsOpen, closeModal, refetch }) => {
 
             <div className="flex items-center justify-center gap-20">
               <button
+                disabled={editing}
                 type="button"
-                className="bg-green-500 text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
+                className="bg-green-500 disabled:bg-gray-500 disabled:pointer-events-none text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
                 onClick={openBedPlacement}
               >
                 Bed Placement
               </button>
               <button
-                disabled={roomData.beds.find((b) => !b.top && !b.left)}
+                disabled={
+                  roomData.beds.find((b) => !b.top && !b.left) || editing
+                }
                 type="submit"
-                className="bg-primary disabled:bg-gray-500 disabled:pointer-events-none text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
+                className="bg-primary disabled:bg-gray-500 disabled:pointer-events-none text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto mt-6 flex items-center justify-center gap-4"
               >
-                Submit
+                Submit{" "}
+                {editing && <CgSpinner className="text-xl animate-spin" />}
               </button>
               <button
+                disabled={editing}
                 onClick={closeModal}
                 type="button"
-                className="bg-orange-500 text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
+                className="bg-orange-500 disabled:bg-gray-500 disabled:pointer-events-none text-white duration-300 active:scale-90 hover:scale-105 font-semibold px-4 py-2 rounded-md mx-auto block mt-6"
               >
                 Cancle
               </button>
