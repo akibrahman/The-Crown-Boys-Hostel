@@ -300,9 +300,9 @@ const ManagerAddARoom = () => {
                 alt="Room Sketch"
                 className="w-full h-full object-contain"
               />
-              {roomData.beds.map((bed) => (
+              {roomData.beds.map((bed, i) => (
                 <DraggableBed
-                  key={bed.bedNo}
+                  key={i}
                   bed={bed}
                   onPositionChange={updateBedPosition}
                 />
@@ -423,7 +423,9 @@ const ManagerAddARoom = () => {
               >
                 <option value="">Select Buildiing</option>
                 {buildings?.map((building) => (
-                  <option value={building._id}>{building.name}</option>
+                  <option key={building._id} value={building._id}>
+                    {building.name}
+                  </option>
                 ))}
               </select>
             </div>
