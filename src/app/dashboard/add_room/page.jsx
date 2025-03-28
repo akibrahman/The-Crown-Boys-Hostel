@@ -380,9 +380,9 @@ const ManagerAddARoom = () => {
                 <option value="7">Seventh Floor</option>
                 <option value="8">Eighth Floor</option>
                 <option value="9">Nineth Floor</option>
-                <option value="10">Tenth Floor</option>
+                <option value="10">Ninth Floor</option>
                 <option value="11">Eleventh Floor</option>
-                <option value="12">Twelveth Floor</option>
+                <option value="12">Twelfth Floor</option>
               </select>
             </div>
             <div className="flex flex-col gap-2">

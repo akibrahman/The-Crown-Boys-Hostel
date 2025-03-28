@@ -223,36 +223,12 @@ const ManagerAllRoomsComponent = () => {
         </h1>
 
         <div className="flex items-center justify-center gap-2 md:gap-10 mb-5">
-          <select
+          <input
             onChange={(e) => setNameRef(e.target.value)}
             value={nameRef}
-            className="px-1 md:px-4 text-xs md:text-base py-1.5 rounded-md font-medium text-gray-50 cursor-pointer active:scale-90 duration-300 outline-none bg-gray-500"
-          >
-            <option value="">Select Name</option>
-            <option value="a1">A1</option>
-            <option value="a2">A2</option>
-            <option value="a3">A3</option>
-            <option value="a4">A4</option>
-            <option value="a5">A5</option>
-            <option value="a6">A6</option>
-
-            <option value="b1">B1</option>
-            <option value="b2">B2</option>
-            <option value="b3">B3</option>
-            <option value="b4">B4</option>
-
-            <option value="c1">C1</option>
-            <option value="c2">C2</option>
-            <option value="c3">C3</option>
-            <option value="c4">C4</option>
-            <option value="c5">C5</option>
-
-            <option value="d1">D1</option>
-            <option value="d2">D2</option>
-            <option value="d3">D3</option>
-            <option value="d4">D4</option>
-            <option value="d5">D5</option>
-          </select>
+            type="text"
+            className="px-1 md:px-4 text-xs md:text-base py-1.5 rounded-md font-medium text-gray-50 outline-none bg-gray-500"
+          />
           <select
             onChange={(e) => setFloorRef(e.target.value)}
             value={floorRef}
@@ -267,6 +243,11 @@ const ManagerAllRoomsComponent = () => {
             <option value="5">Fifth Floor</option>
             <option value="6">Sixth Floor</option>
             <option value="7">Seventh Floor</option>
+            <option value="8">Eighth Floor</option>
+            <option value="9">Nineth Floor</option>
+            <option value="10">Ninth Floor</option>
+            <option value="11">Eleventh Floor</option>
+            <option value="12">Twelfth Floor</option>
           </select>
           <select
             onChange={(e) => setFilterRef(e.target.value)}

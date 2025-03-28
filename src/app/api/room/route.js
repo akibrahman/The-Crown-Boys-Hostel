@@ -34,7 +34,7 @@ export const GET = async (req) => {
 
     let query = {};
     if (id) query = { ...query, _id: id };
-    if (name) query = { ...query, name };
+    if (name) query = { ...query, name: { $regex: new RegExp(name, "i") } };
     if (floor) query = { ...query, floor: parseInt(floor) };
 
     let rooms = await Room.find(query).lean();
