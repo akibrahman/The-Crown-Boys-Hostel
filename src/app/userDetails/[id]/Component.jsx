@@ -232,9 +232,9 @@ const Component = ({ id }) => {
                     name="roomNumber"
                     type="text"
                     defaultValue={
-                      client.roomNumber.split("")[0].toUpperCase() +
+                      client?.roomNumber?.split("")[0]?.toUpperCase() +
                       " " +
-                      client.roomNumber.split("")[1]
+                      client?.roomNumber?.split("")[1]
                     }
                   />
                 </div>
