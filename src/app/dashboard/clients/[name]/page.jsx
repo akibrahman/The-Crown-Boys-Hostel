@@ -5,11 +5,20 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { FaUserEdit } from "react-icons/fa";
+import { ImBlocked } from "react-icons/im";
+import { MdReportProblem } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const UserDetails = () => {
   const paramsData = useParams();
   const name = decodeURIComponent(paramsData.name);
+
+  const [givingAuthorization, setGivingAuthorization] = useState(false);
+  const [declining, setDeclining] = useState(false);
 
   const { data: user, isLoading } = useQuery({
     queryKey: ["userDetails", name],
@@ -60,6 +69,176 @@ const UserDetails = () => {
               {convertCamelCaseToCapitalized(user?.role)} -{" "}
               {user?.nidAuth ? "NID" : "Birth Certificate"}
             </p>
+          </div>
+          <div className="flex-1 flex flex-col items-end justify-center gap-6">
+            {/* Action Buttons */}
+            <div className="flex items-center justify-center gap-4">
+              <div className="text-2xl aspect-square rounded-full bg-dashboard flex items-center justify-center w-10 h-10 duration-300 active:scale-90 cursor-pointer shadow-white shadow">
+                <FaUserEdit className="" />
+              </div>
+
+              <div className="text-xl aspect-square rounded-full bg-dashboard flex items-center justify-center w-10 h-10 duration-300 active:scale-90 cursor-pointer shadow-white shadow">
+                <ImBlocked className="" />
+              </div>
+
+              <div className="text-2xl aspect-square rounded-full bg-dashboard flex items-center justify-center w-10 h-10 duration-300 active:scale-90 cursor-pointer shadow-white shadow">
+                <MdReportProblem className="" />
+              </div>
+            </div>
+            {/* Approve Rejecvt Buttons */}
+            {user?.isVerified && user?.isClient && !user?.isClientVerified && (
+              <div className="flex items-center justify-center gap-4 select-none">
+                <button
+                  onClick={async () => {
+                    const swalRes = await Swal.fire({
+                      title: `Do you want to Decline ${user.username}?`,
+                      icon: "question",
+                      showCancelButton: true,
+                      confirmButtonColor: "#1493EA",
+                      cancelButtonColor: "#EF4444",
+                      confirmButtonText: "Proceed",
+                      cancelButtonText: "Cancel",
+                      background: "#141E30",
+                      color: "#fff",
+                    });
+                    if (!swalRes.isConfirmed) {
+                      return toast.success("Cancelled!");
+                    }
+                    setDeclining(true);
+                    try {
+                      const { data } = await axios.post(
+                        "/api/clients/declineclient",
+                        { id: clientDetails?._id }
+                      );
+                      if (data.success) {
+                        const folderRef = ref(storage, "user_info/");
+                        const listResult = await listAll(folderRef);
+                        const matchingItems = listResult.items.filter((item) =>
+                          item.name.startsWith(`${data.email.toString()}`)
+                        );
+                        for (const itemRef of matchingItems) {
+                          await deleteObject(itemRef);
+                        }
+                        await clientRefetch();
+                        toast.success("Client Declined Successfully");
+                      } else {
+                        toast("BCEND Success False");
+                        throw new Error(data.msg);
+                      }
+                    } catch (error) {
+                      console.log("Frontend problem when declining a client");
+                      console.log(error);
+                      toast.error("Authorization Error!");
+                    } finally {
+                      redirect("/dashboard/clients");
+                    }
+                  }}
+                  className="bg-red-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
+                >
+                  Decline
+                  {declining && <CgSpinner className="animate-spin text-2xl" />}
+                </button>
+                <button
+                  onClick={async () => {
+                    const swalRes = await Swal.fire({
+                      title: `Do you want to Accept ${user.username}?`,
+                      icon: "question",
+                      showCancelButton: true,
+                      confirmButtonColor: "#1493EA",
+                      cancelButtonColor: "#EF4444",
+                      confirmButtonText: "Proceed",
+                      cancelButtonText: "Cancel",
+                      background: "#141E30",
+                      color: "#fff",
+                    });
+                    if (!swalRes.isConfirmed) {
+                      return toast.success("Cancelled!");
+                    }
+                    setGivingAuthorization(true);
+                    try {
+                      const userId = clientDetails?._id;
+                      const managerId = user._id;
+                      const days = parseInt(
+                        currentDays[currentDays.length - 1]
+                      );
+                      const currentMonthName = new Date().toLocaleDateString(
+                        "en-BD",
+                        {
+                          month: "long",
+                          timeZone: "Asia/Dhaka",
+                        }
+                      );
+                      const currentDateNumber = parseInt(
+                        new Date().toLocaleDateString("en-BD", {
+                          day: "numeric",
+                          timeZone: "Asia/Dhaka",
+                        })
+                      );
+                      const currentMonth = new Date(
+                        new Date().toLocaleString("en-US", {
+                          timeZone: "Asia/Dhaka",
+                        })
+                      ).getMonth();
+                      const currentYear = new Date(
+                        new Date().toLocaleString("en-US", {
+                          timeZone: "Asia/Dhaka",
+                        })
+                      ).getFullYear();
+
+                      const payLoad = {
+                        userId,
+                        managerId,
+                        days,
+                        currentMonthName,
+                        currentDateNumber,
+                        currentMonth,
+                        currentYear,
+                      };
+
+                      if (
+                        userId == null ||
+                        managerId == null ||
+                        days == null ||
+                        currentMonthName == null ||
+                        currentDateNumber == null ||
+                        currentMonth == null ||
+                        currentYear == null
+                      ) {
+                        return toast.error("Missing Data!");
+                      }
+
+                      const { data } = await axios.post(
+                        "/api/clients/approveclient",
+                        payLoad
+                      );
+                      if (data.success) {
+                        await clientRefetch();
+                        toast.success("Authorization Provided");
+                      } else throw new Error(data.msg);
+                    } catch (error) {
+                      console.log(
+                        "Frontend problem when authorizing as a client"
+                      );
+                      console.log(error);
+                      toast.error(
+                        error?.response?.data?.msg ||
+                          error?.message ||
+                          "Authorization Error!"
+                      );
+                    } finally {
+                      await refetch();
+                      setGivingAuthorization(false);
+                    }
+                  }}
+                  className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
+                >
+                  Approve
+                  {givingAuthorization && (
+                    <CgSpinner className="animate-spin text-2xl" />
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -141,40 +320,48 @@ const UserDetails = () => {
               </Link>
             )}
             {user.birthCertificatePicture && (
-              <div className="flex flex-col items-center">
-                <Image
-                  src={user.birthCertificatePicture}
-                  alt="Birth Certificate"
-                  width={120}
-                  height={120}
-                  className="rounded-md border border-gray-600"
-                />
-                <p className="text-sm text-gray-400 mt-1">Birth Certificate</p>
-              </div>
+              <Link target="_blank" href={user.birthCertificatePicture}>
+                <div className="flex flex-col items-center">
+                  <Image
+                    src={user.birthCertificatePicture}
+                    alt="Birth Certificate"
+                    width={120}
+                    height={120}
+                    className="rounded-md border border-gray-600"
+                  />
+                  <p className="text-sm text-gray-400 mt-1">
+                    Birth Certificate
+                  </p>
+                </div>{" "}
+              </Link>
             )}
             {user.nidFrontPicture && (
-              <div className="flex flex-col items-center">
-                <Image
-                  src={user.nidFrontPicture}
-                  alt="NID Front"
-                  width={120}
-                  height={120}
-                  className="rounded-md border border-gray-600"
-                />
-                <p className="text-sm text-gray-400 mt-1">NID Front</p>
-              </div>
+              <Link target="_blank" href={user.nidFrontPicture}>
+                <div className="flex flex-col items-center">
+                  <Image
+                    src={user.nidFrontPicture}
+                    alt="NID Front"
+                    width={120}
+                    height={120}
+                    className="rounded-md border border-gray-600"
+                  />
+                  <p className="text-sm text-gray-400 mt-1">NID Front</p>
+                </div>{" "}
+              </Link>
             )}
             {user.nidBackPicture && (
-              <div className="flex flex-col items-center">
-                <Image
-                  src={user.nidBackPicture}
-                  alt="NID Back"
-                  width={120}
-                  height={120}
-                  className="rounded-md border border-gray-600"
-                />
-                <p className="text-sm text-gray-400 mt-1">NID Back</p>
-              </div>
+              <Link target="_blank" href={user.nidBackPicture}>
+                <div className="flex flex-col items-center">
+                  <Image
+                    src={user.nidBackPicture}
+                    alt="NID Back"
+                    width={120}
+                    height={120}
+                    className="rounded-md border border-gray-600"
+                  />
+                  <p className="text-sm text-gray-400 mt-1">NID Back</p>
+                </div>{" "}
+              </Link>
             )}
           </div>
         </div>

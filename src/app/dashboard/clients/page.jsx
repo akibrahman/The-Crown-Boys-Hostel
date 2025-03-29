@@ -182,9 +182,9 @@ const Clients = () => {
                   width={150}
                   height={150}
                   src={
-                    clientDetails.profilePicture == "/__"
+                    clientDetails?.profilePicture == "/__"
                       ? "/images/no-user.png"
-                      : clientDetails.profilePicture
+                      : clientDetails?.profilePicture
                   }
                   alt="Profile Picture"
                   className="object-cover aspect-square rounded-full h-[150px] w-[150px]"
@@ -192,60 +192,60 @@ const Clients = () => {
               </div>
               <div>
                 <h1 className="text-3xl font-bold mb-2">
-                  {clientDetails.username}
+                  {clientDetails?.username}
                 </h1>
-                <p className="mb-2">Email: {clientDetails.email}</p>
+                <p className="mb-2">Email: {clientDetails?.email}</p>
                 <p>
-                  Floor: {clientDetails.floor}
-                  <sup>th</sup> Floor - {clientDetails.floor + 1} Tala
+                  Floor: {clientDetails?.floor}
+                  <sup>th</sup> Floor - {clientDetails?.floor + 1} Tala
                 </p>
                 <p>
                   Room Number:{" "}
-                  {clientDetails.roomNumber.split("")[0].toUpperCase() +
+                  {clientDetails?.roomNumber?.split("")[0]?.toUpperCase() +
                     "-" +
-                    clientDetails.roomNumber.split("")[1]}
+                    clientDetails?.roomNumber?.split("")[1]}
                 </p>
                 <p className="mb-1">
-                  Contact Number: {clientDetails.contactNumber}
+                  Contact Number: {clientDetails?.contactNumber}
                 </p>
                 <p className="mb-1">
-                  Father&apos;s Number: {clientDetails.fathersNumber}
+                  Father&apos;s Number: {clientDetails?.fathersNumber}
                 </p>
                 <p className="mb-1">
-                  Mother&apos;s Number: {clientDetails.mothersNumber}
+                  Mother&apos;s Number: {clientDetails?.mothersNumber}
                 </p>
               </div>
             </div>
             <div className="flex flex-col items-center gap-6 my-6">
-              {clientDetails.nidFrontPicture && (
+              {clientDetails?.nidFrontPicture && (
                 <div className="">
                   <Image
                     width={400}
                     height={170}
-                    src={clientDetails.nidFrontPicture}
+                    src={clientDetails?.nidFrontPicture}
                     alt="NID Photo Front"
                     className="object-cover rounded-lg"
                   />
                 </div>
               )}
-              {clientDetails.nidBackPicture && (
+              {clientDetails?.nidBackPicture && (
                 <div>
                   <Image
                     width={400}
                     height={170}
-                    src={clientDetails.nidBackPicture}
+                    src={clientDetails?.nidBackPicture}
                     alt="NID Photo Back"
                     className="object-cover rounded-lg"
                   />
                 </div>
               )}
             </div>
-            {clientDetails.birthCertificatePicture && (
+            {clientDetails?.birthCertificatePicture && (
               <div className="mb-4 flex justify-center">
                 <Image
                   width={300}
                   height={700}
-                  src={clientDetails.birthCertificatePicture}
+                  src={clientDetails?.birthCertificatePicture}
                   alt="Birth Certificate"
                   className="object-cover rounded-lg"
                 />
@@ -262,7 +262,7 @@ const Clients = () => {
                     try {
                       const { data } = await axios.post(
                         "/api/clients/declineclient",
-                        { id: clientDetails._id }
+                        { id: clientDetails?._id }
                       );
                       if (data.success) {
                         const folderRef = ref(storage, "user_info/");
@@ -305,7 +305,7 @@ const Clients = () => {
                     //! Here
                     setGivingAuthorization(true);
                     try {
-                      const userId = clientDetails._id;
+                      const userId = clientDetails?._id;
                       const managerId = user._id;
                       const days = parseInt(
                         currentDays[currentDays.length - 1]
@@ -483,17 +483,15 @@ const Clients = () => {
                     </>
                   ) : (
                     <>
-                      <button
-                        onClick={() =>
-                          getDetailsOfClientForApproval(client._id)
-                        }
-                        className="bg-green-500 text-white font-semibold px-4 py-1 rounded-full duration-300 flex items-center gap-1 active:scale-90"
-                      >
-                        Details{" "}
-                        {clientDetailsIsLoading && (
-                          <CgSpinner className="animate-spin text-2xl" />
-                        )}
-                      </button>
+                      <p className="text-red-500 font-semibold flex items-center gap-1">
+                        <FaTimes className="text-3xl font-normal" />
+                        Disapproved
+                      </p>
+                      <Link href={`/dashboard/clients/${client.username}`}>
+                        <button className="font-semibold flex items-center gap-2 bg-blue-500 text-white px-3 py-1 duration-300 active:scale-90">
+                          Details <FaArrowRight />
+                        </button>
+                      </Link>
                     </>
                   )}
                 </>

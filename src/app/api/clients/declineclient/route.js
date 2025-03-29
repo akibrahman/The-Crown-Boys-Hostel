@@ -5,7 +5,9 @@ import { NextResponse } from "next/server";
 export const POST = async (req) => {
   try {
     const { id } = await req.json();
+    if (!id) throw new Error("Invalid ID!");
     const user = await User.findById(id);
+    if (!user) throw new Error("Invalid ID!");
     await sendSMS(
       user.contactNumber,
       `Hi ${user.username},\nYour registration has been declined from the Authority, Please contact with us for more Details\n\nThe Corwn Boys Hostel Authority Team`
