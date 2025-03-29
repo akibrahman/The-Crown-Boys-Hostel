@@ -119,14 +119,26 @@ const UserDetails = () => {
                 <FaUserEdit className="" />
               </div>
 
-              <div className="text-xl aspect-square rounded-full bg-dashboard flex items-center justify-center w-10 h-10 duration-300 active:scale-90 cursor-pointer shadow-white shadow">
-                <ImBlocked className="" />
-              </div>
+              {!user?.blockDate && (
+                <div className="text-xl aspect-square rounded-full bg-dashboard flex items-center justify-center w-10 h-10 duration-300 active:scale-90 cursor-pointer shadow-white shadow">
+                  <ImBlocked className="" />
+                </div>
+              )}
+              {user?.blockDate && (
+                <div className="text-xl text-red-500 aspect-square rounded-full bg-dashboard flex items-center justify-center w-10 h-10 duration-300 active:scale-90 cursor-pointer shadow-red-500 shadow">
+                  <ImBlocked className="" />
+                </div>
+              )}
 
               <div className="text-2xl aspect-square rounded-full bg-dashboard flex items-center justify-center w-10 h-10 duration-300 active:scale-90 cursor-pointer shadow-white shadow">
                 <MdReportProblem className="" />
               </div>
             </div>
+            {user?.blockDate && (
+              <p className="text-red-500 text-sm">
+                {new Date(user?.blockDate).toDateString()}
+              </p>
+            )}
             {/* Approve Rejecvt Buttons */}
             {user?.isVerified && user?.isClient && !user?.isClientVerified && (
               <div className="flex items-center justify-center gap-4 select-none">
@@ -271,11 +283,11 @@ const UserDetails = () => {
               {user?.contactNumber}
             </p>
             <p>
-              <span className="font-semibold">Father's Contact:</span>{" "}
+              <span className="font-semibold">Father`&apos;`s Contact:</span>{" "}
               {user?.fathersNumber}
             </p>
             <p>
-              <span className="font-semibold">Mother's Contact:</span>{" "}
+              <span className="font-semibold">Mother`&apos;`s Contact:</span>{" "}
               {user?.mothersNumber}
             </p>
             <p>

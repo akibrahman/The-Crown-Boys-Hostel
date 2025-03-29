@@ -17,7 +17,7 @@ export const GET = async (req) => {
     //! Query
     let query = {};
     if (_id) query = { ...query, _id };
-    if (name) query = { ...query, username: { $regex: new RegExp(name, "i") } };
+    if (name) query = { ...query, username };
     if (email) query = { ...query, email: { $regex: new RegExp(email, "i") } };
     if (contactNumber)
       query = {

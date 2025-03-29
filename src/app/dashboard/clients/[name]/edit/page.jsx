@@ -74,11 +74,11 @@ const UserDetails = () => {
               {user?.contactNumber}
             </p>
             <p>
-              <span className="font-semibold">Father's Contact:</span>{" "}
+              <span className="font-semibold">Father`&apos;`s Contact:</span>{" "}
               {user?.fathersNumber}
             </p>
             <p>
-              <span className="font-semibold">Mother's Contact:</span>{" "}
+              <span className="font-semibold">Mother`&apos;`s Contact:</span>{" "}
               {user?.mothersNumber}
             </p>
             <p>
