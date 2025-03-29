@@ -17,8 +17,7 @@ import Swal from "sweetalert2";
 const UserDetails = () => {
   const paramsData = useParams();
   const router = useRouter();
-  const name = decodeURIComponent(paramsData.name);
-
+  const email = decodeURIComponent(paramsData.email);
   const [givingAuthorization, setGivingAuthorization] = useState(false);
   const [declining, setDeclining] = useState(false);
   const [currentDays, setCurrentDays] = useState(null);
@@ -28,10 +27,10 @@ const UserDetails = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["userDetails", name],
+    queryKey: ["userDetails", email],
     queryFn: async ({ queryKey }) => {
       try {
-        const { data } = await axios.get(`/api/user?name=${queryKey[1]}`);
+        const { data } = await axios.get(`/api/user?email=${queryKey[1]}`);
         if (data?.user) return data.user;
         return null;
       } catch (error) {
@@ -283,11 +282,11 @@ const UserDetails = () => {
               {user?.contactNumber}
             </p>
             <p>
-              <span className="font-semibold">Father`&apos;`s Contact:</span>{" "}
+              <span className="font-semibold">Father&apos;s Contact:</span>{" "}
               {user?.fathersNumber}
             </p>
             <p>
-              <span className="font-semibold">Mother`&apos;`s Contact:</span>{" "}
+              <span className="font-semibold">Mother&apos;s Contact:</span>{" "}
               {user?.mothersNumber}
             </p>
             <p>
