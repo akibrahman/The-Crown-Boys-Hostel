@@ -28,7 +28,6 @@ export const GET = async (req) => {
       }
       return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
     }
-
     const manager = await User.findById(jwtData?.id);
     if (!manager || manager.role != "manager")
       return NextResponse.json({ msg: "Unauthorized" }, { status: 401 });
