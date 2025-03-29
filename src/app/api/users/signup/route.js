@@ -47,8 +47,8 @@ export async function POST(req) {
     } else if (isNid == "false" && !birthCertificatePicture)
       throw new Error("Birth Certificate is Required!");
     //! Check User
-    const isExist = await User.findOne({ email });
-    if (isExist) throw new Error("Email is already in use!");
+    const isExist = await User.findOne({ email, username });
+    if (isExist) throw new Error("Email or Name is already in use!");
     //! Hashing
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);

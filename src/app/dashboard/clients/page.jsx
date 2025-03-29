@@ -27,7 +27,11 @@ const Clients = () => {
   const [declining, setDeclining] = useState(false);
   const [clientsFilter, setClientsFilter] = useState("active");
 
-  const { data: clients, refetch: clientRefetch } = useQuery({
+  const {
+    data: clients,
+    refetch: clientRefetch,
+    isLoading,
+  } = useQuery({
     queryKey: ["clients", "manager", user?._id, clientName, clientsFilter],
     queryFn: async ({ queryKey }) => {
       const { data } = await axios.get(
@@ -166,7 +170,6 @@ const Clients = () => {
   return (
     <>
       <Modal
-        // appElement={el}
         isOpen={clientDetailsModalIsOpen}
         onRequestClose={closeModalForClientDetails}
         style={customStylesForclientDetailsModal}
@@ -422,7 +425,7 @@ const Clients = () => {
           <p className="text-xs md:text-sm">{clients?.length}</p>
         </div>
 
-        {clientName && !clients ? (
+        {(clientName && !clients) || isLoading ? (
           <p className="mt-4 flex items-center gap-1 font-semibold">
             <CgSpinner className="animate-spin text-lg" />
             Loading...
@@ -472,7 +475,7 @@ const Clients = () => {
                         <TiTick className="text-3xl font-normal" />
                         Approved
                       </p>
-                      <Link href={`/userDetails/${client._id}`} target="_blank">
+                      <Link href={`/dashboard/clients/${client.username}`}>
                         <button className="font-semibold flex items-center gap-2 bg-blue-500 text-white px-3 py-1 duration-300 active:scale-90">
                           Details <FaArrowRight />
                         </button>
@@ -500,7 +503,7 @@ const Clients = () => {
                     <FaTimes className="text-xl font-normal" />
                     Unverified
                   </p>
-                  <Link href={`/userDetails/${client._id}`}>
+                  <Link href={`/dashboard/clients/${client.username}`}>
                     <button className="font-semibold flex items-center gap-2 bg-blue-500 px-3 py-1 duration-300 active:scale-90">
                       Details <FaArrowRight />
                     </button>

@@ -11,7 +11,7 @@ export const GET = async (req) => {
     const client = await User.findById(id);
     return NextResponse.json({ client, success: true });
   } catch (error) {
-    console.log("+", error);
+    console.log( error);
     return NextResponse.json(
       { msg: "Backend Error when finding client" },
       { status: 500 }

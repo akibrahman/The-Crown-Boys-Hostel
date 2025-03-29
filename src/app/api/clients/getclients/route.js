@@ -12,7 +12,6 @@ export const GET = async (req) => {
     const clientName = searchParams.get("clientName");
     const regexPattern = new RegExp(clientName, "i");
     if (!id) {
-      console.log("Yes, Traget");
       const clients = await User.find({
         isClient: true,
         isClientVerified: true,
