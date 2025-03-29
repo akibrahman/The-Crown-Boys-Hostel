@@ -82,7 +82,7 @@ const ManagerRFIDIssueComponent = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(error?.response?.data?.msg);
     }
   };
   const [isIssuing, setisIssuing] = useState([false, ""]);
@@ -103,7 +103,7 @@ const ManagerRFIDIssueComponent = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(error?.response?.data?.msg);
     } finally {
       setSelectedUser("");
       setisIssuing([false, ""]);

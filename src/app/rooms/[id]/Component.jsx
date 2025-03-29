@@ -86,7 +86,7 @@ const Component = ({ id }) => {
       } else toast.error(data.msg);
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(error?.response?.data?.msg);
     } finally {
       setIsBooking(false);
     }

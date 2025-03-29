@@ -32,12 +32,15 @@ const userSchema = new mongoose.Schema({
   },
   birthCertificatePicture: {
     type: String,
+    default: "",
   },
   nidFrontPicture: {
     type: String,
+    default: "",
   },
   nidBackPicture: {
     type: String,
+    default: "",
   },
   password: {
     type: String,
@@ -55,17 +58,23 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  isManager: Boolean,
+  isManager: {
+    type: Boolean,
+    default: false,
+  },
   isManagerVerified: {
     type: Boolean,
     default: false,
   },
-  isClient: Boolean,
+  isClient: {
+    type: Boolean,
+    default: false,
+  },
   isClientVerified: {
     type: Boolean,
     default: false,
   },
-  blockDate: String,
+  blockDate: { type: String, default: "" },
   charges: {
     type: [{}],
     default: [],
@@ -74,18 +83,18 @@ const userSchema = new mongoose.Schema({
     type: [{ path: String, link: String, fileType: String }],
     default: [],
   },
-  nidAuth: Boolean,
-  floor: Number,
-  roomNumber: String,
-  studentId: String,
-  bloodGroup: String,
-  institution: String,
-  messAddress: { type: String, default: "Shaplar Mor, Kamarpara, Uttara 10" },
-  bkashNumber: String,
-  manager: String,
-  forgotPasswordToken: String,
+  nidAuth: { type: Boolean, default: true },
+  floor: { type: Number, default: 0 },
+  roomNumber: { type: String, default: "" },
+  studentId: { type: String, default: "" },
+  bloodGroup: { type: String, default: "" },
+  institution: { type: String, default: "" },
+  messAddress: { type: String, default: "" },
+  bkashNumber: { type: String, default: "" },
+  manager: { type: String, default: "" },
+  forgotPasswordToken: { type: String, default: "" },
   forgotPasswordTokenExpiry: Date,
-  verifyToken: String,
+  verifyToken: { type: String, default: "" },
   verifyTokenExpiry: Date,
 });
 

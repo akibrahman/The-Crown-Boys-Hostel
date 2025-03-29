@@ -151,7 +151,7 @@ const ModalComponent = ({ isModalOpen, closeModal, modalData, id1 }) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(error?.response?.data?.msg);
     }
   };
 

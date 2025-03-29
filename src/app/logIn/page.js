@@ -39,10 +39,10 @@ const LogIn = () => {
     } catch (error) {
       console.log(error);
       if (error.response.data.code === 2002) {
-        toast.error(error.response.data.msg);
+        toast.error(error?.response?.data?.msg);
       }
       if (error.response.data.code === 2003) {
-        toast.error(error.response.data.msg);
+        toast.error(error?.response?.data?.msg);
       }
     } finally {
       setLoading(false);

@@ -180,7 +180,7 @@ const NavMenus = ({ items, loading }) => {
               id="checkbox"
               ref={burgerMenuButtonRef}
             />
-            <label for="checkbox" className="toggle">
+            <label htmlFor="checkbox" className="toggle">
               <span className="bars" id="bar1"></span>
               <span className="bars" id="bar2"></span>
               <span className="bars" id="bar3"></span>

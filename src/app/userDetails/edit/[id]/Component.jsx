@@ -360,7 +360,7 @@ const Component = ({ id }) => {
                 <div class="w-full md:w-[280px] px-3 mb-2">
                   <label
                     class="block tracking-wide text-white font-bold mb-1"
-                    for="username"
+                    htmlFor="username"
                   >
                     Name
                   </label>
@@ -375,7 +375,7 @@ const Component = ({ id }) => {
                 <div class="w-full md:w-[280px] px-3 mb-2">
                   <label
                     class="block tracking-wide text-white font-bold mb-1"
-                    for="email"
+                    htmlFor="email"
                   >
                     E-mail
                   </label>
@@ -390,7 +390,7 @@ const Component = ({ id }) => {
                 <div class="w-full md:w-[280px] px-3 mb-2">
                   <label
                     class="block tracking-wide text-white font-bold mb-1"
-                    for="contactNumber"
+                    htmlFor="contactNumber"
                   >
                     Contact Number
                   </label>
@@ -405,7 +405,7 @@ const Component = ({ id }) => {
                 <div class="w-full md:w-[280px] px-3 mb-2">
                   <label
                     class="block tracking-wide text-white font-bold mb-1"
-                    for="fathersNumber"
+                    htmlFor="fathersNumber"
                   >
                     Father&apos;s Number
                   </label>
@@ -420,7 +420,7 @@ const Component = ({ id }) => {
                 <div class="w-full md:w-[280px] px-3 mb-2">
                   <label
                     class="block tracking-wide text-white font-bold mb-1"
-                    for="mothersNumber"
+                    htmlFor="mothersNumber"
                   >
                     Mother&apos;s Number:
                   </label>
@@ -448,7 +448,7 @@ const Component = ({ id }) => {
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
-                    for="messAddress"
+                    htmlFor="messAddress"
                   >
                     Mess Address
                   </label>
@@ -463,7 +463,7 @@ const Component = ({ id }) => {
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
-                    for="institution"
+                    htmlFor="institution"
                   >
                     Institution
                   </label>
@@ -478,7 +478,7 @@ const Component = ({ id }) => {
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
-                    for="floor"
+                    htmlFor="floor"
                   >
                     Floor Number
                   </label>
@@ -501,7 +501,7 @@ const Component = ({ id }) => {
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
-                    for="roomNumber"
+                    htmlFor="roomNumber"
                   >
                     Room Number
                   </label>
@@ -540,7 +540,7 @@ const Component = ({ id }) => {
                 {/* <div class="lg:w-1/2 md:w-full px-3 mb-6">
                     <label
                       class="block tracking-wide text-white font-bold mb-2"
-                      for="utilityCharge"
+                      htmlFor="utilityCharge"
                     >
                       Utility Charge
                     </label>
@@ -555,7 +555,7 @@ const Component = ({ id }) => {
                   <div class="lg:w-1/2 md:w-full px-3 mb-6">
                     <label
                       class="block tracking-wide text-white font-bold mb-2"
-                      for="wifiCharge"
+                      htmlFor="wifiCharge"
                     >
                       Wifi Charge
                     </label>
@@ -570,7 +570,7 @@ const Component = ({ id }) => {
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
-                    for="bloodGroup"
+                    htmlFor="bloodGroup"
                   >
                     Blood Group
                   </label>
@@ -585,7 +585,7 @@ const Component = ({ id }) => {
                 <div class="lg:w-1/2 md:w-full px-3 mb-6">
                   <label
                     class="block tracking-wide text-white font-bold mb-2"
-                    for="studentId"
+                    htmlFor="studentId"
                   >
                     Student or Job ID
                   </label>

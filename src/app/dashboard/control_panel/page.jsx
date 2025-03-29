@@ -61,7 +61,7 @@ const OwnerControlPanel = () => {
             setIsLoading(false);
           } catch (error) {
             console.log(error);
-            toast.error(error.response.data.msg);
+            toast.error(error?.response?.data?.msg);
             setIsLoading(false);
           }
         }}

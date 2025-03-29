@@ -94,7 +94,7 @@ const ManagerSendSMSComponent = () => {
       else throw new Error("Server Error!");
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(error?.response?.data?.msg);
     } finally {
       e.target.reset();
       setSendState("");

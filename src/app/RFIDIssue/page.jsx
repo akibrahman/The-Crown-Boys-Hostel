@@ -57,7 +57,7 @@ const RFIDIssue = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(error?.response?.data?.msg);
     }
   };
   const [isIssuing, setisIssuing] = useState([false, ""]);
@@ -78,7 +78,7 @@ const RFIDIssue = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(error?.response?.data?.msg);
     } finally {
       setSelectedUser("");
       setisIssuing([false, ""]);
@@ -103,7 +103,7 @@ const RFIDIssue = () => {
             }
           } catch (error) {
             console.log(error);
-            toast.error(error.response.data.msg);
+            toast.error(error?.response?.data?.msg);
           }
         }}
         className="block mx-auto my-4 px-4 py-1 duration-300 bg-green-500 text-white active:scale-90"

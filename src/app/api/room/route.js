@@ -189,7 +189,7 @@ export const POST = async (req) => {
               : file
           );
         } catch (error) {
-          throw new Error(error.response.data.msg);
+          throw new Error(error?.response?.data?.msg);
         }
       }
       const bedsForRoom = beds.map((b) => ({
@@ -357,7 +357,7 @@ export const PUT = async (req) => {
           });
         }
       } catch (error) {
-        throw new Error(error.response.data.msg);
+        throw new Error(error?.response?.data?.msg);
       }
     }
 

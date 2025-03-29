@@ -120,7 +120,7 @@ const ManagerManageRoomBedData = ({
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg || "Something went wrong, Try again");
+      toast.error(error?.response?.data?.msg || "Something went wrong, Try again");
     } finally {
       setLoading(false);
     }

@@ -47,7 +47,7 @@ const ManagerEditTransactionComponent = ({
       toast.success(data.msg);
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg || error.message);
+      toast.error(error?.response?.data?.msg || error.message);
     } finally {
       setEditTransaction(false);
       setEditTransactionData(null);

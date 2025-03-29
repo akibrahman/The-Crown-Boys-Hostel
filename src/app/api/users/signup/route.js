@@ -1,5 +1,6 @@
 import { dbConfig } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
+import axios from "axios";
 import bcryptjs from "bcryptjs";
 import { NextResponse } from "next/server";
 
@@ -7,74 +8,147 @@ await dbConfig();
 
 export async function POST(req) {
   try {
-    const body = await req.json();
+    const formData = await req.formData();
+    //! Extract All Data
+    const username = formData.get("username");
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const studentId = formData.get("studentId");
+    const bloodGroup = formData.get("bloodGroup");
+    const contactNumber = formData.get("contactNumber");
+    const fathersNumber = formData.get("fathersNumber");
+    const mothersNumber = formData.get("mothersNumber");
+    const bkashNumber = formData.get("bkashNumber");
+    const institution = formData.get("institution");
+    const profilePicture = formData.get("profilePicture");
+    const managerId = formData.get("manager");
+    const role = formData.get("role");
+    const isNid = formData.get("isNid");
+    const birthCertificatePicture = formData.get("birthCertificatePicture");
+    const nidFrontPicture = formData.get("nidFrontPicture");
+    const nidBackPicture = formData.get("nidBackPicture");
+    const idPicture = formData.get("idPicture");
+    //! Validate All Data
+    if (!username) throw new Error("UserName is Required!");
+    if (!email) throw new Error("Email is Required!");
+    if (!password) throw new Error("Password is Required!");
+    if (!studentId) throw new Error("Student ID is Required!");
+    if (!bloodGroup) throw new Error("Blood Group is Required!");
+    if (!contactNumber) throw new Error("Contact Number is Required!");
+    if (!bkashNumber) throw new Error("bKash Number is Required!");
+    if (!institution) throw new Error("Institution is Required!");
+    if (!profilePicture) throw new Error("Profile Picture is Required!");
+    if (!managerId) throw new Error("Manager is Required!");
+    if (!role) throw new Error("Role is Required!");
+    if (!idPicture) throw new Error("ID Picture is Required!");
+    if (isNid == "true") {
+      if (!nidFrontPicture || !nidBackPicture)
+        throw new Error("NID is Required!");
+    } else if (isNid == "false" && !birthCertificatePicture)
+      throw new Error("Birth Certificate is Required!");
     //! Check User
-    const isExist = await User.findOne({ email: body.email });
-    if (isExist) {
-      return NextResponse.json(
-        {
-          msg: "User Already Exist",
-          code: 1212,
-          success: false,
-        },
-        {
-          status: 201,
-        }
-      );
-    }
+    const isExist = await User.findOne({ email });
+    if (isExist) throw new Error("Email is already in use!");
     //! Hashing
     const salt = await bcryptjs.genSalt(10);
-    const hashPassword = await bcryptjs.hash(body.password, salt);
-    const newUser = new User({
-      username: body.username,
-      email: body.email,
-      password: hashPassword,
-      messAddress: body.messAddress,
-      studentId: body.studentId,
-      bloodGroup: body.bloodGroup,
-      contactNumber: body.contactNumber,
-      fathersNumber: body.fathersNumber,
-      mothersNumber: body.mothersNumber,
-      bkashNumber: body.bkashNumber,
-      institution: body.institution,
-      profilePicture: body.profilePicture,
-      roomNumber: body.roomNumber,
-      floor: body.floor ? parseInt(body.floor) : 0,
-      manager: body.manager ? body.manager : "",
-      role: body.role,
-      isManager: body.role === "manager" ? true : false,
-      isClient: body.role === "client" ? true : false,
-    });
-    if (body.birthCertificatePicture) {
-      newUser.nidAuth = false;
-      newUser.birthCertificatePicture = body.birthCertificatePicture;
-    } else {
-      newUser.nidAuth = true;
-      newUser.nidFrontPicture = body.nidFrontPicture;
-      newUser.nidBackPicture = body.nidBackPicture;
+    const hashedPassword = await bcryptjs.hash(password, salt);
+    //! Checking Manager
+    const manager = await User.findById(managerId);
+    if (!manager || manager.role != "manager")
+      throw new Error("Invalid Manager ID!");
+    //! Uploading Assets
+    let filesToBeUploaded = [
+      { title: "profilePicture", file: profilePicture, url: "" },
+      { title: "idPicture", file: idPicture, url: "" },
+    ];
+    if (nidFrontPicture)
+      filesToBeUploaded.push({
+        title: "nidFrontPicture",
+        file: nidFrontPicture,
+        url: "",
+      });
+    if (nidBackPicture)
+      filesToBeUploaded.push({
+        title: "nidBackPicture",
+        file: nidBackPicture,
+        url: "",
+      });
+    if (birthCertificatePicture)
+      filesToBeUploaded.push({
+        title: "birthCertificatePicture",
+        file: birthCertificatePicture,
+        url: "",
+      });
+    for (let i = 1; i <= filesToBeUploaded.length; i++) {
+      const data = filesToBeUploaded[i - 1];
+      const dataForImageUrl = new FormData();
+      dataForImageUrl.append("file", data.file);
+      dataForImageUrl.append("path", `/users`);
+      dataForImageUrl.append("size", "5");
+      dataForImageUrl.append("fileType", "jpg,png,jpeg,webp");
+      dataForImageUrl.append("securityCode", process.env.TOKEN_SECRET);
+      try {
+        const { data: uploadResponse } = await axios.post(
+          `${process.env.BASE_URL}/api/singleFileUpload`,
+          dataForImageUrl
+        );
+        if (!uploadResponse.success) throw new Error(data.msg);
+        filesToBeUploaded = filesToBeUploaded.map((file) =>
+          file.title === data.title
+            ? { ...file, url: uploadResponse.path }
+            : file
+        );
+      } catch (error) {
+        throw new Error(error?.response?.data?.msg || error.message);
+      }
     }
-    const savedUser = await newUser.save();
+    //! Creating User
+    await new User({
+      username,
+      email,
+      password: hashedPassword,
+      messAddress: manager.messAddress,
+      studentId,
+      bloodGroup,
+      contactNumber,
+      fathersNumber,
+      mothersNumber,
+      bkashNumber,
+      institution,
+      profilePicture,
+      roomNumber: "",
+      floor: 0,
+      manager: managerId ? managerId : "",
+      role,
+      isManager: role === "manager" ? true : false,
+      isClient: role === "client" ? true : false,
+      nidAuth: isNid == "true" ? true : false,
+      profilePicture:
+        filesToBeUploaded?.find((f) => f?.title == "profilePicture")?.url || "",
+      nidFrontPicture:
+        filesToBeUploaded?.find((f) => f?.title == "nidFrontPicture")?.url ||
+        "",
+      nidBackPicture:
+        filesToBeUploaded?.find((f) => f?.title == "nidBackPicture")?.url || "",
+      idPicture:
+        filesToBeUploaded?.find((f) => f?.title == "idPicture")?.url || "",
+      birthCertificatePicture:
+        filesToBeUploaded?.find((f) => f?.title == "birthCertificatePicture")
+          ?.url || "",
+    }).save();
+    //! Response
     return NextResponse.json(
       {
         msg: "Successfully User Craeted",
         success: true,
-        user: savedUser,
       },
-      {
-        status: 200,
-      }
+      { status: 200 }
     );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      {
-        msg: error.message,
-        code: 1010,
-        success: false,
-      },
-      {
-        status: 201,
-      }
+      { msg: error.message, success: false },
+      { status: 500 }
     );
   }
 }

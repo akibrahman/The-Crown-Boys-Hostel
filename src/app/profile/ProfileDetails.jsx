@@ -143,7 +143,7 @@ const ProfileDetails = ({
       closeModalForChangePassModal();
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.msg);
+      toast.error(error?.response?.data?.msg);
       if (error.response.data.code == 2003) {
         e.target.oldPassword.value = "";
       }

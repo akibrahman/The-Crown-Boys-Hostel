@@ -1,7 +1,6 @@
 "use client";
 
 import PreLoader from "@/Components/PreLoader/PreLoader";
-import { base64 } from "@/utils/base64";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
@@ -12,14 +11,8 @@ import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 import { FaPlusCircle, FaTimes } from "react-icons/fa";
 import Select from "react-select";
-import { storage } from "../../../firebase.config";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 const Registration = () => {
   const router = useRouter();
-  const [preview, setPreview] = useState([null, null]);
-  const [nidFront, setNidFront] = useState([null, null]);
-  const [nidBack, setNidBack] = useState([null, null]);
-  const [birthCertificate, setBrithCertificate] = useState([null, null]);
   const [role, setRole] = useState("client");
   const [loading, setLoading] = useState(false);
   const [isNid, setIsNid] = useState(true);
@@ -30,6 +23,19 @@ const Registration = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    studentId: "",
+    bloodGroup: "",
+    contactNumber: "",
+    fathersNumber: "",
+    mothersNumber: "",
+    bkashNumber: "",
+    institution: "",
+    profilePicture: "",
+    manager: "",
+    birthCertificatePicture: "",
+    nidFrontPicture: "",
+    nidBackPicture: "",
+    idPicture: "",
   });
 
   //! Get Managers
@@ -85,107 +91,56 @@ const Registration = () => {
     });
   };
 
-  const uploadFile = (file, path) => {
-    return new Promise((resolve, reject) => {
-      const storageRef = ref(storage, path);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(progress);
-        },
-        (error) => {
-          console.log(error);
-          toast.error("Firebase error");
-          reject(error);
-        },
-        async () => {
-          const url = await getDownloadURL(uploadTask.snapshot.ref);
-          resolve(url + "__urlpathdevider__" + path);
-        }
-      );
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let finalData = { ...formData, role };
-    const checkResult = await emailChecker(finalData.email);
-    if (!checkResult) {
-      toast.error("Invalid E-mail address!!!");
-      return;
-    }
-    if (finalData.password !== finalData.confirmPassword) {
-      toast.error("Passwords are not same !");
-      return;
-    }
-    setLoading(true);
-    if (!preview[0]) {
-      toast.error("No profile picture!");
-      setLoading(false);
-      return;
-    }
-    if (isNid ? !nidFront[0] || !nidBack[0] : !birthCertificate[0]) {
-      toast.error("Set identity properly");
-      setLoading(false);
-      return;
-    }
     try {
-      const profilePicture = await uploadFile(
-        preview[0],
-        `user_info/${formData.email + "_profile_picture.jpg"}`
-      );
-      if (isNid) {
-        const nidFrontPicture = await uploadFile(
-          nidFront[0],
-          `user_info/${formData.email + "_nid_front.jpg"}`
-        );
-        const nidBackPicture = await uploadFile(
-          nidBack[0],
-          `user_info/${formData.email + "_nid_back.jpg"}`
-        );
-        const birthCertificatePicture = null;
-        finalData = {
-          ...finalData,
-          profilePicture,
-          nidFrontPicture,
-          nidBackPicture,
-          birthCertificatePicture,
-        };
-      } else {
-        const nidFrontPicture = null;
-        const nidBackPicture = null;
-        const birthCertificatePicture = await uploadFile(
-          birthCertificate[0],
-          `user_info/${formData.email + "_birth_certificate.jpg"}`
-        );
-        finalData = {
-          ...finalData,
-          profilePicture,
-          nidFrontPicture,
-          nidBackPicture,
-          birthCertificatePicture,
-        };
-      }
-      console.log(finalData);
+      if (formData.password !== formData.confirmPassword)
+        throw new Error("Passwords are not same !");
 
-      const res = await axios.post("/api/users/signup", finalData);
-      console.log(res.data);
-      if (res.data.success) {
-        toast.success("Registration Successful");
-        router.push("/signin");
-      } else {
-        if (res.data.code === 1212) {
-          toast.error("User exists with this E-mail !");
-        }
-        if (res.data.code === 1010) {
-          toast.error(res.data.msg);
-        }
-      }
+      if (!formData.profilePicture)
+        throw new Error("Please Upload Profile Picture!");
+      if (!formData.idPicture)
+        throw new Error("Please Upload ID Card (Student / Job)!");
+
+      if (isNid) {
+        if (!formData.nidFrontPicture || !formData.nidBackPicture)
+          throw new Error("Please Upload NID!");
+      } else if (!isNid && !formData.birthCertificatePicture)
+        throw new Error("Please Upload Birth Certificate!");
+
+      setLoading(true);
+      // const checkResult = await emailChecker(formData.email);
+      // if (!checkResult) throw new Error("Invalid E-mail Address!");
+
+      const dataToSend = new FormData();
+      dataToSend.append("username", formData.username);
+      dataToSend.append("email", formData.email);
+      dataToSend.append("password", formData.password);
+      dataToSend.append("studentId", formData.studentId);
+      dataToSend.append("bloodGroup", formData.bloodGroup);
+      dataToSend.append("contactNumber", formData.contactNumber);
+      dataToSend.append("fathersNumber", formData.fathersNumber);
+      dataToSend.append("mothersNumber", formData.mothersNumber);
+      dataToSend.append("bkashNumber", formData.bkashNumber);
+      dataToSend.append("institution", formData.institution);
+      dataToSend.append("profilePicture", formData.profilePicture);
+      dataToSend.append("manager", formData.manager);
+      dataToSend.append("role", role);
+      dataToSend.append("isNid", isNid);
+      dataToSend.append(
+        "birthCertificatePicture",
+        formData.birthCertificatePicture
+      );
+      dataToSend.append("nidFrontPicture", formData.nidFrontPicture);
+      dataToSend.append("nidBackPicture", formData.nidBackPicture);
+      dataToSend.append("idPicture", formData.idPicture);
+
+      const { data } = await axios.post("/api/users/signup", dataToSend);
+      if (!data.success) throw new Error(data.msg);
+      toast.success("Registration Successful");
+      router.push("/signin");
     } catch (error) {
-      toast.error("Error for Registration");
+      toast.error(error?.response?.data?.msg || error.message);
       console.log(error);
     } finally {
       setLoading(false);
@@ -197,7 +152,7 @@ const Registration = () => {
   return (
     <div className="relative z-10 flex items-center justify-center bg-dashboard text-slate-100">
       <div className={`p-10 rounded shadow-md w-full duration-300`}>
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold mb-6">Sign Up</h2>
           <div className="flex justify-center items-center gap-4">
             <button
@@ -227,7 +182,7 @@ const Registration = () => {
               Client
             </button>
           </div>
-        </div>
+        </div> */}
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col md:flex-row justify-between items-cente gap-4">
             {/* Left Side  */}
@@ -361,9 +316,6 @@ const Registration = () => {
                     <input
                       onClick={() => {
                         setIsNid(!isNid);
-                        setNidFront([null, null]);
-                        setNidBack([null, null]);
-                        setBrithCertificate([null, null]);
                       }}
                       type="checkbox"
                       value=""
@@ -391,17 +343,21 @@ const Registration = () => {
                     >
                       NID Front
                     </label>
-                    {nidFront[1] ? (
+                    {formData?.nidFrontPicture ? (
                       <div className="relative">
                         <Image
-                          src={nidFront[1]}
+                          src={URL.createObjectURL(formData?.nidFrontPicture)}
                           width={"200"}
                           height={"100"}
                           alt="NID Front"
                           className="rounded-md"
                         />
                         <FaTimes
-                          onClick={() => setNidFront([null, null])}
+                          onClick={() =>
+                            handleChange({
+                              target: { name: "nidFrontPicture", value: "" },
+                            })
+                          }
                           className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
                         />
                       </div>
@@ -415,8 +371,9 @@ const Registration = () => {
                       onChange={async (e) => {
                         const file = e.target.files[0];
                         if (file) {
-                          const objectUrl = URL.createObjectURL(file);
-                          setNidFront([file, objectUrl]);
+                          handleChange({
+                            target: { name: "nidFrontPicture", value: file },
+                          });
                         }
                       }}
                       className="hidden"
@@ -431,17 +388,21 @@ const Registration = () => {
                     >
                       NID Back
                     </label>
-                    {nidBack[1] ? (
+                    {formData?.nidBackPicture ? (
                       <div className="relative">
                         <Image
-                          src={nidBack[1]}
+                          src={URL.createObjectURL(formData?.nidBackPicture)}
                           width={"200"}
                           height={"100"}
                           className="rounded-md"
                           alt="NID Back"
                         />
                         <FaTimes
-                          onClick={() => setNidBack([null, null])}
+                          onClick={() =>
+                            handleChange({
+                              target: { name: "nidBackPicture", value: "" },
+                            })
+                          }
                           className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
                         />
                       </div>
@@ -456,8 +417,9 @@ const Registration = () => {
                       onChange={async (e) => {
                         const file = e.target.files[0];
                         if (file) {
-                          const objectUrl = URL.createObjectURL(file);
-                          setNidBack([file, objectUrl]);
+                          handleChange({
+                            target: { name: "nidBackPicture", value: file },
+                          });
                         }
                       }}
                       className="hidden"
@@ -476,17 +438,26 @@ const Registration = () => {
                   >
                     Birth Certificate
                   </label>
-                  {birthCertificate[1] ? (
+                  {formData?.birthCertificatePicture ? (
                     <div className="relative">
                       <Image
-                        src={birthCertificate[1]}
+                        src={URL.createObjectURL(
+                          formData?.birthCertificatePicture
+                        )}
                         width={"300"}
                         height={"400"}
                         className="rounded-md mx-auto"
                         alt="Birth Certificate"
                       />
                       <FaTimes
-                        onClick={() => setBrithCertificate([null, null])}
+                        onClick={() =>
+                          handleChange({
+                            target: {
+                              name: "birthCertificatePicture",
+                              value: "",
+                            },
+                          })
+                        }
                         className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
                       />
                     </div>
@@ -507,8 +478,12 @@ const Registration = () => {
                     onChange={async (e) => {
                       const file = e.target.files[0];
                       if (file) {
-                        const objectUrl = URL.createObjectURL(file);
-                        setBrithCertificate([file, objectUrl]);
+                        handleChange({
+                          target: {
+                            name: "birthCertificatePicture",
+                            value: file,
+                          },
+                        });
                       }
                     }}
                     className="hidden"
@@ -520,25 +495,6 @@ const Registration = () => {
             </div>
             {/* Right Side  */}
             <div className="w-full md:w-1/2">
-              <div className="mb-4">
-                <label
-                  htmlFor="messAddress"
-                  className="block text-sm font-bold mb-2"
-                >
-                  Mess Address
-                </label>
-                <input
-                  type="text"
-                  id="messAddress"
-                  name="messAddress"
-                  // value={formData.messAddress}
-                  // onChange={handleChange}
-                  readOnly
-                  value={"Shaplar Mor, Kamarpara, Uttara 10"}
-                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                  required
-                />
-              </div>
               <div className="mb-4">
                 <label
                   htmlFor="contactNumber"
@@ -594,25 +550,24 @@ const Registration = () => {
                   />
                 </div>
               )}
-              {role === "manager" ? (
-                <div className="mb-4">
-                  <label
-                    htmlFor="bkashNumber"
-                    className="block text-sm font-bold mb-2"
-                  >
-                    Bkash Number
-                  </label>
-                  <input
-                    type="text"
-                    id="bkashNumber"
-                    name="bkashNumber"
-                    value={formData.bkashNumber}
-                    onChange={handleChange}
-                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                    required
-                  />
-                </div>
-              ) : (
+              <div className="mb-4">
+                <label
+                  htmlFor="bkashNumber"
+                  className="block text-sm font-bold mb-2"
+                >
+                  Bkash Number
+                </label>
+                <input
+                  type="text"
+                  id="bkashNumber"
+                  name="bkashNumber"
+                  value={formData.bkashNumber}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 w-full rounded text-stone-900"
+                  required
+                />
+              </div>
+              {role === "client" && (
                 <div className="mb-4">
                   <label
                     htmlFor="institution"
@@ -657,120 +612,109 @@ const Registration = () => {
                   />
                 </div>
               )}
-              {role === "client" && (
-                <div className="mb-4">
-                  <label
-                    htmlFor="floor"
-                    className="block text-sm font-bold mb-2"
-                  >
-                    Floor
-                  </label>
-                  <select
-                    id="floor"
-                    name="floor"
-                    // value={formData.floor}
-                    onChange={handleChange}
-                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                    required
-                  >
-                    {/* <option value="">Select Floor</option>
-                    <option value="0">Ground Floor</option> */}
-                    <option value="1">First Floor</option>
-                    <option value="2">Second Floor</option>
-                    <option value="3">Third Floor</option>
-                    <option value="4">Fourth Floor</option>
-                    <option value="5">Fifth Floor</option>
-                    <option value="6">Sixth Floor</option>
-                    <option value="7">Seventh Floor</option>
-                    <option value="8">Eighth Floor</option>
-                    <option value="9">Nineth Floor</option>
-                    <option value="10">Tenth Floor</option>
-                    <option value="11">Eleventh Floor</option>
-                    <option value="12">Twelveth Floor</option>
-                  </select>
-                </div>
-              )}
-              {role === "client" && (
-                <div className="mb-4">
-                  <label
-                    htmlFor="roomNumber"
-                    className="block text-sm font-bold mb-2"
-                  >
-                    Room Number
-                  </label>
-                  <select
-                    id="roomNumber"
-                    name="roomNumber"
-                    // value={formData.floor}
-                    onChange={handleChange}
-                    className="border border-gray-300 p-2 w-full rounded text-stone-900"
-                    required
-                  >
-                    <option value="">Select Room</option>
-                    <option value="a1">A 1</option>
-                    <option value="a2">A 2</option>
-                    <option value="a3">A 3</option>
-                    <option value="a4">A 4</option>
-                    <option value="a5">A 5</option>
-                    <option value="a6">A 6</option>
-                    <option value="b1">B 1</option>
-                    <option value="b2">B 2</option>
-                    <option value="b3">B 3</option>
-                    <option value="b4">B 4</option>
-                  </select>
-                </div>
-              )}
-              <div className="flex items-center justify-between">
-                <div className="mb-4 w-[80%]">
+
+              <div className="flex items-center justify-evenly">
+                <div className="">
                   <label
                     htmlFor="profilePicture"
-                    className="block text-sm font-bold mb-2"
+                    className="block text-sm font-bold mb-2 cursor-pointer"
                   >
                     Profile Picture
                   </label>
-                  <label
-                    htmlFor="profilePicture"
-                    className="border border-sky-500 flex items-center justify-center font-bold text-white p-2 w-1/2 rounded bg-sky-500 cursor-pointer select-none duration-300 active:scale-90"
-                  >
-                    + Add Photo
-                  </label>
+                  {formData?.profilePicture ? (
+                    <div className="relative w-max">
+                      <Image
+                        src={URL.createObjectURL(formData?.profilePicture)}
+                        width={"150"}
+                        height={"150"}
+                        className="rounded-full aspect-square object-cover w-[150px] h-[150px]"
+                        alt="NID Back"
+                      />
+                      <FaTimes
+                        onClick={() =>
+                          handleChange({
+                            target: { name: "profilePicture", value: "" },
+                          })
+                        }
+                        className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
+                      />
+                    </div>
+                  ) : (
+                    <label
+                      htmlFor="profilePicture"
+                      className="w-[150px] h-[150px] bg-no-repeat bg-center bg-contain block bg-[url('/images/pp.jpg')] cursor-pointer rounded-full"
+                    ></label>
+                  )}
+
                   <input
                     onChange={async (e) => {
                       const file = e.target.files[0];
                       if (file) {
-                        const objectUrl = URL.createObjectURL(file);
-                        setPreview([file, objectUrl]);
+                        handleChange({
+                          target: { name: "profilePicture", value: file },
+                        });
                       }
                     }}
-                    type="file"
-                    accept="image/*"
-                    id="profilePicture"
-                    name="profilePicture"
                     className="hidden"
+                    type="file"
+                    id="profilePicture"
                   />
                 </div>
+                <div className="">
+                  <label
+                    htmlFor="profilePicture"
+                    className="block text-sm font-bold mb-2 cursor-pointer"
+                  >
+                    ID Card - Student or Job
+                  </label>
+                  {formData?.idPicture ? (
+                    <div className="relative w-max">
+                      <Image
+                        src={URL.createObjectURL(formData?.idPicture)}
+                        width={"100"}
+                        height={"200"}
+                        className="object-cover w-[100px] h-[200px]"
+                        alt="NID Back"
+                      />
+                      <FaTimes
+                        onClick={() =>
+                          handleChange({
+                            target: { name: "idPicture", value: "" },
+                          })
+                        }
+                        className="absolute top-0 right-0 bg-sky-500 text-white p-1.5 text-3xl rounded-full cursor-pointer duration-300 active:scale-90"
+                      />
+                    </div>
+                  ) : (
+                    <label
+                      htmlFor="idPicture"
+                      className="w-[100px] h-[200px] bg-no-repeat bg-center bg-contain block bg-[url('/images/card.jpg')] cursor-pointer"
+                    ></label>
+                  )}
 
-                {preview[1] && (
-                  <Image
-                    src={preview[1]}
-                    className="aspect-square rounded-full mr-10"
-                    alt="Preview of profile picture"
-                    width={60}
-                    height={60}
+                  <input
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        handleChange({
+                          target: { name: "idPicture", value: file },
+                        });
+                      }
+                    }}
+                    className="hidden"
+                    type="file"
+                    id="idPicture"
                   />
-                )}
+                </div>
               </div>
             </div>
           </div>
           <button
             type="submit"
-            className="bg-sky-500 text-white p-2 w-full rounded hover:bg-sky-600 transition duration-300"
+            className="bg-sky-500 text-white p-2 w-full rounded hover:bg-sky-600 transition duration-300 flex items-center justify-center gap-2"
           >
-            {loading ? (
-              <CgSpinner className="animate-spin text-2xl text-center mx-auto" />
-            ) : (
-              "Sign Up"
-            )}
+            Sign Up
+            {loading && <CgSpinner className="animate-spin text-xl" />}
           </button>
           <div className="mt-4">
             <Link href={"/login"}>

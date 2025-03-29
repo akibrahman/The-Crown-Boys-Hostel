@@ -59,7 +59,7 @@ const MealChangeRequests = () => {
           }
         } catch (error) {
           console.log(error);
-          toast.error(error.response.data.msg);
+          toast.error(error?.response?.data?.msg);
         } finally {
           await mealRequestsRefetch();
           setIsAccepting([false, ""]);
@@ -92,7 +92,7 @@ const MealChangeRequests = () => {
           }
         } catch (error) {
           console.log(error);
-          toast.error(error.response.data.msg);
+          toast.error(error?.response?.data?.msg);
         } finally {
           await mealRequestsRefetch();
           setIsDeclining([false, ""]);
