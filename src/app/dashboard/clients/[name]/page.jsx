@@ -21,8 +21,13 @@ const UserDetails = () => {
 
   const [givingAuthorization, setGivingAuthorization] = useState(false);
   const [declining, setDeclining] = useState(false);
+  const [currentDays, setCurrentDays] = useState(null);
 
-  const { data: user, isLoading } = useQuery({
+  const {
+    data: user,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["userDetails", name],
     queryFn: async ({ queryKey }) => {
       try {
@@ -34,6 +39,34 @@ const UserDetails = () => {
       }
     },
   });
+
+  useEffect(() => {
+    if (
+      user?.role === "client" ||
+      user?.role === "manager" ||
+      user?.role === "owner"
+    ) {
+      const currentDate = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      });
+      let currentMonth = new Date(currentDate).getMonth() + 1;
+      let currentYear = new Date(currentDate).getFullYear();
+      if (currentMonth >= 12 || currentMonth == "12") {
+        console.log("True");
+        currentMonth = 0;
+        currentYear++;
+      }
+      const dayCountOfCurrentMonth = parseInt(
+        new Date(currentYear, currentMonth, 0).getDate()
+      );
+
+      let tempArray = [];
+      for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
+        tempArray.push(i);
+      }
+      setCurrentDays(tempArray);
+    }
+  }, [user?.role]);
 
   const floors = [
     { value: 0, label: "Ground Floor" },
@@ -152,8 +185,7 @@ const UserDetails = () => {
                     }
                     setGivingAuthorization(true);
                     try {
-                      const userId = clientDetails?._id;
-                      const managerId = user?._id;
+                      const userId = user?._id;
                       const days = parseInt(
                         currentDays[currentDays.length - 1]
                       );
@@ -183,7 +215,6 @@ const UserDetails = () => {
 
                       const payLoad = {
                         userId,
-                        managerId,
                         days,
                         currentMonthName,
                         currentDateNumber,
@@ -193,7 +224,6 @@ const UserDetails = () => {
 
                       if (
                         userId == null ||
-                        managerId == null ||
                         days == null ||
                         currentMonthName == null ||
                         currentDateNumber == null ||
@@ -208,19 +238,11 @@ const UserDetails = () => {
                         payLoad
                       );
                       if (data.success) {
-                        await clientRefetch();
                         toast.success("Authorization Provided");
                       } else throw new Error(data.msg);
                     } catch (error) {
-                      console.log(
-                        "Frontend problem when authorizing as a client"
-                      );
                       console.log(error);
-                      toast.error(
-                        error?.response?.data?.msg ||
-                          error?.message ||
-                          "Authorization Error!"
-                      );
+                      toast.error(error?.response?.data?.msg || error?.message);
                     } finally {
                       await refetch();
                       setGivingAuthorization(false);

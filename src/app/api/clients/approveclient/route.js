@@ -3,7 +3,9 @@ import Bill from "@/models/billModel";
 import Order from "@/models/orderModel";
 import User from "@/models/userModel";
 import { sendSMS } from "@/utils/sendSMS";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 await dbConfig();
 
@@ -11,7 +13,6 @@ export const POST = async (req) => {
   try {
     const {
       userId,
-      managerId,
       days,
       currentDateNumber,
       currentMonthName,
@@ -20,26 +21,31 @@ export const POST = async (req) => {
     } = await req.json();
     if (
       userId == null ||
-      managerId == null ||
       days == null ||
       currentDateNumber == null ||
       currentMonthName == null ||
       currentMonth == null ||
       currentYear == null
     )
-      throw new Error(
-        "Data Missing" +
-          `
-__userId__:__${userId}__     
-__managerId__:__${managerId}__
-__days__:__${days}__
-__currentDateNumber__:__${currentDateNumber}__
-__currentMonthName__:__${currentMonthName}__
-__currentMonth__:__${currentMonth}__
-__currentYear__:__${currentYear}__
-        `
-      );
-    //
+      throw new Error("Data Missing");
+
+    const client = await User.findById(userId);
+    if (!client) throw new Error("Invalid ID!");
+
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      console.log(error);
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+    }
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager" || client.manager !== jwtData?.id)
+      return NextResponse.json({ msg: "Unauthorized" }, { status: 401 });
     const isLastDayOfCurrentMonthInBangladesh = () => {
       const today = new Date();
       today.setUTCHours(today.getUTCHours() + 6);
@@ -96,7 +102,7 @@ __currentYear__:__${currentYear}__
       } else {
         await new Order({
           userId,
-          managerId,
+          managerId: jwtData?.id,
           month: currentMonthName,
           year: currentYear,
           date: new Date(currentYear, currentMonth, i).toLocaleDateString(),

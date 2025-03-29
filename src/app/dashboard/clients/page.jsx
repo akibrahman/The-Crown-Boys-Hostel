@@ -144,16 +144,13 @@ const Clients = () => {
       const currentDate = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
       });
-      console.log(currentDate);
       let currentMonth = new Date(currentDate).getMonth() + 1;
       let currentYear = new Date(currentDate).getFullYear();
-      console.log(currentMonth, currentYear);
       if (currentMonth >= 12 || currentMonth == "12") {
         console.log("True");
         currentMonth = 0;
         currentYear++;
       }
-      console.log(currentMonth, currentYear);
       const dayCountOfCurrentMonth = parseInt(
         new Date(currentYear, currentMonth, 0).getDate()
       );
@@ -162,7 +159,6 @@ const Clients = () => {
       for (let i = 1; i <= dayCountOfCurrentMonth; i++) {
         tempArray.push(i);
       }
-      console.log(tempArray);
       setCurrentDays(tempArray);
     }
   }, [user?.role]);
