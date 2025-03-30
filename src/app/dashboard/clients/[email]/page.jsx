@@ -114,7 +114,7 @@ const UserDetails = () => {
           <div className="flex-1 flex flex-col items-end justify-center gap-6">
             {/* Action Buttons */}
             <div className="flex items-center justify-center gap-4">
-              <Link href={`/dashboard/clients/${user.email}/edit`}>
+              <Link href={`/dashboard/clients/${user?.email}/edit`}>
                 <div className="text-2xl aspect-square rounded-full bg-dashboard flex items-center justify-center w-10 h-10 duration-300 active:scale-90 cursor-pointer shadow-white shadow">
                   <FaUserEdit className="" />
                 </div>

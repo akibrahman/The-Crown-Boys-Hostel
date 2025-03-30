@@ -14,7 +14,7 @@ await dbConfig();
 
 export const POST = async (req) => {
   try {
-    const formData = await req.formData(); // Get form data
+    const formData = await req.formData();
     const name = formData.get("name");
     const location = formData.get("location");
     const floorsCount = formData.get("floorsCount");

@@ -72,13 +72,50 @@ const UserDetailsEdit = () => {
 
   const handleSave = async () => {
     try {
-      console.log("User Data : ", user);
-      console.log("User Data : ", user.nidAuth);
-      // await axios.put(`/api/user/${user.email}`, user);
-      // toast.success("User updated successfully");
-      // refetch();
+      if (!user?.username) throw new Error("UserName is Required!");
+      if (!user?.email) throw new Error("Email is Required!");
+      if (!user?.studentId) throw new Error("Student ID is Required!");
+      if (!user?.bloodGroup) throw new Error("Blood Group is Required!");
+      if (!user?.contactNumber) throw new Error("Contact Number is Required!");
+      if (!user?.bkashNumber) throw new Error("bKash Number is Required!");
+      if (!user?.institution) throw new Error("Institution is Required!");
+      if (!user?.profilePicture)
+        throw new Error("Profile Picture is Required!");
+      if (!user?.role) throw new Error("Role is Required!");
+      if (!user?.idPicture) throw new Error("ID Picture is Required!");
+      if (user?.nidAuth) {
+        if (!user?.nidFrontPicture || !user?.nidBackPicture)
+          throw new Error("NID is Required!");
+      } else if (!user?.nidAuth && !user?.birthCertificatePicture)
+        throw new Error("Birth Certificate is Required!");
+
+      const formData = new FormData();
+      Object.entries(user).forEach(([key, value]) => {
+        if (value instanceof File) {
+          
+          formData.append(key, value);
+        } else if (Array.isArray(value)) {
+          formData.append(key, JSON.stringify(value));
+        } else if (
+          typeof value === "object" &&
+          !Array.isArray(value) &&
+          value !== null
+        ) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value);
+        }
+      });
+      const { data } = await axios.patch(
+        `/api/user?_id=${user?._id}`,
+        formData
+      );
+      if (!data.success) throw new Error(data.msg);
+      toast.success(data.msg);
+      router.back();
     } catch (error) {
-      toast.error("Failed to update user");
+      console.log(error);
+      toast.error(error?.response?.data?.msg || error.message);
     }
   };
 
