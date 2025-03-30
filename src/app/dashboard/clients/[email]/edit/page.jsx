@@ -82,7 +82,7 @@ const UserDetailsEdit = () => {
       if (!user?.profilePicture)
         throw new Error("Profile Picture is Required!");
       if (!user?.role) throw new Error("Role is Required!");
-      if (!user?.idPicture) throw new Error("ID Picture is Required!");
+      // if (!user?.idPicture) throw new Error("ID Picture is Required!");
       if (user?.nidAuth) {
         if (!user?.nidFrontPicture || !user?.nidBackPicture)
           throw new Error("NID is Required!");
@@ -92,7 +92,6 @@ const UserDetailsEdit = () => {
       const formData = new FormData();
       Object.entries(user).forEach(([key, value]) => {
         if (value instanceof File) {
-          
           formData.append(key, value);
         } else if (Array.isArray(value)) {
           formData.append(key, JSON.stringify(value));
