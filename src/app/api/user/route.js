@@ -14,7 +14,6 @@ export const GET = async (req) => {
     const name = searchParams.get("name");
     const email = searchParams.get("email");
     const contactNumber = searchParams.get("contactNumber");
-    console.log("==============:", email);
     //! Query
     let query = {};
     if (_id) query = { ...query, _id };
