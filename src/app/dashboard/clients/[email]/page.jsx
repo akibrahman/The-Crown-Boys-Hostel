@@ -330,6 +330,30 @@ const UserDetails = () => {
           </div>
         </div>
 
+        {/* Charges Section */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold border-b border-gray-700 pb-2">
+            Charges
+          </h3>
+          {user?.charges && user.charges.length > 0 ? (
+            <ul className="divide-y divide-gray-200">
+              {user.charges.map((charge, index) => (
+                <li
+                  key={index}
+                  className="py-2 flex items-center justify-center gap-4"
+                >
+                  <span className="text-gray-400 font-semibold">
+                    {charge.note}
+                  </span>
+                  <span className="font-semibold">{charge.amount} BDT</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500">No charges available</p>
+          )}
+        </div>
+
         {/* Document Images */}
         <div className="mt-6">
           <h3 className="text-lg font-semibold border-b border-gray-700 pb-2">

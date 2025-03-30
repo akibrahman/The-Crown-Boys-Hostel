@@ -332,6 +332,69 @@ const UserDetailsEdit = () => {
           </div>
         </div>
 
+        {/* Charges Section */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold border-b border-gray-700 pb-2">
+            Charges
+          </h3>
+          {user?.charges && user.charges.length > 0 ? (
+            <ul className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+              {user.charges.map((charge, index) => (
+                <li
+                  key={index}
+                  className="flex items-center justify-center gap-4"
+                >
+                  <span className="text-gray-400 font-semibold">
+                    {charge.note}
+                  </span>
+                  <span className="font-semibold">{charge.amount} BDT</span>
+                  <FaTimes
+                    onClick={() => {
+                      let oldCharges = [...user?.charges];
+                      oldCharges = oldCharges.filter(
+                        (c) => c.note != charge.note
+                      );
+                      setUser((prev) => ({ ...prev, charges: oldCharges }));
+                    }}
+                    className="text-xl text-gray-400 cursor-pointer duration-300 active:scale-90"
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500">No charges available</p>
+          )}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const note = e.target.note.value;
+              const amount = parseInt(e.target.amount.value);
+              if (!note || !amount || amount <= 0) return;
+              const oldCharges = [...user.charges];
+              oldCharges.push({ note, amount });
+              setUser((prev) => ({ ...prev, charges: oldCharges }));
+              e.target.reset();
+            }}
+            className="py-2 flex items-center justify-center gap-4"
+          >
+            <input
+              className="text-gray-400 placeholder:text-gray-400 bg-transparent px-3 py-0.5 outline-none border border-gray-400 rounded-md"
+              type="text"
+              name="note"
+              placeholder="Note"
+            />
+            <input
+              className=" bg-transparent px-3 py-0.5 outline-none border border-gray-400 rounded-md"
+              type="number"
+              name="amount"
+              placeholder="Amount"
+            />
+            <button>
+              <FaPlus className="text-xl text-gray-400 cursor-pointer duration-300 active:scale-90" />
+            </button>
+          </form>
+        </div>
+
         {/* Document Images */}
         <div className="mt-6">
           <h3 className="text-lg font-semibold border-b border-gray-700 pb-2">

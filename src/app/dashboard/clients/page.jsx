@@ -76,8 +76,6 @@ const Clients = () => {
     enabled: user?._id && user?.role == "manager" ? true : false,
   });
 
-  if (isLoading) return <PreLoader />;
-
   return (
     <div className="px-3 flex flex-col items-center gap-4 py-5  bg-dashboard text-slate-100 min-h-full">
       <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-5 md:pb-2">

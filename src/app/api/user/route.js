@@ -25,7 +25,9 @@ export const GET = async (req) => {
         contactNumber,
       };
     //! User
-    const user = await User.findOne(query);
+    const user = await User.findOne(query).select(
+      "username email contactNumber fathersNumber mothersNumber bkashNumber profilePicture idPicture birthCertificatePicture nidFrontPicture nidBackPicture role institution nidAuth blockDate floor roomNumber studentId bloodGroup messAddress manager charges"
+    );
     //! Authorization
     const token = cookies()?.get("token")?.value;
     let jwtData;
