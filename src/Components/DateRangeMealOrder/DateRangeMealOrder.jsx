@@ -188,17 +188,14 @@ const DateRangeMealOrder = ({
     const toDay = parseInt(toDate.split("/")[1]);
 
     try {
-      const { data: resData } = await axios.put(
-        "/api/orders/daterangemealchnage",
-        {
-          data,
-          userId: user._id,
-          fromDate,
-          toDate,
-          fromDay,
-          toDay,
-        }
-      );
+      const { data: resData } = await axios.put("/api/orders/c", {
+        data,
+        userId: user._id,
+        fromDate,
+        toDate,
+        fromDay,
+        toDay,
+      });
       if (resData.success) {
         setDate1(null);
         setDate2(null);

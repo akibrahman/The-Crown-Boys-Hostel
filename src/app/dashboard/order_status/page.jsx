@@ -43,11 +43,9 @@ const ManagerOrderStatusComponent = () => {
     queryKey: ["orderStatus", user?._id],
     queryFn: async () => {
       try {
-        const { data } = await axios.post("/api/managersOrder/getOrderStatus", {
-          yesterday: yesterdayDateString,
-          today: todayDateString,
-          tomorrow: tomorrowDateString,
-        });
+        const { data } = await axios.get(
+          `/api/orders/m/orderstatus?yesterday=${yesterdayDateString}&today=${todayDateString}&tomorrow=${tomorrowDateString}`
+        );
         if (data.success) {
           return data.orders;
         } else {
@@ -246,82 +244,6 @@ const ManagerOrderStatusComponent = () => {
     );
   return (
     <>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-      >
-        <div className="relative dark:bg-gradient-to-r dark:from-primary dark:to-secondary bg-white p-4 overflow-y-scroll h-[90vh]">
-          <p className="text-center text-xl text-sky-500 pb-4 font-semibold">
-            Floor Meal Analyzation
-          </p>
-          <FaTimes
-            className="absolute top-2 right-2 text-sky-500 text-xl cursor-pointer"
-            onClick={closeModal}
-          />
-          <div className="space-y-1">
-            {floorAnalysingData.map((d, i) => (
-              <>
-                <div
-                  className="dark:bg-stone-700 bg-stone-300 px-6 py-2 rounded-md flex flex-wrap md:flex-nowrap items-center justify-center gap-5 dark:text-white text-stone-900 font-semibold"
-                  key={i}
-                >
-                  <p className="w-[110px]">
-                    <span className="text-sky-500 bg-stone-800 h-6 w-6 rounded-full inline-flex items-center justify-center mr-2">
-                      {d.floor + 1}
-                    </span>
-                    {d.floor == 0 ? "G" : d.floor}
-                    <sup>th</sup> Floor
-                  </p>
-                  <p className="w-[100px]">Breakfast: {d.totalBreakfast}</p>
-                  <p className="w-[100px]">Lunch: {d.totalLunch}</p>
-                  <p className="w-[100px]">Dinner: {d.totalDinner}</p>
-                  <p className="w-[100px]">Total: {d.totalMeal}</p>
-                </div>
-                {(d.orders[0].t != 0 || d.orders[1].t != 0) && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border rounded-md p-2">
-                    {d.orders.map((r, j) => (
-                      <>
-                        <table className="border dark:text-white" key={j}>
-                          <thead>
-                            <tr>
-                              <th className="border text-sm font-extralight">
-                                Block
-                              </th>
-                              <th className="border text-sm font-extralight">
-                                Breakfast
-                              </th>
-                              <th className="border text-sm font-extralight">
-                                Lunch
-                              </th>
-                              <th className="border text-sm font-extralight">
-                                Dinner
-                              </th>
-                              <th className="border text-sm font-extralight">
-                                Total
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="border text-center">{r.block}</td>
-                              <td className="border text-center">{r.b}</td>
-                              <td className="border text-center">{r.l}</td>
-                              <td className="border text-center">{r.d}</td>
-                              <td className="border text-center">{r.t}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </>
-                    ))}
-                  </div>
-                )}
-              </>
-            ))}
-          </div>
-        </div>
-      </Modal>
-
       {showPosPrint && (
         <div className="fixed z-50 top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.5)]">
           <motion.div

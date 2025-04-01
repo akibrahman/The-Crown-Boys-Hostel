@@ -12,7 +12,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
 import toast from "react-hot-toast";
-import { CgSpinner } from "react-icons/cg";
 import { FaArrowRight } from "react-icons/fa";
 import { LuCalendarPlus } from "react-icons/lu";
 import { TbLoader3 } from "react-icons/tb";
@@ -101,42 +100,39 @@ const Order = () => {
       new Date(
         new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" })
       ).getHours() < 17
-      // new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Dhaka"})).getMinutes()
     ) {
       setLoading(true);
       try {
         setDate(selectedDate);
-        const { data } = await axios.post("/api/orders/getorder", {
-          date:
-            new Date(selectedDate).toLocaleDateString("en-US", {
-              timeZone: "Asia/Dhaka",
-              month: "numeric",
-            }) +
-            "/" +
-            new Date(selectedDate).toLocaleDateString("en-US", {
-              timeZone: "Asia/Dhaka",
-              day: "numeric",
-            }) +
-            "/" +
-            new Date(selectedDate).toLocaleDateString("en-US", {
-              timeZone: "Asia/Dhaka",
-              year: "numeric",
-            }),
-          userId: user._id,
-        });
+        const date =
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            month: "numeric",
+          }) +
+          "/" +
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            day: "numeric",
+          }) +
+          "/" +
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            year: "numeric",
+          });
+        const { data } = await axios.get(`/api/order/c?date=${date}`);
 
-        if (data.success) {
-          setOrder(null);
-          setOrder(data.order);
-          setBreakfast(data.order.breakfast);
-          setLunch(data.order.lunch);
-          setDinner(data.order.dinner);
-          setIsGuestMeal(data.order.isGuestMeal);
-          setGuestMealBreakfastCount(data.order.guestBreakfastCount);
-          setGuestMealLunchCount(data.order.guestLunchCount);
-          setGuestMealDinnerCount(data.order.guestDinnerCount);
-          toast.success("Day selected");
-        }
+        if (!data.success) throw new Error(data.msg);
+
+        setOrder(null);
+        setOrder(data.order);
+        setBreakfast(data.order.breakfast);
+        setLunch(data.order.lunch);
+        setDinner(data.order.dinner);
+        setIsGuestMeal(data.order.isGuestMeal);
+        setGuestMealBreakfastCount(data.order.guestBreakfastCount);
+        setGuestMealLunchCount(data.order.guestLunchCount);
+        setGuestMealDinnerCount(data.order.guestDinnerCount);
+        toast.success("Day selected");
       } catch (error) {
         console.log(error);
         toast.error(
@@ -183,36 +179,34 @@ const Order = () => {
       setLoading(true);
       try {
         setDate(selectedDate);
-        const { data } = await axios.post("/api/orders/getorder", {
-          date:
-            new Date(selectedDate).toLocaleDateString("en-US", {
-              timeZone: "Asia/Dhaka",
-              month: "numeric",
-            }) +
-            "/" +
-            new Date(selectedDate).toLocaleDateString("en-US", {
-              timeZone: "Asia/Dhaka",
-              day: "numeric",
-            }) +
-            "/" +
-            new Date(selectedDate).toLocaleDateString("en-US", {
-              timeZone: "Asia/Dhaka",
-              year: "numeric",
-            }),
-          userId: user._id,
-        });
-        if (data.success) {
-          setOrder(null);
-          setOrder(data.order);
-          setBreakfast(data.order.breakfast);
-          setLunch(data.order.lunch);
-          setDinner(data.order.dinner);
-          setIsGuestMeal(data.order.isGuestMeal);
-          setGuestMealBreakfastCount(data.order.guestBreakfastCount);
-          setGuestMealLunchCount(data.order.guestLunchCount);
-          setGuestMealDinnerCount(data.order.guestDinnerCount);
-          toast.success("Day selected");
-        }
+        const date =
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            month: "numeric",
+          }) +
+          "/" +
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            day: "numeric",
+          }) +
+          "/" +
+          new Date(selectedDate).toLocaleDateString("en-US", {
+            timeZone: "Asia/Dhaka",
+            year: "numeric",
+          });
+        const { data } = await axios.get(`/api/order/c?date=${date}`);
+        if (!data.success) throw new Error(data.msg);
+
+        setOrder(null);
+        setOrder(data.order);
+        setBreakfast(data.order.breakfast);
+        setLunch(data.order.lunch);
+        setDinner(data.order.dinner);
+        setIsGuestMeal(data.order.isGuestMeal);
+        setGuestMealBreakfastCount(data.order.guestBreakfastCount);
+        setGuestMealLunchCount(data.order.guestLunchCount);
+        setGuestMealDinnerCount(data.order.guestDinnerCount);
+        toast.success("Day selected");
       } catch (error) {
         console.log(error);
         toast.error(
@@ -331,14 +325,11 @@ const Order = () => {
                         return;
                       }
                       setLoading(true);
-                      const { data } = await axios.patch(
-                        "/api/orders/updateorder",
-                        {
-                          meal: "breakfast",
-                          state: !breakfast,
-                          id: order._id,
-                        }
-                      );
+                      const { data } = await axios.put("/api/order/c", {
+                        meal: "breakfast",
+                        state: !breakfast,
+                        id: order._id,
+                      });
                       if (data.success) {
                         setLoading(false);
                         console.log(!breakfast);
@@ -368,7 +359,7 @@ const Order = () => {
                   lunch ? "shadow-2xl shadow-green-500" : ""
                 }`}
               >
-                <p className="text-2xl font-semibold">Sehri:</p>
+                <p className="text-2xl font-semibold">Lunch:</p>
                 <label class="inline-flex items-center me-5 cursor-pointer">
                   <input
                     onClick={async () => {
@@ -384,10 +375,11 @@ const Order = () => {
                         return;
                       }
                       setLoading(true);
-                      const { data } = await axios.patch(
-                        "/api/orders/updateorder",
-                        { meal: "lunch", state: !lunch, id: order._id }
-                      );
+                      const { data } = await axios.put("/api/order/c", {
+                        meal: "lunch",
+                        state: !lunch,
+                        id: order._id,
+                      });
                       if (data.success) {
                         setLoading(false);
                         console.log(!lunch);
@@ -433,10 +425,11 @@ const Order = () => {
                         return;
                       }
                       setLoading(true);
-                      const { data } = await axios.patch(
-                        "/api/orders/updateorder",
-                        { meal: "dinner", state: !dinner, id: order._id }
-                      );
+                      const { data } = await axios.put("/api/order/c", {
+                        meal: "dinner",
+                        state: !dinner,
+                        id: order._id,
+                      });
                       if (data.success) {
                         setLoading(false);
                         console.log(!dinner);
@@ -500,14 +493,11 @@ const Order = () => {
                         }
                         if (isGuestMeal) {
                           setLoading(true);
-                          const { data } = await axios.patch(
-                            "/api/orders/updateorder",
-                            {
-                              meal: "guest",
-                              state: false,
-                              id: order._id,
-                            }
-                          );
+                          const { data } = await axios.put("/api/order/c", {
+                            meal: "guest",
+                            state: false,
+                            id: order._id,
+                          });
                           if (data.success) {
                             setGuestMealBreakfastCount(0);
                             setGuestMealLunchCount(0);
@@ -550,17 +540,14 @@ const Order = () => {
                         return;
                       }
                       setLoading(true);
-                      const { data } = await axios.patch(
-                        "/api/orders/updateorder",
-                        {
-                          meal: "guest",
-                          state: isGuestMeal,
-                          id: order._id,
-                          guestBreakfastCount: guestMealBreakfastCount,
-                          guestLunchCount: guestMealLunchCount,
-                          guestDinnerCount: guestMealDinnerCount,
-                        }
-                      );
+                      const { data } = await axios.put("/api/order/c", {
+                        meal: "guest",
+                        state: isGuestMeal,
+                        id: order._id,
+                        guestBreakfastCount: guestMealBreakfastCount,
+                        guestLunchCount: guestMealLunchCount,
+                        guestDinnerCount: guestMealDinnerCount,
+                      });
                       if (data.success) {
                         setLoading(false);
                         toast.success("Guest Meal Updated");
@@ -593,7 +580,7 @@ const Order = () => {
                       />
                     </div>
                     <div className="flex items-center gap-3">
-                      <p className="min-w-[100px]">Sehri:</p>
+                      <p className="min-w-[100px]">Lunch:</p>
                       <input
                         min={0}
                         className="dark:bg-stone-800 dark:text-white bg-stone-300 w-[100px] px-3 py-2 rounded-md outline-none"
@@ -607,7 +594,7 @@ const Order = () => {
                               })
                             ).getHours() >= 1
                           ) {
-                            toast.error("Today's Guest-Sehri cann't be edited");
+                            toast.error("Today's Guest-Lunch cann't be edited");
                             return;
                           }
                           setGuestMealLunchCount(e.target.value);

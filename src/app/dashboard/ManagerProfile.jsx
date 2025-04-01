@@ -43,12 +43,9 @@ const ManagerProfile = ({ user }) => {
       queryKey: ["allOrdersForCurrentMonth", "manager", user?._id],
       queryFn: async ({ queryKey }) => {
         try {
-          const { data } = await axios.post("/api/orders/getordersformanager", {
-            managerId: queryKey[2],
-            month: currentMonth,
-            year: currentYear,
-          });
-          console.log("Manager All Orders Loading");
+          const { data } = await axios.get(
+            `/api/orders/m?managerId=${queryKey[2]}&month=${currentMonth}&year=${currentYear}`
+          );
           return data.orders.filter(
             (d) =>
               parseInt(d.date.split("/")[1]) <=

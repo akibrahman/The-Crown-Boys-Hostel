@@ -83,7 +83,7 @@ const MealOffByManager = ({
         year: "numeric",
       });
     try {
-      const { data } = await axios.put("/api/orders/mealOffbyDate", {
+      const { data } = await axios.put("/api/orders/m/mealoffbydate", {
         reqData,
         date: stringDate,
         managerId: user._id,

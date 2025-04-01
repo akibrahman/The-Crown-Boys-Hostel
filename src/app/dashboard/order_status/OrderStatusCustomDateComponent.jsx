@@ -24,11 +24,13 @@ const OrderStatusCustomDateComponent = ({
     queryKey: ["orderStatusCustom", user?._id, date],
     queryFn: async ({ queryKey }) => {
       try {
-        const { data } = await axios.post("/api/managersOrder/getOrderStatus", {
-          custom: new Date(queryKey[2]).toLocaleDateString("en-BD", {
+        const { data } = await axios.get(
+          `/api/orders/m/orderstatus?custom=${new Date(
+            queryKey[2]
+          ).toLocaleDateString("en-BD", {
             timeZone: "Asia/Dhaka",
-          }),
-        });
+          })}`
+        );
         if (data.success) {
           console.log(data.orders);
           return data.orders;

@@ -28,11 +28,9 @@ const MealHistoryComponent = () => {
     }
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/orders/getorders", {
-        userId: user._id,
-        month,
-        year,
-      });
+      const { data } = await axios.get(
+        `/api/orders/c?month=${month}&year=${year}`
+      );
       setResult({
         orders: data.orders.sort((a, b) => a._id.localeCompare(b._id)),
       });

@@ -14,6 +14,7 @@ import { FaArrowRight } from "react-icons/fa";
 import Select from "react-select";
 import { LuCalendarPlus } from "react-icons/lu";
 import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
+import { TbLoader3 } from "react-icons/tb";
 
 const ManagerMealUpdatorComponent = () => {
   const { user } = useContext(AuthContext);
@@ -88,24 +89,24 @@ const ManagerMealUpdatorComponent = () => {
 
     try {
       setDate(selectedDate);
-      const { data } = await axios.post("/api/orders/getorder", {
-        date:
-          new Date(selectedDate).toLocaleDateString("en-US", {
-            timeZone: "Asia/Dhaka",
-            month: "numeric",
-          }) +
-          "/" +
-          new Date(selectedDate).toLocaleDateString("en-US", {
-            timeZone: "Asia/Dhaka",
-            day: "numeric",
-          }) +
-          "/" +
-          new Date(selectedDate).toLocaleDateString("en-US", {
-            timeZone: "Asia/Dhaka",
-            year: "numeric",
-          }),
-        userId: clientId,
-      });
+      const date =
+        new Date(selectedDate).toLocaleDateString("en-US", {
+          timeZone: "Asia/Dhaka",
+          month: "numeric",
+        }) +
+        "/" +
+        new Date(selectedDate).toLocaleDateString("en-US", {
+          timeZone: "Asia/Dhaka",
+          day: "numeric",
+        }) +
+        "/" +
+        new Date(selectedDate).toLocaleDateString("en-US", {
+          timeZone: "Asia/Dhaka",
+          year: "numeric",
+        });
+      const { data } = await axios.get(
+        `/api/order/m?date=${date}&userId=${clientId}`
+      );
 
       if (data.success) {
         setOrder(null);
@@ -142,7 +143,9 @@ const ManagerMealUpdatorComponent = () => {
         user={user}
       />
       {loading && (
-        <div className="absolute h-full w-full top-0 bg-[rgba(0,0,0,0.6)] z-50"></div>
+        <div className="absolute h-full w-full top-0 bg-[rgba(0,0,0,0.6)] z-50 flex items-center justify-center">
+          <TbLoader3 className="animate-spin aspect-square h-52 w-52 font-thin opacity-60" />
+        </div>
       )}
       <p className="text-2xl text-white bg-sky-500 px-8 py-3 font-bold text-center mb-5 relative">
         Change Meal Here
@@ -203,14 +206,11 @@ const ManagerMealUpdatorComponent = () => {
                     <input
                       onClick={async () => {
                         setLoading(true);
-                        const { data } = await axios.put(
-                          "/api/orders/updateorder",
-                          {
-                            meal: "breakfast",
-                            state: !breakfast,
-                            id: order._id,
-                          }
-                        );
+                        const { data } = await axios.put("/api/order/m", {
+                          meal: "breakfast",
+                          state: !breakfast,
+                          id: order._id,
+                        });
                         if (data.success) {
                           setLoading(false);
                           console.log(!breakfast);
@@ -239,10 +239,11 @@ const ManagerMealUpdatorComponent = () => {
                     <input
                       onClick={async () => {
                         setLoading(true);
-                        const { data } = await axios.put(
-                          "/api/orders/updateorder",
-                          { meal: "lunch", state: !lunch, id: order._id }
-                        );
+                        const { data } = await axios.put("/api/order/m", {
+                          meal: "lunch",
+                          state: !lunch,
+                          id: order._id,
+                        });
                         if (data.success) {
                           setLoading(false);
                           console.log(!lunch);
@@ -271,10 +272,11 @@ const ManagerMealUpdatorComponent = () => {
                     <input
                       onClick={async () => {
                         setLoading(true);
-                        const { data } = await axios.put(
-                          "/api/orders/updateorder",
-                          { meal: "dinner", state: !dinner, id: order._id }
-                        );
+                        const { data } = await axios.put("/api/order/m", {
+                          meal: "dinner",
+                          state: !dinner,
+                          id: order._id,
+                        });
                         if (data.success) {
                           setLoading(false);
                           console.log(!dinner);
@@ -300,14 +302,11 @@ const ManagerMealUpdatorComponent = () => {
                         onClick={async () => {
                           if (isGuestMeal) {
                             setLoading(true);
-                            const { data } = await axios.put(
-                              "/api/orders/updateorder",
-                              {
-                                meal: "guest",
-                                state: false,
-                                id: order._id,
-                              }
-                            );
+                            const { data } = await axios.put("/api/order/m", {
+                              meal: "guest",
+                              state: false,
+                              id: order._id,
+                            });
                             if (data.success) {
                               setGuestMealBreakfastCount(0);
                               setGuestMealLunchCount(0);
@@ -349,17 +348,14 @@ const ManagerMealUpdatorComponent = () => {
                           return;
                         }
                         setLoading(true);
-                        const { data } = await axios.put(
-                          "/api/orders/updateorder",
-                          {
-                            meal: "guest",
-                            state: isGuestMeal,
-                            id: order._id,
-                            guestBreakfastCount: guestMealBreakfastCount,
-                            guestLunchCount: guestMealLunchCount,
-                            guestDinnerCount: guestMealDinnerCount,
-                          }
-                        );
+                        const { data } = await axios.put("/api/order/m", {
+                          meal: "guest",
+                          state: isGuestMeal,
+                          id: order._id,
+                          guestBreakfastCount: guestMealBreakfastCount,
+                          guestLunchCount: guestMealLunchCount,
+                          guestDinnerCount: guestMealDinnerCount,
+                        });
                         if (data.success) {
                           setLoading(false);
                           toast.success("Guest Meal Updated");

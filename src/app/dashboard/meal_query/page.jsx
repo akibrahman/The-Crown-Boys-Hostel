@@ -54,16 +54,13 @@ const ManagerMealQueryComponent = () => {
     }
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/orders/getorders", {
-        userId: clientId,
-        month,
-        year,
-      });
+      const { data } = await axios.get(
+        `/api/orders/m?userId=${clientId}&month=${month}&year=${year}`
+      );
       setResult({
         orders: data.orders.sort((a, b) => a._id.localeCompare(b._id)),
         bill: data.bill,
       });
-      console.log("=>>>>>>>>>>>", data.orders);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong, Try again!");

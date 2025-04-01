@@ -24,13 +24,11 @@ const CurrentMonthComponent = () => {
   });
   const { data: calanderData } = useQuery({
     queryKey: ["calanderData", "user", user?._id],
-    queryFn: async ({ queryKey }) => {
+    queryFn: async () => {
       try {
-        const { data } = await axios.post("/api/orders/getorders", {
-          userId: queryKey[2],
-          month: currentMonth,
-          year: currentYear,
-        });
+        const { data } = await axios.get(
+          `/api/orders/c?month=${currentMonth}&year=${currentYear}`
+        );
         return data.orders.sort((a, b) => a._id.localeCompare(b._id));
       } catch (error) {
         console.log(error);
