@@ -58,11 +58,15 @@ export const PUT = async (req) => {
     try {
       jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
     } catch (error) {
+      console.log(error);
       if (error.message == "invalid token" || "jwt malformed") {
         cookies().delete("token");
       }
-      return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
     }
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized" }, { status: 401 });
     //
     const { data, userId, fromDate, toDate, fromDay, toDay } = await req.json();
     if (Object.keys(data).length == 0) {
@@ -83,7 +87,7 @@ export const PUT = async (req) => {
     }
     for (let i = fromDay; i <= toDay; i++) {
       const order = await Order.findOne({
-        userId: jwtData.id,
+        userId,
         date: fromDate.split("/")[0] + "/" + i + "/" + fromDate.split("/")[2],
       });
       if (!order) continue;

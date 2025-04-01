@@ -15,6 +15,7 @@ import Select from "react-select";
 import { LuCalendarPlus } from "react-icons/lu";
 import { customStylesForReactSelect } from "@/utils/reactSelectCustomStyle";
 import { TbLoader3 } from "react-icons/tb";
+import DateRangeMealOrderManager from "@/Components/DateRangeMealOrderManager/DateRangeMealOrderManager";
 
 const ManagerMealUpdatorComponent = () => {
   const { user } = useContext(AuthContext);
@@ -29,9 +30,28 @@ const ManagerMealUpdatorComponent = () => {
   const [guestMealLunchCount, setGuestMealLunchCount] = useState(0);
   const [guestMealDinnerCount, setGuestMealDinnerCount] = useState(0);
   const [clientId, setClientId] = useState("");
+  const [clientName, setClientName] = useState("");
   const [mealOffPopUp, setMealOffPopUp] = useState(false);
+  const [dateRangePopUp, setDateRangePopUp] = useState(false);
 
   const currentMonth = new Date().toLocaleDateString("en-BD", {
+    month: "long",
+    timeZone: "Asia/Dhaka",
+  });
+
+  const nextMonth = new Date(
+    new Date(
+      new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      })
+    ).getFullYear(),
+    new Date(
+      new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Dhaka",
+      })
+    ).getMonth() + 1,
+    1
+  ).toLocaleDateString("en-BD", {
     month: "long",
     timeZone: "Asia/Dhaka",
   });
@@ -142,6 +162,16 @@ const ManagerMealUpdatorComponent = () => {
         currentYear={currentYear}
         user={user}
       />
+      <DateRangeMealOrderManager
+        dateRangePopUp={dateRangePopUp}
+        setDateRangePopUp={setDateRangePopUp}
+        // currentDate={currentDate}
+        currentMonth={currentMonth}
+        nextMonth={nextMonth}
+        // currentMonthNumber={currentMonthNumber}
+        currentYear={currentYear}
+        user={{ _id: clientId, name: clientName }}
+      />
       {loading && (
         <div className="absolute h-full w-full top-0 bg-[rgba(0,0,0,0.6)] z-50 flex items-center justify-center">
           <TbLoader3 className="animate-spin aspect-square h-52 w-52 font-thin opacity-60" />
@@ -164,6 +194,7 @@ const ManagerMealUpdatorComponent = () => {
                   setOrder(null);
                   setDate(null);
                   setClientId(e.value);
+                  setClientName(e.label);
                 }}
                 className="w-[200px] text-dashboard outline-none"
                 options={clients}
@@ -183,13 +214,28 @@ const ManagerMealUpdatorComponent = () => {
                 yearPlaceholder="----"
                 onChange={(e) => dateSelected(e)}
               />
-              <p
-                onClick={() => setMealOffPopUp(true)}
-                className="font-semibold text-blue-500 underline flex items-center gap-1 group cursor-pointer"
-              >
-                Off Meal by Date
-                <FaArrowRight className="text-xl duration-300 group-hover:translate-x-2" />
-              </p>
+              <div className="space-y-4 text-lg">
+                <p
+                  onClick={() => setMealOffPopUp(true)}
+                  className="font-semibold text-blue-500 underline flex items-center gap-1 group cursor-pointer"
+                >
+                  Off Meal by Date
+                  <FaArrowRight className="text-xl duration-300 group-hover:translate-x-2" />
+                </p>
+                <p
+                  onClick={() => {
+                    if (!clientId) {
+                      toast.error("Client is not selected!");
+                      return;
+                    }
+                    setDateRangePopUp(true);
+                  }}
+                  className="font-semibold text-blue-500 underline flex items-center gap-1 group cursor-pointer"
+                >
+                  Date Range Order
+                  <FaArrowRight className="text-xl duration-300 group-hover:translate-x-2" />
+                </p>
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 align-middle gap-10 md:gap-4 px-5 mt-16">
