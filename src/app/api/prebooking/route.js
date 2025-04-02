@@ -114,6 +114,7 @@ export const POST = async (req) => {
     );
   }
 };
+
 // Editing PreBooking
 export const PUT = async (req) => {
   try {
@@ -191,6 +192,45 @@ export const GET = async (req) => {
     return NextResponse.json({
       success: true,
       transaction,
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, msg: error.message },
+      { status: 500 }
+    );
+  }
+};
+
+export const DELETE = async (req) => {
+  try {
+    const token = cookies()?.get("token")?.value;
+    let jwtData;
+    if (!token)
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
+    try {
+      jwtData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+      if (error.message == "invalid token" || "jwt malformed") {
+        cookies().delete("token");
+      }
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 400 });
+    }
+
+    const manager = await User.findById(jwtData?.id);
+    if (!manager || manager.role != "manager")
+      return NextResponse.json({ msg: "Unauthorized", error }, { status: 401 });
+
+    const { searchParams } = new URL(req.url);
+    const _id = searchParams.get("_id");
+    if (!_id) throw new Error("No ID");
+    if (!mongoose.Types.ObjectId.isValid(_id)) throw new Error("Invalid ID");
+    const booking = await Booking.findById(_id);
+    if (!booking) throw new Error("Wrong ID");
+    await Booking.findByIdAndDelete(_id);
+    return NextResponse.json({
+      success: true,
+      msg: "Deleted Successfully!",
     });
   } catch (error) {
     console.log(error);

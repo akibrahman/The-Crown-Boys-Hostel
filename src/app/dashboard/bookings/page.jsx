@@ -34,7 +34,7 @@ const ManagerAllBookingsComponent = () => {
     queryFn: async () => {
       const { data } = await axios.patch(`/api/booking`);
       if (data.success) {
-        return data.bookings;
+        return data.bookings.reverse();
       } else {
         return [];
       }
@@ -61,8 +61,8 @@ const ManagerAllBookingsComponent = () => {
           refetch={refetch}
         />
       )}
-      <div className="min-h-full p-10 bg-dashboard text-slate-100">
-        <p className="text-center font-semibold mb-8 text-2xl dark:text-white">
+      <div className="min-h-full p-4 bg-dashboard text-slate-100">
+        <p className="text-center font-semibold mb-4 text-2xl dark:text-white">
           Bookings
         </p>
         {bookings?.length == 0 && !isLoading && (
@@ -70,9 +70,11 @@ const ManagerAllBookingsComponent = () => {
             No Bookings
           </p>
         )}
-        {bookings.map((booking, i) => (
-          <BookingCard refetch={refetch} booking={booking} key={i} />
-        ))}
+        <div className="flex flex-col gap-10">
+          {bookings.map((booking, i) => (
+            <BookingCard refetch={refetch} booking={booking} key={i} />
+          ))}
+        </div>
       </div>
     </>
   );

@@ -7,6 +7,7 @@ import { FaTimes } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
+import ManagerData from "@/Components/ManagerData/ManagerData";
 
 const ManagerProfile = ({ user }) => {
   const currentMonth = new Date().toLocaleDateString("en-BD", {
@@ -156,72 +157,75 @@ const ManagerProfile = ({ user }) => {
     </div>
   ) : (
     user.role === "manager" && user.isVerified && user.isManagerVerified && (
-      <div className="flex flex-col md:flex-row gap-4 items-center min-h-full px-20 md:px-32 py-5 bg-dashboard text-slate-100">
-        <div className={`w-full md:w-1/2 py-8 flex flex-col items-center`}>
-          <Image
-            alt={`Profile picture of ${user.username}`}
-            src={user.profilePicture}
-            width={200}
-            height={200}
-            className="mb-5 rounded-full aspect-square"
-          />
-          <p className="mb-1 text-blue-500 font-medium text-xl">
-            {user.username}
-          </p>
-          <p className="mb-1 text-blue-500 font-medium">
-            {convertCamelCaseToCapitalized(user.role)}
-          </p>
-          {user.isVerified ? (
-            <div className="flex flex-col md:flex-row items-center gap-3">
-              <p
-                className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold ${
-                  user.role === "owner" ? "text-blue-500" : "text-green-500"
-                }`}
-              >
-                <TiTick className="text-xl" />
-                Verified
-              </p>
-            </div>
-          ) : (
-            <p
-              className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold mt-2 bg-red-500 select-none`}
-            >
-              <FaTimes className="text-xl" />
-              Unverified
+      <>
+        <div className="flex flex-col md:flex-row gap-4 items-center min-h-full px-20 md:px-32 py-5 bg-dashboard text-slate-100">
+          <div className={`w-full md:w-1/2 py-8 flex flex-col items-center`}>
+            <Image
+              alt={`Profile picture of ${user.username}`}
+              src={user.profilePicture}
+              width={200}
+              height={200}
+              className="mb-5 rounded-full aspect-square"
+            />
+            <p className="mb-1 text-blue-500 font-medium text-xl">
+              {user.username}
             </p>
-          )}
-          <p>{user.email}</p>
-          <p>{user.contactNumber}</p>
-        </div>
-        {!managerCalanderData || !ordersForTheMonth ? (
-          <MealRateCalculatingEffect />
-        ) : (
-          <div className="w-full md:w-1/2">
-            <div className="py-5 md:py-0 md:p-10 md:mt-20 mx-auto">
-              <p className="flex items-center gap-2 mb-5">
-                Current Meal Rate:
-                <span className="text-blue-500 font-extralight text-4xl">
-                  {mealRateF}
-                </span>
-                BDT
+            <p className="mb-1 text-blue-500 font-medium">
+              {convertCamelCaseToCapitalized(user.role)}
+            </p>
+            {user.isVerified ? (
+              <div className="flex flex-col md:flex-row items-center gap-3">
+                <p
+                  className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold ${
+                    user.role === "owner" ? "text-blue-500" : "text-green-500"
+                  }`}
+                >
+                  <TiTick className="text-xl" />
+                  Verified
+                </p>
+              </div>
+            ) : (
+              <p
+                className={`flex items-center gap-1 w-max px-4 py-1 rounded-full font-semibold mt-2 bg-red-500 select-none`}
+              >
+                <FaTimes className="text-xl" />
+                Unverified
               </p>
-              <p>
-                Total Market:
-                <span className="text-blue-500 font-bold text-2xl">
-                  {totalMarketF}
-                </span>
-                BDT
-              </p>
-              <p>
-                Total meal count:
-                <span className="text-blue-500 font-bold text-2xl">
-                  {totalMealCountF}
-                </span>
-              </p>
-            </div>
+            )}
+            <p>{user.email}</p>
+            <p>{user.contactNumber}</p>
           </div>
-        )}
-      </div>
+          {!managerCalanderData || !ordersForTheMonth ? (
+            <MealRateCalculatingEffect />
+          ) : (
+            <div className="w-full md:w-1/2">
+              <div className="py-5 md:py-0 md:p-10 md:mt-20 mx-auto">
+                <p className="flex items-center gap-2 mb-5">
+                  Current Meal Rate:
+                  <span className="text-blue-500 font-extralight text-4xl">
+                    {mealRateF}
+                  </span>
+                  BDT
+                </p>
+                <p>
+                  Total Market:
+                  <span className="text-blue-500 font-bold text-2xl">
+                    {totalMarketF}
+                  </span>
+                  BDT
+                </p>
+                <p>
+                  Total meal count:
+                  <span className="text-blue-500 font-bold text-2xl">
+                    {totalMealCountF}
+                  </span>
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+        <ManagerData />
+      </>
     )
   );
 };
