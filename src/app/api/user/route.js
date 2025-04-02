@@ -100,8 +100,21 @@ export const PATCH = async (req) => {
     )
       return NextResponse.json({ msg: "Unauthorized" }, { status: 401 });
 
-    if (client.role == "manager") {
-    } else if (client._id.toString() == user._id.toString()) {
+    if (
+      client.role != "manager" &&
+      client._id.toString() == user._id.toString()
+    ) {
+      filesToBeUploaded.forEach((f) => {
+        if (
+          (f.name == "idPicture" && user.idPicture) ||
+          (f.name == "birthCertificatePicture" &&
+            user.birthCertificatePicture) ||
+          (f.name == "nidFrontPicture" && user.nidFrontPicture) ||
+          (f.name == "nidBackPicture" && user.nidBackPicture)
+        ) {
+          throw new Error("UnAuthorized Change!");
+        }
+      });
     }
     //! Uploading Assets
     for (let i = 1; i <= filesToBeUploaded.length; i++) {
@@ -146,7 +159,7 @@ export const PATCH = async (req) => {
     //! Response
     return NextResponse.json({
       success: true,
-      msg: "User fetched successfully",
+      msg: "User Updated successfully",
       user,
     });
   } catch (error) {
